@@ -2,25 +2,19 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Search from "../_molecules/search";
 import { companyListings } from "@/constants";
-import AvailableCompany from "./available-opportunity";
-import { Opportunity } from "@/types";
-import AvailableOpportunity from "./available-opportunity";
+import AvailableCompany from "../_molecules/available-opportunity";
 // import Featured from "../_molecules/featured";
 
-export default function Results({
-  selectedId,
-  setSelectedId,
+export default function Centered({
+  companyId,
+  setCompanyId,
   onShowLeft,
-  opportunities,
   mobileView,
-  setSelectedOpportunity,
+  setSelectedCompany,
 }: {
-  selectedId: string | null;
-  setSelectedId: (id: string | null) => void;
+  companyId: number | null;
+  setCompanyId: (id: number | null) => void;
   onShowLeft?: () => void;
-  mobileView: "centered" | "left" | "right";
-  setSelectedOpportunity: (name: Opportunity | null) => void;
-  opportunities: Opportunity[];
 }) {
   return (
     <div
@@ -44,19 +38,19 @@ export default function Results({
           Search Results
         </h6>
         <p className="text-primary md:text-[#8C8CB0] text-sm lg:text-base self-center">
-          {opportunities.length ? opportunities.length : 0} results found
+          {200} results found
         </p>
       </div>
 
       <div className="flex gap-6 flex-wrap md:max-h-[700px] md:overflow-y-scroll pr-1.5  ">
         {" "}
-        {opportunities.map((item, index) => (
-          <AvailableOpportunity
-            details={item}
+        {companyListings.map((company, index) => (
+          <AvailableCompany
+            details={company}
             key={index}
-            selectedId={selectedId}
-            setSelectedId={setSelectedId}
-            setSelectedOpportunity={setSelectedOpportunity}
+            companyId={companyId}
+            setCompanyId={setCompanyId}
+            setSelectedCompany={setSelectedCompany}
             // isSelected={selectedCompanyId === company.id}
           />
         ))}

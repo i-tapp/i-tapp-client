@@ -1,12 +1,12 @@
 import { query } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 
-export const useFetchJobs = () => {
+export const useFetchOpportunities = () => {
   return useQuery({
-    queryKey: ["jobs"],
+    queryKey: ["opportunities"],
     queryFn: async () => {
       const response = await query("/o");
-      return response;
+      return response.data;
     },
   });
 };
@@ -68,5 +68,26 @@ export const useFetchCompanyJobs = () => {
       const response = await query("/company/jobs/all");
       return response;
     },
+  });
+};
+
+export const useFetchCompanyOpportunities = () => {
+  return useQuery({
+    queryKey: ["company-opportunities"],
+    queryFn: async () => {
+      const response = await query("/opportunities/me");
+      return response;
+    },
+  });
+};
+
+export const useFetchOpportunityDetails = (id?: string) => {
+  return useQuery({
+    queryKey: ["opportunity-details", id],
+    queryFn: async () => {
+      const response = await query(`/opportunities/${id}/details`);
+      return response;
+    },
+    enabled: !!id,
   });
 };

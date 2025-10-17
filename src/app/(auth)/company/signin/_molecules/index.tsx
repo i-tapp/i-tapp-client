@@ -9,7 +9,7 @@ import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -23,6 +23,7 @@ import { ButtonWithLoader } from "@/components/button-with-loader";
 import { signinSchema } from "@/lib/validations/auth";
 import { signinCompany } from "@/actions/auth";
 import { useCompanyStore } from "@/lib/store/company";
+import Input from "@/components/input";
 
 export function CompanySignIn() {
   const router = useRouter();
@@ -77,7 +78,7 @@ export function CompanySignIn() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="Enter company email" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -91,7 +92,7 @@ export function CompanySignIn() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" {...field} />
+                  <Input type="password" {...field} placeholder="**********" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

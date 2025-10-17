@@ -1,22 +1,23 @@
+import type { Company } from "@/types";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface CompanyState {
-  company: any;
+  company: Company | null;
   companyJobs: any[];
   selectedJob: any;
   totalApplicants: number;
   acceptedApplicants: number;
   shortlistedApplicants: number;
   selectedApplicant: any;
-  setCompany: (c: any) => void;
+  setCompany: (c: Company) => void;
   setCompanyJobs: (jobs: any[]) => void;
   setTotalApplicants: (count: number) => void;
   setAcceptedApplicants: (count: number) => void;
   setSelectedJob: (job: any) => void;
   setShortlistedApplicants: (count: number) => void;
   setSelectedApplicant: (a: any) => void;
-  updateCompanyProfile: (updates: Partial<any>) => void;
+  updateCompanyProfile: (updates: Partial<Company>) => void;
 }
 
 export const useCompanyStore = create<CompanyState>()(
@@ -41,7 +42,7 @@ export const useCompanyStore = create<CompanyState>()(
 
       updateCompanyProfile: (updates) =>
         set((state) => ({
-          company: { ...state.company, ...updates },
+          company: state.company ? { ...state.company, ...updates } : null,
         })),
     }),
     { name: "company-store" }

@@ -8,7 +8,11 @@ import { SitePagination } from "@/components/ui/site-pagination";
 import usePaginator from "@/hooks/use-paginator";
 import { useFetchApplication } from "@/hooks/query";
 
-export default function MyApplication({ searchParams }) {
+export default function MyApplication({
+  searchParams,
+}: {
+  searchParams?: { query?: string };
+}) {
   const query = searchParams?.query || "";
 
   // Fetch applications with react-query

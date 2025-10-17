@@ -11,7 +11,8 @@ export function Wrapper({
   return (
     <section
       className={cn(
-        "w-full  px-6 sm:px-8 md:px-[80px] touch:px-[118px] m-auto py-20 sm:py-[102px]",
+        // Base (mobile): tighter padding
+        "w-full px-4 sm:px-6 md:px-12 lg:px-20 xl:px-28 m-auto py-12 sm:py-16 md:py-20 lg:py-24",
         className
       )}
     >

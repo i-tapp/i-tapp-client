@@ -1,16 +1,17 @@
+import type { Student } from "@/types";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface StudentState {
-  student: any;
+  student: Student | null;
   savedApplications: any[];
   selectedJob: any;
-  students: any[];
-  setStudent: (s: any) => void;
+  students: Student[];
+  setStudent: (s: Student) => void;
   setSavedApplications: (apps: any[]) => void;
   setSelectedJob: (job: any) => void;
-  setStudents: (list: any[]) => void;
-  updateStudentProfile: (updates: Partial<any>) => void;
+  setStudents: (list: Student[]) => void;
+  updateStudentProfile: (updates: Partial<Student>) => void;
 }
 
 export const useStudentStore = create<StudentState>()(
@@ -28,7 +29,7 @@ export const useStudentStore = create<StudentState>()(
 
       updateStudentProfile: (updates) =>
         set((state) => ({
-          student: { ...state.student, ...updates },
+          student: state.student ? { ...state.student, ...updates } : null,
         })),
     }),
     { name: "student-store" }

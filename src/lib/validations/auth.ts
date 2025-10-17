@@ -62,7 +62,7 @@ export const companyProfileSchema = z.object({
   website: z.string().optional(),
   address: z.string().optional(),
   description: z.string().optional(),
-  student_capacity: z.number().optional(),
+  studentCapacity: z.number().optional(),
   profilePicture: z.any().optional(),
   bannerImage: z.any().optional(),
 });

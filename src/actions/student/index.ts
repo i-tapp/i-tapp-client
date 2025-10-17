@@ -1,20 +1,34 @@
-import { mutate } from "@/lib/api";
+import { mutate, query } from "@/lib/api";
 import { actionClient } from "@/lib/safe-action";
 import { verifyStudentIdentitySchema } from "@/lib/validations/auth";
 import z from "zod";
 
 const applyJ = z.object({
-  jobId: z.string(),
+  id: z.string(),
 });
 
 export const apply = actionClient
-
   .inputSchema(applyJ)
-  .action(async ({ parsedInput: { jobId } }) => {
+  .action(async ({ parsedInput: { id } }) => {
     try {
-      const response = await mutate(`/applications/${jobId}/apply`);
+      const response = await mutate(`/applications/${id}/apply`);
+      return response?.data;
+    } catch (error) {
+      console.log(error);
+      throw error; // Ensure the error is propagated back to the frontend
+    }
+  });
 
-      return response;
+export const withdraw = actionClient
+  .inputSchema(applyJ)
+  .action(async ({ parsedInput: { id } }) => {
+    try {
+      const response = await mutate(
+        `/applications/${id}/withdraw`,
+        undefined,
+        "PATCH"
+      );
+      return response?.data;
     } catch (error) {
       console.log(error);
       throw error; // Ensure the error is propagated back to the frontend
@@ -22,12 +36,10 @@ export const apply = actionClient
   });
 
 export const save = actionClient
-
   .inputSchema(applyJ)
-  .action(async ({ parsedInput: { jobId } }) => {
+  .action(async ({ parsedInput: { id } }) => {
     try {
-      const response = await mutate("/student/saved/applications", { jobId });
-
+      const response = await mutate(`/applications/${id}/apply`);
       return response;
     } catch (error) {
       console.log(error);
@@ -80,9 +92,9 @@ export const verifyStudentIdentity = actionClient
   .inputSchema(verifyStudentIdentitySchema)
   .action(async ({ parsedInput: { matNo } }) => {
     // return true;
-    const response = await mutate("/student/check", {
-      matriculation: matNo,
+    const response = await query(`/s/matric/${encodeURIComponent(matNo)}`, {
+      // matriculation: matNo,
     });
-    console.log(response.data);
-    return response.data;
+    console.log("student data retrieved", response);
+    return response;
   });

@@ -10,7 +10,7 @@ import { useAction } from "next-safe-action/hooks";
 import { toast } from "react-toastify";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
@@ -23,6 +23,7 @@ import {
 
 import { useGlobal } from "@/context/GlobalContext";
 import { logout } from "@/actions/auth";
+import Input from "@/components/input";
 
 const profileSchema = z.object({
   firstName: z.string().min(1, "Required").optional(),

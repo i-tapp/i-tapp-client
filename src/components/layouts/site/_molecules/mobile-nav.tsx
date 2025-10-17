@@ -1,30 +1,50 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Menu } from "iconsax-reactjs";
-import { useState } from "react";
-
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { buttonVariants } from "@/components/ui/button";
 import { app } from "@/config/app";
+import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
+import Hr from "@/components/ui/hr";
 
 export function MobileNav() {
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger className="md:hidden">
-        <Menu size={24} />
+      {/* Hamburger Button */}
+      <SheetTrigger
+        className="md:hidden"
+        aria-label="Open mobile navigation menu"
+      >
+        <Menu size={26} className="text-primary" />
       </SheetTrigger>
-      <SheetContent className="w-full max-w-[300px] py-16 flex flex-col justify-center gap-8 md:hidden">
-        <nav className="flex flex-col gap-3">
+
+      {/* Drawer Content */}
+      <SheetContent
+        className={cn(
+          "w-full max-w-[300px] flex flex-col justify-between gap-8 py-12 px-6 md:hidden",
+          "bg-white shadow-lg"
+        )}
+      >
+        {/* Navigation Links */}
+        <nav className="flex flex-col gap-4">
           {app.nav_links.map((link) => (
             <Link
               key={link.text}
               href={link.href}
               title={link.title}
-              className="text-base text-black"
               onClick={() => setOpen(false)}
+              className={cn(
+                "text-base transition-colors hover:text-primary",
+                pathname === link.href
+                  ? "text-primary font-medium"
+                  : "text-gray-800"
+              )}
             >
               {link.text}
             </Link>
@@ -32,17 +52,24 @@ export function MobileNav() {
         </nav>
 
         {/* Action Buttons */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3 ">
+          <Hr />
           <Link
             href={app.links.signin}
-            className={buttonVariants({ variant: "outline", size: "sm" })}
+            className={cn(
+              buttonVariants({ variant: "outline", size: "sm" }),
+              "w-full justify-center"
+            )}
             onClick={() => setOpen(false)}
           >
             Sign In
           </Link>
           <Link
             href={app.links.signup}
-            className={buttonVariants({ size: "sm" })}
+            className={cn(
+              buttonVariants({ size: "sm" }),
+              "w-full justify-center"
+            )}
             onClick={() => setOpen(false)}
           >
             Get Started

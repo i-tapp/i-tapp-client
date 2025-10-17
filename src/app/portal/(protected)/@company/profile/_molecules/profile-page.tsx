@@ -51,9 +51,9 @@ export default function CompanyProfilePage() {
       </div>
 
       {/* Banner */}
-      {company.backgroundImageUrl && (
+      {company.bannerUrl && (
         <img
-          src={company.backgroundImageUrl}
+          src={company.bannerUrl}
           alt="Company Banner"
           className="w-full h-40 object-cover rounded-lg mb-6"
         />
@@ -61,9 +61,9 @@ export default function CompanyProfilePage() {
 
       {/* Profile Image */}
       <div className="flex items-center mb-6">
-        {company.profileImageUrl && (
+        {company.logoUrl && (
           <img
-            src={company.profileImageUrl}
+            src={company.logoUrl}
             alt="Company Logo"
             className="w-20 h-20 rounded-full object-cover border"
           />
@@ -82,7 +82,7 @@ export default function CompanyProfilePage() {
         <div className="space-y-4">
           <Field
             label="Student Capacity"
-            value={company.student_capacity?.toString()}
+            value={company.studentCapacity?.toString()}
           />
           <Field label="Industry" value={company.industry} />
           <Field label="Email" value={company.email} />

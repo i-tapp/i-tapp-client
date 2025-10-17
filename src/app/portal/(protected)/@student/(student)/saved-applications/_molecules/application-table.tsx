@@ -10,11 +10,17 @@ import {
 import { cn } from "@/utils/tailwind";
 import ApplicationCard from "./application-card";
 import moment from "moment";
+import { Application } from "@/types";
 
-export default function ApplicationTable({ query, applications }) {
-  const myApplication = applications.filter((app) =>
-    app.companyName.toLocaleLowerCase().startsWith(query.toLocaleLowerCase())
-  );
+interface Props {
+  query: string;
+  applications: Application[];
+}
+
+export default function ApplicationTable({ query, applications }: Props) {
+  // const myApplication = applications.filter((app) =>
+  //   app.companyName?.toLocaleLowerCase().startsWith(query.toLocaleLowerCase())
+  // );
 
   return (
     <div>
@@ -25,21 +31,25 @@ export default function ApplicationTable({ query, applications }) {
               <TableHead>Company</TableHead>
               <TableHead>Applied on</TableHead>
               <TableHead>Location</TableHead>
-              <TableHead>Role</TableHead>
+              <TableHead>Industry</TableHead>
               <TableHead>No of Applicants</TableHead>
               <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {myApplication.map((application, key) => (
+            {applications.map((application, key) => (
               <TableRow key={key}>
-                <TableCell>{application.companyName}</TableCell>
+                <TableCell>{application?.opportunity?.company?.name}</TableCell>
                 <TableCell>
-                  {moment(application.createdAt).format("MMM Do YY")}
+                  {moment(application.appliedAt).format("MMM Do YY")}
                 </TableCell>
-                <TableCell>{application.location}</TableCell>
-                <TableCell>{application.industry}</TableCell>
-                <TableCell>{application.numberOfApplicants}</TableCell>
+                <TableCell>{application?.opportunity?.location}</TableCell>
+                <TableCell>
+                  {application.opportunity?.company?.industry}
+                </TableCell>
+                <TableCell>
+                  {application?.opportunity?.totalApplications || 0}
+                </TableCell>
                 <TableCell>
                   <span
                     className={cn(
@@ -49,7 +59,7 @@ export default function ApplicationTable({ query, applications }) {
                         : "border-[#DF0404] text-[#DF0404]  bg-[#DF0404]"
                     )}
                   >
-                    Active
+                    {application?.opportunity?.status}
                   </span>
                 </TableCell>
               </TableRow>
@@ -57,8 +67,8 @@ export default function ApplicationTable({ query, applications }) {
           </TableBody>
         </Table>
       </div>
-      <div className=" flex flex-col gap-4">
-        {myApplication.map((application, key) => (
+      <div className="flex flex-col gap-4">
+        {applications.map((application, key) => (
           <ApplicationCard key={key} application={application} />
         ))}
       </div>

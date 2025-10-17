@@ -6,8 +6,11 @@ import { ProfileAdd, ArrowRight } from "iconsax-reactjs";
 import { OverviewBox } from "@/components/overview-box";
 import { ApplicantCard } from "../../../../../../../components/applicant-card";
 
-import { Applicant } from "@/types";
-import { useFetchAllCompanyApplications } from "@/hooks/query";
+import { Applicant, Opportunity } from "@/types";
+import {
+  useFetchAllCompanyApplications,
+  useFetchCompanyOpportunities,
+} from "@/hooks/query";
 import { useCompanyStore } from "@/lib/store/company";
 import OpportunityCard from "./opportunity-card";
 
@@ -15,6 +18,8 @@ export function Dashboard() {
   const company = useCompanyStore((s) => s.company);
 
   const { data, isLoading } = useFetchAllCompanyApplications();
+
+  const { data: opportunities } = useFetchCompanyOpportunities();
 
   // if (isLoading) {
   //   return <p>Loading...</p>;
@@ -31,7 +36,7 @@ export function Dashboard() {
   const acceptedApplicantsCount = acceptedApplicants[1];
   const shortlistedApplicantsCount = shortlistedApplicants[1];
 
-  console.log("company", company);
+  console.log("opportunities", opportunities);
 
   return (
     <div className="flex flex-col gap-4">
@@ -76,14 +81,25 @@ export function Dashboard() {
               <ApplicantCard key={index} applicant={applicant} />
             ))}
         </div>
-        <div>
-          <OpportunityCard
+        <div className="flex flex-col mt-5 gap-2">
+          {opportunities?.map((opportunity: Opportunity, index: number) => (
+            <OpportunityCard
+              key={index}
+              id={opportunity.id}
+              title={opportunity.title}
+              applicants={opportunity.totalApplications}
+              status={opportunity.status}
+              actionLabel="View Applicants"
+              onAction={() => console.log("Viewing opportunity")}
+            />
+          ))}
+          {/* <OpportunityCard
             title="Frontend Developer"
             applicants={5}
             status="open"
             actionLabel="View Applicants"
             onAction={() => console.log("Viewing opportunity")}
-          />
+          /> */}
         </div>
       </div>
     </div>

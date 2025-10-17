@@ -53,7 +53,7 @@ export const studentSignup = actionClient
     }) => {
       console.log(email);
       try {
-        const response = await mutate("/auth/student/signup", {
+        const response = await mutate("/auth/signup/student", {
           firstName,
           lastName,
           email,
@@ -98,8 +98,8 @@ export const companySignup = actionClient
         year_founded,
       });
 
-      console.log(response.data);
+      console.log(response);
 
-      return response.data;
+      return response;
     }
   );

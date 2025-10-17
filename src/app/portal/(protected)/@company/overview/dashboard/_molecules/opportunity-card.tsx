@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Briefcase } from "iconsax-reactjs";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 type OpportunityCardProps = {
   icon?: React.ReactNode;
@@ -9,6 +10,7 @@ type OpportunityCardProps = {
   status: string;
   onAction?: () => void;
   actionLabel?: string;
+  id: string;
 };
 
 export default function OpportunityCard({
@@ -17,11 +19,12 @@ export default function OpportunityCard({
   applicants,
   status,
   onAction,
+  id,
   actionLabel = "View",
 }: OpportunityCardProps) {
   return (
-    <div className="flex items-center justify-between rounded-md w-full px-3 py-4 shadow-md bg-[#f1f6fc] border-l-4  border-l-primary">
-      {/* Left side */}
+    <div className="flex items-center justify-between rounded-md w-full px-3 py-4 shadow-md bg-[#fcfcfd] border-l-4  border-l-primary">
+      {/* Left side f9fafb */}
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-full ">
           {icon ?? "📌"}
@@ -37,9 +40,9 @@ export default function OpportunityCard({
       {/* Right side */}
       <div className="flex items-center gap-3">
         <span
-          className={`px-2 py-1 text-xs font-semibold rounded ${
+          className={`px-3 py-1 text-xs  font-semibold rounded-xl ${
             status === "open"
-              ? "bg-green-100 text-green-700"
+              ? "bg-green-700 text-white"
               : "bg-red-100 text-red-700"
           }`}
         >
@@ -47,10 +50,14 @@ export default function OpportunityCard({
         </span>
 
         <Button
-          onClick={onAction}
+          // onClick={onAction}
+          asChild
           className="flex flex-row items-center gap-1 cursor-pointer shadow-sm text-white"
         >
-          {actionLabel}
+          {/* {actionLabel} */}
+          <Link href={`/portal/overview/opportunities/${id}`}>
+            {actionLabel}
+          </Link>
         </Button>
       </div>
     </div>

@@ -1,5 +1,5 @@
-import React from "react";
-import { useForm, Controller } from "react-hook-form";
+import React, { Dispatch, SetStateAction } from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Select,
@@ -8,20 +8,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FormField } from "@/components/ui/form-field";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+// import { Input } from "@/components/ui/input";
 import { InputDescription } from "@/components/ui/input-description";
-
-// import db from "../../../../../../db.json";
 import { verifyStudentIdentitySchema } from "@/lib/validations/auth";
 import { useAction } from "next-safe-action/hooks";
-import { Dispatch, SetStateAction } from "react";
 import { ButtonWithLoader } from "@/components/button-with-loader";
 import { toast } from "react-toastify";
-// import { db } from "@/db";
 import { verifyStudentIdentity } from "@/actions/student";
 import { db } from "../../../../../../db";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import Input from "@/components/input";
 
 export function SchoolInfo({
   formIndex,
@@ -32,12 +36,7 @@ export function SchoolInfo({
   setForm: Dispatch<SetStateAction<number>>;
   setStudentData: Dispatch<SetStateAction<any>>;
 }) {
-  const {
-    register,
-    getValues,
-    formState: { isDirty, isValid, errors },
-    ...form
-  } = useForm({
+  const form = useForm({
     mode: "all",
     resolver: zodResolver(verifyStudentIdentitySchema),
     defaultValues: {
@@ -46,6 +45,13 @@ export function SchoolInfo({
     },
   });
 
+  const {
+    handleSubmit,
+    control,
+    formState: { isDirty, isValid, errors },
+    getValues,
+  } = form;
+
   const { execute, hasErrored, result, isExecuting } = useAction(
     verifyStudentIdentity,
     {
@@ -53,7 +59,7 @@ export function SchoolInfo({
         toast.success("Student info verified!");
         setTimeout(() => {
           setStudentData(data);
-          setForm(++formIndex);
+          setForm((prev) => prev + 1);
         }, 1000);
       },
       onError(error) {
@@ -63,66 +69,77 @@ export function SchoolInfo({
     }
   );
 
-  return (
-    <form
-      className="w-full flex flex-col gap-6"
-      onSubmit={(e) => {
-        e.preventDefault();
+  const onSubmit = (values: any) => {
+    execute(values);
+  };
 
-        execute(getValues());
-      }}
-    >
-      {hasErrored && (
-        <span className="text-danger font-semi-bold ">
-          {result.serverError}
-        </span>
-      )}
-      <div className="flex flex-col gap-5">
-        <FormField>
-          <Label className="font-regular">Name of school*</Label>
-          <Controller
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full flex flex-col gap-6"
+      >
+        {hasErrored && (
+          <span className="text-danger font-semibold">
+            {result?.serverError}
+          </span>
+        )}
+
+        <div className="flex flex-col gap-5">
+          {/* SCHOOL SELECT */}
+          <FormField
+            control={control}
             name="school"
-            control={form.control}
-            render={({ field, fieldState: { error } }) => (
-              <>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select School" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {db.schools.map((school) => (
-                      <SelectItem key={school.name} value={school.name}>
-                        {school.full_name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <InputDescription
-                  variant={error && "error"}
-                  text={error?.message}
-                />
-              </>
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name of school*</FormLabel>
+                <FormControl>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="border border-gray-300 outline-none shadow-none focus:ring-1 focus:ring-inset-1 focus:ring-primary/20  ">
+                      <SelectValue placeholder="Select School" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {db.schools.map((school) => (
+                        <SelectItem key={school.name} value={school.name}>
+                          {school.full_name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
           />
-        </FormField>
-        <FormField>
-          <Label className="font-regular">Matriculation Number*</Label>
-          <Input type="text" {...register("matNo")} />
-          <InputDescription
-            variant={errors.matNo && "error"}
-            text={errors.matNo?.message}
-          />
-        </FormField>
 
-        <ButtonWithLoader
-          type="submit"
-          isPending={isExecuting}
-          disabled={!isValid || !isDirty || isExecuting}
-          className="w-full"
-        >
-          Continue...
-        </ButtonWithLoader>
-      </div>
-    </form>
+          {/* MATRIC NUMBER INPUT */}
+          <FormField
+            control={control}
+            name="matNo"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Matriculation Number*</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter Matriculation Number" {...field} />
+                </FormControl>
+                <FormDescription>
+                  This is your unique student ID assigned by your institution.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <ButtonWithLoader
+            type="submit"
+            isPending={isExecuting}
+            disabled={!isValid || !isDirty || isExecuting}
+            className="w-full"
+          >
+            Continue...
+          </ButtonWithLoader>
+        </div>
+      </form>
+    </Form>
   );
 }

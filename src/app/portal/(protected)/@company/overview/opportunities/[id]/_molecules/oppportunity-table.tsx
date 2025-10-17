@@ -8,7 +8,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import Image from "next/image";
-import { Overview } from "./overview";
+import { Overview } from "../../_molecules/overview";
 import { LucideMailX, User } from "lucide-react"; // Example icon
 import { number } from "zod";
 import Link from "next/link";
@@ -20,8 +20,10 @@ import {
   Bookmark2,
   SmsEdit,
 } from "iconsax-reactjs";
+import { Application } from "@/types";
+import { ur } from "zod/v4/locales";
 
-export default function OpportunityTable() {
+export default function OpportunityTable({ data }: { data: Application[] }) {
   const applicants = [
     {
       id: 1,
@@ -154,14 +156,17 @@ export default function OpportunityTable() {
         </TableHeader>
 
         <TableBody>
-          {applicants.map((applicant) => (
-            <TableRow key={applicant.id} className="even:bg-gray-50">
-              <TableCell className="py-4">
-                <ApplicantProfile {...applicant} />
-              </TableCell>
-              <TableCell className="py-4">{applicant.status}</TableCell>
-              <TableCell className="py-4">{applicant.appliedDate}</TableCell>
-              {/* <TableCell className="py-4">
+          {data.map((applicant) => {
+            const student = applicant?.student;
+
+            return (
+              <TableRow key={applicant.id} className="even:bg-gray-50">
+                <TableCell className="py-4">
+                  <ApplicantProfile student={student} />
+                </TableCell>
+                <TableCell className="py-4">{applicant.status}</TableCell>
+                <TableCell className="py-4">{applicant.appliedAt}</TableCell>
+                {/* <TableCell className="py-4">
                 <a
                   href={`/uploads/${applicant.resume}`}
                   className="text-blue-600 hover:underline"
@@ -169,44 +174,43 @@ export default function OpportunityTable() {
                   View
                 </a>
               </TableCell> */}
-              <TableCell className="py-4">
-                <div className="flex items-center justify-center gap-2">
-                  <ArchiveAdd size={18} />
-                  <SmsEdit size={18} />
-                  <Button variant="secondary" size="sm">
-                    View Profile <ArrowRight2 className="ml-1" />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
+                <TableCell className="py-4">
+                  <div className="flex items-center justify-center gap-2">
+                    <ArchiveAdd size={18} />
+
+                    <Link href={`mailto:${student?.user?.email}`}>
+                      <SmsEdit size={18} />
+                    </Link>
+
+                    <Button variant="secondary" size="sm">
+                      View Profile <ArrowRight2 className="ml-1" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>
   );
 }
 
-export function ApplicantProfile({
-  name,
-  school,
-  avatar,
-}: {
-  name: string;
-  school: string;
-  avatar: string;
-}) {
+export function ApplicantProfile({ student }: { student }) {
   return (
     <div className="flex items-center gap-3">
       <Image
-        src={avatar || "/applicant.png"}
-        alt={name}
+        src={student?.user?.avatarUrl || "/applicant.png"}
+        alt={student.firstName + " " + student.lastName}
         width={30}
         height={30}
         className="h-10 w-10 border rounded-full object-cover"
       />
       <div>
-        <p className="font-semibold text-sm">{name}</p>
-        <p className="text-xs text-gray-500">{school}</p>
+        <p className="font-semibold text-sm">
+          {student.firstName + " " + student.lastName}
+        </p>
+        <p className="text-xs text-gray-500">{student.school}</p>
       </div>
     </div>
   );

@@ -40,7 +40,7 @@ export default function ProfileForm() {
       phone: "",
       website: "",
       address: "",
-      student_capacity: undefined,
+      studentCapacity: undefined,
       description: "",
     },
   });
@@ -76,7 +76,7 @@ export default function ProfileForm() {
         phone: company.phone ?? "",
         website: company.website ?? "",
         address: company.address ?? "",
-        student_capacity: company.student_capacity,
+        studentCapacity: company.studentCapacity,
         description: company.description ?? "",
       });
     }
@@ -98,9 +98,9 @@ export default function ProfileForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {/* Banner Upload */}
         <label className="block w-full h-40 bg-gray-200 my-5 rounded-md flex items-center justify-center cursor-pointer">
-          {backgroundPreview || company?.backgroundImageUrl ? (
+          {backgroundPreview || company?.bannerUrl ? (
             <Image
-              src={backgroundPreview ?? company!.backgroundImageUrl}
+              src={backgroundPreview ?? company!.bannerUrl}
               alt="Banner"
               fill
               className="object-cover rounded-md"
@@ -122,9 +122,9 @@ export default function ProfileForm() {
 
         {/* Profile Picture Upload */}
         <label className="cursor-pointer w-[80px] h-[70px] border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center overflow-hidden">
-          {profilePreview || company?.profileImageUrl ? (
+          {profilePreview || company?.logoUrl ? (
             <Image
-              src={profilePreview ?? company!.profileImageUrl}
+              src={profilePreview ?? company!.logoUrl}
               alt="Profile"
               width={80}
               height={70}
@@ -158,7 +158,7 @@ export default function ProfileForm() {
                   <FormControl>
                     <Input
                       type={
-                        field.name === "student_capacity" ? "number" : "text"
+                        field.name === "studentCapacity" ? "number" : "text"
                       }
                       placeholder={`Enter ${field.name}`}
                       {...field}

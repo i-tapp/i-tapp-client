@@ -1,6 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
-import { Inter, Montserrat } from "next/font/google";
+import { Montserrat, Open_Sans } from "next/font/google";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { GlobalProvider } from "@/context/GlobalContext";
@@ -8,16 +8,16 @@ import { AppProvider } from "@/components/providers/app-provider";
 import { ReactQueryProvider } from "@/provider/react-query-provider";
 import { ToastContainer } from "react-toastify";
 
-export const inter = Inter({
-  weight: ["400", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
 export const montserrat = Montserrat({
-  weight: ["600", "700"],
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-montserrat",
+});
+
+export const opensans = Open_Sans({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-opensans",
 });
 
 export const metadata: Metadata = {
@@ -31,9 +31,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // className={(inter.className, inter.variable, montserrat.variable)}
     <html lang="en">
-      <body className={`${inter.variable} ${montserrat.variable} antialiased`}>
+      <body
+        className={`${opensans.variable} ${montserrat.variable} antialiased`}
+      >
         <ReactQueryProvider>
           <GlobalProvider>
             <AppProvider>{children}</AppProvider>

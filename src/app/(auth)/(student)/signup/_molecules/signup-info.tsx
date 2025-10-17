@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import { ButtonWithLoader } from "@/components/button-with-loader";
 import {
   Form,
@@ -17,6 +17,7 @@ import { studentSignupSchema } from "@/lib/validations/auth";
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "react-toastify";
 import { studentSignup } from "@/actions/auth";
+import Input from "@/components/input";
 
 type Login = {
   email: string;
@@ -95,7 +96,7 @@ export function SignupInfo({
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} placeholder="Enter your email" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -110,7 +111,11 @@ export function SignupInfo({
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        type="password"
+                        {...field}
+                        placeholder="password"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -125,7 +130,11 @@ export function SignupInfo({
                   <FormItem>
                     <FormLabel>Confirm Password</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        type="password"
+                        {...field}
+                        placeholder="Confirm password"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

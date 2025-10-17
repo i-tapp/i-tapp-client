@@ -9,16 +9,17 @@ export default function AuthLayoutUi({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <main className="w-full">
-        <div className="flex items-start justify-center container py-16">
-          <div className="lg:flex-1 flex flex-col gap-3 items-center">
-            <Link href="/">
-              <Logo />
-            </Link>
-            {children}
-          </div>
-          <div className="lg:flex-1 hidden lg:block bg-grey-1 rounded-md h-16 min-h-[400px] sticky top-10 relative overflow-hidden">
+    <main className="w-full min-h-screen flex items-center justify-center bg-background">
+      <div className="container flex flex-col lg:flex-row items-center justify-between gap-12 py-16">
+        <div className="w-full lg:w-2/3 flex flex-col items-center  gap-6">
+          <Link href="/">
+            <Logo />
+          </Link>
+          {children}
+        </div>
+        <div className="hidden lg:flex w-full lg:w-1/2 justify-center">
+          <div className="relative w-full max-w-md aspect-[4/4] rounded-md overflow-hidden shadow-sm">
+            {" "}
             <Image
               src={LoginImg}
               alt="Company Banner"
@@ -28,7 +29,7 @@ export default function AuthLayoutUi({
             />
           </div>
         </div>
-      </main>
-    </>
+      </div>
+    </main>
   );
 }

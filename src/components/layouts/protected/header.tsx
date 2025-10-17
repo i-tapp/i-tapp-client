@@ -13,49 +13,30 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Logo } from "@/components/logo";
-import { Wrapper } from "@/components/wrapper";
 import { MobileNav } from "./mobile-nav";
-import { useGlobal } from "@/context/GlobalContext";
 import { cn } from "@/lib/utils";
+import { useCompanyStore } from "@/lib/store/company";
 
-export const navLinks: { text: string; href: string }[] = [
-  {
-    text: "Find IT space",
-    href: "/portal/find-it-space",
-  },
-  {
-    text: "My IT Space",
-    href: "/portal/my-it-space",
-  },
-  {
-    text: "My Applications",
-    href: "/portal/my-application",
-  },
-  {
-    text: "Saved Applications",
-    href: "/portal/saved-applications",
-  },
-];
-
-export function Header() {
+export function Header({ link }: { link: { text: string; href: string }[] }) {
   const pathname = usePathname();
-  const { student } = useGlobal();
+
+  const company = useCompanyStore((c) => c.company);
+
   const parentRoute = pathname.split("/")[2];
 
   return (
-    <header className="w-full fixed px-4 top-0 bg-white border-b z-10 border-grey-5">
-      <Wrapper className="flex items-center h-16 justify-between py-6! md:px-0 touch:px-0">
-        <Link href="/portal/find-it-space">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-grey-5 bg-white">
+      <div className="flex items-center justify-between px-6 h-[55px]">
+        <Link href="/">
           <Logo />
         </Link>
-        {/* Navigation Links */}
-        <nav className="items-center gap-14 hidden md:flex">
-          {navLinks.map((link, index) => (
+        <nav className="gap-16 hidden md:flex h-full">
+          {link.map((link, index) => (
             <Link
               key={index}
               href={link.href}
               className={cn(
-                "border-b-4 border-transparent text-sm text-primary pb-3",
+                "flex items-center h-full border-b-2 text-sm border-transparent text-primary transition-colors",
                 link.href.includes(parentRoute) && "border-primary text-black"
               )}
             >
@@ -63,13 +44,12 @@ export function Header() {
             </Link>
           ))}
         </nav>
-        {/* Action Buttons */}
         <div className="hidden md:flex gap-2">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
                 <Notification
-                  size={44}
+                  size={35}
                   className=" border border-[#C9C9DA] rounded-full p-2"
                 />
               </TooltipTrigger>
@@ -88,28 +68,27 @@ export function Header() {
                   />
                   You&apos;ve just been accepted by Chenotech Nigeria Limited
                 </p>
-                <Link href="/portal/notifications">
+                <Link href="/notifications">
                   <p className="px-10 py-2">See all notifications</p>
                 </Link>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+
           <Link href="/portal/profile">
-            <div className="rounded-full border h-[50px] w-[50px]">
+            <div className="rounded-full h-[40px] w-[40px]">
               <Image
-                src={student?.profileImageUrl || "/applicant.png"}
-                alt="applicant"
+                src={company?.profileImageUrl || "/applicant.png"}
+                alt=""
                 className="object-cover w-full h-full rounded-full"
-                width={50}
-                height={50}
+                width={35}
+                height={35}
               />
             </div>
           </Link>
         </div>
-
-        {/* Mobile Nav */}
-        <MobileNav />
-      </Wrapper>
+        <MobileNav links={link} />
+      </div>
     </header>
   );
 }

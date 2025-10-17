@@ -2,6 +2,24 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+:root {
+  --font-opensans: "Open_Sans", sans-serif;
+  --font-montserrat: "Montserrat", sans-serif;
+}
+
+* {
+  font-family: var(--font-opensans);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-montserrat);
+}
+
 @theme inline {
   /* Container Configuration */
   /* --container-center: true;
@@ -20,10 +38,6 @@
   --breakpoint-touch: 1200px;
   --breakpoint-xl: 1440px; */
 
-  /* Font Families */
-  --font-family-inter: var(--font-inter);
-  --font-family-montserrat: var(--font-montserrat);
-
   /* Font Weights */
   --font-weight-regular: 400;
   --font-weight-semi-bold: 600;
@@ -34,6 +48,9 @@
   --color-secondary: #cedcee;
   --color-info: #2f80ed;
   --color-warning: #27ae60;
+  --color-destructive: #dc2626; /* Tailwind red-600 */
+  --destructive-foreground: #fef2f2;
+
   --color-success: #e2b93b;
   --color-danger: #eb5757;
   --color-black: #282828;

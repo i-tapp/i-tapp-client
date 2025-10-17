@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/utils/tailwind";
 import { ArrowLeft2 } from "iconsax-reactjs";
 
-export default function FilterCompanies({
+export default function Left({
   onBack,
   mobileView,
   filter,
@@ -22,6 +22,16 @@ export default function FilterCompanies({
   filterActive: boolean;
   setFilterActive: (active: boolean) => void;
 }) {
+  const industries = [
+    "Software Development",
+    "Data Science",
+    // "Cybersecurity",
+    // "Cloud Computing",
+    // "Artificial Intelligence",
+  ];
+
+  const durations = [3, 6, 12];
+
   const handleMonthChange = (id, checked) => {
     const duration = filter.duration.map((month) => {
       if (month.id === id) {

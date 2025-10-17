@@ -1,98 +1,78 @@
 "use client";
 
 import React, { useState } from "react";
-import FilterCompanies from "./filter";
-import { Wrapper } from "@/components/wrapper";
-import Results from "./results";
 import { filters } from "@/config/student";
-import { Filter } from "iconsax-reactjs";
-import AvailableCompanyDetails from "./available-company-details";
-import { cn } from "@/utils/tailwind";
-import Modal from "@/components/ui/modal";
-import ApplicationForm from "./form";
-import { useFetchJobs } from "@/hooks/query";
+import { Filter } from "lucide-react";
+import FilterCompanies from "./filter";
+import Results from "./results";
+import AvailableCompanyDetails from "./opportunity-details";
+import { useFetchOpportunities } from "@/hooks/query";
+import OpportunityDetails from "./opportunity-details";
+import { Opportunity } from "@/types";
+// import { useFetchJobs } from "@/hooks/query";
 
-export default function FindITSpace({ searchParams }) {
-  const [companyId, setCompanyId] = useState<number | null>(null);
+export default function FindITSpace() {
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedOpportunity, setSelectedOpportunity] =
+    useState<Opportunity | null>(null);
+  const [mobileView, setMobileView] = useState<"centered" | "left" | "right">(
+    "centered"
+  );
   const [filter, setFilter] = useState(filters);
   const [filterActive, setFilterActive] = useState(false);
-  const [showModal, setShowModal] = useState(false);
 
-  // ✅ fetch jobs via TanStack Query
-  const { data: jobs, isLoading, error } = useFetchJobs();
+  const { data: opportunities, isLoading, error } = useFetchOpportunities();
 
-  // Flatten + normalize the jobs list
-  const companyList = jobs?.data?.flat() || [];
-  const companyDetail = companyList.find((company) => company.id === companyId);
-
-  if (isLoading) {
-    return <p className="text-center">Loading jobs...</p>;
-  }
-
-  if (error) {
-    return <p className="text-center text-red-500">Failed to load jobs.</p>;
-  }
-
-  console.log("jjjjjjjj", jobs);
+  console.log("opportunities", opportunities);
 
   return (
-    <Wrapper
-      className={cn(
-        "touch:px-5 bg-[#F0F0F5] max-w-full flex flex-col justify-center md:flex-row md:justify-between mt-4 sm:py-20 sm:pb-10 md:px-10 gap-x-4",
-        companyId && "touch:pr-0 md:pr-0"
-      )}
-    >
-      {/* Filter toggle (mobile) */}
-      {companyId === null && (
-        <div className="sm:hidden text-center mb-4">
-          <div
-            className="bg-white inline-block p-1 rounded border border-black"
-            onClick={() => setFilterActive(true)}
-          >
-            <Filter className="inline mr-2" />
-            <span>filter</span>
-          </div>
+    <div className="bg-[#F0F0F5] pt-[80px] w-full min-h-screen">
+      <div className="md:hidden w-full flex justify-center mb-4">
+        <div
+          className="bg-white inline-flex items-center p-1.5 px-3 rounded border border-gray-300 cursor-pointer"
+          onClick={() =>
+            setMobileView((prev) => (prev === "left" ? "centered" : "left"))
+          }
+        >
+          <Filter className="inline mr-2 w-4 h-4" />
+          <span className="text-sm font-medium">Filters</span>
         </div>
-      )}
+      </div>
 
-      {/* Main content */}
-      <div
-        className={cn(
-          "flex justify-center gap-x-8 md:w-9/12",
-          companyId && "hidden md:flex"
-        )}
-      >
+      <div className="flex items-start flex-col md:flex-row justify-center md:justify-between px-4 md:px-6 gap-6 max-w-[1800px] mx-auto relative">
+        {/* LEFT */}
         <FilterCompanies
           filter={filter}
           setFilter={setFilter}
-          setCompanyList={() => {}} // no longer manually setting list
-          companyList={companyList}
+          mobileView={mobileView}
+          onBack={() => setMobileView("centered")}
           filterActive={filterActive}
           setFilterActive={setFilterActive}
         />
-
+        {/* CENTERED */}
         <Results
-          filter={filter}
-          setCompanyId={setCompanyId}
-          companyPost={companyList}
-          searchParams={searchParams}
-          filterActive={filterActive}
+          selectedId={selectedId}
+          mobileView={mobileView}
+          setSelectedId={(id) => {
+            setSelectedId(id);
+            if (id) setMobileView("right");
+          }}
+          opportunities={opportunities || []}
+          setSelectedOpportunity={setSelectedOpportunity}
+          onShowLeft={() => setMobileView("left")}
+        />
+        {/* RIGHT OpportunityDetails */}
+        <OpportunityDetails
+          selectedId={selectedId}
+          mobileView={mobileView}
+          // setSelectedOpportunity={setSelectedOpportunity}
+          selectedOpportunity={selectedOpportunity}
+          setSelectedId={(id) => {
+            setSelectedId(id);
+            if (!id) setMobileView("centered");
+          }}
         />
       </div>
-
-      {/* Company details */}
-      {companyId && (
-        <AvailableCompanyDetails
-          details={companyDetail}
-          setCompanyId={setCompanyId}
-          setShowModal={setShowModal}
-        />
-      )}
-
-      {/* Application modal */}
-      <Modal showModal={showModal} setShowModal={setShowModal}>
-        <ApplicationForm id={companyId} />
-      </Modal>
-    </Wrapper>
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import { headers } from "next/headers";
-import { CompanyLayoutUi } from "@/components/layouts/protected/company";
+import { CompanyLayout } from "@/components/layouts/protected/company";
 import StudentLayout from "@/components/layouts/protected/student";
 
 type UserRole = "company" | "student";
@@ -18,14 +18,12 @@ export default async function PortalLayout({
   const headersList = await headers();
   const role = headersList.get("x-user-role")?.toLowerCase() as UserRole | null;
 
-  console.log("showing user roles", role);
-
   if (role === "student") {
     return <StudentLayout>{student}</StudentLayout>;
   }
 
   if (role === "company") {
-    return <CompanyLayoutUi>{company}</CompanyLayoutUi>;
+    return <CompanyLayout>{company}</CompanyLayout>;
   }
 
   // fallback if role missing or invalid

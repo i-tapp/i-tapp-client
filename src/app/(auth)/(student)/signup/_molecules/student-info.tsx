@@ -1,5 +1,6 @@
+import Input from "@/components/input";
 import { FormField } from "@/components/ui/form-field";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 
@@ -18,7 +19,7 @@ interface StudentData {
 export function StudentInfo({ studentData }: { studentData: StudentData }) {
   // Extract the nested data
   const { firstName, lastName, course, matriculation, phone } =
-    studentData.data.data;
+    studentData?.data?.data;
 
   // Split the name into first and last name
 

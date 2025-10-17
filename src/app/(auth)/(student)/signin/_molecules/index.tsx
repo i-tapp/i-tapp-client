@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -24,6 +24,7 @@ import { toast } from "react-toastify";
 
 import { signinStudent } from "@/actions/auth";
 import { useStudentStore } from "@/lib/store/student";
+import Input from "@/components/input";
 
 export function StudentSignIn() {
   const router = useRouter();
@@ -60,7 +61,7 @@ export function StudentSignIn() {
     <div className="w-full max-w-[350px] m-auto flex flex-col">
       <div className="flex flex-col gap-2 items-center mb-6">
         <h1 className="text-xl font-bold">Log in to your account</h1>
-        <p className="text-sm text-muted-foreground">Welcome back</p>
+        <p className="text-sm text-muted-foreground">Welcome back!</p>
       </div>
 
       {hasErrored && (
@@ -81,7 +82,7 @@ export function StudentSignIn() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="Enter your email" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -95,7 +96,7 @@ export function StudentSignIn() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" {...field} />
+                  <Input type="password" placeholder="********" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -106,7 +107,7 @@ export function StudentSignIn() {
             type="submit"
             disabled={!form.formState.isValid}
             isPending={isExecuting}
-            className="w-full"
+            className="w-full text-white"
           >
             Sign In
           </ButtonWithLoader>

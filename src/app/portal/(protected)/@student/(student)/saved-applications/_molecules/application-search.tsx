@@ -11,7 +11,7 @@ export default function ApplicationSearch() {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const handleSearch = (term) => {
+  const handleSearch = (term: string) => {
     const params = new URLSearchParams(searchParams);
     if (term) {
       params.set("query", term);

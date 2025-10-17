@@ -1,21 +1,37 @@
 "use client";
 
 import { useState } from "react";
-import OpportunityTable from "./oppportunity-table";
-import OpportunityForm from "./edit-opportunity";
 import { Button } from "@/components/ui/button";
+import OpportunityForm from "./edit-opportunity";
+import OpportunityTable from "./oppportunity-table";
+import { useParams } from "next/navigation";
+import { useFetchOpportunityDetails } from "@/hooks/query";
+import { Opportunity } from "@/types";
 
 export default function OpportunityDetailsPage() {
+  const { id } = useParams();
+
+  console.log("Opportunity ID:", id);
+  const { data, isLoading, error } = useFetchOpportunityDetails(id as string);
+
+  console.log("Opportunity Details Data:", data);
+
   const [editing, setEditing] = useState(false);
+
+  const opportunity = data as Opportunity;
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
 
   if (editing) {
     return <OpportunityForm />;
   }
   return (
-    <div className="p-6 w-full">
+    <div className="p-6 w-full mx-auto">
       {/* Header Info */}
       <div className="text-sm text-gray-600 mb-4">
-        Full-Time • San Francisco, CA
+        {opportunity?.type} • {opportunity?.location} •{" "}
       </div>
 
       {/* Card Container */}
@@ -23,6 +39,7 @@ export default function OpportunityDetailsPage() {
         {/* Opportunity Section */}
         <div className="flex flex-flow justify-between">
           <h1 className="text-2xl font-semibold mb-4">Opportunity Details</h1>
+          {/* <p className="text-xs"> {id}</p> */}
           <div className="flex flex-row justify-center gap-2">
             <Button variant={"default"} onClick={() => setEditing(true)}>
               Edit
@@ -34,21 +51,21 @@ export default function OpportunityDetailsPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-y-2 text-sm text-gray-700 mb-4">
           <div>
             <span className="font-medium">Department:</span>{" "}
-            <span>Engineering</span>
+            <span>{opportunity.department || "N/A"}</span>
           </div>
           <div>
             <span className="font-medium">Status:</span>{" "}
-            <span className="text-green-600">Active</span>
+            <span className="text-green-600">{opportunity.status}</span>
           </div>
           <div>
             <span className="font-medium">Posted On:</span>{" "}
-            <span>2024-07-20</span>
+            <span>{opportunity.createdAt}</span>
           </div>
         </div>
 
         <p className="text-gray-600 mb-6">
-          Seeking a talented Frontend intern to join our growing team. You’ll
-          help build UI components and work closely with senior engineers.
+          {opportunity.description ||
+            "No description provided for this opportunity."}
         </p>
 
         <hr className="-mx-6 border-gray-200 mb-6" />
@@ -59,7 +76,7 @@ export default function OpportunityDetailsPage() {
 
         {/* Tbale  */}
 
-        <OpportunityTable />
+        <OpportunityTable data={opportunity?.applications} />
       </div>
     </div>
   );

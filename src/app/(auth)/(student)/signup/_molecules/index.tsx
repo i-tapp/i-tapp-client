@@ -11,7 +11,7 @@ import { StudentInfo } from "./student-info";
 
 export function StudentOnboardingForm() {
   const [form, setForm] = useState<number>(0);
-  const [studentData, setStudentData] = useState<any>();
+  const [studentData, setStudentData] = useState();
 
   let currentForm: React.ReactNode;
 

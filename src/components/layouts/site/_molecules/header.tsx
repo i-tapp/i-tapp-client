@@ -5,6 +5,7 @@ import { Logo } from "@/components/logo";
 import { Wrapper } from "@/components/wrapper";
 import { MobileNav } from "./mobile-nav";
 import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export function Header() {
   return (
@@ -28,13 +29,19 @@ export function Header() {
         <div className="hidden md:flex gap-2">
           <Link
             href={app.links.signin}
-            className={buttonVariants({ variant: "outline", size: "sm" })}
+            className={cn(
+              buttonVariants({ variant: "outline", size: "default" }),
+              "border border-primary/20 text-primary rounded-lg text-sm"
+            )}
           >
             Sign In
           </Link>
           <Link
             href={app.links.signup}
-            className={buttonVariants({ size: "sm" })}
+            className={cn(
+              buttonVariants({ size: "default" }),
+              "text-white border-none bg-primary rounded-lg text-sm"
+            )}
           >
             Get Started
           </Link>
