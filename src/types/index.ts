@@ -55,7 +55,7 @@ export interface Student {
   avatarUrl: string;
   isVerified: boolean;
   role: string;
-
+  courseOfStudy?: string;
   softSkills?: string;
   technicalSkills?: string;
   preferredIndustry?: string;
@@ -66,16 +66,19 @@ export interface Student {
   };
 }
 
+type OpportunityStatus = "open" | "closed" | "draft";
+
 export interface Opportunity {
   id: string;
   title: string;
   description: string;
   location: string;
+  department: string;
   totalApplications: number;
   type: string;
   duration?: string;
   mode: string;
-  status: string;
+  status: "open" | "closed" | "draft";
   // requirements: string[];
   // skills: string[];
   hasApplied: boolean;

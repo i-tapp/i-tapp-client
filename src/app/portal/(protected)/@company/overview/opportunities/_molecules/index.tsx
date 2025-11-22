@@ -3,45 +3,24 @@
 import { useState, useMemo } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  TickCircle, // active
-  CloseCircle, // closed
-  DocumentText,
-  ArrowRight2, // draft
-} from "iconsax-reactjs";
+import { TickCircle, CloseCircle, DocumentText } from "iconsax-reactjs";
 import { ArrowRight, Search } from "lucide-react";
 import Link from "next/link";
+import { useFetchCompanyOpportunities } from "@/hooks/query";
+import { Opportunity } from "@/types";
 
-const opportunities = [
-  {
-    id: 1,
-    title: "Frontend Intern",
-    department: "Engineering",
-    location: "Lagos, Nigeria",
-    status: "Open",
-    applicants: 12,
-  },
-  {
-    id: 2,
-    title: "Backend Developer",
-    department: "Engineering",
-    location: "Remote",
-    status: "Closed",
-    applicants: 8,
-  },
-  {
-    id: 3,
-    title: "UI/UX Designer",
-    department: "Design",
-    location: "Abuja, Nigeria",
-    status: "Draft",
-    applicants: 5,
-  },
-];
+// Unified status type
+type OpportunityStatus = "open" | "closed" | "draft";
 
 export default function OpportunityPage() {
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState<OpportunityStatus | "All">(
+    "All"
+  );
+
+  const { data } = useFetchCompanyOpportunities();
+
+  const opportunities = (data as Opportunity[]) || [];
 
   // Filtered list
   const filtered = useMemo(() => {
@@ -70,9 +49,9 @@ export default function OpportunityPage() {
       </div>
 
       {/* Status filter */}
-      <div className="flex flex-row items-center gap-2">
+      <div className="flex flex-row items-center gap-2 flex-wrap">
         <span className="text-sm font-medium">Status:</span>
-        {["All", "Open", "Closed", "Draft"].map((filter) => (
+        {(["All", "open", "closed", "draft"] as const).map((filter) => (
           <button
             key={filter}
             onClick={() => setStatusFilter(filter)}
@@ -90,8 +69,8 @@ export default function OpportunityPage() {
         ))}
       </div>
 
-      {/* Opportunities table */}
-      <div className="border border-[#f5f5f5] rounded-md overflow-hidden">
+      {/* Opportunities table - Desktop */}
+      <div className="hidden md:block border border-[#f5f5f5] rounded-md overflow-hidden">
         {/* Header */}
         <div className="flex justify-between items-center bg-[#f5f5f5] px-4 py-2 font-semibold text-sm text-gray-600">
           <p className="flex-1">Job Title</p>
@@ -102,10 +81,8 @@ export default function OpportunityPage() {
 
         {/* List */}
         <div>
-          {filtered.length > 0 ? (
-            filtered.map((op, index) => (
-              <CardView key={op.id} index={index} {...op} />
-            ))
+          {filtered?.length > 0 ? (
+            filtered?.map((op) => <CardView key={op.id} {...op} />)
           ) : (
             <p className="text-center text-sm text-gray-500 py-6">
               No opportunities found
@@ -113,84 +90,94 @@ export default function OpportunityPage() {
           )}
         </div>
       </div>
+
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-3">
+        {filtered.length > 0 ? (
+          filtered.map((op) => <MobileCardView key={op.id} {...op} />)
+        ) : (
+          <p className="text-center text-sm text-gray-500 py-6">
+            No opportunities found
+          </p>
+        )}
+      </div>
     </div>
   );
 }
 
 type CardProps = {
+  id: string;
   title: string;
   department: string;
   location: string;
-  status: string;
-  applicants: number;
-  index: number;
+  status: OpportunityStatus;
+  totalApplications: number;
 };
 
+// Desktop table row view
 export function CardView({
+  id,
   title,
   department,
   location,
   status,
-  applicants,
-  index,
+  totalApplications,
 }: CardProps) {
-  const renderStatus = () => {
-    switch (status) {
-      case "Open":
-        return (
-          <div className="flex items-center justify-center gap-1 text-green-600">
-            <TickCircle size={18} variant="Bold" />
-            <span className="text-sm font-medium">Active</span>
-          </div>
-        );
-      case "Closed":
-        return (
-          <div className="flex items-center justify-center gap-1 text-red-600">
-            <CloseCircle size={18} variant="Bold" />
-            <span className="text-sm font-medium">Closed</span>
-          </div>
-        );
-      case "Draft":
-        return (
-          <div className="flex items-center justify-center gap-1 text-gray-500">
-            <DocumentText size={18} variant="Bold" />
-            <span className="text-sm font-medium">Draft</span>
-          </div>
-        );
-      default:
-        return null;
-    }
+  const statusConfig = {
+    open: {
+      icon: <TickCircle size={18} variant="Bold" />,
+      color: "text-green-600",
+    },
+    closed: {
+      icon: <CloseCircle size={18} variant="Bold" />,
+      color: "text-red-600",
+    },
+    draft: {
+      icon: <DocumentText size={18} variant="Bold" />,
+      color: "text-gray-500",
+    },
   };
+
+  const currentStatus = statusConfig[status];
 
   return (
     <div
-      className={`flex items-center justify-between px-4 py-4 border-1 border-[#F5F5F5] hover:bg-gray-50 transition `}
+      className={`flex items-center justify-between px-4 py-4 border-b border-[#F5F5F5] hover:bg-gray-50 transition`}
     >
       {/* Left: logo + details */}
       <div className="flex items-center gap-3 flex-1">
-        <div className="h-10 w-10 rounded-full bg-[#f5f5f5] text-white flex items-center justify-center">
+        <div className="h-10 w-10 rounded-full bg-[#f5f5f5] flex items-center justify-center text-xl">
           🏢
         </div>
         <div>
           <h1 className="text-sm font-semibold">{title}</h1>
           <p className="text-xs text-gray-500">
-            {department} &#8226; {location}
+            {department ?? "Engineering"} &#8226; {location}
           </p>
         </div>
       </div>
 
       {/* Status */}
-      <div className="w-28 text-center">{renderStatus()}</div>
+      <div className="w-28 text-center">
+        <div
+          className={`flex capitalize items-center justify-center gap-1 ${currentStatus.color} `}
+        >
+          {" "}
+          {/* //  */}
+          {currentStatus.icon}
+          <span className="text-sm font-medium">{status}</span>
+        </div>
+      </div>
 
       {/* Applicants */}
       <div className="w-28 text-center text-sm text-gray-700">
-        {applicants} Applicant{applicants > 0 && "s"}
+        {totalApplications} Applicant{totalApplications !== 1 && "s"}
       </div>
 
       {/* Action */}
       <div className="w-28 text-right">
         <Link
-          href={`opportunities/${index}`}
+          href={`opportunities/${id}`}
           className={
             buttonVariants({ variant: "secondary" }) +
             " flex items-center gap-2"
@@ -198,6 +185,73 @@ export function CardView({
         >
           <span>View</span>
           <ArrowRight size={16} />
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+// Mobile card view
+function MobileCardView({
+  id,
+  title,
+  department,
+  location,
+  status,
+  totalApplications,
+}: CardProps) {
+  const statusConfig = {
+    open: {
+      badge: "bg-green-700 text-white",
+      icon: <TickCircle size={14} variant="Bold" />,
+    },
+    closed: {
+      badge: "bg-red-100 text-red-700",
+      icon: <CloseCircle size={14} variant="Bold" />,
+    },
+    draft: {
+      badge: "bg-gray-100 text-gray-700",
+      icon: <DocumentText size={14} variant="Bold" />,
+    },
+  };
+
+  const currentStatus = statusConfig[status];
+
+  return (
+    <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-full bg-[#f5f5f5] flex items-center justify-center text-xl">
+            🏢
+          </div>
+          <div>
+            <h1 className="text-sm font-semibold">{title}</h1>
+            <p className="text-xs text-gray-500">
+              {department ?? "Engineering"} &#8226; {location}
+            </p>
+          </div>
+        </div>
+        <span
+          className={`px-2 py-1 text-xs font-semibold rounded-lg flex items-center gap-1 ${currentStatus.badge}`}
+        >
+          {currentStatus.icon}
+          {status}
+        </span>
+      </div>
+
+      <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+        <span className="text-xs text-gray-500">
+          {totalApplications} Applicant{totalApplications !== 1 && "s"}
+        </span>
+        <Link
+          href={`opportunities/${id}`}
+          className={
+            buttonVariants({ variant: "default", size: "sm" }) +
+            " flex items-center gap-1"
+          }
+        >
+          <span>View</span>
+          <ArrowRight size={14} />
         </Link>
       </div>
     </div>

@@ -11,11 +11,30 @@ import Link from "next/link";
 import moment from "moment";
 import { acceptApplication, declineApplication } from "@/actions/company";
 import { GraduationCap } from "lucide-react";
+import {
+  useFetchApplicationDetails,
+  useFetchStudentDetails,
+} from "@/hooks/query";
+import { useParams, useSearchParams } from "next/navigation";
+import path from "path";
+import { Spinner } from "@/components/spinner";
 
 export default function CandidateProfile() {
+  const { studentId } = useParams();
+  const opportunityId = useSearchParams().get("opportunityId");
+
   const { selectedApplicant } = useGlobal();
   const student = selectedApplicant?.student;
-  const name = student?.firstName + " " + student?.lastName;
+
+  const { data: studentDetails, isLoading } = useFetchStudentDetails(
+    studentId as string
+  );
+
+  const { data: applicationDetails } = useFetchApplicationDetails(
+    opportunityId as string
+  );
+
+  const name = studentDetails?.firstName + " " + studentDetails?.lastName;
 
   const { execute: acceptAction, isExecuting: isAccepting } = useAction(
     acceptApplication,
@@ -51,6 +70,10 @@ export default function CandidateProfile() {
     }
   };
 
+  if (isLoading) {
+    return <Spinner placeholder="Loading student details..." />;
+  }
+
   return (
     <div className="min-h-screen bg-background py-6 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
@@ -74,7 +97,7 @@ export default function CandidateProfile() {
           <div>
             <h1 className="font-semibold text-2xl text-foreground">{name}</h1>
             <p className="text-base pt-1 text-muted-foreground">
-              {student?.courseOfStudy || "Not specified"}
+              {studentDetails?.courseOfStudy || "Not specified"}
             </p>
           </div>
         </div>
@@ -91,7 +114,7 @@ export default function CandidateProfile() {
               <div>
                 <p className="text-sm text-muted-foreground mb-2">ABOUT</p>
                 <p className="text-sm text-foreground leading-relaxed">
-                  {student?.bio || "No bio provided."}
+                  {studentDetails?.profileBio || "No bio provided."}
                 </p>
               </div>
 
@@ -101,14 +124,16 @@ export default function CandidateProfile() {
                 <div className="flex items-start gap-3 mb-3">
                   <Sms className="text-primary mt-1" size={20} />
                   <div className="flex-1">
-                    <p className="text-sm text-muted-foreground mb-1">
-                      EMAIL ADDRESS
-                    </p>
+                    <p className="text-sm text-muted-foreground mb-1">Email</p>
                     <a
-                      href={`mailto:${student?.email}`}
+                      href={
+                        studentDetails?.user?.email
+                          ? `mailto:${studentDetails?.user?.email}`
+                          : undefined
+                      }
                       className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
                     >
-                      {student?.email || "Not specified"}
+                      {studentDetails?.user?.email || "Not specified"}
                     </a>
                   </div>
                 </div>
@@ -116,11 +141,9 @@ export default function CandidateProfile() {
                 <div className="flex items-start gap-3 mb-3">
                   <Call className="text-primary mt-1" size={20} />
                   <div className="flex-1">
-                    <p className="text-sm text-muted-foreground mb-1">
-                      PHONE NUMBER
-                    </p>
+                    <p className="text-sm text-muted-foreground mb-1">Phone</p>
                     <p className="text-sm font-semibold text-foreground">
-                      {student?.phoneNumber || "Not specified"}
+                      {studentDetails?.user?.phoneNumber || "Not specified"}
                     </p>
                   </div>
                 </div>
@@ -129,10 +152,10 @@ export default function CandidateProfile() {
                   <Location className="text-primary mt-1" size={20} />
                   <div className="flex-1">
                     <p className="text-sm text-muted-foreground mb-1">
-                      ADDRESS
+                      Address
                     </p>
                     <p className="text-sm font-semibold text-foreground">
-                      {student?.address || "Not specified"}
+                      {studentDetails?.user?.address || "Not specified"}
                     </p>
                   </div>
                 </div>
@@ -152,17 +175,19 @@ export default function CandidateProfile() {
                 <div className="flex justify-between items-center">
                   <p className="text-sm text-muted-foreground">Status:</p>
                   <span className="text-sm font-semibold text-foreground">
-                    {selectedApplicant?.accepted
-                      ? "Accepted"
-                      : "Pending Review"}
+                    {applicationDetails?.status
+                      ? applicationDetails.status.charAt(0).toUpperCase() +
+                        applicationDetails.status.slice(1)
+                      : "N/A"}
+                    {/* . ? "Accepted" : "Pending Review" */}
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center">
                   <p className="text-sm text-muted-foreground">Applied Date:</p>
                   <span className="text-sm font-semibold text-foreground">
-                    {selectedApplicant?.createdAt
-                      ? moment(selectedApplicant.createdAt).format("ll")
+                    {applicationDetails?.appliedAt
+                      ? moment(applicationDetails.appliedAt).format("ll")
                       : "N/A"}
                   </span>
                 </div>
@@ -230,9 +255,9 @@ export default function CandidateProfile() {
                 <div className="flex items-start gap-3">
                   <GraduationCap className="text-primary mt-1" size={20} />
                   <div className="flex-1">
-                    <p className="text-sm text-muted-foreground mb-1">SCHOOL</p>
+                    <p className="text-sm text-muted-foreground mb-1">School</p>
                     <p className="text-sm font-semibold text-foreground">
-                      {student?.school || "Not specified"}
+                      {studentDetails?.school || "Not specified"}
                     </p>
                   </div>
                 </div>
@@ -241,10 +266,10 @@ export default function CandidateProfile() {
                   <Note1 className="text-primary mt-1" size={20} />
                   <div className="flex-1">
                     <p className="text-sm text-muted-foreground mb-1">
-                      COURSE OF STUDY
+                      Course of Study
                     </p>
                     <p className="text-sm font-semibold text-foreground">
-                      {student?.courseOfStudy || "Not specified"}
+                      {studentDetails?.courseOfStudy || "Not specified"}
                     </p>
                   </div>
                 </div>
@@ -254,7 +279,7 @@ export default function CandidateProfile() {
             {/* Application Documents Section */}
             <div className="p-6">
               <h2 className="text-lg font-bold text-foreground mb-4">
-                Application Documents
+                Documents
               </h2>
 
               {student?.documentUrls && student.documentUrls.length > 0 ? (

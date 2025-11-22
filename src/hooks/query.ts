@@ -91,3 +91,25 @@ export const useFetchOpportunityDetails = (id?: string) => {
     enabled: !!id,
   });
 };
+
+export const useFetchStudentDetails = (id?: string) => {
+  return useQuery({
+    queryKey: ["student-details", id],
+    queryFn: async () => {
+      const response = await query(`/s/${id}/`);
+      return response;
+    },
+    enabled: !!id,
+  });
+};
+
+export const useFetchApplicationDetails = (id?: string) => {
+  return useQuery({
+    queryKey: ["application-details", id],
+    queryFn: async () => {
+      const response = await query(`/applications/${id}`);
+      return response;
+    },
+    enabled: !!id,
+  });
+};

@@ -91,6 +91,7 @@ export function Dashboard() {
               status={opportunity.status}
               actionLabel="View Applicants"
               onAction={() => console.log("Viewing opportunity")}
+              variant="list"
             />
           ))}
           {/* <OpportunityCard

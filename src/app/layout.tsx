@@ -12,12 +12,14 @@ export const montserrat = Montserrat({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-montserrat",
+  display: "swap",
 });
 
 export const opensans = Open_Sans({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-opensans",
+  display: "swap",
 });
 
 export const metadata: Metadata = {

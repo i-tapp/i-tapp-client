@@ -7,7 +7,7 @@ const roleRedirects: Record<string, string> = {
   company: "/portal/overview/dashboard",
 };
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const token = req.cookies.get("session-token")?.value;
   const role = req.cookies.get("role")?.value;
   const { pathname } = req.nextUrl;

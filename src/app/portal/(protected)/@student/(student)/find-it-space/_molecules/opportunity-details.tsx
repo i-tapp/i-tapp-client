@@ -1,9 +1,11 @@
 import { apply, save, withdraw } from "@/actions/student";
 import { Button } from "@/components/ui/button";
 import Hr from "@/components/ui/hr";
+import { query } from "@/lib/api";
 import { useStudentStore } from "@/lib/store";
 import { Opportunity } from "@/types";
 import { cn } from "@/utils/tailwind";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAction } from "next-safe-action/hooks";
 import Image from "next/image";
 import { todo } from "node:test";
@@ -33,10 +35,14 @@ export default function OpportunityDetails({
   console.log("currentStudentId", currentStudentId);
 
   const app = selectedOpportunity?.applications?.find(
-    (a) => a.student.user.id === currentStudentId
+    (a) => a.student.id === currentStudentId
   );
+
+  console.log("app", app);
   const applicationId = app?.id;
   const appStatus = app?.status;
+
+  const queryClient = useQueryClient();
 
   const {
     execute: applyAction,
@@ -47,6 +53,7 @@ export default function OpportunityDetails({
     onSuccess(data) {
       toast.success(data?.data?.message || "Applied successfully!");
       console.log("applyResult", data);
+      queryClient.invalidateQueries({ queryKey: ["opportunities"] });
     },
     onError(error) {
       console.error(error);
@@ -75,6 +82,7 @@ export default function OpportunityDetails({
       onSuccess(data) {
         toast.success(data?.data?.message || "Withdrawn successfully!");
         console.log("withdrawResult", data);
+        queryClient.invalidateQueries({ queryKey: ["opportunities"] });
       },
       onError(error) {
         console.error(error);
