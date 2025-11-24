@@ -1,4 +1,13 @@
+import {
+  OpportunityMode,
+  OpportunityStatus,
+  OpportunityType,
+} from "@/types/enums";
 import { z } from "zod";
+
+const modeValues = Object.values(OpportunityMode) as string[];
+const statusValues = Object.values(OpportunityStatus) as string[];
+const typeValues = Object.values(OpportunityType) as string[];
 
 export const signinSchema = z.object({
   email: z.email(),
@@ -21,7 +30,7 @@ export const signupSchema = z.object({
 });
 
 export const acceptSchema = z.object({
-  studentId: z.string(),
+  id: z.string(),
 });
 
 export const verifyStudentIdentitySchema = z.object({
@@ -67,17 +76,22 @@ export const companyProfileSchema = z.object({
   bannerImage: z.any().optional(),
 });
 
-export const createSpaceSchema = z.object({
-  id: z.string().optional(),
+export const opportunityFormSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters"),
-  industry: z.string().min(2, "Industry must be at least 2 characters"),
-  level: z.string().min(2, "Industry must be at least 2 characters"),
-  state: z.string().min(2, "State must be at least 2 characters"),
-  city: z.string().min(2, "City must be at least 2 characters"),
-  address: z.string().min(5, "Address must be at least 5 characters"),
+  department: z.string().min(1, "Department is required"),
+  industry: z.string().min(1, "Industry is required"),
+  location: z.string().min(2, "Location is required"),
+  mode: z.enum(modeValues),
+  type: z.enum(typeValues),
+  status: z.enum(statusValues),
+  duration: z.number().int().positive(), // Remove z.coerce
   description: z.string().min(10, "Description must be at least 10 characters"),
-  duration: z.coerce.number().int().positive(),
-  // showAvailability: z.boolean().default(false),
+  maxApplicants: z.number().optional(),
+  applicationDeadline: z.string().optional(),
+  autoClose: z.boolean().optional(),
+  requiresResume: z.boolean().optional(),
+  requiresCoverLetter: z.boolean().optional(),
+  skills: z.array(z.string()).optional(),
 });
 
 export const fullCompanySignupSchema =

@@ -15,6 +15,7 @@ import { ArchiveAdd, ArrowRight2, SmsEdit } from "iconsax-reactjs";
 import { Application } from "@/types";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { StatusBadge } from "@/components/application-status";
 
 export default function OpportunityTable({ data }: { data: Application[] }) {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -319,44 +320,3 @@ export function ApplicantProfile({ student }) {
 }
 
 // Status Badge Component
-function StatusBadge({ status }: { status: string }) {
-  const statusConfig = {
-    new_applicant: {
-      label: "New",
-      color: "bg-blue-100 text-blue-700",
-    },
-    shortlisted: {
-      label: "Shortlisted",
-      color: "bg-purple-100 text-purple-700",
-    },
-    interviewing: {
-      label: "Interviewing",
-      color: "bg-yellow-100 text-yellow-700",
-    },
-    rejected: {
-      label: "Rejected",
-      color: "bg-red-100 text-red-700",
-    },
-    approved: {
-      label: "Approved",
-      color: "bg-green-100 text-green-700",
-    },
-    accepted: {
-      label: "Accepted",
-      color: "bg-green-100 text-green-700",
-    },
-  };
-
-  const currentStatus = statusConfig[status] || {
-    label: status,
-    color: "bg-gray-100 text-gray-700",
-  };
-
-  return (
-    <span
-      className={`px-3 py-1 text-xs font-semibold rounded-full ${currentStatus.color}`}
-    >
-      {currentStatus.label}
-    </span>
-  );
-}

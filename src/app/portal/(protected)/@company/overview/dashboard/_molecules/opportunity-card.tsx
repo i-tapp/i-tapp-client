@@ -1,3 +1,4 @@
+import { OpportunityStatusBadge } from "@/components/opportunity-status";
 import { Button } from "@/components/ui/button";
 import {
   Briefcase,
@@ -32,52 +33,6 @@ export default function OpportunityCard({
   onAction,
   variant = "dashboard",
 }: OpportunityCardProps) {
-  // Render status consistently
-  const renderStatus = () => {
-    const baseClass =
-      variant === "dashboard"
-        ? "px-3 py-1 text-xs font-semibold rounded-xl"
-        : "flex items-center justify-center gap-1 text-sm font-medium";
-
-    switch (status) {
-      case "open":
-        return variant === "dashboard" ? (
-          <span className={`${baseClass} bg-green-700 text-white`}>
-            {status}
-          </span>
-        ) : (
-          <div className={`${baseClass} text-green-600`}>
-            <TickCircle size={16} variant="Bold" />
-            <span>Active</span>
-          </div>
-        );
-      case "closed":
-        return variant === "dashboard" ? (
-          <span className={`${baseClass} bg-red-100 text-red-700`}>
-            {status}
-          </span>
-        ) : (
-          <div className={`${baseClass} text-red-600`}>
-            <CloseCircle size={16} variant="Bold" />
-            <span>Closed</span>
-          </div>
-        );
-      case "draft":
-        return variant === "dashboard" ? (
-          <span className={`${baseClass} bg-gray-100 text-gray-700`}>
-            {status}
-          </span>
-        ) : (
-          <div className={`${baseClass} text-gray-500`}>
-            <DocumentText size={16} variant="Bold" />
-            <span>Draft</span>
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
-
   if (variant === "dashboard") {
     // Card-style layout
     return (
@@ -102,7 +57,8 @@ export default function OpportunityCard({
 
         {/* Right side */}
         <div className="flex items-center gap-3">
-          {renderStatus()}
+          {/* {renderStatus()} */}
+          <OpportunityStatusBadge status={status as any} variant="dashboard" />
           <Button
             onClick={onAction}
             className="flex items-center gap-1 shadow-sm text-white"
@@ -135,7 +91,9 @@ export default function OpportunityCard({
       </div>
 
       {/* Status */}
-      <div className="w-28 text-center">{renderStatus()}</div>
+      <div className="w-28 text-center">
+        <OpportunityStatusBadge status={status as any} variant="default" />
+      </div>
 
       {/* Applicants */}
       <div className="w-28 text-center text-sm text-gray-700">

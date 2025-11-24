@@ -24,60 +24,66 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import { useState } from "react";
+import {
+  OpportunityMode,
+  OpportunityStatus,
+  OpportunityType,
+} from "@/types/enums";
+import { Check } from "iconsax-reactjs";
+import { Checkbox } from "@/components/ui/checkbox";
+import { opportunityFormSchema } from "@/lib/validations/auth";
 
-export default function OpportunityForm() {
-  const formSchema = z.object({
-    title: z.string().min(1),
-    department: z.string().min(1),
-    location: z.string().min(1),
-    mode: z.enum(["remote", "onsite", "hybrid"]),
-    type: z.enum(["internship", "fulltime", "parttime", "contract"]),
-    status: z.enum(["active", "draft", "closed", "paused"]),
-    duration: z.number().min(1),
-    description: z.string().min(1),
-    maxApplicants: z.number().optional(),
-    applicationDeadline: z.string().optional(),
-    autoClose: z.boolean().optional(),
-    requiresResume: z.boolean().optional(),
-    requiresCoverLetter: z.boolean().optional(),
-    skills: z.array(z.string()).optional(), // NEW: required skills
-  });
+type FormValues = z.infer<typeof opportunityFormSchema>;
+type OpportunityFormProps = {
+  initialData?: FormValues;
+  onSubmit: (data: FormValues) => void;
+  onClose?: () => void;
+};
 
-  type FormValues = z.infer<typeof formSchema>;
-
+export default function OpportunityForm({
+  initialData,
+  onSubmit,
+  onClose,
+}: OpportunityFormProps) {
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: "Frontend Developer Intern",
-      department: "Engineering",
-      location: "San Francisco, CA",
-      mode: "onsite",
-      type: "internship",
-      status: "active",
-      duration: 3,
-      description:
-        "Seeking a talented Frontend intern to join our growing team. You'll help build UI components and work closely with senior engineers.",
-      maxApplicants: 50,
-      applicationDeadline: "2024-12-31",
+    resolver: zodResolver(opportunityFormSchema),
+    defaultValues: initialData || {
+      title: "",
+      department: "",
+      location: "",
+      mode: "remote",
+      type: OpportunityType.FULL_TIME,
+      status: "draft",
+      duration: 0,
+      description: "",
+      maxApplicants: undefined,
+      applicationDeadline: undefined,
       autoClose: false,
-      requiresResume: true,
+      skills: [],
+      requiresResume: false,
       requiresCoverLetter: false,
-      skills: [], // initialize as empty
     },
   });
   const [customSkill, setCustomSkill] = useState("");
 
-  const onSubmit = (data: FormValues) => {
-    console.log("Form submitted:", data);
-    // handle update logic here
+  const handleSubmit = (data: FormValues) => {
+    onSubmit(data);
+    console.log("Submitting Form", form);
   };
+
+  const OpportunityTypeLabels = {
+    [OpportunityType.FULL_TIME]: "Full-time",
+    [OpportunityType.PART_TIME]: "Part-time",
+    [OpportunityType.INTERNSHIP]: "Internship",
+    [OpportunityType.CONTRACT]: "Contract",
+  } as const;
 
   return (
     <div className="p-6 w-full max-w-6xl mx-auto">
       {/* Header */}
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           {/* Opportunity Details Section */}
           <div className="border-2 border-primary/20 rounded-lg bg-card p-6">
             <h2 className="text-xl font-bold text-foreground mb-6">
@@ -173,10 +179,13 @@ export default function OpportunityForm() {
                           <SelectValue placeholder="Select type" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="internship">Internship</SelectItem>
-                          <SelectItem value="fulltime">Full-time</SelectItem>
-                          <SelectItem value="parttime">Part-time</SelectItem>
-                          <SelectItem value="contract">Contract</SelectItem>
+                          {Object.entries(OpportunityTypeLabels).map(
+                            ([value, label]) => (
+                              <SelectItem key={value} value={value}>
+                                {label}
+                              </SelectItem>
+                            )
+                          )}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -221,7 +230,14 @@ export default function OpportunityForm() {
                   <FormItem className="flex items-center gap-4">
                     <FormLabel className="w-32">Duration (months)</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="e.g. 3" {...field} />
+                      <Input
+                        type="number"
+                        placeholder="e.g. 3"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(parseInt(e.target.value) || 0)
+                        }
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -297,11 +313,9 @@ export default function OpportunityForm() {
                 render={({ field }) => (
                   <FormItem className="md:col-span-2 flex items-start gap-3">
                     <FormControl>
-                      <input
-                        type="checkbox"
+                      <Checkbox
                         checked={field.value || false}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                        className="mt-1"
+                        onCheckedChange={field.onChange}
                       />
                     </FormControl>
                     <div>
@@ -344,10 +358,9 @@ export default function OpportunityForm() {
                 render={({ field }) => (
                   <FormItem className="flex items-center gap-3 md:col-span-2">
                     <FormControl>
-                      <input
-                        type="checkbox"
+                      <Checkbox
                         checked={field.value || false}
-                        onChange={(e) => field.onChange(e.target.checked)}
+                        onCheckedChange={field.onChange}
                       />
                     </FormControl>
                     <FormLabel className="text-sm cursor-pointer">
@@ -362,10 +375,9 @@ export default function OpportunityForm() {
                 render={({ field }) => (
                   <FormItem className="flex items-center gap-3 md:col-span-2">
                     <FormControl>
-                      <input
-                        type="checkbox"
+                      <Checkbox
                         checked={field.value || false}
-                        onChange={(e) => field.onChange(e.target.checked)}
+                        onCheckedChange={field.onChange}
                       />
                     </FormControl>
                     <FormLabel className="text-sm cursor-pointer">
@@ -379,12 +391,11 @@ export default function OpportunityForm() {
 
           {/* Action Buttons */}
           <div className="flex justify-end gap-3">
-            <Link href="/portal/opportunities/details">
-              <Button type="button" variant="outline">
-                Cancel
-              </Button>
-            </Link>
-            <Button type="submit" className="gap-2">
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+
+            <Button type="submit" className="gap-2 text-white">
               <Save size={18} />
               Save Changes
             </Button>

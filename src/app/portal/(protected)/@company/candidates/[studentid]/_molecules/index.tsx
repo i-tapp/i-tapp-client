@@ -3,7 +3,6 @@
 import React from "react";
 import Image from "next/image";
 import { ArrowLeft, Call, Location, Note1, Sms } from "iconsax-reactjs";
-import { useGlobal } from "@/context/GlobalContext";
 import { Button } from "@/components/ui/button";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "react-toastify";
@@ -22,9 +21,6 @@ import { Spinner } from "@/components/spinner";
 export default function CandidateProfile() {
   const { studentId } = useParams();
   const opportunityId = useSearchParams().get("opportunityId");
-
-  const { selectedApplicant } = useGlobal();
-  const student = selectedApplicant?.student;
 
   const { data: studentDetails, isLoading } = useFetchStudentDetails(
     studentId as string
@@ -65,8 +61,8 @@ export default function CandidateProfile() {
   );
 
   const handleAccept = () => {
-    if (student?.id) {
-      acceptAction({ studentId: student.id });
+    if (opportunityId) {
+      acceptAction({ id: opportunityId });
     }
   };
 
@@ -87,7 +83,7 @@ export default function CandidateProfile() {
           </Link>
           <div className="rounded-full border-2 border-primary/20 h-[100px] w-[100px] overflow-hidden">
             <Image
-              src={student?.profileImageUrl || "/applicant.png"}
+              src={studentDetails?.profileImageUrl || "/applicant.png"}
               alt={name}
               width={100}
               height={100}
@@ -193,7 +189,7 @@ export default function CandidateProfile() {
                 </div>
               </div>
 
-              {selectedApplicant?.accepted ? (
+              {applicationDetails?.accepted ? (
                 <div className="space-y-3">
                   <div className="bg-primary/5 rounded-md p-4 space-y-2">
                     <div className="flex justify-between items-center">
@@ -201,16 +197,16 @@ export default function CandidateProfile() {
                         Start Date:
                       </p>
                       <span className="text-sm font-bold text-foreground">
-                        {selectedApplicant?.startDate
-                          ? moment(selectedApplicant.startDate).format("ll")
+                        {applicationDetails?.startDate
+                          ? moment(applicationDetails.startDate).format("ll")
                           : "N/A"}
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
                       <p className="text-sm text-muted-foreground">End Date:</p>
                       <span className="text-sm font-bold text-foreground">
-                        {selectedApplicant?.endDate
-                          ? moment(selectedApplicant.endDate).format("ll")
+                        {applicationDetails?.endDate
+                          ? moment(applicationDetails.endDate).format("ll")
                           : "N/A"}
                       </span>
                     </div>
@@ -234,7 +230,9 @@ export default function CandidateProfile() {
                     {isAccepting ? "Processing..." : "Accept"}
                   </Button>
                   <Button
-                    onClick={() => declineAction({ studentId: student.id })}
+                    onClick={() =>
+                      declineAction({ id: opportunityId as string })
+                    }
                     disabled={isDeclining}
                     size="default"
                     className="flex-1 bg-red-600 hover:bg-red-700 text-white"
@@ -282,12 +280,13 @@ export default function CandidateProfile() {
                 Documents
               </h2>
 
-              {student?.documentUrls && student.documentUrls.length > 0 ? (
+              {studentDetails?.documentUrls &&
+              studentDetails.documentUrls.length > 0 ? (
                 <Button
                   size="lg"
                   onClick={() =>
                     window.open(
-                      student.documentUrls,
+                      studentDetails.documentUrls,
                       "_blank",
                       "noopener noreferrer"
                     )

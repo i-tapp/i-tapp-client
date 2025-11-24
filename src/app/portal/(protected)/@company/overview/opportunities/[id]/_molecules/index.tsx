@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import OpportunityForm from "./edit-opportunity";
 import OpportunityTable from "./oppportunity-table";
 import { useParams } from "next/navigation";
 import { useFetchOpportunityDetails } from "@/hooks/query";
@@ -15,6 +14,7 @@ import {
   Lock,
 } from "iconsax-reactjs";
 import { Calendar, MapPin, Briefcase } from "lucide-react";
+import OpportunityForm from "../../_molecules/opportunity-form";
 
 export default function OpportunityDetailsPage() {
   const { id } = useParams();
@@ -48,7 +48,16 @@ export default function OpportunityDetailsPage() {
   }
 
   if (editing) {
-    return <OpportunityForm />;
+    return (
+      <OpportunityForm
+        initialData={opportunity}
+        onClose={() => setEditing(false)}
+        onSubmit={(data) => {
+          console.log("Form submitted with data:", data);
+          setEditing(false);
+        }}
+      />
+    );
   }
 
   // Status configuration

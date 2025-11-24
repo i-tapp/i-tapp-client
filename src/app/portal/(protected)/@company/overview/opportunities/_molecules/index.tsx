@@ -8,6 +8,9 @@ import { ArrowRight, Search } from "lucide-react";
 import Link from "next/link";
 import { useFetchCompanyOpportunities } from "@/hooks/query";
 import { Opportunity } from "@/types";
+import OpportunityForm from "./opportunity-form";
+import { Spinner } from "@/components/spinner";
+import { createOpportunity } from "@/actions/company";
 
 // Unified status type
 type OpportunityStatus = "open" | "closed" | "draft";
@@ -17,14 +20,22 @@ export default function OpportunityPage() {
   const [statusFilter, setStatusFilter] = useState<OpportunityStatus | "All">(
     "All"
   );
+  const [creating, setCreating] = useState(false);
 
-  const { data } = useFetchCompanyOpportunities();
+  const {
+    data: opportunities,
+    isLoading,
+    error,
+  } = useFetchCompanyOpportunities();
+  // const opportunities = (data as Opportunity[]) || [];
 
-  const opportunities = (data as Opportunity[]) || [];
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   // Filtered list
   const filtered = useMemo(() => {
-    return opportunities.filter((op) => {
+    return (opportunities || []).filter((op) => {
       const matchesSearch = op.title
         .toLowerCase()
         .includes(search.toLowerCase());
@@ -32,20 +43,39 @@ export default function OpportunityPage() {
         statusFilter === "All" || op.status === statusFilter;
       return matchesSearch && matchesStatus;
     });
-  }, [search, statusFilter]);
+  }, [opportunities, search, statusFilter]);
+
+  if (creating) {
+    return (
+      <OpportunityForm
+        onClose={() => setCreating(false)}
+        onSubmit={(data) => createOpportunity(data)}
+      />
+    );
+  }
 
   return (
     <div className="space-y-4 mx-5">
       {/* Search bar */}
-      <div className="bg-white border border-gray-200 flex items-center px-2 py-2 rounded-md w-full max-w-lg">
-        <Search size={18} className="text-gray-400" />
-        <Input
-          type="search"
-          placeholder="Search opportunities..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border-0 flex outline-none shadow-none focus:ring-0 ml-2"
-        />
+
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="bg-white border border-gray-200 flex items-center px-2 py-2 rounded-md w-full max-w-lg">
+          <Search size={18} className="text-gray-400" />
+          <Input
+            type="search"
+            placeholder="Search opportunities..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border-0 flex outline-none shadow-none focus:ring-0 ml-2"
+          />
+        </div>
+
+        <Button
+          onClick={() => setCreating(true)}
+          className="text-white bg-primary"
+        >
+          Add New Opportunity
+        </Button>
       </div>
 
       {/* Status filter */}
