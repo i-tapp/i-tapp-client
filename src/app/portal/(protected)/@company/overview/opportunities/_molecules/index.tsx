@@ -11,6 +11,7 @@ import { Opportunity } from "@/types";
 import OpportunityForm from "./opportunity-form";
 import { Spinner } from "@/components/spinner";
 import { createOpportunity } from "@/actions/company";
+import { useAction } from "next-safe-action/hooks";
 
 // Unified status type
 type OpportunityStatus = "open" | "closed" | "draft";
@@ -18,16 +19,22 @@ type OpportunityStatus = "open" | "closed" | "draft";
 export default function OpportunityPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<OpportunityStatus | "All">(
-    "All"
+    "open"
   );
   const [creating, setCreating] = useState(false);
 
-  const {
-    data: opportunities,
-    isLoading,
-    error,
-  } = useFetchCompanyOpportunities();
-  // const opportunities = (data as Opportunity[]) || [];
+  const { data, isLoading, error } = useFetchCompanyOpportunities();
+  const opportunities = (data as Opportunity[]) || [];
+
+  const { execute, isExecuting } = useAction(createOpportunity, {
+    onSuccess(data) {
+      console.log("Success", data);
+      setCreating(false);
+    },
+    onError(error) {
+      console.error("Error creating opportunity:", error);
+    },
+  });
 
   if (isLoading) {
     return <Spinner />;
@@ -49,7 +56,8 @@ export default function OpportunityPage() {
     return (
       <OpportunityForm
         onClose={() => setCreating(false)}
-        onSubmit={(data) => createOpportunity(data)}
+        onSubmit={(data) => execute(data)}
+        isExecuting={isExecuting}
       />
     );
   }

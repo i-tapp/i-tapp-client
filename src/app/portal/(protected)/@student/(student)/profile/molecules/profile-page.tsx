@@ -1,100 +1,278 @@
 "use client";
-
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import ProfileForm from "./profile-form";
-import { useStudentStore } from "@/lib/store/student";
-import { useFetchProfile } from "@/hooks/query";
-import { logout } from "@/utils/auth";
+import {
+  User,
+  Mail,
+  Phone,
+  Briefcase,
+  Target,
+  Award,
+  Code,
+  Heart,
+  Edit3,
+  LogOut,
+  X,
+  MapPin,
+  Calendar,
+  GraduationCap,
+  FileText,
+} from "lucide-react";
+import InfoCard from "@/components/info-card";
+import SkillCard from "@/components/skill-card";
 
-export default function ProfilePage() {
-  const { data } = useFetchProfile();
+// Mock student data
+const mockStudent = {
+  firstName: "John",
+  lastName: "Doe",
+  email: "john.doe@university.edu",
+  phone: "+234 803 555 1234",
+  matricNumber: "2020/12345",
+  department: "Computer Science",
+  level: "400 Level",
+  cgpa: "4.75",
+  profileBio:
+    "Passionate software developer with a keen interest in web technologies and artificial intelligence. Always eager to learn new technologies and contribute to innovative projects.",
+  softSkills:
+    "Communication, Teamwork, Problem Solving, Time Management, Leadership",
+  technicalSkills: "JavaScript, React, Node.js, Python, SQL, Git, Docker",
+  preferredIndustry: "Software Development, Fintech, AI/ML",
+  goals:
+    "Secure a software engineering role at a leading tech company and contribute to building scalable solutions that impact millions of users.",
+  address: "University of Lagos, Akoka, Lagos",
+  dateOfBirth: "1999-05-15",
+  profilePicture: null,
+};
 
+const StudentProfilePage = ({
+  student = mockStudent,
+  onEdit = () => {},
+  onLogout = () => {},
+}) => {
   const [editing, setEditing] = useState(false);
-  const setStudent = useStudentStore((s) => s.setStudent);
-  const student = useStudentStore((s) => s.student);
 
   if (!student) {
-    return <p className="text-center text-gray-500 mt-24">No student data</p>;
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <User className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <p className="text-gray-500 text-lg">No student data available</p>
+        </div>
+      </div>
+    );
   }
-
-  console.log(student);
 
   if (editing) {
     return (
-      <div className="max-w-5xl mx-auto mt-24 p-8 bg-white rounded-lg shadow-md">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-xl font-semibold">Edit Profile</h1>
-          <div className="flex space-x-2">
-            <Button variant="secondary" onClick={() => setEditing(false)}>
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={logout}>
-              Logout
-            </Button>
+      <div className="min-h-screen py-8 px-4 bg-gray-50">
+        <div className="max-w-5xl mx-auto">
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-6">
+              <div className="flex justify-between items-center">
+                <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+                  <Edit3 className="w-6 h-6" />
+                  Edit Profile
+                </h1>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setEditing(false)}
+                    className="flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors border border-white/30"
+                  >
+                    <X className="w-4 h-4 mr-2" />
+                    Cancel
+                  </button>
+                  <button
+                    onClick={onLogout}
+                    className="flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="p-8">
+              <p className="text-center text-gray-500">
+                Profile Form Component Goes Here
+              </p>
+            </div>
           </div>
         </div>
-        <ProfileForm />
       </div>
     );
   }
 
   return (
-    <div className="max-w-5xl mx-auto mt-24 p-8 bg-white rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-semibold">Student Profile</h1>
-        <div className="flex space-x-2">
-          <Button onClick={() => setEditing(true)}>Edit Profile</Button>
-          <Button variant="destructive" onClick={logout}>
-            Logout
-          </Button>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
+      <div className="max-w-5xl mx-auto">
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          {/* Header Banner */}
+          <div className="relative">
+            <div className="w-full h-56 bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800" />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Left column */}
-        <div className="space-y-4">
-          <Field label="First Name" value={student?.firstName} />
-          <Field label="Last Name" value={student?.lastName} />
-          <Field label="Email" value={student.email} />
-          <Field label="Phone" value={student.phone} />
-        </div>
+            {/* Action Buttons */}
+            <div className="absolute top-4 right-4 flex gap-3">
+              <button
+                onClick={() => setEditing(true)}
+                className="flex items-center px-4 py-2 bg-white hover:bg-gray-100 text-gray-900 rounded-lg transition-colors shadow-lg font-medium"
+              >
+                <Edit3 className="w-4 h-4 mr-2" />
+                Edit Profile
+              </button>
+              <button
+                onClick={onLogout}
+                className="flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors shadow-lg font-medium"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </button>
+            </div>
 
-        {/* Right column */}
-        <div className="space-y-4">
-          <Field label="Soft Skills" value={student.softSkills} />
-          <Field label="Technical Skills" value={student.technicalSkills} />
-          <Field label="Preferred Industry" value={student.preferredIndustry} />
-          <Field label="Goals" value={student.goals} />
-        </div>
-      </div>
+            {/* Profile Picture */}
+            <div className="absolute -bottom-16 left-8">
+              {student.profilePicture ? (
+                <img
+                  src={student.profilePicture}
+                  alt="Profile"
+                  className="w-32 h-32 rounded-2xl object-cover border-4 border-white shadow-xl bg-white"
+                />
+              ) : (
+                <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 border-4 border-white shadow-xl flex items-center justify-center">
+                  <User className="w-16 h-16 text-white" />
+                </div>
+              )}
+            </div>
+          </div>
 
-      <div className="mt-6">
-        <Field label="Bio" value={student?.profileBio} multiline />
+          {/* Student Name & Basic Info */}
+          <div className="pt-20 px-8 pb-6 border-b border-gray-200">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                  {student.firstName} {student.lastName}
+                </h1>
+                <div className="flex flex-wrap items-center gap-4 text-gray-600">
+                  <div className="flex items-center gap-2">
+                    <GraduationCap className="w-4 h-4" />
+                    <span className="text-sm font-medium">
+                      {student.department}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FileText className="w-4 h-4" />
+                    <span className="text-sm font-medium">{student.level}</span>
+                  </div>
+                  {student.cgpa && (
+                    <div className="flex items-center gap-2">
+                      <Award className="w-4 h-4 text-yellow-600" />
+                      <span className="text-sm font-medium">
+                        CGPA: {student.cgpa}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+              {student.matricNumber && (
+                <div className="bg-blue-50 border border-blue-200 px-4 py-2 rounded-lg">
+                  <p className="text-xs text-blue-600 font-medium uppercase tracking-wide">
+                    Matric Number
+                  </p>
+                  <p className="text-lg font-bold text-blue-900">
+                    {student.matricNumber}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Bio Section */}
+          {student.profileBio && (
+            <div className="px-8 py-6 bg-gray-50 border-b border-gray-200">
+              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                About Me
+              </h2>
+              <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                {student.profileBio}
+              </p>
+            </div>
+          )}
+
+          {/* Contact Information */}
+          <div className="p-8 border-b border-gray-200">
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-6">
+              Contact Information
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <InfoCard
+                icon={<Mail className="w-5 h-5" />}
+                label="Email Address"
+                value={student.email}
+              />
+              <InfoCard
+                icon={<Phone className="w-5 h-5" />}
+                label="Phone Number"
+                value={student.phone}
+              />
+              {student.address && (
+                <InfoCard
+                  icon={<MapPin className="w-5 h-5" />}
+                  label="Address"
+                  value={student.address}
+                  fullWidth
+                />
+              )}
+              {student.dateOfBirth && (
+                <InfoCard
+                  icon={<Calendar className="w-5 h-5" />}
+                  label="Date of Birth"
+                  value={new Date(student.dateOfBirth).toLocaleDateString(
+                    "en-US",
+                    {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    }
+                  )}
+                />
+              )}
+            </div>
+          </div>
+
+          {/* Skills & Preferences */}
+          <div className="p-8 bg-gray-50">
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-6">
+              Skills & Career Goals
+            </h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <SkillCard
+                icon={<Code className="w-5 h-5" />}
+                label="Technical Skills"
+                value={student.technicalSkills}
+                color="blue"
+              />
+              <SkillCard
+                icon={<Heart className="w-5 h-5" />}
+                label="Soft Skills"
+                value={student.softSkills}
+                color="purple"
+              />
+              <SkillCard
+                icon={<Briefcase className="w-5 h-5" />}
+                label="Preferred Industry"
+                value={student.preferredIndustry}
+                color="green"
+              />
+              <SkillCard
+                icon={<Target className="w-5 h-5" />}
+                label="Career Goals"
+                value={student.goals}
+                color="orange"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
-}
+};
 
-function Field({
-  label,
-  value,
-  multiline,
-}: {
-  label: string;
-  value?: string;
-  multiline?: boolean;
-}) {
-  return (
-    <div>
-      <p className="text-sm font-medium text-gray-500 mb-1">{label}</p>
-      <p
-        className={`text-base text-gray-900 border border-gray-300 rounded-md px-3 py-2 bg-white ${
-          multiline ? "min-h-[100px] whitespace-pre-line" : ""
-        }`}
-      >
-        {value || "—"}
-      </p>
-    </div>
-  );
-}
+export default StudentProfilePage;

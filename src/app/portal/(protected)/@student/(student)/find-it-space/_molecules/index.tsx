@@ -21,12 +21,20 @@ export default function FindITSpace() {
   const [filter, setFilter] = useState(filters);
   const [filterActive, setFilterActive] = useState(false);
 
-  const { data: opportunities, isLoading, error } = useFetchOpportunities();
+  const {
+    data: opportunities,
+    isLoading,
+    error,
+  } = useFetchOpportunities(filter);
 
   console.log("opportunities", opportunities);
 
+  if (error) {
+    return <div>Error loading opportunities.</div>;
+  }
+
   return (
-    <div className="bg-[#F0F0F5] pt-[80px] w-full min-h-screen">
+    <div className="bg-[#F0F0F5] pt-20 w-full min-h-screen">
       <div className="md:hidden w-full flex justify-center mb-4">
         <div
           className="bg-white inline-flex items-center p-1.5 px-3 rounded border border-gray-300 cursor-pointer"
@@ -46,7 +54,7 @@ export default function FindITSpace() {
           setFilter={setFilter}
           mobileView={mobileView}
           onBack={() => setMobileView("centered")}
-          filterActive={filterActive}
+          // filterActive={filterActive}
           setFilterActive={setFilterActive}
         />
         {/* CENTERED */}

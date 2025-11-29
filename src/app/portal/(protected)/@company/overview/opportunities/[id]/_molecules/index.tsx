@@ -15,6 +15,10 @@ import {
 } from "iconsax-reactjs";
 import { Calendar, MapPin, Briefcase } from "lucide-react";
 import OpportunityForm from "../../_molecules/opportunity-form";
+import { useAction } from "next-safe-action/hooks";
+import { closeOpportunity, updateOpportunity } from "@/actions/company";
+import { Spinner } from "@/components/spinner";
+import { OpportunityStatusBadge } from "@/components/opportunity-status";
 
 export default function OpportunityDetailsPage() {
   const { id } = useParams();
@@ -23,15 +27,31 @@ export default function OpportunityDetailsPage() {
 
   const opportunity = data as Opportunity;
 
+  const { execute, isExecuting } = useAction(updateOpportunity, {
+    onSuccess(data) {
+      console.log("Success", data);
+      setEditing(false);
+    },
+    onError(error) {
+      console.error("Error updating opportunity:", error);
+    },
+  });
+
+  const { execute: close, isExecuting: isClosing } = useAction(
+    closeOpportunity,
+    {
+      onSuccess(data) {
+        console.log("Success", data);
+        setEditing(false);
+      },
+      onError(error) {
+        console.error("Error updating opportunity:", error);
+      },
+    }
+  );
+
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading opportunity details...</p>
-        </div>
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (error) {
@@ -47,13 +67,34 @@ export default function OpportunityDetailsPage() {
     );
   }
 
+  const mapOpportunityToFormData = (opportunity: Opportunity) => {
+    return {
+      title: opportunity.title,
+      description: opportunity.description,
+      location: opportunity.location,
+      type: opportunity.type,
+      mode: opportunity.mode,
+      duration: opportunity.duration,
+      department: opportunity.department,
+      industry: opportunity.industry,
+      maxApplicants: opportunity.maxApplicants,
+      skills: opportunity.skills,
+      applicationDeadline: opportunity.applicationDeadline,
+      status: opportunity.status,
+      autoCloseOnDeadline: opportunity.autoCloseOnDeadline,
+      resumeRequired: opportunity.resumeRequired,
+      schoolLetterRequired: opportunity.schoolLetterRequired,
+    };
+  };
+
   if (editing) {
     return (
       <OpportunityForm
-        initialData={opportunity}
+        initialData={mapOpportunityToFormData(opportunity)}
         onClose={() => setEditing(false)}
+        isExecuting={isExecuting}
         onSubmit={(data) => {
-          console.log("Form submitted with data:", data);
+          execute({ id: opportunity.id, ...data });
           setEditing(false);
         }}
       />
@@ -62,34 +103,34 @@ export default function OpportunityDetailsPage() {
 
   // Status configuration
   const statusConfig = {
-    Active: {
+    open: {
       icon: <TickCircle size={18} variant="Bold" />,
       color: "text-green-600",
       bg: "bg-green-50",
     },
-    Closed: {
+    closed: {
       icon: <CloseCircle size={18} variant="Bold" />,
       color: "text-red-600",
       bg: "bg-red-50",
     },
-    Draft: {
+    draft: {
       icon: <DocumentText size={18} variant="Bold" />,
       color: "text-gray-600",
       bg: "bg-gray-50",
     },
   };
 
-  const currentStatus = statusConfig[opportunity?.status] || statusConfig.Draft;
+  const currentStatus = statusConfig[opportunity?.status] || statusConfig.draft;
 
   return (
     <div className="p-4 md:p-6 w-full mx-auto max-w-7xl">
       {/* Breadcrumb/Meta Info */}
       <div className="flex items-center gap-2 text-sm text-gray-600 mb-4 flex-wrap">
         <Briefcase size={16} />
-        <span>{opportunity?.type || "N/A"}</span>
+        <span className="capitalize">{opportunity?.type || "N/A"}</span>
         <span>•</span>
         <MapPin size={16} />
-        <span>{opportunity?.location || "N/A"}</span>
+        <span className="capitalize">{opportunity?.location || "N/A"}</span>
         <span>•</span>
         <Calendar size={16} />
         <span>
@@ -111,6 +152,10 @@ export default function OpportunityDetailsPage() {
               {currentStatus.icon}
               <span className="font-medium text-sm">{opportunity?.status}</span>
             </div>
+            {/* <OpportunityStatusBadge
+              status={opportunity?.status}
+              variant="default"
+            /> */}
           </div>
 
           {/* Action Buttons */}
@@ -123,7 +168,11 @@ export default function OpportunityDetailsPage() {
               <Edit2 size={16} />
               Edit
             </Button>
-            <Button variant="secondary" className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              className="flex items-center gap-2"
+              onClick={() => close({ id: opportunity.id })}
+            >
               <Lock size={16} />
               Close
             </Button>
@@ -136,7 +185,7 @@ export default function OpportunityDetailsPage() {
             <span className="text-xs text-gray-500 font-medium uppercase tracking-wide">
               Department
             </span>
-            <span className="text-sm text-gray-900 font-semibold mt-1">
+            <span className="text-sm text-gray-900 font-semibold mt-1 capitalize">
               {opportunity?.department || "N/A"}
             </span>
           </div>
@@ -145,7 +194,7 @@ export default function OpportunityDetailsPage() {
               Status
             </span>
             <span
-              className={`text-sm font-semibold mt-1 ${currentStatus.color}`}
+              className={`text-sm font-semibold mt-1 ${currentStatus.color} capitalize`}
             >
               {opportunity?.status}
             </span>

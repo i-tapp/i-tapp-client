@@ -5,6 +5,7 @@ import { companyListings } from "@/constants";
 import AvailableCompany from "./available-opportunity";
 import { Opportunity } from "@/types";
 import AvailableOpportunity from "./available-opportunity";
+import { Inbox } from "lucide-react";
 // import Featured from "../_molecules/featured";
 
 export default function Results({
@@ -50,16 +51,26 @@ export default function Results({
 
       <div className="flex gap-6 flex-wrap md:max-h-[700px] md:overflow-y-scroll pr-1.5  ">
         {" "}
-        {opportunities.map((item, index) => (
-          <AvailableOpportunity
-            details={item}
-            key={index}
-            selectedId={selectedId}
-            setSelectedId={setSelectedId}
-            setSelectedOpportunity={setSelectedOpportunity}
-            // isSelected={selectedCompanyId === company.id}
-          />
-        ))}
+        {opportunities.length ? (
+          opportunities.map((item, index) => (
+            <AvailableOpportunity
+              details={item}
+              key={index}
+              selectedId={selectedId}
+              setSelectedId={setSelectedId}
+              setSelectedOpportunity={setSelectedOpportunity}
+              // isSelected={selectedCompanyId === company.id}
+            />
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center w-full py-20 text-gray-400 space-y-3">
+            <Inbox className="w-12 h-12" />
+            <span className="text-lg font-medium">No opportunities found.</span>
+            <span className="text-sm text-gray-500">
+              Try adjusting your filters or check back later.
+            </span>
+          </div>
+        )}
       </div>
 
       <div> pagination</div>

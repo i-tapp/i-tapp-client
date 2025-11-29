@@ -1,6 +1,11 @@
 import { mutate, query } from "@/lib/api";
 import { actionClient } from "@/lib/safe-action";
-import { acceptSchema, opportunityFormSchema } from "@/lib/validations/auth";
+import {
+  acceptSchema,
+  opportunityFormSchema,
+  updateOpportunitySchema,
+} from "@/lib/validations/auth";
+import z from "zod";
 
 /* -------------------------- Profile Actions -------------------------- */
 export const updateCompanyProfile = actionClient.action(async () => {
@@ -21,50 +26,49 @@ export const updateCompanyProfile = actionClient.action(async () => {
 /* -------------------------- Opportunity / Job Actions -------------------------- */
 const createOpportunity = actionClient
   .inputSchema(opportunityFormSchema)
-  .action(
-    async ({ parsedInput: { title, duration, description, industry } }) => {
-      try {
-        const response = await mutate("/company/job/new", {
-          title,
-          duration,
-          description,
-          industry,
-        });
-        return response.data;
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
+  .action(async ({ parsedInput }) => {
+    console.log("Creating opportunity...");
+    try {
+      const response = await mutate("/opportunities", parsedInput);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
-  );
+  });
 
-export const updateSpace = actionClient
-  .inputSchema(opportunityFormSchema)
-  .action(
-    async ({
-      parsedInput: {
-        title,
-        duration,
-        mode,
-        type,
-        status,
-        description,
-        industry,
-      },
-    }) => {
-      try {
-        const response = await mutate(
-          `/company/job/update/`,
-          { title, mode, type, status, duration, description, industry },
-          "PUT"
-        );
-        return response.data;
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
+export const closeOpportunity = actionClient
+  .inputSchema(z.object({ id: z.string() }))
+  .action(async ({ parsedInput: { id } }) => {
+    try {
+      const response = await mutate(
+        `/opportunities/${id}/`,
+        { status: "closed" },
+        "PATCH"
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
-  );
+  });
+
+export const updateOpportunity = actionClient
+  .inputSchema(updateOpportunitySchema)
+  .action(async ({ parsedInput }) => {
+    const { id, ...updateData } = parsedInput;
+    try {
+      const response = await mutate(
+        `/opportunities/${id}`,
+        updateData,
+        "PATCH"
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  });
 
 export const fetchCompanyJobs = actionClient.action(async () => {
   try {
@@ -86,6 +90,22 @@ export const fetchAllCompanyApplications = actionClient.action(async () => {
     console.log(error);
   }
 });
+
+export const createOffer = actionClient
+  .inputSchema(acceptSchema)
+  .action(async ({ parsedInput: { id } }) => {
+    try {
+      const response = await mutate(
+        `/offers/${id}/create-offer/`,
+        undefined,
+        "POST"
+      );
+      return response;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  });
 
 export const acceptApplication = actionClient
   .inputSchema(acceptSchema)

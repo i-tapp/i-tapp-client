@@ -1,0 +1,233 @@
+import React from "react";
+import Image from "next/image";
+import moment from "moment";
+import {
+  MapPin,
+  Calendar,
+  Building2,
+  Globe,
+  Clock,
+  Users,
+  CheckCircle2,
+} from "lucide-react";
+// Adjust this import path to where your actual image is
+import somPng from "@/assets/images/company.png";
+
+// ---- Mock Data for this specific page view ----
+// This represents the data fetched for the single company being viewed
+const companyDetails = {
+  id: 1,
+  name: "Lala Inc. (Shell)",
+  location: "Abuja, Nigeria",
+  bannerUrl: somPng, // Using your import
+  startDate: "2025-03-01",
+  endDate: "2025-05-29",
+  founded: "2024",
+  headquarters: "N/A",
+  industry: "Oil & Gas / Testing",
+  duration: 3,
+  capacity: "N/A",
+  website: "ask.com",
+  status: "Offer Received",
+  description:
+    "We are a global group of energy and petrochemicals companies with over 90,000 employees in more than 70 countries and territories. Our operations are divided into Upstream, Integrated Gas and New Energies, Downstream, and Projects & Technology.",
+};
+// --------------------------------------------------
+
+const CompanyDetailsPage: React.FC = () => {
+  // In real app, you would get 'company' via props or fetch based on URL ID
+  const company = companyDetails;
+
+  const handleAcceptOffer = () => {
+    console.log("Accept offer clicked for:", company.name);
+    // API call logic here
+  };
+
+  return (
+    <div className="bg-gray-50 min-h-screen pb-12">
+      {/* 1. Hero Banner Image */}
+      <div className="w-full h-64 md:h-80 relative">
+        <Image
+          src={company.bannerUrl}
+          alt={`${company.name} Banner`}
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent"></div>
+      </div>
+
+      {/* Main Content Container that overlaps the banner slightly */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative -mt-20 z-10">
+        {/* 2. Header Card: Identity & Actions */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="flex items-center gap-4">
+            {/* Placeholder Logo */}
+            <div className="flex items-center justify-center w-20 h-20 bg-red-600 text-white rounded-full text-3xl font-bold shadow-sm border-4 border-white">
+              {company.name.charAt(0)}
+            </div>
+            <div>
+              <div className="flex items-center gap-3 flex-wrap">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+                  {company.name}
+                </h1>
+                {/* Status Pill */}
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                  <CheckCircle2 size={16} className="mr-1" /> {company.status}
+                </span>
+              </div>
+              <div className="flex items-center text-gray-600 mt-2">
+                <MapPin size={18} className="mr-1 text-gray-400" />
+                <p>{company.location}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Primary Action Button */}
+          <div className="w-full md:w-auto">
+            <button
+              onClick={handleAcceptOffer}
+              className="w-full md:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            >
+              Accept Offer
+            </button>
+          </div>
+        </div>
+
+        {/* 3. Two-Column Content Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column: Main Details (Span 2 of 3 columns) */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Placement Timeline Section */}
+            <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">
+                Placement Schedule
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex items-start">
+                  <div className="bg-blue-50 p-3 rounded-lg mr-4 text-blue-600">
+                    <Calendar size={24} />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Start Date</p>
+                    <p className="text-lg font-semibold text-gray-900">
+                      {moment(company.startDate).format("MMMM Do, YYYY")}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="bg-blue-50 p-3 rounded-lg mr-4 text-blue-600">
+                    <Calendar size={24} />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">End Date</p>
+                    <p className="text-lg font-semibold text-gray-900">
+                      {moment(company.endDate).format("MMMM Do, YYYY")}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-6 pt-6 border-t border-gray-100 flex items-center text-gray-600">
+                <Clock size={18} className="mr-2 text-gray-400" />
+                <span>
+                  Total Duration:{" "}
+                  <span className="font-semibold text-gray-900">
+                    {company.duration} Months
+                  </span>
+                </span>
+              </div>
+            </section>
+
+            {/* Description Section */}
+            <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">
+                About the Company
+              </h3>
+              <div className="prose max-w-none text-gray-700">
+                <p>{company.description || "No description provided."}</p>
+              </div>
+            </section>
+          </div>
+
+          {/* Right Column: Sidebar Stats (Span 1 of 3 columns) */}
+          <div className="lg:col-span-1">
+            <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-6">
+                Company Snapshot
+              </h3>
+
+              {/* Modernized List instead of Grid */}
+              <ul className="space-y-5">
+                <StatItem
+                  icon={<Building2 size={20} />}
+                  label="Industry"
+                  value={company.industry}
+                />
+                <StatItem
+                  icon={<MapPin size={20} />}
+                  label="Headquarters"
+                  value={company.headquarters}
+                />
+                <StatItem
+                  icon={<Globe size={20} />}
+                  label="Website"
+                  value={company.website}
+                  isLink={!!company.website && company.website !== "N/A"}
+                />
+                <StatItem
+                  icon={<Clock size={20} />}
+                  label="Founded"
+                  value={company.founded}
+                />
+                <StatItem
+                  icon={<Users size={20} />}
+                  label="Company Size"
+                  value={company.capacity}
+                />
+              </ul>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Helper component for the sidebar stats items to keep code clean
+const StatItem = ({
+  icon,
+  label,
+  value,
+  isLink = false,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string | number;
+  isLink?: boolean;
+}) => {
+  const displayValue = value || "N/A";
+  return (
+    <li className="flex items-center justify-between border-b border-gray-50 pb-4 last:border-0 last:pb-0">
+      <div className="flex items-center text-gray-500">
+        <span className="mr-3 text-gray-400">{icon}</span>
+        <span className="text-sm font-medium">{label}</span>
+      </div>
+      <div className="text-sm font-semibold text-gray-900 text-right max-w-[50%] truncate">
+        {isLink ? (
+          <a
+            href={`https://${displayValue}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline"
+          >
+            {displayValue}
+          </a>
+        ) : (
+          displayValue
+        )}
+      </div>
+    </li>
+  );
+};
+
+export default CompanyDetailsPage;

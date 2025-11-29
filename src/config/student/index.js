@@ -1,3 +1,5 @@
+import { id } from "date-fns/locale";
+
 export const nav_links = [
   { href: "find-it-space", text: "Find IT space" },
   { href: "my-it-space", text: "My IT space" },
@@ -7,15 +9,20 @@ export const nav_links = [
 ];
 export const filters = {
   duration: [
-    { id: "0-3", time: "0-3", checked: false },
-    { id: "3-6", time: "3-6", checked: false },
-    { id: "6-12", time: "6-12", checked: false },
+    { id: 1, time: "0-3", checked: false },
+    { id: 2, time: "3-6", checked: false },
+    { id: 3, time: "6-12", checked: false },
+  ],
+  status: [
+    { id: 1, status: "open", checked: false },
+    { id: 2, status: "closed", checked: false },
+    { id: 3, status: "draft", checked: false },
   ],
   location: "",
-  field: [
-    { id: " Engineering", industry: "Engineering", checked: false },
-    { id: " Science", industry: "Science", checked: false },
-    { id: "Art", industry: "Art", checked: false },
-    { id: "IT/Technology", industry: "IT/Technology", checked: false },
+  industry: [
+    { id: 1, industry: "engineering", checked: false },
+    { id: 2, industry: "science", checked: false },
+    { id: 3, industry: "art", checked: false },
+    { id: 4, industry: "it/technology", checked: false },
   ],
 };

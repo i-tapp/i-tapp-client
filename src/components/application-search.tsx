@@ -3,8 +3,8 @@
 import { Input } from "@/components/ui/input";
 import React from "react";
 import { SearchNormal1, ArrowDown2 } from "iconsax-reactjs";
-import { Sort } from "./sort";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { Sort } from "@/components/sort";
 
 export default function ApplicationSearch() {
   const searchParams = useSearchParams();

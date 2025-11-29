@@ -1,11 +1,46 @@
 import { query } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 
-export const useFetchOpportunities = () => {
+export const useFetchOpportunities = (filter: any) => {
   return useQuery({
-    queryKey: ["opportunities"],
+    queryKey: ["opportunities", filter],
     queryFn: async () => {
-      const response = await query("/o");
+      const queryObject: Record<string, any> = {};
+
+      const durationMapping: Record<string, number[]> = {
+        "0-3": [0, 1, 2, 3],
+        "3-6": [3, 4, 5, 6],
+        "6-12": [6, 7, 8, 9, 10, 11, 12],
+      };
+
+      const selectedDuration = filter.duration
+        .filter((d) => d.checked)
+        .flatMap((d) => durationMapping[d.time] || []);
+      if (selectedDuration.length)
+        queryObject.duration = selectedDuration.join(",");
+
+      // Industry
+      const selectedIndustry = filter.industry
+        .filter((i) => i.checked)
+        .map((i) => i.industry);
+      if (selectedIndustry.length)
+        queryObject.industry = selectedIndustry.join(",");
+
+      // Status
+      const selectedStatus = filter.status
+        .filter((s) => s.checked)
+        .map((s) => s.status);
+      if (selectedStatus.length) queryObject.status = selectedStatus.join(",");
+
+      // Location
+      if (filter.location && filter.location.trim() !== "") {
+        queryObject.location = filter.location.trim();
+      }
+
+      const qs = new URLSearchParams(queryObject).toString();
+      console.log("Current query string:", qs);
+
+      const response = await query(`/opportunities?${qs}`);
       return response.data;
     },
   });
@@ -41,13 +76,24 @@ export const useFetchSavedApplication = () => {
   });
 };
 
-export const useFetchAcceptedApplications = () => {
+export const useFetchOffers = () => {
   return useQuery({
-    queryKey: ["acceted-application"],
+    queryKey: ["offers"],
     queryFn: async () => {
-      const response = await query("/student/job/current");
+      const response = await query("/offers/my-offers");
       return response;
     },
+  });
+};
+
+export const useFetchOfferDetails = (id?: string) => {
+  return useQuery({
+    queryKey: ["offer-details", id],
+    queryFn: async () => {
+      const response = await query(`/offers/${id}/`);
+      return response;
+    },
+    enabled: !!id,
   });
 };
 

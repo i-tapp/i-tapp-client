@@ -7,6 +7,38 @@ const applyJ = z.object({
   id: z.string(),
 });
 
+export const acceptOffer = actionClient
+  .inputSchema(z.object({ id: z.string() }))
+  .action(async ({ parsedInput: { id } }) => {
+    try {
+      const response = await mutate(
+        `/offers/${id}/accept/`,
+        undefined,
+        "PATCH"
+      );
+      return response;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  });
+
+export const declineOffer = actionClient
+  .inputSchema(z.object({ id: z.string() }))
+  .action(async ({ parsedInput: { id } }) => {
+    try {
+      const response = await mutate(
+        `/offers/${id}/decline/`,
+        undefined,
+        "PATCH"
+      );
+      return response;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  });
+
 export const apply = actionClient
   .inputSchema(applyJ)
   .action(async ({ parsedInput: { id } }) => {

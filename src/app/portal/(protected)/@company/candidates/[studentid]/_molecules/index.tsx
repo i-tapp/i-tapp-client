@@ -8,7 +8,11 @@ import { useAction } from "next-safe-action/hooks";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import moment from "moment";
-import { acceptApplication, declineApplication } from "@/actions/company";
+import {
+  acceptApplication,
+  createOffer,
+  declineApplication,
+} from "@/actions/company";
 import { GraduationCap } from "lucide-react";
 import {
   useFetchApplicationDetails,
@@ -31,6 +35,20 @@ export default function CandidateProfile() {
   );
 
   const name = studentDetails?.firstName + " " + studentDetails?.lastName;
+
+  const { execute: createAction, isExecuting: isCreating } = useAction(
+    createOffer,
+    {
+      onSuccess: () => {
+        toast.success("Application accepted successfully!");
+      },
+      onError: (error) => {
+        const { serverError } = error?.error;
+        const errorMessage = serverError || "An error occurred.";
+        toast.error(errorMessage);
+      },
+    }
+  );
 
   const { execute: acceptAction, isExecuting: isAccepting } = useAction(
     acceptApplication,
@@ -60,9 +78,9 @@ export default function CandidateProfile() {
     }
   );
 
-  const handleAccept = () => {
+  const handleCreate = () => {
     if (opportunityId) {
-      acceptAction({ id: opportunityId });
+      createAction({ id: opportunityId });
     }
   };
 
@@ -75,12 +93,12 @@ export default function CandidateProfile() {
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="flex gap-6 items-center mb-8">
-          <Link href={`/portal/candidates/accepted`}>
+          {/* <Link href={`/portal/candidates/accepted`}>
             <ArrowLeft
               className="text-foreground cursor-pointer hover:text-primary transition-colors"
               size={24}
             />
-          </Link>
+          </Link> */}
           <div className="rounded-full border-2 border-primary/20 h-[100px] w-[100px] overflow-hidden">
             <Image
               src={studentDetails?.profileImageUrl || "/applicant.png"}
@@ -189,7 +207,7 @@ export default function CandidateProfile() {
                 </div>
               </div>
 
-              {applicationDetails?.accepted ? (
+              {/* {applicationDetails?.status?.accepted ? (
                 <div className="space-y-3">
                   <div className="bg-primary/5 rounded-md p-4 space-y-2">
                     <div className="flex justify-between items-center">
@@ -240,7 +258,59 @@ export default function CandidateProfile() {
                     {isDeclining ? "Processing..." : "Decline"}
                   </Button>
                 </div>
-              )}
+              )} */}
+
+              <div className="flex gap-3">
+                {applicationDetails?.status === "accepted" ? (
+                  // <div className="w-full text-center py-2 rounded bg-green-100 text-green-700 font-medium">
+                  //   Accepted
+                  // </div>
+
+                  <Button
+                    disabled
+                    size="default"
+                    variant={"outline"}
+                    className="flex-1 w-full text-center py-2 rounded bg-green-100 text-green-700 font-medium"
+                  >
+                    Accepted
+                  </Button>
+                ) : applicationDetails?.status === "rejected" ? (
+                  // <div className="w-full text-center py-2 rounded bg-red-100 text-red-700 font-medium">
+                  //   Declined
+                  // </div>
+
+                  <Button
+                    disabled
+                    size="default"
+                    variant={"outline"}
+                    className="flex-1 w-full text-center py-2 rounded bg-red-100 text-red-700 font-medium"
+                  >
+                    Declined
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      onClick={handleCreate}
+                      size="default"
+                      disabled={isCreating}
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      {isCreating ? "Processing..." : "Send Offer"}
+                    </Button>
+
+                    <Button
+                      onClick={() =>
+                        declineAction({ id: opportunityId as string })
+                      }
+                      size="default"
+                      disabled={isDeclining}
+                      className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                    >
+                      {isDeclining ? "Processing..." : "Decline"}
+                    </Button>
+                  </>
+                )}
+              </div>
             </div>
 
             {/* Student Information Section */}

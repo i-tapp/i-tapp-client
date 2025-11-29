@@ -88,10 +88,14 @@ export const opportunityFormSchema = z.object({
   description: z.string().min(10, "Description must be at least 10 characters"),
   maxApplicants: z.number().optional(),
   applicationDeadline: z.string().optional(),
-  autoClose: z.boolean().optional(),
-  requiresResume: z.boolean().optional(),
-  requiresCoverLetter: z.boolean().optional(),
-  skills: z.array(z.string()).optional(),
+  autoCloseOnDeadline: z.boolean().optional(),
+  resumeRequired: z.boolean().optional(),
+  schoolLetterRequired: z.boolean().optional(),
+  skills: z.string().optional(),
+});
+
+export const updateOpportunitySchema = opportunityFormSchema.extend({
+  id: z.string().min(1, "Opportunity ID is required"),
 });
 
 export const fullCompanySignupSchema =

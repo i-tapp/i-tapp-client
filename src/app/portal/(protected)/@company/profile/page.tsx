@@ -1,6 +1,4 @@
-import React from "react";
-import ProfileForm from "./_molecules/profile-form";
-import CompanyProfilePage from "./_molecules/profile-page";
+import CompanyProfilePage from "./_molecules";
 
 const page = () => {
   return <CompanyProfilePage />;

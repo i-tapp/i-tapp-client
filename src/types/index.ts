@@ -70,17 +70,29 @@ type OpportunityStatus = "open" | "closed" | "draft";
 
 export interface Opportunity {
   id: string;
+
   title: string;
   description: string;
   location: string;
-  department: string;
-  totalApplications: number;
+
   type: string;
-  duration?: string;
   mode: string;
-  status: "open" | "closed" | "draft";
-  // requirements: string[];
-  // skills: string[];
+  status: OpportunityStatus;
+
+  duration: number;
+  department: string;
+  industry: string;
+  totalApplications: number;
+
+  autoCloseOnDeadline: boolean;
+
+  resumeRequired: boolean;
+
+  schoolLetterRequired: boolean;
+  maxApplicants: number;
+
+  skills: string;
+  applicationDeadline: string;
   hasApplied: boolean;
   createdAt: string;
   company: Company;

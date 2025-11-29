@@ -1,48 +1,34 @@
+import Input from "@/components/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import Hr from "@/components/ui/hr";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/utils/tailwind";
 import { ArrowLeft2 } from "iconsax-reactjs";
 
 export default function FilterCompanies({
-  onBack,
-  mobileView,
   filter,
   setFilter,
-  filterActive,
+  mobileView,
   setFilterActive,
+  onBack,
 }: {
-  onBack?: () => void;
-  mobileView?: string;
   filter: any;
-  setFilter: (filter: any) => void;
-  filterActive: boolean;
+  setFilter: (f: any) => void;
+  mobileView?: "left" | "centered" | "right";
   setFilterActive: (active: boolean) => void;
+  onBack?: () => void;
 }) {
-  const handleMonthChange = (id, checked) => {
-    const duration = filter.duration.map((month) => {
-      if (month.id === id) {
-        return { ...month, checked: checked };
-      } else {
-        return month;
-      }
+  // Generic checkbox handler works for any key
+  const handleCheck = (key: string, id: number) => {
+    setFilter({
+      ...filter,
+      [key]: filter[key].map((item) =>
+        item.id === id ? { ...item, checked: !item.checked } : item
+      ),
     });
-
-    setFilter({ ...filter, duration: duration });
-  };
-
-  const handleFieldChange = (id, checked) => {
-    const field = filter.field.map((field) => {
-      if (field.id === id) {
-        return { ...field, checked: checked };
-      } else {
-        return field;
-      }
-    });
-    setFilter({ ...filter, field: field });
   };
 
   return (
@@ -62,30 +48,74 @@ export default function FilterCompanies({
             className="sm:hidden"
           />
           <h1 className="font-semibold text-lg hidden sm:block">Filters</h1>
-
-          {/* <Button variant="outline" onClick={onShowLeft}>
-            // Show Left Panel //{" "}
-          </Button> */}
           <Button
-            variant={"ghost"}
+            variant="ghost"
             className="text-sm text-primary cursor-pointer hover:underline"
-            onClick={() => setFilter(filter)}
+            onClick={() =>
+              setFilter({
+                ...filter,
+                duration: filter.duration.map((d: any) => ({
+                  ...d,
+                  checked: false,
+                })),
+                industry: filter.industry.map((i: any) => ({
+                  ...i,
+                  checked: false,
+                })),
+                status: filter.status.map((s: any) => ({
+                  ...s,
+                  checked: false,
+                })),
+                location: "",
+              })
+            }
           >
             Reset All
           </Button>
         </div>
 
-        <Hr />
+        {/* <Hr /> */}
 
-        {/* Sort By */}
+        {/* Sort */}
         <section>
           <h6 className="mb-3 font-medium text-sm text-gray-700">Sort by</h6>
-          <RadioGroup defaultValue="most-recent">
+          <RadioGroup
+            value={filter.sort}
+            onValueChange={(value) => setFilter({ ...filter, sort: value })}
+          >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="most-recent" id="most-recent" />
               <Label htmlFor="most-recent">Most Recent</Label>
             </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="oldest" id="oldest" />
+              <Label htmlFor="oldest">Oldest</Label>
+            </div>
           </RadioGroup>
+        </section>
+
+        {/* <Hr /> */}
+
+        {/* Status */}
+        <section>
+          <h6 className="mb-3 font-medium text-sm text-gray-700">Status</h6>
+          <div className="flex flex-wrap gap-3">
+            {filter.status.map((s: any) => (
+              <Label
+                key={s.id}
+                htmlFor={`status-${s.id}`}
+                className="flex items-center text-sm space-x-2 cursor-pointer"
+              >
+                <Checkbox
+                  id={`status-${s.id}`}
+                  checked={s.checked}
+                  onCheckedChange={() => handleCheck("status", s.id)}
+                  className="w-4 h-4 text-white"
+                />
+                <span>{s.status}</span>
+              </Label>
+            ))}
+          </div>
         </section>
 
         <Hr />
@@ -94,22 +124,19 @@ export default function FilterCompanies({
         <section>
           <h6 className="mb-3 font-medium text-sm text-gray-700">Duration</h6>
           <div className="flex flex-wrap gap-3">
-            {filter.duration.map((month, index) => (
+            {filter.duration.map((d: any) => (
               <Label
-                key={index}
-                htmlFor={`month-${month.id}`}
-                className="flex items-center space-x-2 text-sm cursor-pointer"
+                key={d.id}
+                htmlFor={`duration-${d.id}`}
+                className="flex items-center text-sm space-x-2 cursor-pointer"
               >
                 <Checkbox
-                  value={month.time}
-                  id={month.id}
-                  checked={month.checked}
-                  onCheckedChange={() =>
-                    handleMonthChange(month.id, !month.checked)
-                  }
+                  id={`duration-${d.id}`}
+                  checked={d.checked}
+                  onCheckedChange={() => handleCheck("duration", d.id)}
                   className="w-4 h-4 text-white"
                 />
-                <span>{month.time} months</span>
+                <span>{d.time} months</span>
               </Label>
             ))}
           </div>
@@ -124,7 +151,7 @@ export default function FilterCompanies({
             value={filter.location}
             onChange={(e) => setFilter({ ...filter, location: e.target.value })}
             placeholder="e.g Lagos"
-            className="mb-2 shadow-none ring-0 outline-none border border-gray-200 focus:ring-neutral-50 focus:outline-none focus:border-primary/30 focus:ring-1"
+            // className="mb-2 shadow-none ring-0 outline-none border border-gray-200 focus:ring-neutral-50 focus:outline-none focus:border-primary/30 focus:ring-1"
           />
         </section>
 
@@ -134,34 +161,30 @@ export default function FilterCompanies({
         <section>
           <h6 className="mb-3 font-medium text-sm text-gray-700">Industry</h6>
           <div className="flex flex-wrap gap-3">
-            {filter.field.map((field) => (
+            {filter.industry.map((i) => (
               <Label
-                key={field.id}
-                htmlFor={`field-${field.id}`}
+                key={i.id}
+                htmlFor={`industry-${i.id}`}
                 className="flex items-center text-sm space-x-2 cursor-pointer"
               >
                 <Checkbox
-                  value={field.industry}
-                  id={`field-${field.id}`}
-                  checked={field.checked}
-                  onCheckedChange={() =>
-                    handleFieldChange(field.id, !field.checked)
-                  }
+                  id={`industry-${i.id}`}
+                  checked={i.checked}
+                  onCheckedChange={() => handleCheck("industry", i.id)}
                   className="w-4 h-4 text-white"
                 />
-                <span>{field.industry}</span>
+                <span>{i.industry}</span>
               </Label>
             ))}
           </div>
         </section>
 
-        {/* Back button (mobile only) */}
         {onBack && (
           <div className="pt-4 md:hidden">
             <Button
               variant="outline"
               onClick={onBack}
-              className="w-full shadow-none border border-gray-300"
+              className="w-full border border-gray-300"
             >
               Back
             </Button>
@@ -171,51 +194,3 @@ export default function FilterCompanies({
     </div>
   );
 }
-
-export const handleFilter = (companyData, filter) => {
-  let filteredCompanies = companyData;
-  // -------------handling filter when a month duration is chosen-------------
-
-  // to get the months that have been checked by the user
-  const filteredDuration = filter.duration
-    .filter((month) => month.checked === true)
-    .map((month) => month.time);
-
-  if (filteredDuration.length) {
-    // to return an array of months with the range of months checked by the user
-    const monthCount = filteredDuration
-      .map((duration) => {
-        if (duration === "0-3") return [0, 1, 2, 3];
-        else if (duration === "3-6") return [3, 4, 5, 6];
-        else if (duration === "6-12") return [6, 7, 8, 9, 10, 11, 12];
-      })
-      .flat();
-
-    // filter companies that have months selected by the user
-    filteredCompanies = filteredCompanies.filter((company) =>
-      monthCount.includes(company.duration)
-    );
-  }
-
-  // ---------filter by location------------//
-  if (filter.location) {
-    filteredCompanies = filteredCompanies.filter((company) =>
-      company.state.toLowerCase().includes(filter.location.toLowerCase())
-    );
-  }
-
-  // ------filter by field-------------
-  // to get the fields that have been checked by the user
-
-  const filteredField = filter.field
-    .filter((field) => field.checked === true)
-    .map((field) => field.industry);
-
-  if (filteredField.length) {
-    filteredCompanies = filteredCompanies.filter((company) =>
-      filteredField.includes(company.industry.trim())
-    );
-  }
-
-  return filteredCompanies;
-};

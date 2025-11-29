@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Upload } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
@@ -22,6 +22,7 @@ import { useGlobal } from "@/context/GlobalContext";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { useCompanyStore } from "@/lib/store/company";
+import Input from "@/components/input";
 
 type ProfileFormData = z.infer<typeof companyProfileSchema>;
 
@@ -97,7 +98,7 @@ export default function ProfileForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {/* Banner Upload */}
-        <label className="block w-full h-40 bg-gray-200 my-5 rounded-md flex items-center justify-center cursor-pointer">
+        <label className="flex w-full h-40 bg-gray-200 my-5 rounded-md items-center justify-center cursor-pointer">
           {backgroundPreview || company?.bannerUrl ? (
             <Image
               src={backgroundPreview ?? company!.bannerUrl}
@@ -121,7 +122,7 @@ export default function ProfileForm() {
         </label>
 
         {/* Profile Picture Upload */}
-        <label className="cursor-pointer w-[80px] h-[70px] border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center overflow-hidden">
+        <label className="cursor-pointer w-20 h-[70px] border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center overflow-hidden">
           {profilePreview || company?.logoUrl ? (
             <Image
               src={profilePreview ?? company!.logoUrl}
@@ -179,6 +180,7 @@ export default function ProfileForm() {
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
+                  className="border-gray-300 ring-0 ring-transparent ring:opacity-1 focus:border-primary"
                   rows={5}
                   placeholder="Enter a description of your company or services"
                   {...field}
@@ -191,13 +193,16 @@ export default function ProfileForm() {
 
         {/* Actions */}
         <div className="flex gap-2">
-          <Button type="submit" size="sm" disabled={status === "executing"}>
+          <Button
+            type="submit"
+            disabled={status === "executing"}
+            className="text-white"
+          >
             {status === "executing" ? "Updating..." : "Update Profile"}
           </Button>
           <Button
             type="button"
             variant="secondary"
-            size="sm"
             onClick={() => form.reset()}
           >
             Reset

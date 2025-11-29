@@ -76,9 +76,9 @@ export function Header({ link }: { link: { text: string; href: string }[] }) {
           </TooltipProvider>
 
           <Link href="/portal/profile">
-            <div className="rounded-full h-[40px] w-[40px]">
+            <div className="rounded-full h-10 w-10">
               <Image
-                src={company?.profileImageUrl || "/applicant.png"}
+                src={company?.avatarUrl || "/applicant.png"}
                 alt=""
                 className="object-cover w-full h-full rounded-full"
                 width={35}

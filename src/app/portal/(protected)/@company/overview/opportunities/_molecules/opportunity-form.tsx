@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -23,7 +23,7 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   OpportunityMode,
   OpportunityStatus,
@@ -32,43 +32,50 @@ import {
 import { Check } from "iconsax-reactjs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { opportunityFormSchema } from "@/lib/validations/auth";
+import Input from "@/components/input";
 
 type FormValues = z.infer<typeof opportunityFormSchema>;
 type OpportunityFormProps = {
   initialData?: FormValues;
   onSubmit: (data: FormValues) => void;
   onClose?: () => void;
+  isExecuting?: boolean;
 };
 
 export default function OpportunityForm({
   initialData,
   onSubmit,
   onClose,
+  isExecuting,
 }: OpportunityFormProps) {
   const form = useForm<FormValues>({
     resolver: zodResolver(opportunityFormSchema),
-    defaultValues: initialData || {
+    defaultValues: initialData ?? {
       title: "",
+      industry: "",
       department: "",
       location: "",
-      mode: "remote",
+      mode: OpportunityMode.REMOTE,
       type: OpportunityType.FULL_TIME,
-      status: "draft",
-      duration: 0,
+      status: OpportunityStatus.DRAFT,
+      duration: 1,
       description: "",
       maxApplicants: undefined,
       applicationDeadline: undefined,
-      autoClose: false,
-      skills: [],
-      requiresResume: false,
-      requiresCoverLetter: false,
+      autoCloseOnDeadline: false,
+      skills: "",
+      resumeRequired: false,
+      schoolLetterRequired: false,
     },
+
+    mode: "onChange", // better UX: validates while typing
   });
-  const [customSkill, setCustomSkill] = useState("");
+
+  useEffect(() => form.reset(initialData), [initialData]);
 
   const handleSubmit = (data: FormValues) => {
     onSubmit(data);
-    console.log("Submitting Form", form);
+    console.log("Errors:", form.formState.errors);
   };
 
   const OpportunityTypeLabels = {
@@ -76,6 +83,19 @@ export default function OpportunityForm({
     [OpportunityType.PART_TIME]: "Part-time",
     [OpportunityType.INTERNSHIP]: "Internship",
     [OpportunityType.CONTRACT]: "Contract",
+  } as const;
+
+  const OpportunityModeLabels = {
+    [OpportunityMode.ONSITE]: "On-site",
+    [OpportunityMode.REMOTE]: "Remote",
+    [OpportunityMode.HYBRID]: "Hybrid",
+    [OpportunityMode.FLEXIBLE]: "Flexible",
+  } as const;
+
+  const OpportunityStatusLabels = {
+    [OpportunityStatus.OPEN]: "Open",
+    [OpportunityStatus.CLOSED]: "Closed",
+    [OpportunityStatus.DRAFT]: "Draft",
   } as const;
 
   return (
@@ -100,6 +120,21 @@ export default function OpportunityForm({
                     <FormLabel className="w-32">Title</FormLabel>
                     <FormControl>
                       <Input placeholder="Job title" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Industry */}
+              <FormField
+                control={form.control}
+                name="industry"
+                render={({ field }) => (
+                  <FormItem className="flex items-center gap-4">
+                    <FormLabel className="w-32">Industry</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Technology" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -152,9 +187,13 @@ export default function OpportunityForm({
                           <SelectValue placeholder="Select mode" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="remote">Remote</SelectItem>
-                          <SelectItem value="onsite">On-site</SelectItem>
-                          <SelectItem value="hybrid">Hybrid</SelectItem>
+                          {Object.entries(OpportunityModeLabels).map(
+                            ([value, label]) => (
+                              <SelectItem key={value} value={value}>
+                                {label}
+                              </SelectItem>
+                            )
+                          )}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -210,10 +249,13 @@ export default function OpportunityForm({
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="active">Active</SelectItem>
-                          <SelectItem value="draft">Draft</SelectItem>
-                          <SelectItem value="closed">Closed</SelectItem>
-                          <SelectItem value="paused">Paused</SelectItem>
+                          {Object.entries(OpportunityStatusLabels).map(
+                            ([value, label]) => (
+                              <SelectItem key={value} value={value}>
+                                {label}
+                              </SelectItem>
+                            )
+                          )}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -231,7 +273,7 @@ export default function OpportunityForm({
                     <FormLabel className="w-32">Duration (months)</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
+                        type="numer"
                         placeholder="e.g. 3"
                         {...field}
                         onChange={(e) =>
@@ -280,7 +322,15 @@ export default function OpportunityForm({
                   <FormItem>
                     <FormLabel>Maximum Applicants</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="e.g. 50" {...field} />
+                      <Input
+                        type="number"
+                        disabled={!!initialData}
+                        placeholder="e.g. 50"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(parseInt(e.target.value) || 0)
+                        }
+                      />
                     </FormControl>
                     <p className="text-xs text-muted-foreground mt-1">
                       Leave empty for unlimited applicants
@@ -297,7 +347,7 @@ export default function OpportunityForm({
                   <FormItem>
                     <FormLabel>Application Deadline</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <Input type="date" {...field} disabled={!!initialData} />
                     </FormControl>
                     <p className="text-xs text-muted-foreground mt-1">
                       Applications will not be accepted after this date
@@ -309,7 +359,7 @@ export default function OpportunityForm({
               {/* Auto-close Option */}
               <FormField
                 control={form.control}
-                name="autoClose"
+                name="autoCloseOnDeadline"
                 render={({ field }) => (
                   <FormItem className="md:col-span-2 flex items-start gap-3">
                     <FormControl>
@@ -354,7 +404,7 @@ export default function OpportunityForm({
               {/* Required Documents */}
               <FormField
                 control={form.control}
-                name="requiresResume"
+                name="resumeRequired"
                 render={({ field }) => (
                   <FormItem className="flex items-center gap-3 md:col-span-2">
                     <FormControl>
@@ -371,7 +421,7 @@ export default function OpportunityForm({
               />
               <FormField
                 control={form.control}
-                name="requiresCoverLetter"
+                name="schoolLetterRequired"
                 render={({ field }) => (
                   <FormItem className="flex items-center gap-3 md:col-span-2">
                     <FormControl>
@@ -397,7 +447,7 @@ export default function OpportunityForm({
 
             <Button type="submit" className="gap-2 text-white">
               <Save size={18} />
-              Save Changes
+              {isExecuting ? "Saing..." : "Save Changes"}
             </Button>
           </div>
         </form>
