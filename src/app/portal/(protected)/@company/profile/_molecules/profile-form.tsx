@@ -23,6 +23,7 @@ import { toast } from "react-toastify";
 import Image from "next/image";
 import { useCompanyStore } from "@/lib/store/company";
 import Input from "@/components/input";
+import { updateCompanyProfile } from "@/actions/company";
 
 type ProfileFormData = z.infer<typeof companyProfileSchema>;
 
@@ -33,12 +34,12 @@ export default function ProfileForm() {
   // ✅ selector style to avoid unnecessary re-renders
   const company = useCompanyStore((s) => s.company);
 
-  const { updateCompanyProfile } = useGlobal();
+  // const { updateCompanyProfile } = useGlobal();
 
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(companyProfileSchema),
     defaultValues: {
-      phone: "",
+      yearFounded: undefined,
       website: "",
       address: "",
       studentCapacity: undefined,
@@ -60,7 +61,11 @@ export default function ProfileForm() {
   );
 
   const onSubmit = (data: ProfileFormData) => {
-    updateProfileAction({ ...data, profileImage, backgroundImage });
+    updateProfileAction({
+      ...data,
+      logoImage: profileImage,
+      bannerImage: backgroundImage,
+    });
   };
 
   const handleFileChange = (
@@ -74,7 +79,7 @@ export default function ProfileForm() {
   useEffect(() => {
     if (company) {
       form.reset({
-        phone: company.phone ?? "",
+        yearFounded: undefined,
         website: company.website ?? "",
         address: company.address ?? "",
         studentCapacity: company.studentCapacity,
@@ -148,7 +153,7 @@ export default function ProfileForm() {
 
         {/* Fields */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {["phone", "website", "address", "student_capacity"].map((field) => (
+          {["founded", "website", "address", "capacity"].map((field) => (
             <FormField
               key={field}
               control={form.control}

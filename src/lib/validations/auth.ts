@@ -67,12 +67,12 @@ export const companySignupSchema = z.object({
 });
 
 export const companyProfileSchema = z.object({
-  phone: z.string().optional(),
+  yearFounded: z.number().optional(),
   website: z.string().optional(),
   address: z.string().optional(),
   description: z.string().optional(),
   studentCapacity: z.number().optional(),
-  profilePicture: z.any().optional(),
+  logoImage: z.any().optional(),
   bannerImage: z.any().optional(),
 });
 

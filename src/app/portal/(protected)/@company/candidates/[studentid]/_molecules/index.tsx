@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { ArrowLeft, Call, Location, Note1, Sms } from "iconsax-reactjs";
 import { Button } from "@/components/ui/button";
@@ -21,8 +21,11 @@ import {
 import { useParams, useSearchParams } from "next/navigation";
 import path from "path";
 import { Spinner } from "@/components/spinner";
+import Modal from "@/components/modal";
+import OfferModal from "./send-offer";
 
 export default function CandidateProfile() {
+  const [offerFormOpen, setOfferFormOpen] = useState(false);
   const { studentId } = useParams();
   const opportunityId = useSearchParams().get("opportunityId");
 
@@ -115,7 +118,6 @@ export default function CandidateProfile() {
             </p>
           </div>
         </div>
-
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Bio & Contact Info Card */}
@@ -261,41 +263,14 @@ export default function CandidateProfile() {
               )} */}
 
               <div className="flex gap-3">
-                {applicationDetails?.status === "accepted" ? (
-                  // <div className="w-full text-center py-2 rounded bg-green-100 text-green-700 font-medium">
-                  //   Accepted
-                  // </div>
-
-                  <Button
-                    disabled
-                    size="default"
-                    variant={"outline"}
-                    className="flex-1 w-full text-center py-2 rounded bg-green-100 text-green-700 font-medium"
-                  >
-                    Accepted
-                  </Button>
-                ) : applicationDetails?.status === "rejected" ? (
-                  // <div className="w-full text-center py-2 rounded bg-red-100 text-red-700 font-medium">
-                  //   Declined
-                  // </div>
-
-                  <Button
-                    disabled
-                    size="default"
-                    variant={"outline"}
-                    className="flex-1 w-full text-center py-2 rounded bg-red-100 text-red-700 font-medium"
-                  >
-                    Declined
-                  </Button>
-                ) : (
+                {applicationDetails?.status === "in_review" && (
                   <>
                     <Button
-                      onClick={handleCreate}
+                      onClick={() => setOfferFormOpen(true)}
                       size="default"
-                      disabled={isCreating}
                       className="flex-1 bg-green-600 hover:bg-green-700 text-white"
                     >
-                      {isCreating ? "Processing..." : "Send Offer"}
+                      {"Send Offer"}
                     </Button>
 
                     <Button
@@ -309,6 +284,49 @@ export default function CandidateProfile() {
                       {isDeclining ? "Processing..." : "Decline"}
                     </Button>
                   </>
+                )}
+
+                {applicationDetails?.status === "accepted" && (
+                  <Button
+                    disabled
+                    size="default"
+                    variant={"outline"}
+                    className="flex-1 w-full text-center py-2 rounded bg-green-100 text-green-700 font-medium"
+                  >
+                    Accepted
+                  </Button>
+                )}
+
+                {applicationDetails?.status === "declined" && (
+                  // <div className="w-full text-center py-2 rounded bg-red-100 text-red-700 font-medium">
+                  //   Declined
+                  // </div>
+
+                  <Button
+                    disabled
+                    size="default"
+                    variant={"outline"}
+                    className="flex-1 w-full text-center py-2 rounded bg-red-100 text-red-700 font-medium"
+                  >
+                    Declined
+                  </Button>
+                )}
+
+                {applicationDetails?.status === "rejected" && (
+                  <Button
+                    disabled
+                    size="default"
+                    variant={"outline"}
+                    className="flex-1 w-full text-center py-2 rounded bg-red-100 text-red-700 font-medium"
+                  >
+                    Student Rejected Offer
+                  </Button>
+                )}
+
+                {applicationDetails?.status === "offered" && (
+                  <p className="flex-1 w-full text-center py-2 rounded bg-yellow-100 text-yellow-700 font-medium">
+                    Waiting for student response
+                  </p>
                 )}
               </div>
             </div>
@@ -346,7 +364,10 @@ export default function CandidateProfile() {
 
             {/* Application Documents Section */}
             <div className="p-6">
-              <h2 className="text-lg font-bold text-foreground mb-4">
+              <h2
+                className="text-lg font-bold text-foreground mb-4"
+                onClick={() => setOfferFormOpen(true)}
+              >
                 Documents
               </h2>
 
@@ -372,7 +393,12 @@ export default function CandidateProfile() {
               )}
             </div>
           </div>
-        </div>
+        </div>{" "}
+        <OfferModal
+          offerFormOpen={offerFormOpen}
+          onClose={() => setOfferFormOpen(false)}
+          onCreate={handleCreate}
+        />
       </div>
     </div>
   );

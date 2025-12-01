@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import InfoCard from "@/components/info-card";
 import SkillCard from "@/components/skill-card";
+import AvatarCard from "@/components/avatar-card";
+import ProfileHeaderBanner from "@/components/profile-header-banner";
 
 // Mock student data
 const mockStudent = {
@@ -66,7 +68,7 @@ const StudentProfilePage = ({
       <div className="min-h-screen py-8 px-4 bg-gray-50">
         <div className="max-w-5xl mx-auto">
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-6">
+            <div className="bg-linear-to-r from-primary to-primary px-8 py-6">
               <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold text-white flex items-center gap-2">
                   <Edit3 className="w-6 h-6" />
@@ -106,42 +108,12 @@ const StudentProfilePage = ({
       <div className="max-w-5xl mx-auto">
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           {/* Header Banner */}
-          <div className="relative">
-            <div className="w-full h-56 bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800" />
-
-            {/* Action Buttons */}
-            <div className="absolute top-4 right-4 flex gap-3">
-              <button
-                onClick={() => setEditing(true)}
-                className="flex items-center px-4 py-2 bg-white hover:bg-gray-100 text-gray-900 rounded-lg transition-colors shadow-lg font-medium"
-              >
-                <Edit3 className="w-4 h-4 mr-2" />
-                Edit Profile
-              </button>
-              <button
-                onClick={onLogout}
-                className="flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors shadow-lg font-medium"
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </button>
-            </div>
-
-            {/* Profile Picture */}
-            <div className="absolute -bottom-16 left-8">
-              {student.profilePicture ? (
-                <img
-                  src={student.profilePicture}
-                  alt="Profile"
-                  className="w-32 h-32 rounded-2xl object-cover border-4 border-white shadow-xl bg-white"
-                />
-              ) : (
-                <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 border-4 border-white shadow-xl flex items-center justify-center">
-                  <User className="w-16 h-16 text-white" />
-                </div>
-              )}
-            </div>
-          </div>
+          <ProfileHeaderBanner
+            data={student}
+            setEditing={setEditing}
+            onLogout={onLogout}
+            icon={<User className="w-16 h-16 text-white" />}
+          />
 
           {/* Student Name & Basic Info */}
           <div className="pt-20 px-8 pb-6 border-b border-gray-200">

@@ -2,26 +2,30 @@ import { mutate, query } from "@/lib/api";
 import { actionClient } from "@/lib/safe-action";
 import {
   acceptSchema,
+  companyProfileSchema,
   opportunityFormSchema,
   updateOpportunitySchema,
 } from "@/lib/validations/auth";
 import z from "zod";
 
 /* -------------------------- Profile Actions -------------------------- */
-export const updateCompanyProfile = actionClient.action(async () => {
-  try {
-    return {
-      success: true,
-      message: "Company profile updated successfully.",
-    };
-  } catch (error) {
-    console.error("Error updating company profile:", error);
-    return {
-      success: false,
-      message: "Failed to update company profile. Please try again.",
-    };
-  }
-});
+export const updateCompanyProfile = actionClient
+  .inputSchema(companyProfileSchema)
+  .action(async ({ parsedInput }) => {
+    console.log("Updating companys profile...", parsedInput);
+    try {
+      return {
+        success: true,
+        message: "Company profile updated successfully.",
+      };
+    } catch (error) {
+      console.error("Error updating company profile:", error);
+      return {
+        success: false,
+        message: "Failed to update company profile. Please try again.",
+      };
+    }
+  });
 
 /* -------------------------- Opportunity / Job Actions -------------------------- */
 const createOpportunity = actionClient

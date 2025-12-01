@@ -18,6 +18,7 @@ import {
   X,
 } from "lucide-react";
 import InfoCard from "@/components/info-card";
+import ProfileHeaderBanner from "@/components/profile-header-banner";
 
 export default function CompanyProfilePage() {
   const [editing, setEditing] = useState(false);
@@ -85,52 +86,13 @@ export default function CompanyProfilePage() {
       <div className="max-w-5xl mx-auto">
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           {/* Header Banner */}
-          <div className="relative">
-            {company.bannerUrl ? (
-              <img
-                src={company.bannerUrl}
-                alt="Company Banner"
-                className="w-full h-56 object-cover"
-              />
-            ) : (
-              <div className="w-full h-56 bg-linear-to-r from-primary via-primary to-primary" />
-            )}
 
-            {/* Action Buttons */}
-            <div className="absolute top-4 right-4 flex gap-3">
-              <Button
-                variant={"default"}
-                onClick={() => setEditing(true)}
-                className="bg-white hover:bg-gray-100 text-gray-900 shadow-lg"
-              >
-                <Edit3 className="w-4 h-4 mr-2" />
-                Edit Profile
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={handleLogout}
-                className="shadow-lg text-shadow-rose-300 hover:bg-red-50 text-red-600"
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
-            </div>
-
-            {/* Company Logo */}
-            <div className="absolute -bottom-10 left-8">
-              {company.logoUrl ? (
-                <img
-                  src={company.logoUrl}
-                  alt="Company Logo"
-                  className="w-24 h-24 rounded-2xl object-cover border-4 border-white shadow-xl bg-white"
-                />
-              ) : (
-                <div className="w-24 h-24 rounded-2xl bg-linear-to-br from-primary to-primary border-4 border-white shadow-xl flex items-center justify-center">
-                  <Building2 className="w-12 h-12 text-white" />
-                </div>
-              )}
-            </div>
-          </div>
+          <ProfileHeaderBanner
+            data={company}
+            setEditing={setEditing}
+            onLogout={handleLogout}
+            icon={<Building2 className="w-16 h-16 text-white" />}
+          />
 
           {/* Company Name & Basic Info */}
           <div className="pt-20 px-8 pb-6 border-b border-gray-200">

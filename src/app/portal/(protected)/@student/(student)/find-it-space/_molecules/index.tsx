@@ -9,6 +9,8 @@ import AvailableCompanyDetails from "./opportunity-details";
 import { useFetchOpportunities } from "@/hooks/query";
 import OpportunityDetails from "./opportunity-details";
 import { Opportunity } from "@/types";
+import Modal from "@/components/modal";
+// import Modal from "@/components/ui/modal";
 // import { useFetchJobs } from "@/hooks/query";
 
 export default function FindITSpace() {
