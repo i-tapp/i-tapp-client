@@ -4,75 +4,57 @@ import Input from "@/components/input";
 import Modal from "@/components/modal";
 import { Button } from "@/components/ui/button";
 import { FileUpIcon, X, FileText, Trash2 } from "lucide-react";
+import FileUpload from "@/components/file-upload";
+import UploadThing from "@/components/upload-thing";
+
+interface OfferFormData {
+  startDate: string;
+  endDate?: string;
+  stipend?: string;
+  file: File | null;
+}
+
+interface OfferFormErrors {
+  startDate?: string;
+  endDate?: string;
+  file?: string;
+}
+
+interface OfferModalProps {
+  onClose: () => void;
+  offerFormOpen: boolean;
+  onCreate: (data: OfferFormData) => void; // <-- accept OfferFormData
+}
 
 export default function OfferModal({
   onClose,
   offerFormOpen,
   onCreate,
-}: {
-  onClose: () => void;
-  offerFormOpen: boolean;
-  onCreate: () => void;
-}) {
-  const [uploadedFile, setUploadedFile] = useState(null);
+}: OfferModalProps) {
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
     startDate: "",
     endDate: "",
-    salary: "",
+    stipend: "",
   });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<OfferFormErrors>({});
 
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Validate file
-      const validTypes = [
-        "application/pdf",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      ];
-      const maxSize = 5 * 1024 * 1024; // 5MB
-
-      if (!validTypes.includes(file.type)) {
-        setErrors((prev) => ({
-          ...prev,
-          file: "Please upload a PDF or DOCX file",
-        }));
-        return;
-      }
-
-      if (file.size > maxSize) {
-        setErrors((prev) => ({
-          ...prev,
-          file: "File size must be less than 5MB",
-        }));
-        return;
-      }
-
-      setUploadedFile(file);
-      setErrors((prev) => ({ ...prev, file: null }));
-    }
-  };
-
-  const handleRemoveFile = () => {
-    setUploadedFile(null);
-  };
-
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
+    if (errors[name as keyof OfferFormErrors]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
     }
   };
 
-  const validateForm = () => {
-    const newErrors = {};
+  const validateForm = (file: File | null) => {
+    const newErrors: OfferFormErrors = {};
 
     if (!formData.startDate) {
       newErrors.startDate = "Start date is required";
     }
 
-    if (!uploadedFile) {
+    if (!file) {
       newErrors.file = "Offer letter is required";
     }
 
@@ -88,11 +70,12 @@ export default function OfferModal({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (validateForm()) {
+    if (validateForm(uploadedFile)) {
       onCreate({ ...formData, file: uploadedFile });
+      // console.log("Form submitted", { ...formData, file: uploadedFile });
     }
   };
 
@@ -161,96 +144,36 @@ export default function OfferModal({
             </div>
           </div>
 
-          {/* Salary */}
+          {/* Stipend */}
           <div className="flex flex-col">
             <label
               className="font-medium mb-1 text-sm text-gray-700"
-              htmlFor="salary"
+              htmlFor="stipend"
             >
-              Stipend/Salary{" "}
-              <span className="text-gray-400 text-xs">(Optional)</span>
+              Stipend <span className="text-gray-400 text-xs">(Optional)</span>
             </label>
             <Input
-              id="salary"
+              id="stipend"
               type="text"
-              name="salary"
-              value={formData.salary}
+              name="stipend"
+              value={formData.stipend}
               onChange={handleInputChange}
               placeholder="e.g. ₦150,000"
             />
           </div>
 
           {/* Upload */}
-          <div className="flex flex-col w-full">
-            <label
-              className="font-medium mb-1 text-sm text-gray-700"
-              htmlFor="file-upload"
-            >
-              Upload Offer Letter <span className="text-red-500">*</span>
-            </label>
-
-            {!uploadedFile ? (
-              <label
-                htmlFor="file-upload"
-                className={`
-                  border-2 border-dashed rounded-xl p-5 
-                  flex flex-col items-center justify-center 
-                  cursor-pointer transition
-border-gray-300 bg-gray-50 hover:border-gray-400 hover:bg-gray-100
-                
-                `}
-              >
-                <FileUpIcon
-                  className={`mb-2 ${
-                    errors.file ? "text-red-400" : "text-gray-400"
-                  }`}
-                  size={40}
-                />
-                <p
-                  className={` "text-gray-600"
-                   font-medium`}
-                >
-                  Click to upload file
-                </p>
-                <p className="text-sm text-gray-400 mt-1">
-                  PDF, DOCX up to 5MB
-                </p>
-                <input
-                  id="file-upload"
-                  type="file"
-                  className="hidden"
-                  accept=".pdf,.docx"
-                  onChange={handleFileChange}
-                />
-              </label>
-            ) : (
-              <div className="border border-gray-300 rounded-xl p-4 bg-gray-50 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <FileText className="text-blue-500" size={32} />
-                  <div>
-                    <p className="text-sm font-medium text-gray-800">
-                      {uploadedFile.name}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {(uploadedFile.size / 1024).toFixed(1)} KB
-                    </p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleRemoveFile}
-                  className="p-2 rounded-lg hover:bg-red-100 transition"
-                  aria-label="Remove file"
-                >
-                  <Trash2 className="text-red-500" size={18} />
-                </button>
-              </div>
-            )}
-
-            {errors.file && (
-              <p className="text-xs text-red-500 mt-1">{errors.file}</p>
-            )}
-          </div>
+          <UploadThing
+            onChange={(file, error) => {
+              setUploadedFile(file);
+              if (error) {
+                setErrors((prev) => ({ ...prev, file: error }));
+              }
+            }}
+          />
+          {errors.file && (
+            <p className="text-xs text-red-500 mt-1">{errors.file}</p>
+          )}
 
           {/* Submit Button */}
           <Button
@@ -259,6 +182,8 @@ border-gray-300 bg-gray-50 hover:border-gray-400 hover:bg-gray-100
           >
             Send Offer
           </Button>
+
+          {/* <FileUpload /> */}
         </form>
       </div>
     </Modal>

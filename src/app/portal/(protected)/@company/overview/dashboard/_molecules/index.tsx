@@ -10,6 +10,7 @@ import { Applicant, Opportunity } from "@/types";
 import {
   useFetchAllCompanyApplications,
   useFetchCompanyOpportunities,
+  useFetchCompanyProfile,
 } from "@/hooks/query";
 import { useCompanyStore } from "@/lib/store/company";
 import OpportunityCard from "./opportunity-card";
@@ -20,6 +21,8 @@ export function Dashboard() {
   const { data, isLoading } = useFetchAllCompanyApplications();
 
   const { data: opportunities } = useFetchCompanyOpportunities();
+
+  const { data: companyProfile } = useFetchCompanyProfile();
 
   // if (isLoading) {
   //   return <p>Loading...</p>;
@@ -41,7 +44,7 @@ export function Dashboard() {
   return (
     <div className="flex flex-col gap-4">
       <h5 className="text-h6">
-        Hello <span className="uppercase">{company?.name}</span>
+        Hello <span className="uppercase">{companyProfile?.name}</span>
       </h5>
       <p className=" text-grey-3">This is the overview of your activities</p>
 

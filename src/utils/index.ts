@@ -1,4 +1,4 @@
-import type { Env } from "@/types/models";
+import { Env } from "@/types";
 
 export function isAbsoluteUrl(url: string): boolean {
   return url.startsWith("https://") || url.startsWith("http://") ? true : false;

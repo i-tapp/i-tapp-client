@@ -67,13 +67,11 @@ export const companySignupSchema = z.object({
 });
 
 export const companyProfileSchema = z.object({
-  yearFounded: z.number().optional(),
-  website: z.string().optional(),
+  website: z.url().optional(),
   address: z.string().optional(),
   description: z.string().optional(),
-  studentCapacity: z.number().optional(),
-  logoImage: z.any().optional(),
-  bannerImage: z.any().optional(),
+  logoImage: z.instanceof(File).optional(),
+  bannerImage: z.instanceof(File).optional(),
 });
 
 export const opportunityFormSchema = z.object({

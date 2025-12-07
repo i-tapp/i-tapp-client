@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import dp from "@/assets/images/dp.png";
 import moment from "moment";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/tailwind";
 import { Opportunity } from "@/types";
 
 export default function AvailableOpportunity({

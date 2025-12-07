@@ -10,7 +10,7 @@ import {
   SmsEdit,
   TickCircle,
 } from "iconsax-reactjs";
-import { useGlobal } from "@/context/GlobalContext";
+
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "react-toastify";
 import { Applicant } from "@/types";
@@ -21,8 +21,6 @@ import {
 } from "@/actions/company";
 
 export function ApplicantCard({ applicant }: { applicant: Applicant }) {
-  const { setSelectedApplicant } = useGlobal();
-
   const { id, accepted } = applicant;
   const student = applicant.student;
   const studentId = student.id;
@@ -77,7 +75,6 @@ export function ApplicantCard({ applicant }: { applicant: Applicant }) {
   });
 
   const handleViewProfile = () => {
-    setSelectedApplicant(applicant);
     console.log(applicant);
   };
 

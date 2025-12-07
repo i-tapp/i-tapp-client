@@ -6,24 +6,46 @@ import {
   opportunityFormSchema,
   updateOpportunitySchema,
 } from "@/lib/validations/auth";
+import { start } from "repl";
 import z from "zod";
 
 /* -------------------------- Profile Actions -------------------------- */
 export const updateCompanyProfile = actionClient
   .inputSchema(companyProfileSchema)
   .action(async ({ parsedInput }) => {
-    console.log("Updating companys profile...", parsedInput);
+    console.log("Updating company profile...", parsedInput);
+    const formData = new FormData();
+
+    if (parsedInput.logoImage) {
+      formData.append("logo", parsedInput.logoImage);
+    }
+
+    if (parsedInput.bannerImage) {
+      formData.append("banner", parsedInput.bannerImage);
+    }
+
+    if (parsedInput.website) {
+      formData.append("website", parsedInput.website);
+    }
+    if (parsedInput.address) {
+      formData.append("address", parsedInput.address);
+    }
+
+    if (parsedInput.description) {
+      formData.append("description", parsedInput.description);
+    }
+
     try {
-      return {
-        success: true,
-        message: "Company profile updated successfully.",
-      };
+      const response = await mutate(
+        "/company/profile/update",
+        formData,
+        "PATCH"
+      );
+      console.log("Update company profile response:", response);
+      return response;
     } catch (error) {
-      console.error("Error updating company profile:", error);
-      return {
-        success: false,
-        message: "Failed to update company profile. Please try again.",
-      };
+      console.log(error);
+      throw error;
     }
   });
 
@@ -95,15 +117,55 @@ export const fetchAllCompanyApplications = actionClient.action(async () => {
   }
 });
 
-export const createOffer = actionClient
-  .inputSchema(acceptSchema)
+export const deleteOffer = actionClient
+  .inputSchema(z.object({ id: z.string() }))
   .action(async ({ parsedInput: { id } }) => {
     try {
+      const response = await mutate(`/offers/${id}/`, undefined, "DELETE");
+      return response;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  });
+
+export const createOffer = actionClient
+  .inputSchema(
+    z.object({
+      id: z.string(),
+      startDate: z.string().optional(),
+      endDate: z.string().optional(),
+      file: z.any().optional(),
+      stipend: z.string().optional(),
+    })
+  )
+  .action(async ({ parsedInput }) => {
+    console.log("Creating offer...", parsedInput);
+
+    const formData = new FormData();
+
+    if (parsedInput.startDate) {
+      formData.append("startDate", parsedInput.startDate);
+    }
+
+    if (parsedInput.endDate) {
+      formData.append("endDate", parsedInput.endDate);
+    }
+    if (parsedInput.stipend) {
+      formData.append("stipend", parsedInput.stipend);
+    }
+    if (parsedInput.file) {
+      formData.append("letter", parsedInput.file);
+    }
+
+    try {
       const response = await mutate(
-        `/offers/${id}/create-offer/`,
-        undefined,
+        `/offers/${parsedInput.id}/create-offer/`,
+        formData,
         "POST"
       );
+
+      console.log("create offer response", response);
       return response;
     } catch (error) {
       console.log(error);

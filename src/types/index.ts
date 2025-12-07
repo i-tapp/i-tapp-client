@@ -57,10 +57,10 @@ export interface Student {
   role: string;
   courseOfStudy?: string;
   softSkills?: string;
-  technicalSkills?: string;
+  techSkills?: string;
   preferredIndustry?: string;
   goals?: string;
-  profileBio?: string;
+  bio?: string;
   user: {
     id: string;
   };
@@ -108,4 +108,13 @@ export interface Application {
   resumeUrl?: string;
   opportunity: Opportunity;
   student: Student;
+}
+
+export interface Env {
+  appEnv?: string;
+  appName?: string;
+  appDomain?: string;
+  backendUrl?: string;
+  backendApiUrl?: string;
+  frontendUrl?: string;
 }

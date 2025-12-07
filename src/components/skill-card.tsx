@@ -1,19 +1,33 @@
-export default function SkillCard({ icon, label, value, color = "blue" }) {
-  const colorClasses = {
+export default function SkillCard({
+  icon,
+  label,
+  value,
+  color = "blue",
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value?: string | string[];
+  color?: "blue" | "purple" | "green" | "orange";
+}) {
+  const colorClasses: any = {
     blue: "bg-blue-50 text-blue-600 border-blue-200",
     purple: "bg-purple-50 text-purple-600 border-purple-200",
     green: "bg-green-50 text-green-600 border-green-200",
     orange: "bg-orange-50 text-orange-600 border-orange-200",
   };
 
-  const tagColors = {
+  const tagColors: any = {
     blue: "bg-blue-100 text-blue-700",
     purple: "bg-purple-100 text-purple-700",
     green: "bg-green-100 text-green-700",
     orange: "bg-orange-100 text-orange-700",
   };
 
-  const skills = value ? value.split(",").map((s) => s.trim()) : [];
+  const skills = Array.isArray(value)
+    ? value
+    : value
+    ? value.split(",").map((s: string) => s.trim())
+    : [];
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all duration-200">
@@ -29,7 +43,7 @@ export default function SkillCard({ icon, label, value, color = "blue" }) {
       </div>
       {skills.length > 0 ? (
         <div className="flex flex-wrap gap-2">
-          {skills.map((skill, index) => (
+          {skills.map((skill: string, index: number) => (
             <span
               key={index}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium ${tagColors[color]}`}

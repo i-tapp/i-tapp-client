@@ -14,7 +14,7 @@ import Link from "next/link";
 import { ArchiveAdd, ArrowRight2, SmsEdit } from "iconsax-reactjs";
 import { Application } from "@/types";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/tailwind";
 import { StatusBadge } from "@/components/application-status";
 
 export default function OpportunityTable({ data }: { data: Application[] }) {

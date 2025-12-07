@@ -6,7 +6,7 @@ import { Menu } from "iconsax-reactjs";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { buttonVariants } from "@/components/ui/button";
 import { app } from "@/config/app";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/tailwind";
 import { usePathname } from "next/navigation";
 import Hr from "@/components/ui/hr";
 

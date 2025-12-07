@@ -9,7 +9,8 @@ import {
 import { Button } from "@/components/ui/button";
 
 const DownloadOfferLetterSection = ({
-  offerLetterUrl = null,
+  offerDetails,
+  offerLetterUrl = offerDetails?.letterUrl,
   companyName = "TechBridge Innovations",
   offerDate = "2025-03-15",
 }) => {
@@ -22,7 +23,10 @@ const DownloadOfferLetterSection = ({
     setTimeout(() => {
       // In real implementation, trigger actual download
       if (offerLetterUrl) {
-        window.open(offerLetterUrl, "_blank");
+        window.open(
+          `http://localhost:3000/offer-letters/${offerLetterUrl}`,
+          "_blank"
+        );
       } else {
         console.log("Download offer letter");
       }
@@ -32,7 +36,10 @@ const DownloadOfferLetterSection = ({
 
   const handlePreview = () => {
     if (offerLetterUrl) {
-      window.open(offerLetterUrl, "_blank");
+      window.open(
+        `http://localhost:3000/offer-letters/${offerLetterUrl}`,
+        "_blank"
+      );
     } else {
       console.log("Preview offer letter");
     }

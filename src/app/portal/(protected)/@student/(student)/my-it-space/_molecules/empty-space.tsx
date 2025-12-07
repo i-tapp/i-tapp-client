@@ -40,8 +40,8 @@ const EmptyState = () => {
         No Offers Yet
       </h3>
       <p className="text-gray-600 max-w-md mx-auto">
-        You don't have any placement offers at the moment. Check back later for
-        new opportunities.
+        You don&apos;t have any placement offers at the moment. Check back later
+        for new opportunities.
       </p>
     </div>
   );

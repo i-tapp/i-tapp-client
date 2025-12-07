@@ -8,7 +8,7 @@ type UserRole = "company" | "student";
 interface PortalLayoutProps {
   company: React.ReactNode;
   student: React.ReactNode;
-  userRole: UserRole;
+  role: UserRole;
 }
 
 export default async function PortalLayout({
@@ -17,6 +17,8 @@ export default async function PortalLayout({
 }: PortalLayoutProps) {
   const headersList = await headers();
   const role = headersList.get("x-user-role")?.toLowerCase() as UserRole | null;
+
+  console.log("PortalLayout role:", role);
 
   if (role === "student") {
     return <StudentLayout>{student}</StudentLayout>;

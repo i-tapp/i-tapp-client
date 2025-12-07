@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Logo } from "@/components/logo";
 import { MobileNav } from "./mobile-nav";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/tailwind";
 import { useCompanyStore } from "@/lib/store/company";
 
 export function Header({ link }: { link: { text: string; href: string }[] }) {

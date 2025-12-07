@@ -16,6 +16,7 @@ export const signinStudent = actionClient
     const response = await mutate("/auth/signin", {
       email,
       password,
+      role: "student",
     });
     const { user, token, profile } = response.data;
     await setAuthCookies(token, user.role);
@@ -28,6 +29,20 @@ export const signinCompany = actionClient
     const response = await mutate("/auth/signin", {
       email,
       password,
+      role: "company",
+    });
+    const { token, user, role, profile } = response.data;
+    await setAuthCookies(token, user.role);
+    return { token, role, user, profile };
+  });
+
+export const signinAdmin = actionClient
+  .inputSchema(signinSchema)
+  .action(async ({ parsedInput: { email, password } }) => {
+    const response = await mutate("/auth/signin", {
+      email,
+      password,
+      role: "admin",
     });
     const { token, user, role, profile } = response.data;
     await setAuthCookies(token, user.role);

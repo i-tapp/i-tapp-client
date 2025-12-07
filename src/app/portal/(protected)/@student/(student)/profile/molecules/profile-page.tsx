@@ -21,6 +21,10 @@ import InfoCard from "@/components/info-card";
 import SkillCard from "@/components/skill-card";
 import AvatarCard from "@/components/avatar-card";
 import ProfileHeaderBanner from "@/components/profile-header-banner";
+import { logout } from "@/utils/auth";
+import { useFetchProfile } from "@/hooks/query";
+import { Spinner } from "@/components/spinner";
+import ProfileForm from "./profile-form";
 
 // Mock student data
 const mockStudent = {
@@ -48,24 +52,24 @@ const mockStudent = {
 const StudentProfilePage = ({
   student = mockStudent,
   onEdit = () => {},
-  onLogout = () => {},
+  onLogout = async () => {
+    await logout();
+    window.location.href = "/";
+  },
 }) => {
   const [editing, setEditing] = useState(false);
 
-  if (!student) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-center">
-          <User className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500 text-lg">No student data available</p>
-        </div>
-      </div>
-    );
+  const { data: studentDetails, isLoading, error } = useFetchProfile();
+
+  console.log("studentDetails", studentDetails);
+
+  if (isLoading) {
+    return <Spinner />;
   }
 
   if (editing) {
     return (
-      <div className="min-h-screen py-8 px-4 bg-gray-50">
+      <div className="min-h-screen mt-12 py-8 px-4 bg-gray-50">
         <div className="max-w-5xl mx-auto">
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div className="bg-linear-to-r from-primary to-primary px-8 py-6">
@@ -93,9 +97,14 @@ const StudentProfilePage = ({
               </div>
             </div>
             <div className="p-8">
-              <p className="text-center text-gray-500">
+              {/* <p className="text-center text-gray-500">
                 Profile Form Component Goes Here
-              </p>
+              </p> */}
+
+              <ProfileForm
+                student={studentDetails}
+                onClose={() => setEditing(false)}
+              />
             </div>
           </div>
         </div>
@@ -104,12 +113,13 @@ const StudentProfilePage = ({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen mt-12 bg-gray-50 py-8 px-4">
       <div className="max-w-5xl mx-auto">
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           {/* Header Banner */}
           <ProfileHeaderBanner
-            data={student}
+            // company={studentDetails}
+            student={studentDetails}
             setEditing={setEditing}
             onLogout={onLogout}
             icon={<User className="w-16 h-16 text-white" />}
@@ -120,7 +130,7 @@ const StudentProfilePage = ({
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                  {student.firstName} {student.lastName}
+                  {studentDetails.firstName} {studentDetails.lastName}
                 </h1>
                 <div className="flex flex-wrap items-center gap-4 text-gray-600">
                   <div className="flex items-center gap-2">
@@ -131,25 +141,27 @@ const StudentProfilePage = ({
                   </div>
                   <div className="flex items-center gap-2">
                     <FileText className="w-4 h-4" />
-                    <span className="text-sm font-medium">{student.level}</span>
+                    <span className="text-sm font-medium">
+                      {studentDetails.level} Level
+                    </span>
                   </div>
-                  {student.cgpa && (
+                  {studentDetails.cgpa && (
                     <div className="flex items-center gap-2">
                       <Award className="w-4 h-4 text-yellow-600" />
                       <span className="text-sm font-medium">
-                        CGPA: {student.cgpa}
+                        CGPA: {studentDetails.cgpa}
                       </span>
                     </div>
                   )}
                 </div>
               </div>
-              {student.matricNumber && (
+              {studentDetails.matriculationNumber && (
                 <div className="bg-blue-50 border border-blue-200 px-4 py-2 rounded-lg">
                   <p className="text-xs text-blue-600 font-medium uppercase tracking-wide">
                     Matric Number
                   </p>
                   <p className="text-lg font-bold text-blue-900">
-                    {student.matricNumber}
+                    {studentDetails.matriculationNumber}
                   </p>
                 </div>
               )}
@@ -157,13 +169,13 @@ const StudentProfilePage = ({
           </div>
 
           {/* Bio Section */}
-          {student.profileBio && (
+          {studentDetails.bio && (
             <div className="px-8 py-6 bg-gray-50 border-b border-gray-200">
               <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
                 About Me
               </h2>
               <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                {student.profileBio}
+                {studentDetails.bio}
               </p>
             </div>
           )}
@@ -177,18 +189,18 @@ const StudentProfilePage = ({
               <InfoCard
                 icon={<Mail className="w-5 h-5" />}
                 label="Email Address"
-                value={student.email}
+                value={studentDetails?.user?.email}
               />
               <InfoCard
                 icon={<Phone className="w-5 h-5" />}
                 label="Phone Number"
-                value={student.phone}
+                value={studentDetails.phone}
               />
               {student.address && (
                 <InfoCard
                   icon={<MapPin className="w-5 h-5" />}
                   label="Address"
-                  value={student.address}
+                  value={studentDetails.address}
                   fullWidth
                 />
               )}
@@ -218,25 +230,25 @@ const StudentProfilePage = ({
               <SkillCard
                 icon={<Code className="w-5 h-5" />}
                 label="Technical Skills"
-                value={student.technicalSkills}
+                value={studentDetails.techSkills}
                 color="blue"
               />
               <SkillCard
                 icon={<Heart className="w-5 h-5" />}
                 label="Soft Skills"
-                value={student.softSkills}
+                value={studentDetails.softSkills}
                 color="purple"
               />
               <SkillCard
                 icon={<Briefcase className="w-5 h-5" />}
                 label="Preferred Industry"
-                value={student.preferredIndustry}
+                value={studentDetails.preferredIndustry}
                 color="green"
               />
               <SkillCard
                 icon={<Target className="w-5 h-5" />}
                 label="Career Goals"
-                value={student.goals}
+                value={studentDetails.goals}
                 color="orange"
               />
             </div>

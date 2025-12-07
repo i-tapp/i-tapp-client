@@ -12,6 +12,7 @@ import {
   acceptApplication,
   createOffer,
   declineApplication,
+  deleteOffer,
 } from "@/actions/company";
 import { GraduationCap } from "lucide-react";
 import {
@@ -23,6 +24,8 @@ import path from "path";
 import { Spinner } from "@/components/spinner";
 import Modal from "@/components/modal";
 import OfferModal from "./send-offer";
+import { Loader } from "@/components/ui/loader";
+import Loading from "@/components/loading";
 
 export default function CandidateProfile() {
   const [offerFormOpen, setOfferFormOpen] = useState(false);
@@ -36,6 +39,8 @@ export default function CandidateProfile() {
   const { data: applicationDetails } = useFetchApplicationDetails(
     opportunityId as string
   );
+
+  const offerId = applicationDetails?.offer?.id;
 
   const name = studentDetails?.firstName + " " + studentDetails?.lastName;
 
@@ -81,15 +86,31 @@ export default function CandidateProfile() {
     }
   );
 
-  const handleCreate = () => {
+  const { execute: withdrawOffer, isExecuting: isWithdrawing } = useAction(
+    deleteOffer,
+    {
+      onSuccess: () => {
+        toast.success("Offer withdrawn successfully!");
+      },
+      onError: (error) => {
+        const { serverError } = error?.error;
+        const errorMessage = serverError || "An error occurred.";
+        toast.error(errorMessage);
+      },
+    }
+  );
+
+  const handleCreate = (things) => {
     if (opportunityId) {
-      createAction({ id: opportunityId });
+      createAction({ ...things, id: opportunityId });
     }
   };
 
   if (isLoading) {
     return <Spinner placeholder="Loading student details..." />;
   }
+
+  console.log("applicationDetails", applicationDetails);
 
   return (
     <div className="min-h-screen bg-background py-6 px-4 sm:px-6 lg:px-8">
@@ -324,9 +345,27 @@ export default function CandidateProfile() {
                 )}
 
                 {applicationDetails?.status === "offered" && (
-                  <p className="flex-1 w-full text-center py-2 rounded bg-yellow-100 text-yellow-700 font-medium">
-                    Waiting for student response
-                  </p>
+                  <div className="flex flex-row justify-center gap-2">
+                    <p className="flex w-full text-center px-2 py-2 rounded bg-yellow-100 text-yellow-700 font-medium">
+                      Waiting for student response
+                    </p>
+
+                    <Button
+                      disabled={isWithdrawing}
+                      size="default"
+                      variant={"outline"}
+                      onClick={() => withdrawOffer({ id: offerId as string })}
+                      className="flex-1 w-full text-center py-2 rounded bg-red-100 text-red-700 font-medium"
+                    >
+                      {isWithdrawing ? (
+                        <>
+                          <Loader /> <Loading />
+                        </>
+                      ) : (
+                        "Withdraw Offer"
+                      )}
+                    </Button>
+                  </div>
                 )}
               </div>
             </div>
@@ -397,7 +436,7 @@ export default function CandidateProfile() {
         <OfferModal
           offerFormOpen={offerFormOpen}
           onClose={() => setOfferFormOpen(false)}
-          onCreate={handleCreate}
+          onCreate={(things) => handleCreate(things)}
         />
       </div>
     </div>

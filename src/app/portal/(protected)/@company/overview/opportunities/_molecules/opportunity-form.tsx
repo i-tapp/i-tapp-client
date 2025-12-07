@@ -71,7 +71,7 @@ export default function OpportunityForm({
     mode: "onChange", // better UX: validates while typing
   });
 
-  useEffect(() => form.reset(initialData), [initialData]);
+  useEffect(() => form.reset(initialData), [initialData, form]);
 
   const handleSubmit = (data: FormValues) => {
     onSubmit(data);

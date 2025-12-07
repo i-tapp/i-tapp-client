@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/tailwind";
 import Search from "../_molecules/search";
 import { companyListings } from "@/constants";
 import AvailableCompany from "./available-opportunity";

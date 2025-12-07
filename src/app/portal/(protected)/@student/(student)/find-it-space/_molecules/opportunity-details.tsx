@@ -6,8 +6,10 @@ import { useStudentStore } from "@/lib/store";
 import { Opportunity } from "@/types";
 import { cn } from "@/utils/tailwind";
 import { useQueryClient } from "@tanstack/react-query";
+// import { Link } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import Image from "next/image";
+import Link from "next/link";
 import { todo } from "node:test";
 import { toast } from "react-toastify";
 
@@ -173,16 +175,19 @@ export default function OpportunityDetails({
             />
             <div>
               <p className="font-semibold text-gray-800">
-                {selectedOpportunity?.title ?? "Opportunity Title"} -{" "}
-                <span className="text-sm text-gray-500">
+                {selectedOpportunity?.title ?? "Opportunity Title"}
+                {/* <span className="text-sm text-gray-500">
                   {" "}
                   {selectedId ?? "ID"}{" "}
-                </span>
+                </span> */}
               </p>
-              <p className="text-sm text-gray-500">
-                {" "}
-                {selectedOpportunity?.company?.name ?? "Company name"}
-              </p>
+              <Link
+                href={`/portal/company/${selectedOpportunity?.company?.id}`}
+              >
+                <h5 className="text-primary font-semibold">
+                  {selectedOpportunity?.company?.name ?? "Company name"}
+                </h5>
+              </Link>
             </div>
           </div>
 
@@ -198,12 +203,12 @@ export default function OpportunityDetails({
           <div className="space-y-3 text-sm text-gray-700 border border-gray-100 bg-gray-50 rounded-lg p-3">
             <div className="space-y-1">
               <p>
-                <span className="font-semibold text-gray-800">Duration:</span>{" "}
+                <span className="font-semibold text-gray-800">Duration:</span>
                 {selectedOpportunity?.duration ?? 0}
                 {/* months */}
               </p>
               <p>
-                <span className="font-semibold text-gray-800">Industry:</span>{" "}
+                <span className="font-semibold text-gray-800">Industry:</span>
                 {selectedOpportunity?.company?.industry ?? "N/A"}
               </p>
               <p>

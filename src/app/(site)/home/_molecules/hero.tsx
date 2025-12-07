@@ -13,12 +13,15 @@ export function Hero() {
         <h1 className="text-black text-h3 leading-[60px] font-medium sm:font-medium sm:leading-[60px] sm:text-h2 md:text-h1 md:leading-[90px] md:font-medium">
           Bridging the gap between companies and students.
         </h1>
-        <p className="text-black text-sm sm:text-md leading-7 max-w-[511px] mx-auto">
+        <p className="text-black text-sm sm:text-md leading-7 max-w-[511px] ">
           A centralized hub for Nigerian students to search, find and apply for
           industrial training placement across different industries.
         </p>
         <div>
-          <Link href="/get-started" className={buttonVariants()}>
+          <Link
+            href="/get-started"
+            className={`${buttonVariants({ size: "lg" })} w-auto  `}
+          >
             Get Started
           </Link>
         </div>

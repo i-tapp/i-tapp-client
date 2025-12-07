@@ -48,11 +48,32 @@ export const useFetchOpportunities = (filter: any) => {
 
 export const useFetchProfile = () => {
   return useQuery({
-    queryKey: ["profile"],
+    queryKey: ["student-profile"],
     queryFn: async () => {
-      const response = await query("/me/profile");
+      const response = await query("/s/profile");
       return response;
     },
+  });
+};
+
+export const useFetchCompanyProfile = () => {
+  return useQuery({
+    queryKey: ["company-profile"],
+    queryFn: async () => {
+      const response = await query("/company/profile");
+      return response;
+    },
+  });
+};
+
+export const useFetchCompanyDetails = (id?: string) => {
+  return useQuery({
+    queryKey: ["company-details", id],
+    queryFn: async () => {
+      const response = await query(`/company/profile/${id}/`);
+      return response;
+    },
+    enabled: !!id,
   });
 };
 

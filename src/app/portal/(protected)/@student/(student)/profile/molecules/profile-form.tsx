@@ -8,6 +8,7 @@ import { z } from "zod";
 import { Upload } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "react-toastify";
+import { Student } from "@/types";
 
 import { Button } from "@/components/ui/button";
 // import { Input } from "@/components/ui/input";
@@ -21,51 +22,45 @@ import {
   FormControl,
 } from "@/components/ui/form";
 
-import { useGlobal } from "@/context/GlobalContext";
 import { logout } from "@/actions/auth";
 import Input from "@/components/input";
+import { StudentProfileSchema, updateStudentProfile } from "@/actions/student";
+import { useQueryClient } from "@tanstack/react-query";
+import AvatarUpdate from "@/components/avatar-update";
 
-const profileSchema = z.object({
-  firstName: z.string().min(1, "Required").optional(),
-  lastName: z.string().min(1, "Required").optional(),
-  email: z.string().email("Invalid email").optional(),
-  phoneNumber: z.string().optional(),
-  bio: z.string().optional(),
-  goals: z.string().optional(),
-  softSkills: z.string().optional(),
-  technicalSkills: z.string().optional(),
-  preferredIndustry: z.string().optional(),
-  profileImage: z.any().optional(),
-  documents: z.any().optional(),
-});
+type ProfileFormData = z.infer<typeof StudentProfileSchema>;
 
-type ProfileFormData = z.infer<typeof profileSchema>;
-
-export default function ProfileForm() {
-  const { updateStudentProfile, student } = useGlobal();
+export default function ProfileForm({
+  student,
+  onClose,
+}: {
+  student: Student;
+  onClose: () => void;
+}) {
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [documents, setDocuments] = useState<File | null>(null);
 
+  const queryClient = useQueryClient();
+
   const form = useForm<ProfileFormData>({
-    resolver: zodResolver(profileSchema),
+    resolver: zodResolver(StudentProfileSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phoneNumber: "",
+      phone: "",
       bio: "",
-      goals: "",
-      softSkills: "",
-      technicalSkills: "",
+      // goals: "",
+      softSkills: [],
+      techSkills: [],
       preferredIndustry: "",
     },
   });
 
-  const { execute: updateProfileAction, status } = useAction(
+  const { execute: updateProfileAction, isExecuting } = useAction(
     updateStudentProfile,
     {
       onSuccess() {
         toast.success("Profile updated successfully!");
+        queryClient.invalidateQueries({ queryKey: ["student-profile"] });
+        onClose();
       },
       onError(err) {
         console.error("Failed to update profile", err);
@@ -77,14 +72,11 @@ export default function ProfileForm() {
   useEffect(() => {
     if (student) {
       form.reset({
-        firstName: student.firstName || "",
-        lastName: student.lastName || "",
-        email: student.email || "",
-        phoneNumber: student.phoneNumber || "",
+        phone: student.phone || "",
         bio: student.bio || "",
-        goals: student.goals || "",
-        softSkills: student.softSkills || "",
-        technicalSkills: student.technicalSkills || "",
+
+        techSkills: student.techSkills || [],
+        softSkills: student.softSkills || [],
         preferredIndustry: student.preferredIndustry || "",
       });
     }
@@ -112,36 +104,11 @@ export default function ProfileForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {/* Profile Image Upload */}
-        <div className="flex items-center">
-          <label className="cursor-pointer">
-            <div className="w-[80px] h-[70px] border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center overflow-hidden">
-              {profileImage ? (
-                <Image
-                  src={URL.createObjectURL(profileImage)}
-                  alt="Profile"
-                  width={80}
-                  height={70}
-                  className="object-cover rounded-full"
-                />
-              ) : (
-                <div className="flex flex-col items-center">
-                  <Upload size={16} />
-                  <span className="text-xs">Photo</span>
-                </div>
-              )}
-            </div>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleFileChange(e, setProfileImage)}
-              className="hidden"
-            />
-          </label>
-        </div>
+        <AvatarUpdate />
 
         {/* Basic Info */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <FormField
+          {/* <FormField
             control={form.control}
             name="firstName"
             render={({ field }) => (
@@ -179,10 +146,10 @@ export default function ProfileForm() {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
           <FormField
             control={form.control}
-            name="phoneNumber"
+            name="phone"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Phone Number</FormLabel>
@@ -204,22 +171,40 @@ export default function ProfileForm() {
               <FormItem>
                 <FormLabel>Soft Skills</FormLabel>
                 <FormControl>
-                  <Input placeholder="E.g communication, teamwork" {...field} />
+                  <Input
+                    placeholder="E.g communication, teamwork"
+                    value={
+                      Array.isArray(field.value) ? field.value.join(", ") : ""
+                    }
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value.split(",").map((s) => s.trim())
+                      )
+                    }
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
-            name="technicalSkills"
+            name="techSkills"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Technical Skills</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="E.g JavaScript, React, Node.js"
-                    {...field}
+                    value={
+                      Array.isArray(field.value) ? field.value.join(", ") : ""
+                    }
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value.split(",").map((s) => s.trim())
+                      )
+                    }
                   />
                 </FormControl>
                 <FormMessage />
@@ -242,7 +227,7 @@ export default function ProfileForm() {
               </FormItem>
             )}
           />
-          <FormField
+          {/* <FormField
             control={form.control}
             name="goals"
             render={({ field }) => (
@@ -257,7 +242,7 @@ export default function ProfileForm() {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
         </div>
 
         {/* Bio + Documents */}
@@ -299,7 +284,7 @@ export default function ProfileForm() {
               />
             </label>
 
-            {student?.documentUrls?.length > 0 && (
+            {/* {student?.documentUrls?.length > 0 && (
               <div className="mt-2 space-y-1">
                 <h4 className="text-sm font-medium">Your Documents:</h4>
                 {student.documentUrls.map((url: string, idx: number) => (
@@ -314,15 +299,15 @@ export default function ProfileForm() {
                   </a>
                 ))}
               </div>
-            )}
+            )} */}
           </div>
         </div>
 
         {/* Actions */}
         <div className="flex justify-between items-center">
           <div className="space-x-2">
-            <Button type="submit" disabled={status === "executing"} size="sm">
-              {status === "executing" ? "Updating..." : "Update Profile"}
+            <Button type="submit" disabled={isExecuting} size="sm">
+              {isExecuting ? "Updating..." : "Update Profile"}
             </Button>
             <Button
               type="button"

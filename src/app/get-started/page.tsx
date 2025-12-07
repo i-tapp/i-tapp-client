@@ -2,13 +2,14 @@
 
 import React, { useState } from "react";
 import { Building2, User, Check } from "lucide-react";
+import Link from "next/link";
 
 const Logo = () => (
   <div className="flex items-center gap-3">
     <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
       <span className="text-white font-bold text-xl">IH</span>
     </div>
-    <span className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+    <span className="text-3xl font-bold bg-linear-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
       InternHub
     </span>
   </div>
@@ -27,7 +28,7 @@ const RoleSelection = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 relative overflow-hidden">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-slate-100 relative overflow-hidden">
       {/* Decorative background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl" />
@@ -38,9 +39,9 @@ const RoleSelection = () => {
       <div className="relative z-10">
         {/* Header */}
         <div className="px-8 py-8">
-          <a href="/" className="inline-block">
+          <Link href="/" className="inline-block">
             <Logo />
-          </a>
+          </Link>
         </div>
 
         {/* Main Section */}
@@ -55,8 +56,8 @@ const RoleSelection = () => {
                 Choose Your Path
               </h1>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Whether you're seeking opportunities or offering them, we've got
-                you covered
+                Whether you&apos;re seeking opportunities or offering them,
+                we&apos;ve got you covered
               </p>
             </div>
 
@@ -76,7 +77,7 @@ const RoleSelection = () => {
                 {/* Selection Badge */}
                 {selectedRole === "student" && (
                   <div className="absolute -top-3 -right-3 w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center shadow-lg animate-in zoom-in duration-300">
-                    <Check className="w-7 h-7 text-white stroke-[3]" />
+                    <Check className="w-7 h-7 text-white stroke-3" />
                   </div>
                 )}
 
@@ -85,8 +86,8 @@ const RoleSelection = () => {
                   <div
                     className={`inline-flex p-5 rounded-2xl transition-all duration-300 ${
                       selectedRole === "student" || isHovered === "student"
-                        ? "bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg"
-                        : "bg-gradient-to-br from-gray-100 to-gray-200"
+                        ? "bg-linear-to-br from-blue-500 to-blue-600 shadow-lg"
+                        : "bg-linear-to-br from-gray-100 to-gray-200"
                     }`}
                   >
                     <User
@@ -101,7 +102,7 @@ const RoleSelection = () => {
                   {/* Content */}
                   <div className="space-y-3">
                     <h2 className="text-3xl font-bold text-gray-900">
-                      I'm a Student
+                      I&apos;m a Student
                     </h2>
                     <p className="text-gray-600 text-lg leading-relaxed">
                       Discover amazing internship opportunities and launch your
@@ -146,7 +147,7 @@ const RoleSelection = () => {
                 {/* Selection Badge */}
                 {selectedRole === "company" && (
                   <div className="absolute -top-3 -right-3 w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center shadow-lg animate-in zoom-in duration-300">
-                    <Check className="w-7 h-7 text-white stroke-[3]" />
+                    <Check className="w-7 h-7 text-white stroke-3" />
                   </div>
                 )}
 
@@ -155,8 +156,8 @@ const RoleSelection = () => {
                   <div
                     className={`inline-flex p-5 rounded-2xl transition-all duration-300 ${
                       selectedRole === "company" || isHovered === "company"
-                        ? "bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg"
-                        : "bg-gradient-to-br from-gray-100 to-gray-200"
+                        ? "bg-linear-to-br from-purple-500 to-purple-600 shadow-lg"
+                        : "bg-linear-to-br from-gray-100 to-gray-200"
                     }`}
                   >
                     <Building2
@@ -171,7 +172,7 @@ const RoleSelection = () => {
                   {/* Content */}
                   <div className="space-y-3">
                     <h2 className="text-3xl font-bold text-gray-900">
-                      I'm a Company
+                      I&apos;m a Company
                     </h2>
                     <p className="text-gray-600 text-lg leading-relaxed">
                       Find talented interns and build your dream team
@@ -211,8 +212,8 @@ const RoleSelection = () => {
                 className={`px-12 py-5 rounded-2xl text-lg font-bold transition-all duration-300 ${
                   selectedRole
                     ? selectedRole === "student"
-                      ? "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1"
-                      : "bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1"
+                      ? "bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1"
+                      : "bg-linear-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1"
                     : "bg-gray-200 text-gray-400 cursor-not-allowed"
                 }`}
               >

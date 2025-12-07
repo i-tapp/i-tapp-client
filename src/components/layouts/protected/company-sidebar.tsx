@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { AddCircle, Element, Briefcase } from "iconsax-reactjs";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/tailwind";
 
 const sideNavLinks: {
   [key: string]: {

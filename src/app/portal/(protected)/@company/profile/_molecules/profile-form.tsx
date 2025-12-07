@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { Upload } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
-import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+
 import {
   Form,
   FormField,
@@ -17,166 +16,182 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { companyProfileSchema } from "@/lib/validations/auth";
-import { useGlobal } from "@/context/GlobalContext";
-import { toast } from "react-toastify";
-import Image from "next/image";
-import { useCompanyStore } from "@/lib/store/company";
+import { Button } from "@/components/ui/button";
 import Input from "@/components/input";
+import { Textarea } from "@/components/ui/textarea";
+
+import { companyProfileSchema } from "@/lib/validations/auth";
+import { useCompanyStore } from "@/lib/store/company";
 import { updateCompanyProfile } from "@/actions/company";
+import z from "zod";
+import { useFetchCompanyProfile } from "@/hooks/query";
+import { Spinner } from "@/components/spinner";
+import { useQueryClient } from "@tanstack/react-query";
+import { on } from "events";
 
-type ProfileFormData = z.infer<typeof companyProfileSchema>;
+export type ProfileFormData = z.infer<typeof companyProfileSchema>;
 
-export default function ProfileForm() {
-  const [profileImage, setProfileImage] = useState<File | null>(null);
-  const [backgroundImage, setBackgroundImage] = useState<File | null>(null);
-
-  // ✅ selector style to avoid unnecessary re-renders
+export default function ProfileForm({ onClose }: { onClose: () => void }) {
   const company = useCompanyStore((s) => s.company);
+  const { data: companyProfile, isLoading } = useFetchCompanyProfile();
 
-  // const { updateCompanyProfile } = useGlobal();
+  const queryClient = useQueryClient();
+
+  const [logoImage, setLogoImage] = useState<File | null>(null);
+  const [bannerImage, setBannerImage] = useState<File | null>(null);
 
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(companyProfileSchema),
     defaultValues: {
-      yearFounded: undefined,
       website: "",
       address: "",
-      studentCapacity: undefined,
       description: "",
     },
   });
 
-  const { execute: updateProfileAction, status } = useAction(
+  // next-safe-action handler
+  const { execute: updateProfile, isExecuting } = useAction(
     updateCompanyProfile,
     {
       onSuccess() {
-        toast.success("Company profile updated successfully.");
+        toast.success("Profile updated.");
+        queryClient.invalidateQueries({ queryKey: ["company-profile"] });
+        onClose();
       },
-      onError(error) {
-        console.error("Failed to update profile", error);
-        toast.error("Failed to update company profile. Please try again.");
+      onError() {
+        toast.error("Failed to update profile.");
       },
     }
   );
 
-  const onSubmit = (data: ProfileFormData) => {
-    updateProfileAction({
-      ...data,
-      logoImage: profileImage,
-      bannerImage: backgroundImage,
-    });
-  };
+  // populate on initial load
+  useEffect(() => {
+    if (companyProfile) {
+      form.reset({
+        website: companyProfile.website ?? "",
+        address: companyProfile.address ?? "",
+        description: companyProfile.description ?? "",
+      });
+    }
+  }, [companyProfile, form]);
 
+  // Memoized previews
+  const logoPreview = useMemo(
+    () => (logoImage ? URL.createObjectURL(logoImage) : null),
+    [logoImage]
+  );
+
+  const bannerPreview = useMemo(
+    () => (bannerImage ? URL.createObjectURL(bannerImage) : null),
+    [bannerImage]
+  );
+
+  // File change handler
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     setter: React.Dispatch<React.SetStateAction<File | null>>
   ) => {
-    if (e.target.files?.[0]) setter(e.target.files[0]);
+    const file = e.target.files?.[0];
+    if (file) setter(file);
   };
 
-  // ✅ populate text fields only
-  useEffect(() => {
-    if (company) {
-      form.reset({
-        yearFounded: undefined,
-        website: company.website ?? "",
-        address: company.address ?? "",
-        studentCapacity: company.studentCapacity,
-        description: company.description ?? "",
-      });
-    }
-  }, [company, form]);
+  // Submit handler
+  const onSubmit = (data: ProfileFormData) => {
+    updateProfile({
+      ...data,
+      logoImage: logoImage ?? undefined,
+      bannerImage: bannerImage ?? undefined,
+    });
+  };
 
-  // ✅ memoize previews
-  const profilePreview = useMemo(
-    () => (profileImage ? URL.createObjectURL(profileImage) : null),
-    [profileImage]
-  );
-  const backgroundPreview = useMemo(
-    () => (backgroundImage ? URL.createObjectURL(backgroundImage) : null),
-    [backgroundImage]
-  );
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
-    // <div className="max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-md">
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {/* Banner Upload */}
-        <label className="flex w-full h-40 bg-gray-200 my-5 rounded-md items-center justify-center cursor-pointer">
-          {backgroundPreview || company?.bannerUrl ? (
+        <label className="flex w-full h-40 bg-gray-100 rounded-md cursor-pointer items-center justify-center relative overflow-hidden">
+          {bannerPreview || companyProfile?.bannerUrl ? (
             <Image
-              src={backgroundPreview ?? company!.bannerUrl}
+              src={bannerPreview ?? companyProfile?.bannerUrl!}
               alt="Banner"
               fill
-              className="object-cover rounded-md"
+              className="object-cover"
             />
           ) : (
-            <div className="text-center">
-              <Upload className="mx-auto mb-2" size={48} />
-              <p className="text-gray-600">Click to upload banner image</p>
+            <div className="text-center text-gray-600">
+              <Upload size={40} className="mx-auto" />
+              <p>Upload banner image</p>
             </div>
           )}
+
           <input
             type="file"
             accept="image/*"
-            aria-label="Upload banner image"
-            onChange={(e) => handleFileChange(e, setBackgroundImage)}
+            onChange={(e) => handleFileChange(e, setBannerImage)}
             className="hidden"
           />
         </label>
 
-        {/* Profile Picture Upload */}
-        <label className="cursor-pointer w-20 h-[70px] border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center overflow-hidden">
-          {profilePreview || company?.logoUrl ? (
+        {/* Logo Upload */}
+        <label className="cursor-pointer w-24 h-24 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center overflow-hidden">
+          {logoPreview || companyProfile?.logoUrl ? (
             <Image
-              src={profilePreview ?? company!.logoUrl}
-              alt="Profile"
-              width={80}
-              height={70}
-              className="object-cover rounded-full"
+              src={logoPreview ?? companyProfile?.logoUrl!}
+              alt="Logo"
+              width={100}
+              height={100}
+              className="object-cover"
             />
           ) : (
-            <div className="flex flex-col items-center">
-              <Upload size={16} />
-              <span className="text-xs">Photo</span>
+            <div className="flex flex-col items-center text-gray-500">
+              <Upload size={18} />
+              <span className="text-xs">Logo</span>
             </div>
           )}
+
           <input
             type="file"
             accept="image/*"
-            aria-label="Upload profile image"
-            onChange={(e) => handleFileChange(e, setProfileImage)}
+            onChange={(e) => handleFileChange(e, setLogoImage)}
             className="hidden"
           />
         </label>
 
-        {/* Fields */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {["founded", "website", "address", "capacity"].map((field) => (
-            <FormField
-              key={field}
-              control={form.control}
-              name={field as keyof ProfileFormData}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="capitalize">{field.name}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type={
-                        field.name === "studentCapacity" ? "number" : "text"
-                      }
-                      placeholder={`Enter ${field.name}`}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ))}
+        {/* Website & Address */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FormField
+            control={form.control}
+            name="website"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Website</FormLabel>
+                <FormControl>
+                  <Input placeholder="https://example.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Address</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter address" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
+        {/* Description */}
         <FormField
           control={form.control}
           name="description"
@@ -185,9 +200,8 @@ export default function ProfileForm() {
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
-                  className="border-gray-300 ring-0 ring-transparent ring:opacity-1 focus:border-primary"
                   rows={5}
-                  placeholder="Enter a description of your company or services"
+                  placeholder="Describe your company"
                   {...field}
                 />
               </FormControl>
@@ -196,15 +210,16 @@ export default function ProfileForm() {
           )}
         />
 
-        {/* Actions */}
-        <div className="flex gap-2">
+        {/* Buttons */}
+        <div className="flex gap-3">
           <Button
             type="submit"
-            disabled={status === "executing"}
-            className="text-white"
+            //  disabled={isExecuting}
           >
-            {status === "executing" ? "Updating..." : "Update Profile"}
+            {/* {isExecuting ? "Updating..." : "Update Profile"} */}
+            Update Profile
           </Button>
+
           <Button
             type="button"
             variant="secondary"
@@ -215,6 +230,5 @@ export default function ProfileForm() {
         </div>
       </form>
     </Form>
-    // </div>
   );
 }

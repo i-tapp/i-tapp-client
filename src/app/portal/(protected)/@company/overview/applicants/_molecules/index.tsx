@@ -5,12 +5,9 @@ import { ApplicantCard } from "../../../../../../../components/applicant-card";
 import { SitePagination } from "@/components/ui/site-pagination";
 import usePaginator from "@/hooks/use-paginator";
 
-import { useGlobal } from "@/context/GlobalContext";
 import { Applicant } from "@/types";
 
 export function Applicants() {
-  const { totalApplicants } = useGlobal();
-
   // ✅ Extract correctly: [list, count]
   const applicantsList: Applicant[] = totalApplicants?.[0] || [];
   const applicantsCount: number = totalApplicants?.[1] || 0;

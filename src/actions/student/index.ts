@@ -79,45 +79,52 @@ export const save = actionClient
     }
   });
 
-const updateProfileSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  email: z.string().email("Invalid email address"),
-  phoneNumber: z.string().min(1, "Phone number is required"),
+export const StudentProfileSchema = z.object({
+  phone: z.string().optional(),
   bio: z.string().optional(),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .optional(),
+  // gender: z.string().optional(),
+  // dob: z.string().optional(),
+  // address: z.string().optional(),
+  techSkills: z.array(z.string()).optional(),
+  softSkills: z.array(z.string()).optional(),
+  preferredIndustry: z.string().optional(),
 });
 
 // Create the action
-export const updateProfile = actionClient
+export const updateStudentProfile = actionClient
 
-  .inputSchema(updateProfileSchema)
-  .action(
-    async ({
-      parsedInput: { firstName, lastName, email, phoneNumber, bio, password },
-    }) => {
-      try {
-        const response = await mutate("/student/profile", {
-          firstName,
-          lastName,
-          email,
-          phoneNumber,
-          bio,
-          password,
-        });
-        return response.data;
-      } catch (error) {
-        console.error("Profile update error:", error);
-        return {
-          success: false,
-          message: "Failed to update profile. Please try again.",
-        };
-      }
+  .inputSchema(StudentProfileSchema)
+  .action(async ({ parsedInput }) => {
+    try {
+      const response = await mutate("/s/profile", parsedInput, "PATCH");
+      return response;
+    } catch (error) {
+      console.error("Profile update error:", error);
+      throw error;
     }
-  );
+  });
+
+export const updateStudentProfilePicture = actionClient
+  .inputSchema(
+    z.object({
+      profileImage: z.instanceof(File),
+    })
+  )
+  .action(async ({ parsedInput: { profileImage } }) => {
+    const formData = new FormData();
+
+    if (profileImage) {
+      formData.append("profileImage", profileImage);
+    }
+
+    try {
+      const response = await mutate("/s/profile-picture", formData, "PATCH");
+      return response;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  });
 
 export const verifyStudentIdentity = actionClient
 

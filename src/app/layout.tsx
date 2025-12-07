@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Montserrat, Open_Sans } from "next/font/google";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
-import { GlobalProvider } from "@/context/GlobalContext";
+
 import { AppProvider } from "@/components/providers/app-provider";
 import { ReactQueryProvider } from "@/provider/react-query-provider";
 import { ToastContainer } from "react-toastify";
@@ -38,9 +38,7 @@ export default function RootLayout({
         className={`${opensans.variable} ${montserrat.variable} antialiased`}
       >
         <ReactQueryProvider>
-          <GlobalProvider>
-            <AppProvider>{children}</AppProvider>
-          </GlobalProvider>
+          <AppProvider>{children}</AppProvider>
         </ReactQueryProvider>
         <ToastContainer
           position="top-center"

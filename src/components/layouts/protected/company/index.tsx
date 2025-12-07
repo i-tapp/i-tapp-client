@@ -5,7 +5,7 @@ import { Header } from "../header";
 import { Nav } from "../company-sidebar";
 import { companyNavLinks } from "@/constants";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/tailwind";
 
 export function CompanyLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

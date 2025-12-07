@@ -5,7 +5,7 @@ import { Logo } from "@/components/logo";
 import { Wrapper } from "@/components/wrapper";
 import { MobileNav } from "./mobile-nav";
 import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/tailwind";
 
 export function Header() {
   return (

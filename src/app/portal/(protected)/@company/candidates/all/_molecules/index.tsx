@@ -39,8 +39,6 @@ import usePaginator from "@/hooks/use-paginator";
 import { SitePagination } from "@/components/ui/site-pagination";
 import { ApplicantCard } from "@/components/applicant-card";
 
-import { useGlobal } from "@/context/GlobalContext";
-
 // Define the type for Applicant
 type Applicant = {
   name: string;
@@ -59,7 +57,6 @@ type Applicant = {
 };
 
 export function AllApplicants() {
-  const { totalApplicants } = useGlobal();
   // Array of applicants with type Applicant
   const applicants: Applicant[] = Array.from({ length: 10 });
 
@@ -69,11 +66,9 @@ export function AllApplicants() {
   return (
     <div>
       <p className="mb-4">Total Applicants</p>
-      {totalApplicants?.[0]
-        ?.slice(0, 5)
-        .map((applicant: Applicant, index: number) => (
-          <ApplicantCard key={index} applicant={applicant} />
-        ))}
+      {applicants?.slice(0, 5).map((applicant: Applicant, index: number) => (
+        <ApplicantCard key={index} applicant={applicant} />
+      ))}
       <SitePagination
         totalPosts={applicants.length}
         postsPerPage={postPerPage}

@@ -2,7 +2,7 @@ import { Eye, EyeSlash } from "iconsax-reactjs";
 import { Input as BaseInput } from "./ui/input";
 import React from "react";
 import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/tailwind";
 
 interface InputProps extends React.ComponentProps<"input"> {
   type?: string;

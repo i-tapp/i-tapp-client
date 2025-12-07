@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/tailwind";
 import { ClassValue } from "clsx";
 
 export function Wrapper({

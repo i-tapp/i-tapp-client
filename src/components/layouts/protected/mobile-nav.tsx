@@ -9,7 +9,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { logout } from "@/actions/auth";
 import { useCompanyStore } from "@/lib/store/company";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/tailwind";
 
 interface MobileNavProps {
   links: { text: string; href: string }[];
@@ -35,7 +35,7 @@ export function MobileNav({ links }: MobileNavProps) {
         {company ? (
           <div className="flex items-center gap-3 border-b pb-4">
             <Image
-              src={company.profileImageUrl ?? "/applicant.png"}
+              src={company.logoUrl ?? "/applicant.png"}
               alt={company.name}
               width={50}
               height={50}

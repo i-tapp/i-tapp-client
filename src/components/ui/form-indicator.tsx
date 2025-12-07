@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/tailwind";
 import React, { type Dispatch, type SetStateAction } from "react";
 
 export function FormIndicator({

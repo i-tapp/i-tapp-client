@@ -262,7 +262,7 @@ const CompanyDetailsPage: React.FC = () => {
               </ul>
             </section>
 
-            <DownloadOfferLetterSection />
+            <DownloadOfferLetterSection offerDetails={offerDetails} />
           </div>
         </div>
       </div>

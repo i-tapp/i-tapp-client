@@ -10,16 +10,17 @@ export default function page() {
         Welcome to i-Tapp, a platform designed to facilitate applications and
         recruitment for the Student Industrial Work Experience Scheme (SIWES) in
         Nigeria. By accessing or using our website, you agree to be bound by the
-        following Terms of Service ("Terms"). Please read them carefully. If you
-        do not agree with these Terms, you may not use our services
+        following Terms of Service (&quot;Terms&quot;). Please read them
+        carefully. If you do not agree with these Terms, you may not use our
+        services
       </p>
       <ol className=" list-decimal flex flex-col gap-3 my-4 px-4">
         <li>
-          Acceptance of Terms: By creating an account, submitting an application,
-          or otherwise using i-Tapp you agree to these Terms and any updates
-          posted on this page. We reserve the right to modify these Terms at any
-          time. Continued use of the website after changes constitutes
-          acceptance of the updated Terms.
+          Acceptance of Terms: By creating an account, submitting an
+          application, or otherwise using i-Tapp you agree to these Terms and
+          any updates posted on this page. We reserve the right to modify these
+          Terms at any time. Continued use of the website after changes
+          constitutes acceptance of the updated Terms.
         </li>
         <li>
           Eligibility: Users must be at least 18 years old or have legal consent
@@ -35,10 +36,9 @@ export default function page() {
           accurate and complete information during registration. You must
           maintain the confidentiality of your account login credentials (e.g.,
           username and password). You agree to notify us immediately of any
-          unauthorized use of your account via support@i-tapp.com. <br /> 
-          i-Tapp is
-          not liable for losses resulting from unauthorized access due to your
-          failure to secure your account.
+          unauthorized use of your account via support@i-tapp.com. <br />
+          i-Tapp is not liable for losses resulting from unauthorized access due
+          to your failure to secure your account.
         </li>
         <li>
           Use of the Platform: The platform may only be used for lawful purposes
@@ -89,12 +89,12 @@ export default function page() {
           terminate your account at any time by contacting support@i-tapp.com.
         </li>
         <li>
-          Limitation of Liability: i-Tapp provides the platform "as is" and does
-          not guarantee uninterrupted or error-free service. We are not liable
-          for any damages, losses, or disputes arising from the use of the
-          platform, including but not limited to placement rejections or
-          employer-student conflicts. Our liability is limited to the fullest
-          extent permitted by Nigerian law.
+          Limitation of Liability: i-Tapp provides the platform &quot;as
+          is&quot; and does not guarantee uninterrupted or error-free service.
+          We are not liable for any damages, losses, or disputes arising from
+          the use of the platform, including but not limited to placement
+          rejections or employer-student conflicts. Our liability is limited to
+          the fullest extent permitted by Nigerian law.
         </li>
         <li>
           Indemnity: You agree to indemnify and hold i-Tapp, its affiliates, and
