@@ -1,6 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { updateCompanyStatus } from "@/actions/admin";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { useFetchCompanyDetails } from "@/hooks/query";
+import { CompanyStatus } from "@/types/enums";
+import { useAction } from "next-safe-action/hooks";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 
@@ -10,24 +15,87 @@ export default function CompanyDetailPage() {
 
   const tabs = ["Overview", "Placements", "Reviews"];
 
+  const {
+    data: companyDetails,
+    isLoading,
+    error,
+  } = useFetchCompanyDetails(companyId as string);
+
+  const { execute, isExecuting } = useAction(updateCompanyStatus, {
+    onSuccess: () => {
+      console.log("Company status updated successfully");
+    },
+    onError: (err) => {
+      console.error("Error updating company status:", err);
+    },
+  });
+
+  if (isLoading) {
+    return <div className="p-4">Loading company details...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="p-4 text-red-600">Error loading company details.</div>
+    );
+  }
+
+  const isSuspended = companyDetails?.status === "suspended";
+  const isApproved = companyDetails?.status === "active";
+  const isPending = companyDetails?.status === "pending";
+
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 p-6">
       {/* HEADER */}
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
           <div className="border rounded-lg w-14 h-14 bg-gray-100"></div>
           <div>
-            <h1 className="text-2xl font-bold">Company Name</h1>
+            <div className="flex flex-row gap-2 items-center">
+              <h1 className="text-2xl font-bold">{companyDetails?.name}</h1>
+              <p className="text-gray-500 text-sm">{companyDetails?.status}</p>
+            </div>
             <p className="text-gray-500 text-sm">Company ID: {companyId}</p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="outline">Edit Company</Button>
-          <Button variant="default">Message Company</Button>
-          <Button variant="destructive" className="bg-orange-500">
+          {/* <Button variant="outline">Edit Company</Button> */}
+          {/* <Link
+            href={`mailto:${companyDetails?.user?.email}`}
+            className={buttonVariants({ variant: "default" })}
+          >
+            Message Company
+          </Link> */}
+
+          <Button
+            variant="default"
+            disabled={isApproved}
+            onClick={() =>
+              execute({
+                companyId: companyId as string,
+                status: CompanyStatus.APPROVED,
+              })
+            }
+          >
+            Approve Company
+          </Button>
+
+          <Button
+            variant="destructive"
+            className="bg-orange-500"
+            onClick={() =>
+              execute({
+                companyId: companyId as string,
+                status: CompanyStatus.SUSPENDED,
+              })
+            }
+            disabled={isSuspended || isPending}
+          >
             Suspend Company
           </Button>
+
+          {/* {isSuspended && <Button variant="default">Reinstate</Button>} */}
         </div>
       </div>
 
@@ -41,17 +109,20 @@ export default function CompanyDetailPage() {
 
             <div className="space-y-2 text-sm text-gray-700">
               <p>
-                <span className="font-medium">Address:</span> 123 Main St, City
+                <span className="font-medium">Address:</span>{" "}
+                {companyDetails?.address}
               </p>
               <p>
-                <span className="font-medium">Email:</span> example@company.com
+                <span className="font-medium">Email:</span>{" "}
+                {companyDetails?.user?.email}
               </p>
               <p>
-                <span className="font-medium">Industry:</span> Technology
+                <span className="font-medium">Industry:</span>{" "}
+                {companyDetails?.industry}
               </p>
               <p>
                 <span className="font-medium">Registration Date:</span>{" "}
-                2024-06-10
+                {companyDetails?.foundedYear ?? "N/A"}
               </p>
             </div>
           </div>
@@ -89,7 +160,7 @@ export default function CompanyDetailPage() {
           <div className="p-4">
             {activeTab === "Overview" && (
               <p className="text-gray-700">
-                Basic company overview will go here.
+                {companyDetails?.description ?? "No description available."}
               </p>
             )}
 

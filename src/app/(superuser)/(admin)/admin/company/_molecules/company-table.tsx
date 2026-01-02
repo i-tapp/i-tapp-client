@@ -2,17 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-// Dummy company data
-const companiesData = Array.from({ length: 10 }, (_, i) => ({
-  id: i + 1,
-  name: `Company ${i + 1}`,
-  status: ["Active", "Pending", "Suspended"][i % 3],
-  industry: ["Tech", "Finance", "Manufacturing", "Healthcare"][i % 4],
-  registrationDate: `2025-0${(i % 9) + 1}-0${(i % 28) + 1}`,
-  cacDocument: `CAC_DOC_${i + 1}.pdf`,
-  opportunities: Math.floor(Math.random() * 10),
-}));
+import { useFetchCompanies } from "@/queries/admin";
+import { useAction } from "next-safe-action/hooks";
+import { updateCompanyStatus } from "@/actions/admin";
 
 const statusColors: Record<string, string> = {
   Active: "bg-green-100 text-green-800",
@@ -20,19 +12,31 @@ const statusColors: Record<string, string> = {
   Suspended: "bg-red-100 text-red-800",
 };
 
-export default function CompanyTable({
-  onView,
-}: {
-  onView: (company: (typeof companiesData)[0]) => void;
+export default function CompanyTable({}: // onView,
+{
+  // onView: (company: any) => void;
 }) {
+  const { data, isLoading, error } = useFetchCompanies();
+
+  console.log("Fetched companies:", data);
+
   const [search, setSearch] = useState("");
   const router = useRouter();
 
-  const filteredCompanies = companiesData.filter(
-    (c) =>
-      c.name.toLowerCase().includes(search.toLowerCase()) ||
-      c.industry.toLowerCase().includes(search.toLowerCase())
-  );
+  if (isLoading) {
+    return <div className="p-4">Loading companies...</div>;
+  }
+
+  if (error) {
+    return <div className="p-4 text-red-600">Error loading companies.</div>;
+  }
+
+  const filteredCompanies =
+    data?.filter(
+      (c) =>
+        c.name.toLowerCase().includes(search.toLowerCase()) ||
+        c.industry.toLowerCase().includes(search.toLowerCase())
+    ) || [];
 
   return (
     <div className="border rounded-xl overflow-x-auto bg-white shadow">
@@ -71,7 +75,6 @@ export default function CompanyTable({
               key={c.id}
               className="border-b hover:bg-gray-50"
               // Uncomment if you want row click navigation
-              onClick={() => router.push(`/admin/company/${c.id}`)}
             >
               <td className="px-4 py-2">{index + 1}</td>
               <td className="px-4 py-2 font-medium">{c.name}</td>
@@ -87,10 +90,10 @@ export default function CompanyTable({
               <td className="px-4 py-2">{c.industry}</td>
               <td className="px-4 py-2">{c.registrationDate}</td>
               <td className="px-4 py-2">{c.cacDocument}</td>
-              <td className="px-4 py-2">{c.opportunities}</td>
+              <td className="px-4 py-2">{c.opportunities.length}</td>
               <td className="px-4 py-2 flex gap-2">
                 <button
-                  onClick={() => onView(c)}
+                  onClick={() => router.push(`/admin/company/${c.id}`)}
                   className="text-indigo-600 hover:underline"
                 >
                   View

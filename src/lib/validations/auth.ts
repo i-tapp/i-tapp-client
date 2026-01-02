@@ -20,6 +20,17 @@ export const companyIdSchema = z.object({
   companyId: z.string(),
 });
 
+export const companyStatusSchema = z.object({
+  companyId: z.string(),
+  status: z.enum([
+    "pending",
+    "under_review",
+    "approved",
+    "rejected",
+    "suspended",
+  ]),
+});
+
 export const signupSchema = z.object({
   email: z.email(),
   password: z.string().min(1),

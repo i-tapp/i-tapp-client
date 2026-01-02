@@ -28,17 +28,21 @@ const dummy = [
   },
 ];
 
-export default function OpportunityTable() {
+export default function OpportunityTable({ data, isLoading }) {
   const [search, setSearch] = useState("");
 
-  const filtered = dummy.filter(
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  const filtered = data.filter(
     (item) =>
       item.title.toLowerCase().includes(search.toLowerCase()) ||
-      item.company.toLowerCase().includes(search.toLowerCase())
+      item.company.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const getStatusColor = (status: string) => {
-    return status === "Active"
+    return status === "open"
       ? "bg-green-100 text-green-700"
       : "bg-red-100 text-red-700";
   };
@@ -90,10 +94,10 @@ export default function OpportunityTable() {
                 className="border-b hover:bg-gray-50 transition"
               >
                 <td className="p-3">{item.title}</td>
-                <td className="p-3">{item.company}</td>
+                <td className="p-3">{item.company.name}</td>
                 <td className="p-3">{item.department}</td>
                 <td className="p-3">{item.location}</td>
-                <td className="p-3">{item.slots}</td>
+                <td className="p-3">{item.company.studentCapacity ?? "N/A"}</td>
                 <td className="p-3">
                   <span
                     className={`px-2 py-1 rounded text-xs ${getStatusColor(
@@ -112,12 +116,12 @@ export default function OpportunityTable() {
                         View
                       </Button>
                     </Link>
-                    <Button variant="outline" size="sm">
+                    {/* <Button variant="outline" size="sm">
                       Edit
                     </Button>
                     <Button variant="destructive" size="sm">
                       Deactivate
-                    </Button>
+                    </Button> */}
                   </div>
                 </td>
               </tr>

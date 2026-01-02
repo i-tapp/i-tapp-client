@@ -1,9 +1,16 @@
 import { query } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 
-export const useFetchOpportunities = (filter: any) => {
+// type OpportunitiesFilter = {
+//   duration?: { checked: boolean; time: string }[];
+//   industry?: { checked: boolean; industry: string }[];
+//   status?: { checked: boolean; status: string }[];
+//   location?: string;
+// };
+
+export const useFetchOpportunities = (filter?: any) => {
   return useQuery({
-    queryKey: ["opportunities", filter],
+    queryKey: ["opportunities", filter ?? {}],
     queryFn: async () => {
       const queryObject: Record<string, any> = {};
 
@@ -13,34 +20,35 @@ export const useFetchOpportunities = (filter: any) => {
         "6-12": [6, 7, 8, 9, 10, 11, 12],
       };
 
-      const selectedDuration = filter.duration
-        .filter((d) => d.checked)
-        .flatMap((d) => durationMapping[d.time] || []);
-      if (selectedDuration.length)
+      const selectedDuration =
+        filter?.duration
+          ?.filter((d) => d.checked)
+          .flatMap((d) => durationMapping[d.time] || []) ?? [];
+
+      if (selectedDuration.length) {
         queryObject.duration = selectedDuration.join(",");
+      }
 
-      // Industry
-      const selectedIndustry = filter.industry
-        .filter((i) => i.checked)
-        .map((i) => i.industry);
-      if (selectedIndustry.length)
+      const selectedIndustry =
+        filter?.industry?.filter((i) => i.checked).map((i) => i.industry) ?? [];
+
+      if (selectedIndustry.length) {
         queryObject.industry = selectedIndustry.join(",");
+      }
 
-      // Status
-      const selectedStatus = filter.status
-        .filter((s) => s.checked)
-        .map((s) => s.status);
-      if (selectedStatus.length) queryObject.status = selectedStatus.join(",");
+      const selectedStatus =
+        filter?.status?.filter((s) => s.checked).map((s) => s.status) ?? [];
 
-      // Location
-      if (filter.location && filter.location.trim() !== "") {
+      if (selectedStatus.length) {
+        queryObject.status = selectedStatus.join(",");
+      }
+
+      if (filter?.location?.trim()) {
         queryObject.location = filter.location.trim();
       }
 
       const qs = new URLSearchParams(queryObject).toString();
-      console.log("Current query string:", qs);
-
-      const response = await query(`/opportunities?${qs}`);
+      const response = await query(`/opportunities${qs ? `?${qs}` : ""}`);
       return response.data;
     },
   });

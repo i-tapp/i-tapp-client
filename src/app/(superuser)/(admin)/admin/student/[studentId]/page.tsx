@@ -1,13 +1,33 @@
 "use client";
 
+import { updateStudentStatus } from "@/actions/admin";
 import { Button } from "@/components/ui/button";
+import { useFetchStudentDetails } from "@/hooks/query";
+import { useQueryClient } from "@tanstack/react-query";
 import { PlusIcon } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 
 export default function StudentDetailsPage() {
   const { studentId } = useParams();
+
+  const { data, isLoading } = useFetchStudentDetails(studentId as string);
   const [activeTab, setActiveTab] = useState("Personal Information");
+
+  const queryClient = useQueryClient();
+
+  const { execute, isExecuting } = useAction(updateStudentStatus, {
+    onSuccess: () => {
+      console.log("Student status updated successfully");
+      queryClient.invalidateQueries({
+        queryKey: ["student-details", studentId],
+      });
+    },
+    onError: (err) => {
+      console.error("Error updating student status:", err);
+    },
+  });
 
   // Placeholder data (replace with API fetch later)
   const student = {
@@ -24,12 +44,22 @@ export default function StudentDetailsPage() {
     "Messages",
   ];
 
+  if (isLoading) {
+    return <div className="p-4">Loading student details...</div>;
+  }
+
+  const name = data?.firstName + " " + data?.lastName;
+
   return (
     <div className="flex flex-col gap-6 p-4">
       {/* Header */}
       <div className="flex flex-row justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold">{student.name}</h1>
+          <div className="flex flex-row items-center gap-3">
+            {" "}
+            <h1 className="text-2xl font-bold">{name}</h1> -{" "}
+            <p>{data?.status}</p>
+          </div>
           <p className="text-gray-500 text-sm">
             Student profile (ID: {studentId})
           </p>
@@ -59,23 +89,51 @@ export default function StudentDetailsPage() {
           </div>
 
           <div className="text-center space-y-1">
-            <p className="font-semibold">{student.name}</p>
+            <p className="font-semibold">{name}</p>
             <p className="text-sm text-gray-500">
-              Matric No: {student.matricNo}
+              Matric No: {data?.matriculationNumber}
             </p>
             <p
               className={`text-sm font-medium ${
-                student.verified ? "text-green-600" : "text-red-500"
+                data?.user?.isVerified ? "text-green-600" : "text-red-500"
               }`}
             >
-              {student.verified ? "Verified" : "Not Verified"}
+              {data?.user?.isVerified ? "Verified" : "Not Verified"}
             </p>
           </div>
 
           <div className="flex flex-col gap-2 w-full">
-            <Button>Verify Student</Button>
-            <Button>Deactivate / Suspend Account</Button>
-            <Button variant="outline">More Options</Button>
+            {/* <Button>Verify Student</Button> */}
+
+            {data?.status !== "suspended" && (
+              <Button
+                variant="destructive"
+                onClick={() =>
+                  execute({
+                    studentId: studentId as string,
+                    status: "suspended",
+                  })
+                }
+              >
+                Deactivate / Suspend Account
+              </Button>
+            )}
+
+            {data?.status === "suspended" && (
+              <Button
+                variant="default"
+                onClick={() =>
+                  execute({
+                    studentId: studentId as string,
+                    status: "active",
+                  })
+                }
+              >
+                Reactivate Account
+              </Button>
+            )}
+
+            {/* <Button variant="outline">More Options</Button> */}
           </div>
         </div>
 

@@ -4,12 +4,19 @@ import { useState } from "react";
 import SummaryCard from "../_molecules/summary-card";
 import StudentTable from "../_molecules/student-table";
 import StudentDetail from "../_molecules/student-detail";
+import { useFetchAllStudents } from "@/queries/admin";
 
 export default function AdminStudentPage() {
+  const { data, isLoading, error } = useFetchAllStudents();
+
   const [selectedStudent, setSelectedStudent] = useState(null);
 
   const summaryItems = [
-    { title: "Total Students", number: 2000, component: "+20 this week" },
+    {
+      title: "Total Students",
+      number: data?.length || 0,
+      component: "+20 this week",
+    },
     { title: "Active Students", number: 1800, component: "+15 this week" },
     { title: "Pending Approval", number: 150, component: "+5 this week" },
   ];
@@ -31,13 +38,18 @@ export default function AdminStudentPage() {
       </div>
 
       {/* Student Table */}
-      <StudentTable onView={setSelectedStudent} />
+      <StudentTable
+        onView={setSelectedStudent}
+        data={data}
+        isLoading={isLoading}
+        error={error}
+      />
 
       {/* Detail Drawer */}
-      <StudentDetail
+      {/* <StudentDetail
         student={selectedStudent}
         onClose={() => setSelectedStudent(null)}
-      />
+      /> */}
     </div>
   );
 }

@@ -1,8 +1,10 @@
 "use client";
 
+import { signinAdmin } from "@/actions/auth";
 import Input from "@/components/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useAction } from "next-safe-action/hooks";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -15,6 +17,17 @@ export default function AdminAuth() {
   });
   const [error, setError] = useState("");
   const router = useRouter();
+
+  const { execute, isExecuting } = useAction(signinAdmin, {
+    onSuccess: (data) => {
+      console.log("Admin signed in:", data);
+      router.replace("/admin");
+    },
+    onError: (error) => {
+      console.error("Error signing in admin:", error);
+      // setError(error?.message || "An error occurred while trying to sign in.");
+    },
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -43,6 +56,11 @@ export default function AdminAuth() {
     };
 
     // TODO: Call login API here
+
+    execute({
+      email: username,
+      password,
+    });
     console.log("Logging in", payload);
     router.replace("/admin");
   };
@@ -107,7 +125,7 @@ export default function AdminAuth() {
           {error && <p className="text-red-500 text-xs">{error}</p>}
 
           <Button type="submit" disabled={!form.username || !form.password}>
-            Log In
+            {isExecuting ? "Logging in..." : "Login as Admin"}
           </Button>
         </form>
 

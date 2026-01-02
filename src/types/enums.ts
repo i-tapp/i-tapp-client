@@ -45,3 +45,11 @@ export enum OpportunityLevel {
   DIRECTOR = "director",
   EXECUTIVE = "executive",
 }
+
+export enum CompanyStatus {
+  PENDING = "pending", // signed up, docs not reviewed
+  UNDER_REVIEW = "under_review",
+  APPROVED = "approved",
+  REJECTED = "rejected",
+  SUSPENDED = "suspended", // previously approved, later disabled
+}

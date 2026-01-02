@@ -1,15 +1,12 @@
 "use client";
 
+import { updateOpportunityStatus } from "@/actions/admin";
 import { Button } from "@/components/ui/button";
+import { useFetchOpportunityDetails } from "@/hooks/query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAction } from "next-safe-action/hooks";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-
-const meta = [
-  { label: "Opportunity Status", value: "Pending" },
-  { label: "Department / Category", value: "Engineering" },
-  { label: "Location", value: "Abuja, Nigeria" },
-  { label: "Start / End Date", value: "June 1, 2024 - August 31, 2024" },
-];
 
 const summaryItem = [
   { label: "Total", value: "45" },
@@ -21,30 +18,98 @@ const summaryItem = [
 export default function OpportunityDetailPage() {
   const { opportunityId } = useParams();
 
+  const queryClient = useQueryClient();
+
+  const { data, isLoading } = useFetchOpportunityDetails(
+    opportunityId as string
+  );
+
+  const { execute, isExecuting } = useAction(updateOpportunityStatus, {
+    onSuccess: () => {
+      console.log("Opportunity status updated successfully");
+      queryClient.invalidateQueries({
+        queryKey: ["opportunity-details", opportunityId],
+      });
+    },
+    onError: (e) => {
+      console.log("Error updating opportunity status", e);
+    },
+  });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  console.log("Opportunity details data:", data);
+
+  const meta = [
+    { label: "Opportunity Status", value: data.status },
+    { label: "Department / Category", value: data.department },
+    // add industry when available
+    { label: "Location", value: data.location },
+    { label: "Start / End Date", value: "June 1, 2024 - August 31, 2024" },
+  ];
+
   return (
     <div className="p-8 max-w-6xl mx-auto flex flex-col gap-8">
       {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-4 gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">
-            Software Engineering Intern
-          </h1>
+          <h1 className="text-2xl font-semibold text-gray-900">{data.title}</h1>
           <p className="text-sm text-gray-600">
             at{" "}
             <Link
               className="text-primary font-medium hover:underline"
-              href="/admin/company/1"
+              href={`/admin/company/${data.company.id}`}
             >
-              Tech Solutions Inc.
+              {data.company.name}
             </Link>
           </p>
         </div>
 
         <div className="flex gap-2">
-          <Button className="bg-green-600 hover:bg-green-700">Promote</Button>
-          <Button variant="outline">Flag</Button>
-          <Button variant="destructive" disabled>
-            Decline
+          {/* <Button className="bg-green-600 hover:bg-green-700" disabled>
+            Promote
+          </Button> */}
+
+          <Button
+            variant="default"
+            disabled={data.status === "open"}
+            onClick={() =>
+              execute({
+                opportunityId: opportunityId as string,
+                status: "open",
+              })
+            }
+          >
+            Open
+          </Button>
+
+          <Button
+            variant="outline"
+            disabled={["flagged", "closed"].includes(data.status)}
+            className="border-amber-500 text-amber-600 hover:bg-amber-50"
+            onClick={() =>
+              execute({
+                opportunityId: opportunityId as string,
+                status: "flagged",
+              })
+            }
+          >
+            Flag
+          </Button>
+
+          <Button
+            variant="destructive"
+            disabled={data.status === "closed"}
+            onClick={() =>
+              execute({
+                opportunityId: opportunityId as string,
+                status: "closed",
+              })
+            }
+          >
+            Deactivate
           </Button>
         </div>
       </div>
@@ -72,20 +137,22 @@ export default function OpportunityDetailPage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
-              faucibus, urna vel efficitur suscipit, neque lorem interdum nunc,
-              at dignissim lorem justo sed augue.
+              {data.company.description}
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t">
               <div>
                 <p className="text-sm text-gray-400">Duration</p>
-                <p className="font-semibold text-gray-800">3 months</p>
+                <p className="font-semibold text-gray-800">
+                  {data.duration} months
+                </p>
               </div>
 
               <div>
                 <p className="text-sm text-gray-400">Stipend</p>
-                <p className="font-semibold text-gray-800">₦80,000 / month</p>
+                <p className="font-semibold text-gray-800">
+                  {data.stipend ?? "Not specified"}
+                </p>
               </div>
             </div>
           </div>

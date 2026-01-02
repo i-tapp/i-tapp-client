@@ -1,6 +1,7 @@
 import { mutate } from "@/lib/api";
 import { actionClient } from "@/lib/safe-action";
-import { companyIdSchema } from "@/lib/validations/auth";
+import { companyIdSchema, companyStatusSchema } from "@/lib/validations/auth";
+import z from "zod";
 
 export const approveCompany = actionClient
   .inputSchema(companyIdSchema)
@@ -28,6 +29,82 @@ export const declineCompany = actionClient
       return {
         success: false,
         error: error || "Failed to decline company",
+      };
+    }
+  });
+
+export const updateCompanyStatus = actionClient
+  .inputSchema(companyStatusSchema)
+  .action(async ({ parsedInput: { companyId, status } }) => {
+    try {
+      const response = await mutate(
+        `/company/${companyId}/status`,
+        {
+          companyId,
+          status,
+        },
+        "PATCH"
+      );
+      return { success: true, data: response };
+    } catch (error) {
+      console.error(error);
+      return {
+        success: false,
+        error: error || "Failed to update company status",
+      };
+    }
+  });
+
+export const updateStudentStatus = actionClient
+  .inputSchema(
+    z.object({
+      studentId: z.string().min(1, "Student ID is required"),
+      status: z.enum(["active", "inactive", "suspended"]),
+    })
+  )
+  .action(async ({ parsedInput: { studentId, status } }) => {
+    try {
+      const response = await mutate(
+        `/s/${studentId}/status`,
+        {
+          studentId,
+          status,
+        },
+        "PATCH"
+      );
+      return { success: true, data: response };
+    } catch (error) {
+      console.error(error);
+      return {
+        success: false,
+        error: error || "Failed to update student status",
+      };
+    }
+  });
+
+export const updateOpportunityStatus = actionClient
+  .inputSchema(
+    z.object({
+      opportunityId: z.string().min(1, "Opportunity ID is required"),
+      status: z.enum(["open", "closed", "flagged"]),
+    })
+  )
+  .action(async ({ parsedInput: { opportunityId, status } }) => {
+    try {
+      const response = await mutate(
+        `/o/${opportunityId}/admin/status`,
+        {
+          opportunityId,
+          status,
+        },
+        "PATCH"
+      );
+      return { success: true, data: response };
+    } catch (error) {
+      console.error(error);
+      return {
+        success: false,
+        error: error || "Failed to update opportunity status",
       };
     }
   });

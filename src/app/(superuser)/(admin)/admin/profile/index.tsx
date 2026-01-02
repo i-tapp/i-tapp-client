@@ -2,9 +2,18 @@
 
 import Input from "@/components/input";
 import { Button } from "@/components/ui/button";
+import { useFetchAdminProfile } from "@/queries/admin";
 import { Camera } from "lucide-react";
 
 export default function AdminProfilePage() {
+  const { data, isLoading } = useFetchAdminProfile();
+
+  if (isLoading) {
+    return <div>Admin profile is loading </div>;
+  }
+
+  console.log("profile fethed", data);
+
   return (
     <div className="flex flex-col gap-8 p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold text-gray-900">Admin Profile</h1>
@@ -24,9 +33,9 @@ export default function AdminProfilePage() {
 
           <div className="flex flex-col">
             <h3 className="text-2xl font-semibold text-gray-900">Admin Name</h3>
-            <p className="text-sm text-gray-500">admin@i-tapp.com</p>
+            <p className="text-sm text-gray-500">{data?.username}</p>
             <span className="mt-1 inline-block px-2 py-1 bg-indigo-100 text-indigo-700 text-xs font-medium rounded">
-              Super Admin
+              {data?.role}
             </span>
           </div>
         </div>
@@ -54,7 +63,7 @@ export default function AdminProfilePage() {
             <label className="text-sm font-medium text-gray-700 mb-1">
               Email
             </label>
-            <Input placeholder="admin@i-tapp.com" />
+            <Input placeholder={data?.user?.email ?? "admin@i-tapp.com"} />
           </div>
 
           {/* Buttons */}
