@@ -3,6 +3,7 @@
 import { useState } from "react";
 import PlacementList from "./_molecules/placement-list";
 import PlacementDetail from "./_molecules/placement-detail";
+import { useFetchOffers } from "@/hooks/query";
 
 export default function PlacementPage() {
   const [selected, setSelected] = useState<any>(null);

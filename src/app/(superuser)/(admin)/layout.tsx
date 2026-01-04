@@ -25,6 +25,7 @@ import Link from "next/link";
 import { cn } from "@/utils/tailwind";
 import { usePathname, useRouter } from "next/navigation";
 import path from "path";
+import { useLogout } from "@/hooks/use-logout";
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -57,6 +58,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   // Initialize with false to avoid hydration mismatch, update in useEffect
   const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  const logout = useLogout();
 
   const router = useRouter();
 
@@ -155,6 +158,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 `}
             >
               <Link
+                onClick={
+                  item.name === "Log out"
+                    ? async (e) => {
+                        e.preventDefault();
+                        await logout();
+                      }
+                    : undefined
+                }
                 href={item.href || "#"}
                 className={cn(
                   "w-full h-full flex items-center",

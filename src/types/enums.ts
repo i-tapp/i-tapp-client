@@ -1,25 +1,33 @@
 export enum ApplicationStatus {
   APPLIED = "applied",
-  SHORTLISTED = "shortlisted",
-  REJECTED = "rejected",
-  ACCEPTED = "accepted",
-  WITHDRAWN = "withdrawn",
   IN_REVIEW = "in_review",
-  INTERVIEWING = "interviewing",
-  APPROVED = "approved",
+  SHORTLISTED = "shortlisted",
+  INTERVIEW = "interview", // Interview stage (optional but common)
+  INTERVIEW_SCHEDULED = "interview_scheduled",
+  OFFERED = "offered", // Company has given an offer letter
+  ACCEPTED = "accepted",
+  REJECTED = "rejected",
+  DECLINED = "declined",
 
-  NEW_APPLICANT = "new_applicant",
-  // INTERVIEW_SCHEDULED = "interview_scheduled",
+  WITHDRAWN = "withdrawn",
+  EXPIRED = "expired", // Company didn't respond in time
 }
 
 export enum OpportunityStatus {
   OPEN = "open",
   CLOSED = "closed",
   DRAFT = "draft",
-  //   PAUSED = "paused",
-  //   FILLED = "filled",
-  //   EXPIRED = "expired",
-  //   REVIEW = "review", // when admin needs to approve
+  PAUSED = "paused",
+  FILLED = "filled",
+  EXPIRED = "expired",
+  REVIEW = "review", // when admin needs to approve
+  FLAGGED = "flagged", // when reported for issues
+}
+
+export enum StudentStatus {
+  ACTIVE = "active",
+  INACTIVE = "inactive",
+  SUSPENDED = "suspended",
 }
 
 export enum OpportunityMode {

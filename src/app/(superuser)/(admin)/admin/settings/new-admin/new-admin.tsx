@@ -1,13 +1,38 @@
 "use client";
 
+import { createAdmin } from "@/actions/admin";
 import Input from "@/components/input";
 import { Button } from "@/components/ui/button";
+import { useAction } from "next-safe-action/hooks";
 // import { RadioGroup } from "@headlessui/react";
 import { useState } from "react";
 
 export default function AddNewAdminPage() {
-  const roles = ["Super Admin", "Admin", "Moderator"];
+  const roles = ["superadmin", "admin", "moderator", "support"];
   const [selectedRole, setSelectedRole] = useState(roles[0]);
+
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    role: roles[3],
+  });
+
+  const { execute, isExecuting } = useAction(createAdmin, {
+    onSuccess: () => {
+      console.log("admin invitation sent");
+    },
+    onError: (e) => {
+      console.log(e);
+    },
+  });
+
+  const handleCreate = () => {
+    execute({
+      username: form.username,
+      email: form.email,
+      role: form.role,
+    });
+  };
 
   return (
     <div className="flex flex-col gap-6 max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-sm">
@@ -26,23 +51,40 @@ export default function AddNewAdminPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col">
             <label className="text-sm font-medium text-gray-700 mb-1">
-              Full Name
+              Email
             </label>
-            <Input placeholder="Full Name" />
+            <Input
+              placeholder="Email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+            />
           </div>
 
           <div className="flex flex-col">
             <label className="text-sm font-medium text-gray-700 mb-1">
-              Email Address
+              Username
             </label>
-            <Input placeholder="Email Address" type="email" />
+            <Input
+              placeholder="Username"
+              value={form.username}
+              onChange={(e) => setForm({ ...form, username: e.target.value })}
+            />
           </div>
 
           <div className="flex flex-col">
             <label className="text-sm font-medium text-gray-700 mb-1">
-              Password
+              Role
             </label>
-            <Input placeholder="Password" type="password" />
+            <select
+              value={form.role}
+              onChange={(e) => setForm({ ...form, role: e.target.value })}
+            >
+              {roles.map((role) => (
+                <option value={role} key={role}>
+                  {role}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
@@ -74,7 +116,9 @@ export default function AddNewAdminPage() {
 
       {/* SAVE BUTTON */}
       <div className="flex justify-end mt-4">
-        <Button>Save Admin</Button>
+        <Button onClick={handleCreate}>
+          {isExecuting ? "Saving..." : "Save Admin"}
+        </Button>
       </div>
     </div>
   );

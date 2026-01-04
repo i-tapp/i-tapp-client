@@ -7,16 +7,13 @@ import { cn } from "@/utils/tailwind";
 import { Toggle } from "@/components/ui/toggle";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
+import AdminList from "./_molecules/admin-list";
 
 const settingsItems = [
   { name: "General", icon: <Users2 size={16} /> },
   { name: "Users & Roles", icon: <Users2 size={16} /> },
   { name: "Payment/Billings", icon: <CreditCard size={16} /> },
   { name: "Security", icon: <Shield size={16} /> },
-];
-
-const admins = [
-  { user: "admin name", role: "super admin", active: "just now" },
 ];
 
 export default function SettingsPage() {
@@ -71,53 +68,7 @@ export default function SettingsPage() {
             <Switch />
           </div>
         )}
-        {selected === 1 && (
-          <div className="flex flex-col gap-6">
-            {/* Header: Title + Add Button */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
-              <div>
-                <h3 className="font-semibold text-lg">Users & Roles</h3>
-                <p className="text-sm text-gray-500">
-                  Manage admin accounts and their roles
-                </p>
-              </div>
-
-              <Link href={"settings/new-admin"}>
-                <Button className="flex items-center gap-2">
-                  <Plus size={16} /> Add New Admin
-                </Button>
-              </Link>
-            </div>
-
-            {/* Table Header */}
-            <div className="hidden md:flex flex-row bg-gray-100 text-gray-600 font-medium px-4 py-2 rounded-t-lg">
-              <div className="flex-1">User</div>
-              <div className="flex-1">Role</div>
-              <div className="flex-1">Last Active</div>
-              <div className="flex-1 text-right">Actions</div>
-            </div>
-
-            {/* Admin Rows */}
-            {admins.map((admin, index) => (
-              <div
-                key={index}
-                className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-0 px-4 py-3 border-b hover:bg-gray-50 rounded-md"
-              >
-                <div className="flex-1 font-medium">{admin.user}</div>
-                <div className="flex-1">{admin.role}</div>
-                <div className="flex-1">{admin.active}</div>
-                <div className="flex-1 flex justify-end gap-2 mt-2 md:mt-0">
-                  <Button size="sm" variant="outline">
-                    Edit
-                  </Button>
-                  <Button size="sm" variant="destructive">
-                    Delete
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        {selected === 1 && <AdminList />}
 
         {selected === 2 && <div>Payment/Billings Content</div>}
         {selected === 3 && <div>Security Content</div>}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
+import { useFetchOffers } from "@/queries/admin";
 
 const dummyApplications = [
   {
@@ -24,10 +25,17 @@ const dummyApplications = [
 
 export default function PlacementList({ onSelect, selectedId }: any) {
   const [search, setSearch] = useState("");
+  const { data, isLoading } = useFetchOffers();
 
-  const filtered = dummyApplications.filter((item) =>
-    item.student.toLowerCase().includes(search.toLowerCase())
-  );
+  if (isLoading) {
+    return <div>Loading placement offers...</div>;
+  }
+
+  const filtered = data.filter((item) => {
+    const student = item.application.student || "";
+    const name = student.firstName + " " + student.lastName;
+    return name.toLowerCase().includes(search.toLowerCase());
+  });
 
   return (
     <div className="p-4 flex flex-col gap-4">
@@ -50,10 +58,13 @@ export default function PlacementList({ onSelect, selectedId }: any) {
               }
             `}
           >
-            <div className="font-medium">{item.student}</div>
-            <div className="text-sm text-gray-500">{item.company}</div>
+            <div className="font-medium">
+              {item.application.student.firstName}{" "}
+              {item.application.student.lastName}
+            </div>
+            <div className="text-sm text-gray-500">{item.company.name}</div>
 
-            <span
+            {/* <span
               className={`text-xs px-2 py-1 rounded mt-1 inline-block
                 ${
                   item.status === "Pending"
@@ -65,7 +76,7 @@ export default function PlacementList({ onSelect, selectedId }: any) {
               `}
             >
               {item.status}
-            </span>
+            </span> */}
           </button>
         ))}
       </div>

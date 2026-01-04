@@ -1,5 +1,6 @@
 import { query } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
+import { use } from "react";
 
 const useFetchCompanies = () => {
   return useQuery({
@@ -8,6 +9,37 @@ const useFetchCompanies = () => {
       const response = await query("/c");
       return response;
     },
+  });
+};
+
+const useFetchAdmins = () => {
+  return useQuery({
+    queryKey: ["admin-admins"],
+    queryFn: async () => {
+      const response = await query("/admins");
+      return response;
+    },
+  });
+};
+
+const useFetchOffers = () => {
+  return useQuery({
+    queryKey: ["admin-offers"],
+    queryFn: async () => {
+      const response = await query("/offers");
+      return response;
+    },
+  });
+};
+
+const useFetchCompanyApplications = (companyId: string) => {
+  return useQuery({
+    queryKey: ["admin-company-applications", companyId],
+    queryFn: async () => {
+      const response = await query(`/applications/company/${companyId}`);
+      return response;
+    },
+    enabled: !!companyId,
   });
 };
 
@@ -31,4 +63,22 @@ const useFetchAdminProfile = () => {
   });
 };
 
-export { useFetchCompanies, useFetchAllStudents, useFetchAdminProfile };
+const useFetchAllApplications = () => {
+  return useQuery({
+    queryKey: ["admin-all-applications"],
+    queryFn: async () => {
+      const response = await query("/applications/all");
+      return response;
+    },
+  });
+};
+
+export {
+  useFetchCompanies,
+  useFetchAllStudents,
+  useFetchAdminProfile,
+  useFetchAllApplications,
+  useFetchCompanyApplications,
+  useFetchOffers,
+  useFetchAdmins,
+};

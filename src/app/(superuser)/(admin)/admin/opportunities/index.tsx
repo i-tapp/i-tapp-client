@@ -1,7 +1,7 @@
 "use client";
 
 import { useFetchOpportunities } from "@/hooks/query";
-import OpportunityTable from "./_molecules/application-table";
+import OpportunityTable from "./_molecules/opportunity-table";
 
 export default function OpportunitiesPage() {
   const { data, isLoading, error } = useFetchOpportunities();

@@ -9,7 +9,9 @@ export const logout = async () => {
   // 2️⃣ Clear Zustand stores
   useStudentStore.getState().setStudent(null);
   useCompanyStore.getState().setCompany(null);
+};
 
-  // 3️⃣ Redirect to login or home
+export const handleLogout = async () => {
+  await logout();
   window.location.href = "/";
 };

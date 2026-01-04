@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { students as studentData } from "./student-detail";
 import { useState } from "react";
+import { studentStatusStyle } from "@/utils/admin-status-style";
 
 export default function StudentTable({
   onView,
@@ -31,12 +32,6 @@ export default function StudentTable({
     );
   });
 
-  const statusColors: Record<string, string> = {
-    Active: "bg-green-100 text-green-800",
-    Pending: "bg-yellow-100 text-yellow-800",
-    Suspended: "bg-red-100 text-red-800",
-  };
-
   return (
     <div className="border rounded-xl overflow-x-auto bg-white shadow">
       <div className="p-4 flex justify-between items-center">
@@ -52,53 +47,53 @@ export default function StudentTable({
         </button>
       </div>
 
-      <table className="min-w-full text-left">
+      <table className="min-w-full text-sm text-left">
         <thead className="bg-gray-50">
           <tr>
-            <th className="px-4 py-2">#</th>
-            <th className="px-4 py-2">Profile</th>
-            <th className="px-4 py-2">Name</th>
-            <th className="px-4 py-2">Email</th>
-            <th className="px-4 py-2">Program</th>
-            <th className="px-4 py-2">Status</th>
-            <th className="px-4 py-2">Applications</th>
-            <th className="px-4 py-2">Actions</th>
+            <th className="p-3">#</th>
+            <th className="p-3">Profile</th>
+            <th className="p-3">Name</th>
+            <th className="p-3">Email</th>
+            <th className="p-3">Program</th>
+            <th className="p-3">Status</th>
+            <th className="p-3">Applications</th>
+            <th className="p-3">Actions</th>
           </tr>
         </thead>
         <tbody>
           {filteredStudents.map((s, index) => (
             <tr
               key={s.id}
-              className="border-b hover:bg-gray-50"
+              className="border-b hover:bg-gray-50 transition"
               onClick={() => router.push(`student/${s.id}`)}
             >
-              <td className="px-4 py-2">{index + 1}</td>
-              <td className="px-4 py-2">
+              <td className="p-3">{index + 1}</td>
+              <td className="p-3">
                 <img
                   src={s.profileUrl}
                   alt={s.name}
                   className="w-10 h-10 rounded-full"
                 />
               </td>
-              {/* <td className="px-4 py-2">{s?.name}</td>
+              {/* <td className="p-3">{s?.name}</td>
                */}
-              <td className="px-4 py-2">
+              <td className="p-3">
                 {s.firstName} {s.lastName}
               </td>
 
-              <td className="px-4 py-2">{s?.user?.email}</td>
-              <td className="px-4 py-2">{s?.courseOfStudy}</td>
-              <td className="px-4 py-2">
+              <td className="p-3">{s?.user?.email}</td>
+              <td className="p-3">{s?.courseOfStudy}</td>
+              <td className="p-3">
                 <span
                   className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                    statusColors[s.status]
+                    studentStatusStyle[s.status]
                   }`}
                 >
                   {s.status}
                 </span>
               </td>
-              <td className="px-4 py-2">{s.applications}</td>
-              <td className="px-4 py-2">
+              <td className="p-3">{s.applications}</td>
+              <td className="p-3">
                 <button
                   onClick={() => onView(s)}
                   className="text-indigo-600 hover:underline"

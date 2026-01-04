@@ -9,8 +9,8 @@ const roleRedirects: Record<string, string> = {
 };
 
 export function proxy(req: NextRequest) {
-  const token = req.cookies.get("session-token")?.value; // "fake-token";
-  const role = req.cookies.get("role")?.value; // "admin";
+  const token = req.cookies.get("session-token")?.value; // || "fake-token";
+  const role = req.cookies.get("role")?.value; // || "admin";
   const { pathname } = req.nextUrl;
 
   console.log("parsing middleware:", { pathname, role, token });

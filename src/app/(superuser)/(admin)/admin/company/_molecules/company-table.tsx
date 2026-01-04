@@ -5,12 +5,7 @@ import { useRouter } from "next/navigation";
 import { useFetchCompanies } from "@/queries/admin";
 import { useAction } from "next-safe-action/hooks";
 import { updateCompanyStatus } from "@/actions/admin";
-
-const statusColors: Record<string, string> = {
-  Active: "bg-green-100 text-green-800",
-  Pending: "bg-yellow-100 text-yellow-800",
-  Suspended: "bg-red-100 text-red-800",
-};
+import { companyStatusStyle } from "@/utils/admin-status-style";
 
 export default function CompanyTable({}: // onView,
 {
@@ -55,17 +50,17 @@ export default function CompanyTable({}: // onView,
       </div>
 
       {/* Table */}
-      <table className="min-w-full text-left">
-        <thead className="bg-gray-50">
+      <table className="min-w-full text-sm text-left">
+        <thead className="bg-gray-100">
           <tr>
-            <th className="px-4 py-2">#</th>
-            <th className="px-4 py-2">Company Name</th>
-            <th className="px-4 py-2">Status</th>
-            <th className="px-4 py-2">Industry</th>
-            <th className="px-4 py-2">Registration Date</th>
-            <th className="px-4 py-2">CAC Document</th>
-            <th className="px-4 py-2">Placements / Opportunities</th>
-            <th className="px-4 py-2">Actions</th>
+            <th className="font-medium p-3">#</th>
+            <th className="font-medium p-3">Company Name</th>
+            <th className="font-medium p-3">Status</th>
+            <th className="font-medium p-3">Industry</th>
+            <th className="font-medium p-3">Registration Date</th>
+            <th className="font-medium p-3">CAC Document</th>
+            <th className="font-medium p-3">Opportunities</th>
+            <th className="font-medium p-3">Actions</th>
           </tr>
         </thead>
 
@@ -73,25 +68,25 @@ export default function CompanyTable({}: // onView,
           {filteredCompanies.map((c, index) => (
             <tr
               key={c.id}
-              className="border-b hover:bg-gray-50"
+              className="border-b hover:bg-gray-50 transition"
               // Uncomment if you want row click navigation
             >
-              <td className="px-4 py-2">{index + 1}</td>
-              <td className="px-4 py-2 font-medium">{c.name}</td>
-              <td className="px-4 py-2">
+              <td className="p-3">{index + 1}</td>
+              <td className="p-3 font-medium">{c.name}</td>
+              <td className="p-3">
                 <span
                   className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                    statusColors[c.status]
+                    companyStatusStyle[c.status]
                   }`}
                 >
                   {c.status}
                 </span>
               </td>
-              <td className="px-4 py-2">{c.industry}</td>
-              <td className="px-4 py-2">{c.registrationDate}</td>
-              <td className="px-4 py-2">{c.cacDocument}</td>
-              <td className="px-4 py-2">{c.opportunities.length}</td>
-              <td className="px-4 py-2 flex gap-2">
+              <td className="p-3">{c.industry}</td>
+              <td className="p-3">{c.registrationDate}</td>
+              <td className="p-3">{c.cacDocument}</td>
+              <td className="p-3">{c.opportunities.length}</td>
+              <td className="p-3 flex gap-2">
                 <button
                   onClick={() => router.push(`/admin/company/${c.id}`)}
                   className="text-indigo-600 hover:underline"

@@ -109,6 +109,41 @@ export const updateOpportunityStatus = actionClient
     }
   });
 
+export const createAdmin = actionClient
+  .inputSchema(
+    z.object({
+      username: z.string().min(1, "Username is required"),
+      email: z.email("Invalid email address"),
+      role: z.enum(["superadmin", "admin", "moderator", "support"]),
+    })
+  )
+  .action(async ({ parsedInput: { username, email, role } }) => {
+    const response = await mutate(`/admins/`, {
+      email,
+      username,
+      role,
+    });
+    return { success: true, data: response };
+  });
+
+export const updateAdminRole = actionClient
+  .inputSchema(
+    z.object({
+      adminId: z.string().min(1, "Admin ID is required"),
+      role: z.enum(["superadmin", "admin", "moderator", "support"]),
+    })
+  )
+  .action(async ({ parsedInput: { adminId, role } }) => {
+    const response = await mutate(
+      `/admins/role/${adminId}`,
+      {
+        role,
+      },
+      "PATCH"
+    );
+    return { success: true, data: response };
+  });
+
 // export const logout = actionClient.schema(logoutSchema).action(async ({}) => {
 //   (await cookies()).set("token", "", {
 //     httpOnly: true,
