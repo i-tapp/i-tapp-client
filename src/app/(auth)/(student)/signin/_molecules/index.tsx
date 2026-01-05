@@ -103,6 +103,17 @@ export function StudentSignIn() {
             )}
           />
 
+          <div className="flex flex-row justify-between text-sm">
+            <div className="flex flex-row justify-center gap-1">
+              <input type="checkbox" />
+              Remember me
+            </div>
+
+            <Link href={"/forgot-password"} className="text-primary">
+              Forgot Password?
+            </Link>
+          </div>
+
           <ButtonWithLoader
             type="submit"
             disabled={!form.formState.isValid}

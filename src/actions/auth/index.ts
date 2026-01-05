@@ -5,10 +5,12 @@ import { actionClient } from "@/lib/safe-action";
 
 import {
   fullCompanySignupSchema,
+  resetPasswordSchema,
   signinSchema,
   signupSchema,
 } from "@/lib/validations/auth";
 import { clearAuthCookies, setAuthCookies } from "@/utils/cookies";
+import z from "zod";
 
 export const signinStudent = actionClient
   .inputSchema(signinSchema)
@@ -85,6 +87,29 @@ export const studentSignup = actionClient
       }
     }
   );
+
+export const resetPassword = actionClient
+  .inputSchema(
+    z.object({
+      email: z.email("Please enter a valid email address"),
+    })
+  )
+  .action(async ({ parsedInput: { email } }) => {
+    const response = await mutate("/auth/reset-password", {
+      email,
+    });
+    return response;
+  });
+
+export const changePassword = actionClient
+  .inputSchema(resetPasswordSchema)
+  .action(async ({ parsedInput: { npassword, token } }) => {
+    const response = await mutate("/auth/change-password", {
+      token,
+      password: npassword,
+    });
+    return response;
+  });
 
 export const companySignup = actionClient
 

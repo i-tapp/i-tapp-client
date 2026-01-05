@@ -40,6 +40,17 @@ export const signupSchema = z.object({
   matriculation: z.string().min(1),
 });
 
+export const resetPasswordSchema = z
+  .object({
+    npassword: z.string().min(8, "Password must be at least 8 characters long"),
+    cpassword: z.string().min(8, "Password must be at least 8 characters long"),
+    token: z.string().optional(),
+  })
+  .refine((data) => data.npassword === data.cpassword, {
+    message: "Passwords do not match",
+    path: ["cpassword"], // 👈 attach error to confirm field
+  });
+
 export const acceptSchema = z.object({
   id: z.string(),
 });
