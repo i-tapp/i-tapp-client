@@ -9,9 +9,9 @@ export const nav_links = [
 ];
 export const filters = {
   duration: [
-    { id: 1, time: "0-3", checked: false },
-    { id: 2, time: "3-6", checked: false },
-    { id: 3, time: "6-12", checked: false },
+    { id: 1, time: "3", checked: false },
+    { id: 2, time: "6", checked: false },
+    { id: 3, time: "12", checked: false },
   ],
   status: [
     { id: 1, status: "open", checked: false },

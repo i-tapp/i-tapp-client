@@ -28,6 +28,8 @@ export default function CompanyProfilePage() {
 
   const { data: companyProfile, isLoading } = useFetchCompanyProfile();
 
+  console.log("Company Profile:", companyProfile);
+
   const handleLogout = async () => {
     await logout();
     window.location.href = "/";
@@ -85,7 +87,11 @@ export default function CompanyProfilePage() {
           {/* Header Banner */}
 
           <ProfileHeaderBanner
-            company={companyProfile}
+            profile={{
+              type: "company",
+              profileImage: companyProfile?.logo,
+              bannerImage: companyProfile?.banner,
+            }}
             setEditing={setEditing}
             onLogout={handleLogout}
             icon={<Building2 className="w-16 h-16 text-white" />}

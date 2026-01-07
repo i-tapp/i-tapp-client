@@ -15,7 +15,18 @@ export default function AvatarUpdate() {
     execute({ profileImage: e.target.files?.[0]! });
   };
 
+  // upload profile picture action (company/student)
   const { execute } = useAction(updateStudentProfilePicture, {
+    onSuccess: (res) => {
+      console.log("Profile image updated successfully:", res);
+    },
+    onError: (error) => {
+      console.error("Error updating profile image:", error);
+    },
+  });
+
+  // upload banner image action (company only )
+  const { execute: banner } = useAction(updateStudentProfilePicture, {
     onSuccess: (res) => {
       console.log("Profile image updated successfully:", res);
     },

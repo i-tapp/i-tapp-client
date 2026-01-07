@@ -9,6 +9,36 @@ import {
 import { start } from "repl";
 import z from "zod";
 
+export const updateCompanyBanner = actionClient
+  .inputSchema(
+    z.object({
+      banner: z.instanceof(File),
+    })
+  )
+  .action(async ({ parsedInput: { banner } }) => {
+    const formData = new FormData();
+    if (banner) {
+      formData.append("banner", banner);
+    }
+    const response = await mutate("/c/profile/banner", formData, "PATCH");
+    return response;
+  });
+
+export const updateCompanyLogo = actionClient
+  .inputSchema(
+    z.object({
+      logo: z.instanceof(File),
+    })
+  )
+  .action(async ({ parsedInput: { logo } }) => {
+    const formData = new FormData();
+    if (logo) {
+      formData.append("logo", logo);
+    }
+    const response = await mutate("/c/profile/logo ", formData, "PATCH");
+    return response;
+  });
+
 /* -------------------------- Profile Actions -------------------------- */
 export const updateCompanyProfile = actionClient
   .inputSchema(companyProfileSchema)

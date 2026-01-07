@@ -150,6 +150,7 @@ export default function FilterCompanies({
           <Input
             value={filter.location}
             onChange={(e) => setFilter({ ...filter, location: e.target.value })}
+            // onBlur={}
             placeholder="e.g Lagos"
             // className="mb-2 shadow-none ring-0 outline-none border border-gray-200 focus:ring-neutral-50 focus:outline-none focus:border-primary/30 focus:ring-1"
           />

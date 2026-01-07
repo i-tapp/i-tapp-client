@@ -14,19 +14,10 @@ export const useFetchOpportunities = (filter?: any) => {
     queryFn: async () => {
       const queryObject: Record<string, any> = {};
 
-      const durationMapping: Record<string, number[]> = {
-        "0-3": [0, 1, 2, 3],
-        "3-6": [3, 4, 5, 6],
-        "6-12": [6, 7, 8, 9, 10, 11, 12],
-      };
+      const selectedDuration = filter?.duration?.find((d) => d.checked)?.time;
 
-      const selectedDuration =
-        filter?.duration
-          ?.filter((d) => d.checked)
-          .flatMap((d) => durationMapping[d.time] || []) ?? [];
-
-      if (selectedDuration.length) {
-        queryObject.duration = selectedDuration.join(",");
+      if (selectedDuration) {
+        queryObject.duration = Number(selectedDuration);
       }
 
       const selectedIndustry =
@@ -48,6 +39,7 @@ export const useFetchOpportunities = (filter?: any) => {
       }
 
       const qs = new URLSearchParams(queryObject).toString();
+      console.log("queryString", qs);
       const response = await query(`/opportunities${qs ? `?${qs}` : ""}`);
       return response.data;
     },

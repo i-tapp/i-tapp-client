@@ -119,7 +119,10 @@ const StudentProfilePage = ({
           {/* Header Banner */}
           <ProfileHeaderBanner
             // company={studentDetails}
-            student={studentDetails}
+            profile={{
+              type: "student",
+              profileImage: studentDetails.profileImage,
+            }}
             setEditing={setEditing}
             onLogout={onLogout}
             icon={<User className="w-16 h-16 text-white" />}

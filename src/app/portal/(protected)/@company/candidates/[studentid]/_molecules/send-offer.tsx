@@ -5,7 +5,7 @@ import Modal from "@/components/modal";
 import { Button } from "@/components/ui/button";
 import { FileUpIcon, X, FileText, Trash2 } from "lucide-react";
 import FileUpload from "@/components/file-upload";
-import UploadThing from "@/components/upload-thing";
+import UploadThing from "@/components/uploading-thing";
 
 interface OfferFormData {
   startDate: string;

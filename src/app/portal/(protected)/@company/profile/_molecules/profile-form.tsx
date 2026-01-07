@@ -37,9 +37,6 @@ export default function ProfileForm({ onClose }: { onClose: () => void }) {
 
   const queryClient = useQueryClient();
 
-  const [logoImage, setLogoImage] = useState<File | null>(null);
-  const [bannerImage, setBannerImage] = useState<File | null>(null);
-
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(companyProfileSchema),
     defaultValues: {
@@ -75,32 +72,10 @@ export default function ProfileForm({ onClose }: { onClose: () => void }) {
     }
   }, [companyProfile, form]);
 
-  // Memoized previews
-  const logoPreview = useMemo(
-    () => (logoImage ? URL.createObjectURL(logoImage) : null),
-    [logoImage]
-  );
-
-  const bannerPreview = useMemo(
-    () => (bannerImage ? URL.createObjectURL(bannerImage) : null),
-    [bannerImage]
-  );
-
-  // File change handler
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    setter: React.Dispatch<React.SetStateAction<File | null>>
-  ) => {
-    const file = e.target.files?.[0];
-    if (file) setter(file);
-  };
-
   // Submit handler
   const onSubmit = (data: ProfileFormData) => {
     updateProfile({
       ...data,
-      logoImage: logoImage ?? undefined,
-      bannerImage: bannerImage ?? undefined,
     });
   };
 
@@ -111,55 +86,6 @@ export default function ProfileForm({ onClose }: { onClose: () => void }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {/* Banner Upload */}
-        <label className="flex w-full h-40 bg-gray-100 rounded-md cursor-pointer items-center justify-center relative overflow-hidden">
-          {bannerPreview || companyProfile?.bannerUrl ? (
-            <Image
-              src={bannerPreview ?? companyProfile?.bannerUrl!}
-              alt="Banner"
-              fill
-              className="object-cover"
-            />
-          ) : (
-            <div className="text-center text-gray-600">
-              <Upload size={40} className="mx-auto" />
-              <p>Upload banner image</p>
-            </div>
-          )}
-
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleFileChange(e, setBannerImage)}
-            className="hidden"
-          />
-        </label>
-
-        {/* Logo Upload */}
-        <label className="cursor-pointer w-24 h-24 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center overflow-hidden">
-          {logoPreview || companyProfile?.logoUrl ? (
-            <Image
-              src={logoPreview ?? companyProfile?.logoUrl!}
-              alt="Logo"
-              width={100}
-              height={100}
-              className="object-cover"
-            />
-          ) : (
-            <div className="flex flex-col items-center text-gray-500">
-              <Upload size={18} />
-              <span className="text-xs">Logo</span>
-            </div>
-          )}
-
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleFileChange(e, setLogoImage)}
-            className="hidden"
-          />
-        </label>
-
         {/* Website & Address */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField

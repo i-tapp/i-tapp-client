@@ -13,8 +13,6 @@ export function proxy(req: NextRequest) {
   const role = req.cookies.get("role")?.value; // || "admin";
   const { pathname } = req.nextUrl;
 
-  console.log("parsing middleware:", { pathname, role, token });
-
   const isAdminRoute = pathname.startsWith("/admin");
   const isPortalRoute = pathname.startsWith("/portal");
   const isAuthRoute = [

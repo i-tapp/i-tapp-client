@@ -1,49 +1,94 @@
 import { User, Edit3, LogOut, Building2 } from "lucide-react";
 import AvatarCard from "./avatar-card";
 import Image from "next/image";
+import UploadThing from "./upload-thing";
+import { useAction } from "next-safe-action/hooks";
+import { updateStudentProfilePicture } from "@/actions/student";
+import { useQueryClient } from "@tanstack/react-query";
+import { query } from "@/lib/api";
+import { updateCompanyBanner, updateCompanyLogo } from "@/actions/company";
+
+type type = "student" | "company";
+
+interface profileData {
+  type: type;
+  // logoImage?: string;
+  bannerImage?: string;
+  profileImage?: string;
+}
 
 interface ProfileHeaderBannerProps {
+  profile: profileData;
   setEditing?: (editing: boolean) => void;
   onLogout?: () => void;
-  company?: {
-    logoImage?: string;
-    bannerImage?: string;
-  };
-  student?: {
-    profileImage?: string;
-  };
   icon?: React.ReactNode;
 }
 
 export default function ProfileHeaderBanner({
   setEditing,
   onLogout,
-  company,
-  student,
   icon,
+  profile,
 }: ProfileHeaderBannerProps) {
-  const profileUrl = student
-    ? student.profileImage
-    : company
-    ? company.logoImage
-    : null;
+  const { profileImage, bannerImage } = profile;
 
-  const bannerUrl = company ? company.bannerImage : null;
+  const queryClient = useQueryClient();
+
+  // upload profile picture action (company/student)
+  const { execute } = useAction(updateStudentProfilePicture, {
+    onSuccess: (res) => {
+      console.log("Profile image updated successfully:", res);
+      queryClient.invalidateQueries({ queryKey: ["student-profile"] });
+    },
+    onError: (error) => {
+      console.error("Error updating profile image:", error);
+    },
+  });
+
+  const { execute: logo } = useAction(updateCompanyLogo, {
+    onSuccess: (res) => {
+      console.log("Profile image updated successfully:", res);
+      queryClient.invalidateQueries({ queryKey: ["student-profile"] });
+    },
+    onError: (error) => {
+      console.error("Error updating profile image:", error);
+    },
+  });
+
+  // upload banner image action (company only )
+  const { execute: banner } = useAction(updateCompanyBanner, {
+    onSuccess: (res) => {
+      console.log("Profile image updated successfully:", res);
+    },
+    onError: (error) => {
+      console.error("Error updating profile image:", error);
+    },
+  });
+
+  console.log("profile", profile);
 
   return (
     <div className="relative">
       {/* Banner */}
-      {bannerUrl ? (
-        <Image
-          src={`${bannerUrl}`}
-          alt="Banner"
-          width={50}
-          height={50}
-          className="w-full h-56 object-cover"
-        />
-      ) : (
-        <div className="w-full h-56 bg-linear-to-r from-primary to-red-500" />
-      )}
+      <UploadThing
+        onSelect={(img) => {
+          console.log(img);
+          banner({ banner: img! });
+        }}
+        disabled={profile.type !== "company"}
+      >
+        {bannerImage ? (
+          <Image
+            src={bannerImage}
+            alt="Banner"
+            width={50}
+            height={50}
+            className="w-full h-56 object-cover"
+          />
+        ) : (
+          <div className="w-full h-56 bg-linear-to-r from-primary to-red-500" />
+        )}
+      </UploadThing>
 
       {/* Action Buttons */}
 
@@ -67,68 +112,27 @@ export default function ProfileHeaderBanner({
       )}
 
       {/* Profile Picture */}
-      <div className="absolute -bottom-12 left-8">
-        {profileUrl ? (
-          <Image
-            src={`http://localhost:3001/${profileUrl}`}
-            alt="Profile"
-            width={50}
-            height={50}
-            className="w-24 h-24 rounded-2xl object-cover border-4 border-white shadow-xl bg-white"
-          />
-        ) : (
-          <AvatarCard icon={icon} />
-        )}
-      </div>
+      <UploadThing
+        onSelect={(img) => {
+          console.log(img);
+          execute({ profileImage: img! });
+          profile.type === "company" && logo({ logo: img! });
+        }}
+      >
+        <div className="absolute -bottom-12 left-8">
+          {profileImage ? (
+            <Image
+              src={profileImage}
+              alt="Profile"
+              width={50}
+              height={50}
+              className="w-24 h-24 rounded-2xl object-cover border-4 border-white shadow-xl bg-white"
+            />
+          ) : (
+            <AvatarCard icon={icon} />
+          )}
+        </div>
+      </UploadThing>
     </div>
   );
 }
-
-// import { User, Edit3, LogOut, Building2 } from "lucide-react";
-// import AvatarCard from "./avatar-card";
-
-// export default function ProfileHeaderBanner({
-//   setEditing,
-//   onLogout,
-//   data,
-//   icon,
-// }) {
-//   console.log("ProfileHeaderBanner data:", data.logoImage);
-//   return (
-//     <div className="relative">
-//       <div className="w-full h-56 bg-linear-to-r from-primary to-red-500" />
-
-//       {/* Action Buttons */}
-
-//       <div className="absolute top-4 right-4 flex gap-3">
-//         <button
-//           onClick={() => setEditing(true)}
-//           className="flex items-center px-4 py-2 bg-white hover:bg-gray-100 text-gray-900 rounded-lg transition-colors shadow-lg font-medium"
-//         >
-//           <Edit3 className="w-4 h-4 mr-2" />
-//           Edit Profile
-//         </button>
-//         <button
-//           onClick={onLogout}
-//           className="flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors shadow-lg font-medium"
-//         >
-//           <LogOut className="w-4 h-4 mr-2" />
-//           Logout
-//         </button>
-//       </div>
-
-//       {/* Profile Picture */}
-//       <div className="absolute -bottom-12 left-8">
-//         {data.logoImage ? (
-//           <img
-//             src={`http://localhost:3000/${data.logoImage}`}
-//             alt="Profile"
-//             className="w-24 h-24 rounded-2xl object-cover border-4 border-white shadow-xl bg-white"
-//           />
-//         ) : (
-//           <AvatarCard icon={icon} />
-//         )}
-//       </div>
-//     </div>
-//   );
-// }

@@ -54,7 +54,7 @@ export async function api<T = any>(
     });
     return response.data;
   } catch (error) {
-    console.error("API request failed:", error);
+    // console.error("API request failed:", error);
     throw error; // don’t swallow
   }
 }
