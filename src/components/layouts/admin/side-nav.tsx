@@ -9,9 +9,8 @@ export default function SideNav({
   isMobile,
   setCollapsed,
   menuItems,
-
   logout,
-}) {
+}: any) {
   const pathname = usePathname();
   const isActive = (href: string) => {
     if (href === "/admin") {
@@ -55,7 +54,7 @@ export default function SideNav({
 
       {/* Menu Items */}
       <nav className="flex-1 py-4 flex flex-col gap-1 px-2">
-        {menuItems.map((item) => (
+        {menuItems.map((item: any) => (
           <Button
             key={item.name}
             variant={"ghost"}

@@ -25,7 +25,7 @@ export default function FilterCompanies({
   const handleCheck = (key: string, id: number) => {
     setFilter({
       ...filter,
-      [key]: filter[key].map((item) =>
+      [key]: filter[key].map((item: any) =>
         item.id === id ? { ...item, checked: !item.checked } : item
       ),
     });
@@ -162,7 +162,7 @@ export default function FilterCompanies({
         <section>
           <h6 className="mb-3 font-medium text-sm text-gray-700">Industry</h6>
           <div className="flex flex-wrap gap-3">
-            {filter.industry.map((i) => (
+            {filter.industry.map((i: any) => (
               <Label
                 key={i.id}
                 htmlFor={`industry-${i.id}`}

@@ -13,7 +13,7 @@ const DownloadOfferLetterSection = ({
   offerLetterUrl = offerDetails?.letterUrl,
   companyName = "TechBridge Innovations",
   offerDate = "2025-03-15",
-}) => {
+}: any) => {
   const [isDownloading, setIsDownloading] = useState(false);
 
   const handleDownload = async () => {

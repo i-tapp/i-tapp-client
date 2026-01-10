@@ -7,7 +7,7 @@ interface StudentState {
   savedApplications: any[];
   selectedJob: any;
   students: Student[];
-  setStudent: (s: Student) => void;
+  setStudent: (s: Student | null) => void;
   setSavedApplications: (apps: any[]) => void;
   setSelectedJob: (job: any) => void;
   setStudents: (list: Student[]) => void;

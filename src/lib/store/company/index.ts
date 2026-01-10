@@ -10,7 +10,7 @@ interface CompanyState {
   acceptedApplicants: number;
   shortlistedApplicants: number;
   selectedApplicant: any;
-  setCompany: (c: Company) => void;
+  setCompany: (c: Company | null) => void;
   setCompanyJobs: (jobs: any[]) => void;
   setTotalApplicants: (count: number) => void;
   setAcceptedApplicants: (count: number) => void;

@@ -23,7 +23,8 @@ export default function ResetPasswordPage() {
     resolver: zodResolver(resetPasswordSchema),
     mode: "onChange",
   });
-  const token = useSearchParams().get("token");
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
 
   const [message, setMessage] = useState("");
 

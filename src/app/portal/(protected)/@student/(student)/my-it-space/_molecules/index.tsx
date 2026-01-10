@@ -67,8 +67,8 @@ const MyItSpace = () => {
 
   const offers = data || [];
 
-  const TransformData = (data) => {
-    return data.map((item) => ({
+  const TransformData = (data: any) => {
+    return data.map((item: any) => ({
       id: item.id,
       name: item.company.name,
       location: item.company.address,
@@ -88,8 +88,8 @@ const MyItSpace = () => {
   if (selectedCompany) {
     return (
       <CompanyDetailsPage
-        company={selectedCompany}
-        onBack={() => setSelectedCompany(null)}
+      // company={selectedCompany}
+      // onBack={() => setSelectedCompany(null)}
       />
     );
   }
@@ -101,7 +101,7 @@ const MyItSpace = () => {
 };
 
 // Offers List View Component
-const OffersListView = ({ offers, onSelectCompany }) => {
+const OffersListView = ({ offers, onSelectCompany }: any) => {
   return (
     <div className=" min-h-screen mt-5 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -122,7 +122,7 @@ const OffersListView = ({ offers, onSelectCompany }) => {
           <EmptyState />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {offers.map((company) => {
+            {offers.map((company: any) => {
               const applicationData = company?.application;
               const opportunityData = applicationData?.opportunity;
               const companyData = company?.company;

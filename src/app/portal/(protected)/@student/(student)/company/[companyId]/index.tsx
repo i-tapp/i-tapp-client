@@ -14,6 +14,17 @@ import {
 } from "lucide-react";
 import { useParams } from "next/navigation";
 
+type Company = {
+  id: string;
+  name: string;
+  // whatever companyDetails contains
+};
+
+type ProfileHeaderBannerProps = {
+  data: Company;
+  icon?: React.ReactNode;
+};
+
 export default function CompanyDetails() {
   const { companyId } = useParams();
 
@@ -32,7 +43,11 @@ export default function CompanyDetails() {
           {/* Header Banner */}
 
           <ProfileHeaderBanner
-            data={companyDetails}
+            // data={companyDetails}
+            profile={{
+              type: "company",
+              bannerImage: "",
+            }}
             // setEditing={setEditing}
             // onLogout={handleLogout}
             icon={<Building2 className="w-16 h-16 text-white" />}

@@ -16,7 +16,13 @@ import {
 import { useRouter } from "next/navigation";
 
 // Individual Offer Card Component
-const OfferCard = ({ company, opportunity, onSelect, application, id }) => {
+const OfferCard = ({
+  company,
+  opportunity,
+  onSelect,
+  application,
+  id,
+}: any) => {
   const router = useRouter();
   return (
     <div

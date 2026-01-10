@@ -42,6 +42,36 @@ export function OpportunityStatusBadge({
       textColor: "text-gray-500",
       icon: <DocumentText size={16} variant="Bold" />,
     },
+    [OpportunityStatus.FILLED]: {
+      label: "Filled",
+      dashboardColor: "bg-blue-100 text-blue-700",
+      textColor: "text-blue-600",
+      icon: <TickCircle size={16} variant="Bold" />,
+    },
+    [OpportunityStatus.FLAGGED]: {
+      label: "Flagged",
+      dashboardColor: "bg-blue-100 text-blue-700",
+      textColor: "text-blue-600",
+      icon: <TickCircle size={16} variant="Bold" />,
+    },
+    [OpportunityStatus.EXPIRED]: {
+      label: "Expired",
+      dashboardColor: "bg-gray-100 text-gray-700",
+      textColor: "text-gray-500",
+      icon: <CloseCircle size={16} variant="Bold" />,
+    },
+    [OpportunityStatus.PAUSED]: {
+      label: "Paused",
+      dashboardColor: "bg-yellow-100 text-yellow-700",
+      textColor: "text-yellow-600",
+      icon: <DotIcon />,
+    },
+    [OpportunityStatus.REVIEW]: {
+      label: "Under Review",
+      dashboardColor: "bg-purple-100 text-purple-700",
+      textColor: "text-purple-600",
+      icon: <DotIcon />,
+    },
   };
 
   const current = statusConfig[status];

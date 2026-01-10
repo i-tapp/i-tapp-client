@@ -22,6 +22,8 @@ export const applicationStatusStyle: Record<ApplicationStatus, string> = {
   [ApplicationStatus.DECLINED]: `${baseStyle} bg-red-100 text-red-700`,
   [ApplicationStatus.WITHDRAWN]: `${baseStyle} bg-gray-100 text-gray-600`,
   [ApplicationStatus.EXPIRED]: `${baseStyle} bg-gray-100 text-gray-500`,
+  [ApplicationStatus.INTERVIEWING]: `${baseStyle} bg-green-100 text-green-700`,
+  [ApplicationStatus.APPROVED]: `${baseStyle} bg-green-100 text-green-700`,
 };
 
 export const companyStatusStyle: Record<CompanyStatus, string> = {

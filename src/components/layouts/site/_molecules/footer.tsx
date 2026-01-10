@@ -41,7 +41,7 @@ export function Footer() {
           />
           <Button
             className="bg-[#F1F2FC] text-black  py-4 hover:bg-[#F1F2FC] active:bg-[#F1F2FC] text-sm sm:text-base sm:w-32 "
-            size="normal"
+            size="default"
           >
             SUBSCRIBE
           </Button>

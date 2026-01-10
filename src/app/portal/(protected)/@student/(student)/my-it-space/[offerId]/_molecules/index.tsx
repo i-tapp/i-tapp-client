@@ -43,7 +43,7 @@ const companyDetails = {
 };
 // --------------------------------------------------
 
-const CompanyDetailsPage: React.FC = () => {
+const CompanyDetailsPage = () => {
   const { offerId } = useParams();
   // In real app, you would get 'company' via props or fetch based on URL ID
   const company = companyDetails;
