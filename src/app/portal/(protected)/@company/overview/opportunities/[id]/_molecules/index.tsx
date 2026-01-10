@@ -123,23 +123,29 @@ export default function OpportunityDetailsPage() {
   const currentStatus = statusConfig[opportunity?.status] || statusConfig.draft;
 
   return (
-    <div className="p-4 md:p-6 w-full mx-auto max-w-7xl">
+    <div className="">
       {/* Breadcrumb/Meta Info */}
       <div className="flex items-center gap-2 text-sm text-gray-600 mb-4 flex-wrap">
-        <Briefcase size={16} />
-        <span className="capitalize">{opportunity?.type || "N/A"}</span>
-        <span>•</span>
-        <MapPin size={16} />
-        <span className="capitalize">{opportunity?.location || "N/A"}</span>
-        <span>•</span>
-        <Calendar size={16} />
-        <span>
-          Posted {new Date(opportunity?.createdAt).toLocaleDateString()}
-        </span>
+        <div className="flex flex-row items-center gap-1">
+          <Briefcase size={16} />
+          <span className="capitalize">{opportunity?.type || "N/A"}</span>
+        </div>
+
+        <div className="flex flex-row items-center gap-1">
+          <MapPin size={16} />
+          <span className="capitalize">{opportunity?.location || "N/A"}</span>
+        </div>
+
+        <div className="flex flex-row items-center gap-1">
+          <Calendar size={16} />
+          <span>
+            Posted {new Date(opportunity?.createdAt).toLocaleDateString()}
+          </span>
+        </div>
       </div>
 
       {/* Main Card Container */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6 w-full">
+      <div className="bg-white rounded-lg border border-gray-200 p-4 md:p-6 w-full">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
           <div className="flex-1">

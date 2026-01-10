@@ -2,8 +2,15 @@
 
 import React from "react";
 import Link from "next/link";
-import { ProfileAdd, ArrowRight } from "iconsax-reactjs";
+import {
+  ProfileAdd,
+  ArrowRight,
+  ProfileTick,
+  TickCircle,
+  Profile2User,
+} from "iconsax-reactjs";
 import { OverviewBox } from "@/components/overview-box";
+import { CheckCircle } from "lucide-react";
 import { ApplicantCard } from "../../../../../../../components/applicant-card";
 
 import { Applicant, Opportunity } from "@/types";
@@ -43,36 +50,40 @@ export function Dashboard() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h5 className="text-h6">
-        Hello <span className="uppercase">{companyProfile?.name}</span>
-      </h5>
-      <p className=" text-grey-3">This is the overview of your activities</p>
+      <div>
+        <h5 className="text-lg font-black">
+          Hello <span className="uppercase">{companyProfile?.name} 👋</span>
+        </h5>
+        <p className=" text-grey-3 text-sm">
+          This is the overview of your activities
+        </p>
+      </div>
 
       <div className="flex flex-col md:flex-row gap-4 w-full">
         <OverviewBox
           title="Total"
           number={totalApplicantsCount}
-          icon={<ProfileAdd />}
+          icon={<Profile2User />}
           link={"/portal/overview/applicants"}
         />
         <OverviewBox
           title="Shortlisted"
           number={shortlistedApplicantsCount}
-          icon={<ProfileAdd />}
+          icon={<ProfileTick />}
           link={"/portal/candidates/shortlisted"}
         />
         <OverviewBox
           title="Accepted"
-          number={acceptedApplicantsCount}
-          icon={<ProfileAdd />}
+          number={8}
+          icon={<TickCircle />}
           link={"/portal/candidates/accepted"}
         />
       </div>
 
       <div>
         <div className="flex justify-between my-5">
-          <span>Recent Applicants</span>
-          <Link href="/portal/overview/applicants" className="flex mr-14 gap-2">
+          <span className="font-semibold">Recent Opportunities</span>
+          <Link href="#" className="flex mr-14 gap-2">
             <span>See all</span>
             <ArrowRight size={24} color="#292D32" />
           </Link>
@@ -84,7 +95,7 @@ export function Dashboard() {
               <ApplicantCard key={index} applicant={applicant} />
             ))}
         </div>
-        <div className="flex flex-col mt-5 gap-2">
+        <div className="flex flex-col mt-5 border border-gray-100 bg-white rounded-xl">
           {opportunities?.map((opportunity: Opportunity, index: number) => (
             <OpportunityCard
               key={index}
@@ -97,13 +108,6 @@ export function Dashboard() {
               variant="list"
             />
           ))}
-          {/* <OpportunityCard
-            title="Frontend Developer"
-            applicants={5}
-            status="open"
-            actionLabel="View Applicants"
-            onAction={() => console.log("Viewing opportunity")}
-          /> */}
         </div>
       </div>
     </div>

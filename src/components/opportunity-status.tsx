@@ -1,6 +1,7 @@
 import React from "react";
 import { OpportunityStatus } from "@/types/enums";
 import { CloseCircle, DocumentText, TickCircle } from "iconsax-reactjs";
+import { Dot, DotIcon } from "lucide-react";
 
 export function OpportunityStatusBadge({
   status,
@@ -12,7 +13,7 @@ export function OpportunityStatusBadge({
   const baseClass =
     variant === "dashboard"
       ? "px-3 py-1 text-xs font-semibold rounded-xl capitalize"
-      : "flex items-center justify-center gap-1 text-sm font-medium capitalize";
+      : "flex items-center justify-center text-sm font-medium capitalize";
 
   const statusConfig: Record<
     OpportunityStatus,
@@ -27,13 +28,13 @@ export function OpportunityStatusBadge({
       label: "Open",
       dashboardColor: "bg-green-700 text-white",
       textColor: "text-green-600",
-      icon: <TickCircle size={16} variant="Bold" />,
+      icon: <DotIcon />,
     },
     [OpportunityStatus.CLOSED]: {
       label: "Closed",
       dashboardColor: "bg-red-100 text-red-700",
       textColor: "text-red-600",
-      icon: <CloseCircle size={16} variant="Bold" />,
+      icon: <DotIcon />,
     },
     [OpportunityStatus.DRAFT]: {
       label: "Draft",
@@ -58,7 +59,7 @@ export function OpportunityStatusBadge({
   return (
     <div className={`${baseClass} ${current.textColor}`}>
       {current.icon}
-      <span>{current.label}</span>
+      <span className="text-xs">{current.label}</span>
     </div>
   );
 }

@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { Upload } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 
 import {
@@ -27,7 +25,6 @@ import z from "zod";
 import { useFetchCompanyProfile } from "@/hooks/query";
 import { Spinner } from "@/components/spinner";
 import { useQueryClient } from "@tanstack/react-query";
-import { on } from "events";
 
 export type ProfileFormData = z.infer<typeof companyProfileSchema>;
 

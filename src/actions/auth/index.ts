@@ -68,23 +68,16 @@ export const studentSignup = actionClient
         school,
       },
     }) => {
-      console.log(email);
-      try {
-        const response = await mutate("/auth/signup/student", {
-          firstName,
-          lastName,
-          email,
-          password,
-          matriculationNumber: matriculation,
-          school,
-        });
+      const response = await mutate("/auth/signup/student", {
+        firstName,
+        lastName,
+        email,
+        password,
+        matriculationNumber: matriculation,
+        school,
+      });
 
-        console.log(response);
-      } catch (error) {
-        console.log(error);
-
-        throw error;
-      }
+      console.log(response);
     }
   );
 

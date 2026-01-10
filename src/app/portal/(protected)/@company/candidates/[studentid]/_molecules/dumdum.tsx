@@ -26,8 +26,6 @@ import Modal from "@/components/modal";
 import OfferModal from "./send-offer";
 import { Loader } from "@/components/ui/loader";
 import Loading from "@/components/loading";
-import Hr from "@/components/ui/hr";
-import { cn } from "@/utils/tailwind";
 
 export default function CandidateProfile() {
   const [offerFormOpen, setOfferFormOpen] = useState(false);
@@ -115,7 +113,7 @@ export default function CandidateProfile() {
   console.log("applicationDetails", applicationDetails);
 
   return (
-    <div className="min-h-screen bg-gray-50/60 ">
+    <div className="min-h-screen bg-gray-50/60 py-6 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="flex gap-6 items-center mb-8">
@@ -135,63 +133,95 @@ export default function CandidateProfile() {
             </p>
           </div>
         </div>
-
         {/* Main Content Grid */}
+        <div className="flex ">
+          {/* Bio & Contact Info Card */}
+          <div className="border border-gray-100 rounded-lg bg-card p-6">
+            <h2 className="text-xl font-bold text-foreground mb-4">
+              Bio & Contact
+            </h2>
 
-        <div className="flex flex-row justify-between gap-4">
-          <SectionWrapper className="flex flex-col rounded-lg border bg-white px-6 py-6 gap-4 w-full ">
-            <div className=" h-80">
-              <h1 className="font-semibold"> Bio & Contact</h1>
-
-              <div className="mt-4">
-                <h1 className="uppercase text-muted-foreground text-sm font-semibold">
-                  about
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  {studentDetails?.bio || "No bio available."}
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm text-muted-foreground mb-2">ABOUT</p>
+                <p className="text-sm text-foreground leading-relaxed">
+                  {studentDetails?.profileBio || "No bio provided."}
                 </p>
               </div>
-            </div>
 
-            <Hr />
-            <div className=" flex flex-col gap-2">
-              <InfoCard
-                icon={Sms}
-                label="Email"
-                value={studentDetails?.user?.email || "Not provided"}
-              />
-              <InfoCard
-                icon={Call}
-                label="Phone"
-                value={studentDetails?.user?.phoneNumber || "Not provided"}
-              />
+              <hr className="border-primary/20" />
 
-              <InfoCard
-                icon={Location}
-                label="Address"
-                value={studentDetails?.user?.address || "Not provided"}
-              />
-            </div>
-          </SectionWrapper>
-          <div className="flex flex-col gap-6 w-full">
-            <SectionWrapper className="flex flex-col gap-2">
-              <HeaderLabel title="Application Info" />
-              <div className="flex flex-row justify-between">
-                <p className="text-xs">status:</p>{" "}
-                <p className="italic text-xs font-semibold">
-                  {applicationDetails?.status
-                    ? applicationDetails.status.charAt(0).toUpperCase() +
-                      applicationDetails.status.slice(1)
-                    : "N/A"}
-                </p>
+              <div>
+                <div className="flex items-start gap-3 mb-3">
+                  <Sms className="text-primary mt-1" size={20} />
+                  <div className="flex-1">
+                    <p className="text-sm text-muted-foreground mb-1">Email</p>
+                    <a
+                      href={
+                        studentDetails?.user?.email
+                          ? `mailto:${studentDetails?.user?.email}`
+                          : undefined
+                      }
+                      className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
+                    >
+                      {studentDetails?.user?.email || "Not specified"}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 mb-3">
+                  <Call className="text-primary mt-1" size={20} />
+                  <div className="flex-1">
+                    <p className="text-sm text-muted-foreground mb-1">Phone</p>
+                    <p className="text-sm font-semibold text-foreground">
+                      {studentDetails?.user?.phoneNumber || "Not specified"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <Location className="text-primary mt-1" size={20} />
+                  <div className="flex-1">
+                    <p className="text-sm text-muted-foreground mb-1">
+                      Address
+                    </p>
+                    <p className="text-sm font-semibold text-foreground">
+                      {studentDetails?.user?.address || "Not specified"}
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="flex text-sm flex-row justify-between">
-                <p className="text-xs">applied date:</p>{" "}
-                <p className="italic text-xs font-semibold">
-                  {applicationDetails?.appliedAt
-                    ? moment(applicationDetails.appliedAt).format("ll")
-                    : "N/A"}
-                </p>
+            </div>
+          </div>
+
+          {/* Application Status & Student Info Card */}
+          <div className="border-2 border-primary/20 rounded-lg bg-card">
+            {/* Application Status Section */}
+            <div className="p-6 border-b border-primary/20">
+              <h2 className="text-xl font-bold text-foreground mb-4">
+                Application Status
+              </h2>
+
+              <div className="space-y-3 mb-4">
+                <div className="flex justify-between items-center">
+                  <p className="text-sm text-muted-foreground">Status:</p>
+                  <span className="text-sm font-semibold text-foreground">
+                    {applicationDetails?.status
+                      ? applicationDetails.status.charAt(0).toUpperCase() +
+                        applicationDetails.status.slice(1)
+                      : "N/A"}
+                    {/* . ? "Accepted" : "Pending Review" */}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <p className="text-sm text-muted-foreground">Applied Date:</p>
+                  <span className="text-sm font-semibold text-foreground">
+                    {applicationDetails?.appliedAt
+                      ? moment(applicationDetails.appliedAt).format("ll")
+                      : "N/A"}
+                  </span>
+                </div>
               </div>
 
               <div className="flex gap-3">
@@ -279,70 +309,77 @@ export default function CandidateProfile() {
                   </div>
                 )}
               </div>
-            </SectionWrapper>
+            </div>
 
-            <SectionWrapper className="">
-              <HeaderLabel title="Student Info" />
+            {/* Student Information Section */}
+            <div className="p-6 border-b border-primary/20">
+              <h2 className="text-lg font-bold text-foreground mb-4">
+                Student Information
+              </h2>
 
-              <InfoCard
-                icon={GraduationCap}
-                label="School"
-                value={studentDetails?.school || "Not provided"}
-              />
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <GraduationCap className="text-primary mt-1" size={20} />
+                  <div className="flex-1">
+                    <p className="text-sm text-muted-foreground mb-1">School</p>
+                    <p className="text-sm font-semibold text-foreground">
+                      {studentDetails?.school || "Not specified"}
+                    </p>
+                  </div>
+                </div>
 
-              <InfoCard
-                icon={Note1}
-                label="Course of Study"
-                value={studentDetails?.courseOfStudy || "Not provided"}
-              />
-            </SectionWrapper>
+                <div className="flex items-start gap-3">
+                  <Note1 className="text-primary mt-1" size={20} />
+                  <div className="flex-1">
+                    <p className="text-sm text-muted-foreground mb-1">
+                      Course of Study
+                    </p>
+                    <p className="text-sm font-semibold text-foreground">
+                      {studentDetails?.courseOfStudy || "Not specified"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-            <SectionWrapper className="h-30">
-              <HeaderLabel title="Documents" />
+            {/* Application Documents Section */}
+            <div className="p-6">
+              <h2
+                className="text-lg font-bold text-foreground mb-4"
+                onClick={() => setOfferFormOpen(true)}
+              >
+                Documents
+              </h2>
 
-              <p className="text-xs mt-3"> No documents uploaded</p>
-            </SectionWrapper>
+              {studentDetails?.documentUrls &&
+              studentDetails.documentUrls.length > 0 ? (
+                <Button
+                  size="lg"
+                  onClick={() =>
+                    window.open(
+                      studentDetails.documentUrls,
+                      "_blank",
+                      "noopener noreferrer"
+                    )
+                  }
+                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                >
+                  View Documents
+                </Button>
+              ) : (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  No documents uploaded.
+                </p>
+              )}
+            </div>
           </div>
-        </div>
-
+        </div>{" "}
         <OfferModal
           offerFormOpen={offerFormOpen}
           onClose={() => setOfferFormOpen(false)}
           onCreate={(things) => handleCreate(things)}
         />
       </div>
-    </div>
-  );
-}
-
-function InfoCard({ icon: Icon, label, value }: any) {
-  return (
-    <div className="flex items-center gap-4 ">
-      <div className="p-2 bg-gray-100 rounded-lg">
-        <Icon className="text-gray-600 size-4" />
-      </div>
-      <div>
-        <p className="text-xs text-muted-foreground">{label}</p>
-        <p className=" text-sm font-medium text-foreground">{value}</p>
-      </div>
-    </div>
-  );
-}
-
-function HeaderLabel({ title }: { title: string }) {
-  return <h1 className="font-semibold text-sm">{title}</h1>;
-}
-
-function SectionWrapper({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={cn(`bg-white p-4 border rounded-lg`, className)}>
-      {children}
     </div>
   );
 }

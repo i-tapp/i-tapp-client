@@ -12,6 +12,7 @@ import OpportunityForm from "./opportunity-form";
 import { Spinner } from "@/components/spinner";
 import { createOpportunity } from "@/actions/company";
 import { useAction } from "next-safe-action/hooks";
+import OpportunityTable from "./opportunity-table";
 
 // Unified status type
 type OpportunityStatus = "open" | "closed" | "draft";
@@ -63,11 +64,10 @@ export default function OpportunityPage() {
   }
 
   return (
-    <div className="space-y-4 mx-5">
+    <div className="space-y-6">
       {/* Search bar */}
-
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div className="bg-white border border-gray-200 flex items-center px-2 py-2 rounded-md w-full max-w-lg">
+        <div className="bg-white border border-gray-200 flex items-center px-1 rounded-md w-full max-w-lg">
           <Search size={18} className="text-gray-400" />
           <Input
             type="search"
@@ -85,7 +85,6 @@ export default function OpportunityPage() {
           Add New Opportunity
         </Button>
       </div>
-
       {/* Status filter */}
       <div className="flex flex-row items-center gap-2 flex-wrap">
         <span className="text-sm font-medium">Status:</span>
@@ -94,7 +93,7 @@ export default function OpportunityPage() {
             key={filter}
             onClick={() => setStatusFilter(filter)}
             className={`
-              px-3 py-1 text-sm font-medium border rounded-md transition
+              px-3 py-1 text-sm font-medium border rounded-lg transition
               ${
                 statusFilter === filter
                   ? "bg-primary text-white border-primary"
@@ -106,28 +105,7 @@ export default function OpportunityPage() {
           </button>
         ))}
       </div>
-
-      {/* Opportunities table - Desktop */}
-      <div className="hidden md:block border border-[#f5f5f5] rounded-md overflow-hidden">
-        {/* Header */}
-        <div className="flex justify-between items-center bg-[#f5f5f5] px-4 py-2 font-semibold text-sm text-gray-600">
-          <p className="flex-1">Job Title</p>
-          <p className="w-28 text-center">Status</p>
-          <p className="w-28 text-center">Applicants</p>
-          <p className="w-28 text-right">Action</p>
-        </div>
-
-        {/* List */}
-        <div>
-          {filtered?.length > 0 ? (
-            filtered?.map((op) => <CardView key={op.id} {...op} />)
-          ) : (
-            <p className="text-center text-sm text-gray-500 py-6">
-              No opportunities found
-            </p>
-          )}
-        </div>
-      </div>
+      <OpportunityTable data={filtered} />
 
       {/* Mobile Card View */}
       <div className="md:hidden space-y-3">
@@ -183,8 +161,8 @@ export function CardView({
       className={`flex items-center justify-between px-4 py-4 border-b border-[#F5F5F5] hover:bg-gray-50 transition`}
     >
       {/* Left: logo + details */}
-      <div className="flex items-center gap-3 flex-1">
-        <div className="h-10 w-10 rounded-full bg-[#f5f5f5] flex items-center justify-center text-xl">
+      <div className="flex items-center gap-3 flex-1 min-w-0">
+        <div className="h-8 w-8 rounded-xl bg-gray-400/36 flex items-center justify-center ">
           🏢
         </div>
         <div>
@@ -259,7 +237,7 @@ function MobileCardView({
     <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-[#f5f5f5] flex items-center justify-center text-xl">
+          <div className="h-10 w-10 rounded-lg bg-[#f5f5f5] flex items-center justify-center text-xl">
             🏢
           </div>
           <div>

@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import ProfileForm from "./profile-form";
 import { useCompanyStore } from "@/lib/store/company";
 import { logout } from "@/actions/auth";
@@ -13,9 +12,6 @@ import {
   MapPin,
   Users,
   Briefcase,
-  Edit3,
-  LogOut,
-  X,
 } from "lucide-react";
 import InfoCard from "@/components/info-card";
 import ProfileHeaderBanner from "@/components/profile-header-banner";

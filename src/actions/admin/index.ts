@@ -6,53 +6,29 @@ import z from "zod";
 export const approveCompany = actionClient
   .inputSchema(companyIdSchema)
   .action(async ({ parsedInput: { companyId } }) => {
-    try {
-      const response = await mutate(`/admin/company/approve`, { companyId });
-      return { success: true, data: response };
-    } catch (error) {
-      console.error(error);
-      return {
-        success: false,
-        error: error || "Failed to approve company",
-      };
-    }
+    const response = await mutate(`/admin/company/approve`, { companyId });
+    return { success: true, data: response };
   });
 
 export const declineCompany = actionClient
   .inputSchema(companyIdSchema)
   .action(async ({ parsedInput: { companyId } }) => {
-    try {
-      const response = await mutate(`/admin/company/decline`, { companyId });
-      return { success: true, data: response };
-    } catch (error) {
-      console.error(error);
-      return {
-        success: false,
-        error: error || "Failed to decline company",
-      };
-    }
+    const response = await mutate(`/admin/company/decline`, { companyId });
+    return { success: true, data: response };
   });
 
 export const updateCompanyStatus = actionClient
   .inputSchema(companyStatusSchema)
   .action(async ({ parsedInput: { companyId, status } }) => {
-    try {
-      const response = await mutate(
-        `/company/${companyId}/status`,
-        {
-          companyId,
-          status,
-        },
-        "PATCH"
-      );
-      return { success: true, data: response };
-    } catch (error) {
-      console.error(error);
-      return {
-        success: false,
-        error: error || "Failed to update company status",
-      };
-    }
+    const response = await mutate(
+      `/company/${companyId}/status`,
+      {
+        companyId,
+        status,
+      },
+      "PATCH"
+    );
+    return { success: true, data: response };
   });
 
 export const updateStudentStatus = actionClient
@@ -63,23 +39,15 @@ export const updateStudentStatus = actionClient
     })
   )
   .action(async ({ parsedInput: { studentId, status } }) => {
-    try {
-      const response = await mutate(
-        `/s/${studentId}/status`,
-        {
-          studentId,
-          status,
-        },
-        "PATCH"
-      );
-      return { success: true, data: response };
-    } catch (error) {
-      console.error(error);
-      return {
-        success: false,
-        error: error || "Failed to update student status",
-      };
-    }
+    const response = await mutate(
+      `/s/${studentId}/status`,
+      {
+        studentId,
+        status,
+      },
+      "PATCH"
+    );
+    return { success: true, data: response };
   });
 
 export const updateOpportunityStatus = actionClient
@@ -90,23 +58,15 @@ export const updateOpportunityStatus = actionClient
     })
   )
   .action(async ({ parsedInput: { opportunityId, status } }) => {
-    try {
-      const response = await mutate(
-        `/o/${opportunityId}/admin/status`,
-        {
-          opportunityId,
-          status,
-        },
-        "PATCH"
-      );
-      return { success: true, data: response };
-    } catch (error) {
-      console.error(error);
-      return {
-        success: false,
-        error: error || "Failed to update opportunity status",
-      };
-    }
+    const response = await mutate(
+      `/o/${opportunityId}/admin/status`,
+      {
+        opportunityId,
+        status,
+      },
+      "PATCH"
+    );
+    return { success: true, data: response };
   });
 
 export const createAdmin = actionClient
