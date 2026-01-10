@@ -59,9 +59,11 @@ export function StudentSignIn() {
 
   return (
     <div className="w-full max-w-[350px] m-auto flex flex-col">
-      <div className="flex flex-col gap-2 items-center mb-6">
-        <h1 className="text-xl font-bold">Log in to your account</h1>
-        <p className="text-sm text-muted-foreground">Welcome back!</p>
+      <div className="flex flex-col  items-center mb-6">
+        <h1 className="text-xl font-bold">Welcome Back</h1>
+        <p className="text-sm text-muted-foreground">
+          Log in to your account to continue
+        </p>
       </div>
 
       {hasErrored && (
@@ -80,9 +82,9 @@ export function StudentSignIn() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="text-xs font-black">Email</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Enter your email" />
+                  <Input {...field} placeholder="name@example.com" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -94,7 +96,7 @@ export function StudentSignIn() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="text-xs font-black">Password</FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="********" {...field} />
                 </FormControl>
@@ -118,7 +120,7 @@ export function StudentSignIn() {
             type="submit"
             disabled={!form.formState.isValid}
             isPending={isExecuting}
-            className="w-full text-white"
+            className="w-full h-11.5 text-white"
           >
             Sign In
           </ButtonWithLoader>

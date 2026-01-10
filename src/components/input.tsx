@@ -21,7 +21,7 @@ export default function Input({
   return (
     <div
       className={cn(
-        "flex items-center gap-1 rounded border border-gray-300 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50",
+        "flex h-11 items-center gap-1 rounded border border-gray-300 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50",
         wrapperClassName // 👈 override or extend outer container
       )}
     >
