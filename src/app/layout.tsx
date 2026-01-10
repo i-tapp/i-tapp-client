@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Montserrat, Open_Sans } from "next/font/google";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
-
+import { Analytics } from "@vercel/analytics/next";
 import { AppProvider } from "@/components/providers/app-provider";
 import { ReactQueryProvider } from "@/provider/react-query-provider";
 import { ToastContainer } from "react-toastify";
@@ -45,6 +45,7 @@ export default function RootLayout({
           autoClose={3000}
           hideProgressBar
         />
+        <Analytics />
       </body>
     </html>
   );
