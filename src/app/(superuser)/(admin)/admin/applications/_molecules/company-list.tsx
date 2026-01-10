@@ -28,7 +28,7 @@ export default function CompanyList({ onSelect, selectedId }: any) {
   }
 
   const filtered = data.filter(
-    (item) => item.name.toLowerCase().includes(search.toLowerCase())
+    (item: any) => item.name.toLowerCase().includes(search.toLowerCase())
     // item.opportunity.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -41,7 +41,7 @@ export default function CompanyList({ onSelect, selectedId }: any) {
       />
 
       <div className="flex flex-col gap-2">
-        {filtered.map((item) => (
+        {filtered.map((item: any) => (
           <button
             key={item.id}
             onClick={() => onSelect(item)}

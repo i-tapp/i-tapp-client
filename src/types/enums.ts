@@ -8,6 +8,8 @@ export enum ApplicationStatus {
   ACCEPTED = "accepted",
   REJECTED = "rejected",
   DECLINED = "declined",
+  INTERVIEWING = "interviewing",
+  APPROVED = "approved",
 
   WITHDRAWN = "withdrawn",
   EXPIRED = "expired", // Company didn't respond in time

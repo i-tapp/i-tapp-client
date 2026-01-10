@@ -74,7 +74,6 @@ export default function ProfileForm({
       form.reset({
         phone: student.phone || "",
         bio: student.bio || "",
-
         techSkills: student.techSkills || [],
         softSkills: student.softSkills || [],
         preferredIndustry: student.preferredIndustry || "",

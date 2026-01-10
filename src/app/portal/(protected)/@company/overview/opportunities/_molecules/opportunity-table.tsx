@@ -16,7 +16,7 @@ import { cn } from "@/utils/tailwind";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-export default function OpportunityTable({ data }) {
+export default function OpportunityTable({ data }: { data: any[] }) {
   return (
     <div className="hidden md:flex rounded-xl border border-gray-200 overflow-hidden bg-white">
       <Table>
@@ -56,7 +56,13 @@ export default function OpportunityTable({ data }) {
               </TableCell>
 
               <TableCell className="px-4 py-5 text-center text-sm">
-                <span className={cn(opportunityStatusStyle[op.status])}>
+                <span
+                  className={cn(
+                    opportunityStatusStyle[
+                      op.status as keyof typeof opportunityStatusStyle
+                    ]
+                  )}
+                >
                   {op.status}
                 </span>
               </TableCell>

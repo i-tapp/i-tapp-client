@@ -120,7 +120,7 @@ export const companySignup = actionClient
         year_founded,
       },
     }) => {
-      const response = await mutate("/company/create", {
+      const response = await mutate("/auth/signup/company", {
         address,
         company_name,
         email,

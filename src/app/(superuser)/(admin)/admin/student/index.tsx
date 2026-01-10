@@ -39,10 +39,10 @@ export default function AdminStudentPage() {
 
       {/* Student Table */}
       <StudentTable
-        onView={setSelectedStudent}
+        // onView={setSelectedStudent}
         data={data}
         isLoading={isLoading}
-        error={error}
+        // error={error}
       />
 
       {/* Detail Drawer */}

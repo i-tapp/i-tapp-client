@@ -7,7 +7,7 @@ import { FileUpIcon, X, FileText, Trash2 } from "lucide-react";
 import FileUpload from "@/components/file-upload";
 import UploadThing from "@/components/uploading-thing";
 
-interface OfferFormData {
+export interface OfferFormData {
   startDate: string;
   endDate?: string;
   stipend?: string;

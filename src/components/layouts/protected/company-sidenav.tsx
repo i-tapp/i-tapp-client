@@ -10,6 +10,16 @@ export default function SideNav({
   setCollapsed,
   links,
   isActive,
+}: {
+  collapsed: boolean;
+  isMobile: boolean;
+  setCollapsed: (collapsed: boolean) => void;
+  links: {
+    label: string;
+    href: string;
+    icon: React.ReactNode;
+  }[];
+  isActive: (href: string) => boolean;
 }) {
   return (
     <>

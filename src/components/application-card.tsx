@@ -1,20 +1,12 @@
-import { Application } from "@/types";
-import React, { useState } from "react";
-import {
-  Building2,
-  MapPin,
-  Users,
-  Calendar,
-  TrendingUp,
-  Search,
-  Filter,
-  ChevronDown,
-  Briefcase,
-} from "lucide-react";
+import { MapPin, Users, Calendar, Briefcase } from "lucide-react";
 import { formatDate } from "@/utils/format-date";
 import { getStatusConfig } from "@/utils/application-status-config";
 
-export default function ApplicationCard({ application }) {
+export default function ApplicationCard({
+  application,
+}: {
+  application: any[];
+}) {
   return (
     <div className="lg:hidden space-y-4">
       {application.length === 0 ? (

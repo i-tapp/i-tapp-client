@@ -4,25 +4,6 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useFetchOffers } from "@/queries/admin";
 
-const dummyApplications = [
-  {
-    id: "1",
-    student: "Alice Johnson",
-    department: "Computer Science",
-    company: "Flutterwave",
-    status: "Pending",
-    date: "2025-11-01",
-  },
-  {
-    id: "2",
-    student: "Michael Adams",
-    department: "Engineering",
-    company: "Interswitch",
-    status: "Approved",
-    date: "2025-11-03",
-  },
-];
-
 export default function PlacementList({ onSelect, selectedId }: any) {
   const [search, setSearch] = useState("");
   const { data, isLoading } = useFetchOffers();
@@ -31,7 +12,7 @@ export default function PlacementList({ onSelect, selectedId }: any) {
     return <div>Loading placement offers...</div>;
   }
 
-  const filtered = data.filter((item) => {
+  const filtered = data.filter((item: any) => {
     const student = item.application.student || "";
     const name = student.firstName + " " + student.lastName;
     return name.toLowerCase().includes(search.toLowerCase());
@@ -46,7 +27,7 @@ export default function PlacementList({ onSelect, selectedId }: any) {
       />
 
       <div className="flex flex-col gap-2">
-        {filtered.map((item) => (
+        {filtered.map((item: any) => (
           <button
             key={item.id}
             onClick={() => onSelect(item)}

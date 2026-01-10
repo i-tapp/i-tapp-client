@@ -7,27 +7,6 @@ import { AlignLeftIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { useFetchCompanyApplications } from "@/queries/admin";
 import { applicationStatusStyle } from "@/utils/admin-status-style";
 
-const dummyApplications = [
-  {
-    id: "1",
-    student: "Alice Johnson",
-    program: "Computer Science",
-    company: "Flutterwave",
-    opportunity: "Backend Intern",
-    status: "Pending",
-    date: "2025-11-01",
-  },
-  {
-    id: "2",
-    student: "Samuel Obi",
-    program: "Engineering",
-    company: "Interswitch",
-    opportunity: "Hardware Intern",
-    status: "Approved",
-    date: "2025-11-03",
-  },
-];
-
 export default function ApplicationList({
   onSelect,
   selectedId,
@@ -53,7 +32,7 @@ export default function ApplicationList({
 
   console.log("Applications data:", data);
 
-  const filtered = data.filter((a) => {
+  const filtered = data.filter((a: any) => {
     const student = a.student.firstName || "";
     const opportunity = a.opportunity.title || "";
 
@@ -62,14 +41,6 @@ export default function ApplicationList({
       opportunity.toLowerCase().includes(search.toLowerCase())
     );
   });
-
-  const statusColor = (status: string) => {
-    return status === "Pending"
-      ? "bg-yellow-200 text-yellow-700"
-      : status === "Approved"
-      ? "bg-green-200 text-green-700"
-      : "bg-red-200 text-red-700";
-  };
 
   const status = data?.status;
 
@@ -90,7 +61,7 @@ export default function ApplicationList({
       </div>
       <div className="flex flex-col gap-2">
         {filtered.length > 0 ? (
-          filtered.map((item) => (
+          filtered.map((item: any) => (
             <button
               key={item.id}
               onClick={() => onSelect(item)}
@@ -110,7 +81,9 @@ export default function ApplicationList({
 
               <span
                 className={`text-xs px-2 py-1 rounded mt-2 inline-block ${
-                  applicationStatusStyle[item.status]
+                  applicationStatusStyle[
+                    item.status as keyof typeof applicationStatusStyle
+                  ]
                 } `}
               >
                 {item.status}

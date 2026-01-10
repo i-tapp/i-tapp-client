@@ -5,10 +5,10 @@ export function StatusBadge({ status }: { status: ApplicationStatus }) {
   const statusConfig: Partial<
     Record<ApplicationStatus, { label: string; color: string }>
   > = {
-    new_applicant: {
-      label: "New",
-      color: "bg-blue-100 text-blue-700",
-    },
+    // new_applicant: {
+    //   label: "New",
+    //   color: "bg-blue-100 text-blue-700",
+    // },
     [ApplicationStatus.SHORTLISTED]: {
       label: "Shortlisted",
       color: "bg-purple-100 text-purple-700",

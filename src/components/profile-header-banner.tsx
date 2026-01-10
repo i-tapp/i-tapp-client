@@ -1,4 +1,4 @@
-import { User, Edit3, LogOut, Building2 } from "lucide-react";
+import { Edit3, LogOut } from "lucide-react";
 import AvatarCard from "./avatar-card";
 import Image from "next/image";
 import UploadThing from "./upload-thing";

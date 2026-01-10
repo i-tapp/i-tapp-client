@@ -35,7 +35,7 @@ export function StudentOnboardingForm() {
       );
       break;
     case 2:
-      currentForm = <StudentInfo studentData={studentData} />;
+      // currentForm = <StudentInfo studentData={studentData} />;
       break;
     default:
       break;

@@ -7,6 +7,8 @@ import { useAction } from "next-safe-action/hooks";
 // import { RadioGroup } from "@headlessui/react";
 import { useState } from "react";
 
+export type adminRole = "superadmin" | "admin" | "moderator" | "support";
+
 export default function AddNewAdminPage() {
   const roles = ["superadmin", "admin", "moderator", "support"];
   const [selectedRole, setSelectedRole] = useState(roles[0]);
@@ -30,7 +32,7 @@ export default function AddNewAdminPage() {
     execute({
       username: form.username,
       email: form.email,
-      role: form.role,
+      role: form.role as adminRole,
     });
   };
 

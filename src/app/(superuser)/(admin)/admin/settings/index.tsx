@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Users2, CreditCard, Shield, Plus } from "lucide-react";
+import { Users2, CreditCard, Shield } from "lucide-react";
 import { cn } from "@/utils/tailwind";
-import { Toggle } from "@/components/ui/toggle";
 import { Switch } from "@/components/ui/switch";
-import Link from "next/link";
 import AdminList from "./_molecules/admin-list";
 
 const settingsItems = [

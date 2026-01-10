@@ -1,7 +1,5 @@
 "use client";
-import { ReactNode, useState } from "react";
 import CompanyTable from "./_molecules/company-table";
-import { useFetchCompanies } from "@/queries/admin";
 
 export default function CompaniesPage() {
   return (

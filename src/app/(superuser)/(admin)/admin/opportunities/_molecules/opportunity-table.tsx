@@ -5,30 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-const dummy = [
-  {
-    id: "1",
-    title: "Backend Intern",
-    company: "Flutterwave",
-    department: "Computer Science",
-    location: "Lagos",
-    slots: 5,
-    status: "Active",
-    createdAt: "2025-11-02",
-  },
-  {
-    id: "2",
-    title: "Accounting Intern",
-    company: "GTBank",
-    department: "Accounting",
-    location: "Abuja",
-    slots: 10,
-    status: "Inactive",
-    createdAt: "2025-11-05",
-  },
-];
-
-export default function OpportunityTable({ data, isLoading }) {
+export default function OpportunityTable({
+  data,
+  isLoading,
+}: {
+  data: any[];
+  isLoading: boolean;
+}) {
   const [search, setSearch] = useState("");
 
   if (isLoading) {
@@ -36,7 +19,7 @@ export default function OpportunityTable({ data, isLoading }) {
   }
 
   const filtered = data.filter(
-    (item) =>
+    (item: any) =>
       item.title.toLowerCase().includes(search.toLowerCase()) ||
       item.company.name.toLowerCase().includes(search.toLowerCase())
   );

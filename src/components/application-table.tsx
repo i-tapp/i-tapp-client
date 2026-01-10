@@ -1,17 +1,11 @@
 import { getStatusConfig } from "@/utils/application-status-config";
 import { formatDate } from "@/utils/format-date";
-import {
-  Building2,
-  MapPin,
-  Users,
-  Calendar,
-  TrendingUp,
-  Search,
-  Filter,
-  ChevronDown,
-  Briefcase,
-} from "lucide-react";
-export default function ApplicationTable({ application }) {
+import { Building2, MapPin, Users, Calendar, Briefcase } from "lucide-react";
+export default function ApplicationTable({
+  application,
+}: {
+  application: any[];
+}) {
   return (
     <div className="hidden lg:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       <div className="overflow-x-auto">

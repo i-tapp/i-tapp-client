@@ -6,10 +6,7 @@ import { Plus } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import Link from "next/link";
 import { useState } from "react";
-
-const admins = [
-  { user: "admin name", role: "super admin", active: "just now" },
-];
+import { adminRole } from "../new-admin/new-admin";
 
 export default function AdminList() {
   const { data, isLoading } = useFetchAdmins();
@@ -61,7 +58,7 @@ export default function AdminList() {
       </div>
 
       {/* Admin Rows */}
-      {data.map((admin, index) => (
+      {data.map((admin: any, index: number) => (
         <div
           key={index}
           className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-0 px-4 py-3 border-b hover:bg-gray-50 rounded-md"
@@ -78,7 +75,7 @@ export default function AdminList() {
                     console.log("Selected role:", e.target.value);
                     execute({
                       adminId: admin.id,
-                      role: e.target.value,
+                      role: e.target.value as adminRole,
                     });
                   }}
                 >

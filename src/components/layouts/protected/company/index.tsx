@@ -1,9 +1,7 @@
 "use client";
 
 import React from "react";
-import { Header } from "../header";
 import { usePathname } from "next/navigation";
-
 import { Briefcase, Element } from "iconsax-reactjs";
 import Link from "next/link";
 import useIsResponsive from "@/utils/responsive";

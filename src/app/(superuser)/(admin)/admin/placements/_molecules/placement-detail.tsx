@@ -1,7 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-
 export default function PlacementDetail({ data }: any) {
   return (
     <div className="p-8 mx-auto flex flex-col gap-6">

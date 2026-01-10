@@ -16,6 +16,7 @@ import { Application } from "@/types";
 import { useState } from "react";
 import { cn } from "@/utils/tailwind";
 import { StatusBadge } from "@/components/application-status";
+import { ApplicationStatus, OpportunityStatus } from "@/types/enums";
 
 export default function OpportunityTable({ data }: { data: Application[] }) {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -131,7 +132,9 @@ export default function OpportunityTable({ data }: { data: Application[] }) {
                       <ApplicantProfile student={student} />
                     </TableCell>
                     <TableCell className="py-4">
-                      <StatusBadge status={applicant.status} />
+                      <StatusBadge
+                        status={applicant.status as ApplicationStatus}
+                      />
                     </TableCell>
                     <TableCell className="py-4">
                       <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -157,16 +160,16 @@ export default function OpportunityTable({ data }: { data: Application[] }) {
                           <ArchiveAdd size={18} />
                         </Button>
 
-                        <Link href={`mailto:${student?.user?.email}`}>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0"
-                            title="Send Email"
-                          >
-                            <SmsEdit size={18} />
-                          </Button>
-                        </Link>
+                        {/* <Link href={`mailto:${student?.user?.email}`}> */}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                          title="Send Email"
+                        >
+                          <SmsEdit size={18} />
+                        </Button>
+                        {/* </Link> */}
 
                         <Link
                           href={`/portal/candidates/${student?.id}?opportunityId=${applicant?.id}`}
@@ -234,13 +237,19 @@ export default function OpportunityTable({ data }: { data: Application[] }) {
 }
 
 // Mobile Card Component
-function ApplicantCard({ applicant, student }) {
+function ApplicantCard({
+  applicant,
+  student,
+}: {
+  applicant: Application;
+  student: any;
+}) {
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
       {/* Top Section */}
       <div className="flex items-start justify-between mb-3">
         <ApplicantProfile student={student} />
-        <StatusBadge status={applicant.status} />
+        <StatusBadge status={applicant.status as ApplicationStatus} />
       </div>
 
       {/* Applied Date */}
@@ -295,7 +304,7 @@ function ApplicantCard({ applicant, student }) {
 }
 
 // Applicant Profile Component
-export function ApplicantProfile({ student }) {
+export function ApplicantProfile({ student }: { student: any }) {
   return (
     <div className="flex items-center gap-3">
       <Image

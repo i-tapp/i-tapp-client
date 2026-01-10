@@ -90,11 +90,11 @@ export function CompanyInfo2({ formData }: CompanyInfo2Props) {
 
   return (
     <>
-      {hasErrored && (
+      {/* {hasErrored && (
         <span className="text-danger font-semi-bold ">
           {result.serverError?.message}
         </span>
-      )}
+      )} */}
       <Form {...form}>
         <form
           className="flex flex-col gap-3"

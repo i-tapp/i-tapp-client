@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFetchCompanies } from "@/queries/admin";
-import { useAction } from "next-safe-action/hooks";
-import { updateCompanyStatus } from "@/actions/admin";
 import { companyStatusStyle } from "@/utils/admin-status-style";
 
 export default function CompanyTable({}: // onView,
@@ -28,7 +26,7 @@ export default function CompanyTable({}: // onView,
 
   const filteredCompanies =
     data?.filter(
-      (c) =>
+      (c: any) =>
         c.name.toLowerCase().includes(search.toLowerCase()) ||
         c.industry.toLowerCase().includes(search.toLowerCase())
     ) || [];
@@ -65,7 +63,7 @@ export default function CompanyTable({}: // onView,
         </thead>
 
         <tbody>
-          {filteredCompanies.map((c, index) => (
+          {filteredCompanies.map((c: any, index: number) => (
             <tr
               key={c.id}
               className="border-b hover:bg-gray-50 transition"
@@ -76,7 +74,9 @@ export default function CompanyTable({}: // onView,
               <td className="p-3">
                 <span
                   className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                    companyStatusStyle[c.status]
+                    companyStatusStyle[
+                      c.status as keyof typeof companyStatusStyle
+                    ]
                   }`}
                 >
                   {c.status}

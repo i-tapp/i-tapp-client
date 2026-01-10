@@ -14,21 +14,27 @@ export const useFetchOpportunities = (filter?: any) => {
     queryFn: async () => {
       const queryObject: Record<string, any> = {};
 
-      const selectedDuration = filter?.duration?.find((d) => d.checked)?.time;
+      const selectedDuration = filter?.duration?.find(
+        (d: { checked: boolean; time: string }) => d.checked
+      )?.time;
 
       if (selectedDuration) {
         queryObject.duration = Number(selectedDuration);
       }
 
       const selectedIndustry =
-        filter?.industry?.filter((i) => i.checked).map((i) => i.industry) ?? [];
+        filter?.industry
+          ?.filter((i: { checked: boolean; industry: string }) => i.checked)
+          .map((i: { checked: boolean; industry: string }) => i.industry) ?? [];
 
       if (selectedIndustry.length) {
         queryObject.industry = selectedIndustry.join(",");
       }
 
       const selectedStatus =
-        filter?.status?.filter((s) => s.checked).map((s) => s.status) ?? [];
+        filter?.status
+          ?.filter((s: { checked: boolean; status: string }) => s.checked)
+          .map((s: { checked: boolean; status: string }) => s.status) ?? [];
 
       if (selectedStatus.length) {
         queryObject.status = selectedStatus.join(",");

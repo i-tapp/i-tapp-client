@@ -1,11 +1,10 @@
 "use client";
 
 import { updateCompanyStatus } from "@/actions/admin";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { useFetchCompanyDetails } from "@/hooks/query";
 import { CompanyStatus } from "@/types/enums";
 import { useAction } from "next-safe-action/hooks";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 

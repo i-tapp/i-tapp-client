@@ -56,8 +56,8 @@ export interface Student {
   isVerified: boolean;
   role: string;
   courseOfStudy?: string;
-  softSkills?: string;
-  techSkills?: string;
+  softSkills?: string[];
+  techSkills?: string[];
   preferredIndustry?: string;
   goals?: string;
   bio?: string;

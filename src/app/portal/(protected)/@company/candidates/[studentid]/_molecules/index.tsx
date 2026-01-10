@@ -2,11 +2,10 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { ArrowLeft, Call, Location, Note1, Sms } from "iconsax-reactjs";
+import { Call, Location, Note1, Sms } from "iconsax-reactjs";
 import { Button } from "@/components/ui/button";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "react-toastify";
-import Link from "next/link";
 import moment from "moment";
 import {
   acceptApplication,
@@ -20,10 +19,8 @@ import {
   useFetchStudentDetails,
 } from "@/hooks/query";
 import { useParams, useSearchParams } from "next/navigation";
-import path from "path";
 import { Spinner } from "@/components/spinner";
-import Modal from "@/components/modal";
-import OfferModal from "./send-offer";
+import OfferModal, { OfferFormData } from "./send-offer";
 import { Loader } from "@/components/ui/loader";
 import Loading from "@/components/loading";
 import Hr from "@/components/ui/hr";
@@ -102,7 +99,7 @@ export default function CandidateProfile() {
     }
   );
 
-  const handleCreate = (things) => {
+  const handleCreate = (things: OfferFormData) => {
     if (opportunityId) {
       createAction({ ...things, id: opportunityId });
     }
@@ -308,7 +305,7 @@ export default function CandidateProfile() {
         <OfferModal
           offerFormOpen={offerFormOpen}
           onClose={() => setOfferFormOpen(false)}
-          onCreate={(things) => handleCreate(things)}
+          onCreate={(things: OfferFormData) => handleCreate(things)}
         />
       </div>
     </div>

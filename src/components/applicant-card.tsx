@@ -101,7 +101,7 @@ export function ApplicantCard({ applicant }: { applicant: Applicant }) {
         </div>
         <div className="flex gap-4 self-center items-center">
           <button
-            onClick={() => bookmarkAction({ studentId })}
+            onClick={() => bookmarkAction({ id: studentId })}
             disabled={isBookmarking}
             className="disabled:opacity-50"
           >
@@ -129,7 +129,7 @@ export function ApplicantCard({ applicant }: { applicant: Applicant }) {
           ) : (
             <>
               <button
-                onClick={() => acceptAction({ studentId })}
+                onClick={() => acceptAction({ id: studentId })}
                 disabled={isAccepting}
                 className="disabled:opacity-50"
               >
@@ -140,7 +140,7 @@ export function ApplicantCard({ applicant }: { applicant: Applicant }) {
                 />
               </button>
               <button
-                onClick={() => declineAction({ studentId })}
+                onClick={() => declineAction({ id: studentId })}
                 disabled={isDeclining}
                 className="disabled:opacity-50"
               >

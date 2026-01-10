@@ -5,12 +5,13 @@ import { useState } from "react";
 import { studentStatusStyle } from "@/utils/admin-status-style";
 
 export default function StudentTable({
-  onView,
+  // onView,
   data,
   isLoading,
 }: {
-  onView: (student: (typeof studentData)[0]) => void;
-  data;
+  // onView: (student: (typeof studentData)[0]) => void;
+  isLoading: boolean;
+  data: any;
 }) {
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -19,7 +20,7 @@ export default function StudentTable({
     return <div className="p-4">Loading students...</div>;
   }
 
-  const filteredStudents = data.filter((s) => {
+  const filteredStudents = data.filter((s: any) => {
     const firstName = s.firstName || "";
     const lastName = s.lastName || "";
     const email = s.user?.email || "";
@@ -61,7 +62,7 @@ export default function StudentTable({
           </tr>
         </thead>
         <tbody>
-          {filteredStudents.map((s, index) => (
+          {filteredStudents.map((s: any, index: number) => (
             <tr
               key={s.id}
               className="border-b hover:bg-gray-50 transition"
@@ -86,7 +87,9 @@ export default function StudentTable({
               <td className="p-3">
                 <span
                   className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                    studentStatusStyle[s.status]
+                    studentStatusStyle[
+                      s.status as keyof typeof studentStatusStyle
+                    ]
                   }`}
                 >
                   {s.status}
@@ -95,7 +98,7 @@ export default function StudentTable({
               <td className="p-3">{s.applications}</td>
               <td className="p-3">
                 <button
-                  onClick={() => onView(s)}
+                  // onClick={() => onView(s)}
                   className="text-indigo-600 hover:underline"
                 >
                   View

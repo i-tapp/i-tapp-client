@@ -37,9 +37,9 @@ export default function OpportunityPage() {
     },
   });
 
-  if (isLoading) {
-    return <Spinner />;
-  }
+  // if (isLoading) {
+  //   return <Spinner />;
+  // }
 
   // Filtered list
   const filtered = useMemo(() => {
