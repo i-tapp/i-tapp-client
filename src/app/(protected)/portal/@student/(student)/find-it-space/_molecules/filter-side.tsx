@@ -8,16 +8,16 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/utils/tailwind";
 import { ArrowLeft2 } from "iconsax-reactjs";
 
-export default function FilterCompanies({
+export default function FilterSide({
   filter,
   setFilter,
-  mobileView,
+  filterActive,
   setFilterActive,
   onBack,
 }: {
   filter: any;
   setFilter: (f: any) => void;
-  mobileView?: "left" | "centered" | "right";
+  filterActive: boolean;
   setFilterActive: (active: boolean) => void;
   onBack?: () => void;
 }) {
@@ -26,21 +26,20 @@ export default function FilterCompanies({
     setFilter({
       ...filter,
       [key]: filter[key].map((item: any) =>
-        item.id === id ? { ...item, checked: !item.checked } : item
+        item.id === id ? { ...item, checked: !item.checked } : item,
       ),
     });
   };
 
   return (
-    <div
+    <aside
       className={cn(
-        "md:flex rounded-lg bg-white shadow-sm transition-all",
-        "w-full md:w-[280px] md:max-w-[35%] lg:w-[300px] xl:w-[310px]",
-        mobileView === "left" ? "flex" : "hidden",
-        "flex-1 md:flex-none"
+        "fixed left-0 top-14 h-[calc(100vh-3.5rem)] w-72 bg-white border z-50 p-2 lg:hidden",
+        "transition-transform duration-200 ease-out",
+        filterActive ? "translate-x-0" : "translate-x-full",
       )}
     >
-      <div className="px-4 py-3 w-full space-y-4">
+      <div className=" w-full space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">
           <ArrowLeft2
@@ -192,6 +191,6 @@ export default function FilterCompanies({
           </div>
         )}
       </div>
-    </div>
+    </aside>
   );
 }

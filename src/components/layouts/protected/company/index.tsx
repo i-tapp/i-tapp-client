@@ -12,12 +12,12 @@ import SideNav from "../company-sidenav";
 const links = [
   {
     label: "Dashboard",
-    href: "/portal/overview/dashboard",
+    href: "/portal/dashboard",
     icon: <Element size={22} />,
   },
   {
     label: "Opportunities",
-    href: "/portal/overview/opportunities",
+    href: "/portal/opportunities",
     icon: <Briefcase size={22} />,
   },
   // {

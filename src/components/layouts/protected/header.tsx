@@ -25,19 +25,21 @@ export function Header({ link }: { link: { text: string; href: string }[] }) {
   const parentRoute = pathname.split("/")[2];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-grey-5 bg-white">
-      <div className="flex items-center justify-between px-6 h-[55px]">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white">
+      <div className="flex items-center justify-between px-6 h-[55px] border-b border-grey-5">
         <Link href="/">
           <Logo />
         </Link>
-        <nav className="gap-16 hidden md:flex h-full">
+        <nav className="gap-16 hidden md:flex h-full ">
           {link.map((link, index) => (
             <Link
               key={index}
               href={link.href}
               className={cn(
-                "flex items-center h-full border-b-2 text-sm border-transparent text-primary transition-colors",
-                link.href.includes(parentRoute) && "border-primary text-black"
+                "flex items-center h-[55px] text-sm text-primary transition-colors",
+                // "border-b-2 border-transparent -mb-px",
+                link.href.includes(parentRoute) &&
+                  "border-b -mb-px border-primary text-black",
               )}
             >
               {link.text}

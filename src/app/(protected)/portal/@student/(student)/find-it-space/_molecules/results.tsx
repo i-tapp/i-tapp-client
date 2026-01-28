@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/tailwind";
-import Search from "../_molecules/search";
+import Search from "./search";
 import { companyListings } from "@/constants";
 import AvailableCompany from "./available-opportunity";
 import { Opportunity } from "@/types";
@@ -11,25 +11,16 @@ import { Inbox } from "lucide-react";
 export default function Results({
   selectedId,
   setSelectedId,
-  onShowLeft,
   opportunities,
-  mobileView,
   setSelectedOpportunity,
 }: {
   selectedId: string | null;
   setSelectedId: (id: string | null) => void;
-  onShowLeft?: () => void;
-  mobileView: "centered" | "left" | "right";
   setSelectedOpportunity: (name: Opportunity | null) => void;
   opportunities: Opportunity[];
 }) {
   return (
-    <div
-      className={cn(
-        "md:flex flex-col flex-1  transition-all",
-        mobileView === "centered" ? "flex" : "hidden"
-      )}
-    >
+    <main className=" p-2 min-w-0">
       <div className="hidden md:block">
         <Search />
       </div>
@@ -74,7 +65,7 @@ export default function Results({
       </div>
 
       <div> pagination</div>
-    </div>
+    </main>
   );
 }
 

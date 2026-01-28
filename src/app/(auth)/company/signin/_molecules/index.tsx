@@ -44,7 +44,7 @@ export function CompanySignIn() {
         setCompany({ ...user, ...profile });
 
         toast.success("Welcome back!");
-        router.push("/portal/overview/dashboard");
+        router.push("/portal/dashboard");
       },
       onError(error) {
         toast.error(error?.error?.serverError ?? "Login failed. Try again.");

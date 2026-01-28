@@ -110,11 +110,27 @@ export interface Application {
   student: Student;
 }
 
+export interface Offers {
+  id: string;
+  status: string;
+  startDate: string;
+  endDate: string;
+  stipend: number;
+  // opportunity: Opportunity;
+  // student: Student;
+
+  offerLetter: string;
+  acceptedAt?: string;
+  declinedAt?: string;
+  expiredAt?: string;
+
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Env {
   appEnv?: string;
   appName?: string;
-  appDomain?: string;
-  backendUrl?: string;
-  backendApiUrl?: string;
+  apiBaseUrl?: string;
   frontendUrl?: string;
 }

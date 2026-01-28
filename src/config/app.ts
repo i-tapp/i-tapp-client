@@ -1,7 +1,6 @@
 export const app = {
-  // name: env("app_name", "ITAPP"),
-  name: "ITAPP",
-  title: "I-Tapp - bringing opportunities closer",
+  name: "I-TAPP",
+  title: "I-Tapp - Bringing opportunities closer",
   description:
     "Login to I-Tapp to search, find and secure SIWES/IT placement across different companies in Nigeria.",
   logo_url: "/logo.png",

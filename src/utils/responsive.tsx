@@ -4,6 +4,7 @@ const useIsResponsive = () => {
   // Initialize with false to avoid hydration mismatch, update in useEffect
   const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
 
   //   (()=>()())
 
@@ -12,6 +13,7 @@ const useIsResponsive = () => {
       const width = window.innerWidth;
       const mobile = width < 768;
       setIsMobile(mobile);
+      setIsTablet(width >= 768 && width < 1024);
       if (mobile) setCollapsed(true);
     };
 
@@ -20,7 +22,7 @@ const useIsResponsive = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  return { collapsed, isMobile, setCollapsed, setIsMobile };
+  return { collapsed, isMobile, setCollapsed, setIsMobile, isTablet };
 };
 
 export default useIsResponsive;

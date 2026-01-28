@@ -74,7 +74,7 @@ export default function OpportunityCard({
             className={
               "text-xs bg-secondary rounded px-4 py-2 outline-none shadow-none"
             }
-            href={`/portal/overview/opportunities/${id}`}
+            href={`/portal/opportunities/${id}`}
           >
             {actionLabel}
           </Link>

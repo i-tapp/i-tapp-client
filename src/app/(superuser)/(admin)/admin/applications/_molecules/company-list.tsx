@@ -8,24 +8,11 @@ export default function CompanyList({ onSelect, selectedId }: any) {
   const [search, setSearch] = useState("");
   const { data, isLoading } = useFetchCompanies();
 
-  const dummyGrouped = [
-    {
-      id: "1",
-      company: "Flutterwave",
-      opportunity: "Backend Intern",
-      totalApplications: 12,
-    },
-    {
-      id: "2",
-      company: "Interswitch",
-      opportunity: "Hardware Intern",
-      totalApplications: 5,
-    },
-  ];
-
   if (isLoading) {
     return <div>Loading companies...</div>;
   }
+
+  console.log("Companies data:", data);
 
   const filtered = data.filter(
     (item: any) => item.name.toLowerCase().includes(search.toLowerCase())

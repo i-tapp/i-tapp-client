@@ -82,7 +82,7 @@ export const companyListings = [
 export const companyNavLinks = [
   {
     text: "Overview",
-    href: "/portal/overview/dashboard",
+    href: "/portal/dashboard",
   },
   {
     text: "IT Space",

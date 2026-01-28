@@ -11,7 +11,6 @@ import {
 } from "iconsax-reactjs";
 import { OverviewBox } from "@/components/overview-box";
 import { CheckCircle } from "lucide-react";
-import { ApplicantCard } from "../../../../../../../components/applicant-card";
 
 import { Applicant, Opportunity } from "@/types";
 import {
@@ -21,6 +20,7 @@ import {
 } from "@/hooks/query";
 import { useCompanyStore } from "@/lib/store/company";
 import OpportunityCard from "./opportunity-card";
+import { ApplicantCard } from "@/components/applicant-card";
 
 export function Dashboard() {
   const company = useCompanyStore((s) => s.company);
