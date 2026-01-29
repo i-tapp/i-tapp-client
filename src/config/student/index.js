@@ -16,7 +16,6 @@ export const filters = {
   status: [
     { id: 1, status: "open", checked: false },
     { id: 2, status: "closed", checked: false },
-    { id: 3, status: "draft", checked: false },
   ],
   location: "",
   industry: [

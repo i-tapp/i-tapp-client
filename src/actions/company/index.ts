@@ -13,7 +13,7 @@ export const updateCompanyBanner = actionClient
   .inputSchema(
     z.object({
       banner: z.instanceof(File),
-    })
+    }),
   )
   .action(async ({ parsedInput: { banner } }) => {
     const formData = new FormData();
@@ -28,7 +28,7 @@ export const updateCompanyLogo = actionClient
   .inputSchema(
     z.object({
       logo: z.instanceof(File),
-    })
+    }),
   )
   .action(async ({ parsedInput: { logo } }) => {
     const formData = new FormData();
@@ -66,11 +66,7 @@ export const updateCompanyProfile = actionClient
     }
 
     try {
-      const response = await mutate(
-        "/company/profile/update",
-        formData,
-        "PATCH"
-      );
+      const response = await mutate("/c/profile/update", formData, "PATCH");
       console.log("Update company profile response:", response);
       return response;
     } catch (error) {
@@ -85,7 +81,7 @@ const createOpportunity = actionClient
   .action(async ({ parsedInput }) => {
     console.log("Creating opportunity...");
     try {
-      const response = await mutate("/opportunities", parsedInput);
+      const response = await mutate("/o", parsedInput);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -97,11 +93,7 @@ export const closeOpportunity = actionClient
   .inputSchema(z.object({ id: z.string() }))
   .action(async ({ parsedInput: { id } }) => {
     try {
-      const response = await mutate(
-        `/opportunities/${id}/`,
-        { status: "closed" },
-        "PATCH"
-      );
+      const response = await mutate(`/o/${id}/`, { status: "closed" }, "PATCH");
       return response.data;
     } catch (error) {
       console.log(error);
@@ -114,11 +106,7 @@ export const updateOpportunity = actionClient
   .action(async ({ parsedInput }) => {
     const { id, ...updateData } = parsedInput;
     try {
-      const response = await mutate(
-        `/opportunities/${id}`,
-        updateData,
-        "PATCH"
-      );
+      const response = await mutate(`/o/${id}`, updateData, "PATCH");
       return response.data;
     } catch (error) {
       console.log(error);
@@ -128,7 +116,7 @@ export const updateOpportunity = actionClient
 
 export const fetchCompanyJobs = actionClient.action(async () => {
   try {
-    const response = await query("/company/jobs/all");
+    const response = await query("/c/jobs/all");
     const data = await response.json();
     return data.data;
   } catch (error) {
@@ -139,7 +127,7 @@ export const fetchCompanyJobs = actionClient.action(async () => {
 /* -------------------------- Application Actions -------------------------- */
 export const fetchAllCompanyApplications = actionClient.action(async () => {
   try {
-    const response = await query("/company/all/category");
+    const response = await query("/c/all/category");
     const data = await response.json();
     return data.data;
   } catch (error) {
@@ -167,7 +155,7 @@ export const createOffer = actionClient
       endDate: z.string().optional(),
       file: z.any().optional(),
       stipend: z.string().optional(),
-    })
+    }),
   )
   .action(async ({ parsedInput }) => {
     console.log("Creating offer...", parsedInput);
@@ -192,7 +180,7 @@ export const createOffer = actionClient
       const response = await mutate(
         `/offers/${parsedInput.id}/create-offer/`,
         formData,
-        "POST"
+        "POST",
       );
 
       console.log("create offer response", response);
@@ -207,11 +195,7 @@ export const acceptApplication = actionClient
   .inputSchema(acceptSchema)
   .action(async ({ parsedInput: { id } }) => {
     try {
-      const response = await mutate(
-        `/applications/${id}/accept/`,
-        undefined,
-        "PATCH"
-      );
+      const response = await mutate(`/a/${id}/accept/`, undefined, "PATCH");
       return response;
     } catch (error) {
       console.log(error);
@@ -223,11 +207,7 @@ export const declineApplication = actionClient
   .inputSchema(acceptSchema)
   .action(async ({ parsedInput: { id } }) => {
     try {
-      const response = await mutate(
-        `/applications/${id}/reject/`,
-        undefined,
-        "PATCH"
-      );
+      const response = await mutate(`/a/${id}/reject/`, undefined, "PATCH");
       return response;
     } catch (error) {
       console.log(error);
@@ -239,7 +219,7 @@ export const bookmarkApplication = actionClient
   .inputSchema(acceptSchema)
   .action(async ({ parsedInput: { id } }) => {
     try {
-      const response = await mutate(`/company/applicants/accept/`, id, "PATCH");
+      const response = await mutate(`/c/applicants/accept/`, id, "PATCH");
       return response;
     } catch (error) {
       console.log(error);

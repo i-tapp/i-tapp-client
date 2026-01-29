@@ -19,52 +19,59 @@ export default function Results({
   setSelectedOpportunity: (name: Opportunity | null) => void;
   opportunities: Opportunity[];
 }) {
+  const isDetailsOpen = !!selectedId;
   return (
-    <main className=" p-2 min-w-0">
+    <main className="p-2 min-w-0 h-full min-h-0 flex flex-col">
       <div className="hidden md:block">
         <Search />
       </div>
 
-      {/* Featured */}
-      {/* <Featured
-        setCompanyId={setCompanyId}
-        setSelectedCompany={setSelectedCompany}
-      /> */}
-
-      <div className="text-center md:flex justify-between my-2">
+      <div className="text-center md:flex justify-between my-2 shrink-0">
         <h6 className="hidden md:block text-md sm:text-md lg:text-h6 font-bold">
           Search Results
         </h6>
-        <p className="text-primary md:text-[#8C8CB0] text-sm lg:text-base self-center">
+        <p className="text-primary md:text-[#8C8CB0] text-sm self-center">
           {opportunities.length ? opportunities.length : 0} results found
+          {/* showing result for lagos  */}
         </p>
       </div>
 
-      <div className="flex gap-6 flex-wrap md:max-h-[700px] md:overflow-y-scroll pr-1.5  ">
-        {" "}
-        {opportunities.length ? (
-          opportunities.map((item, index) => (
-            <AvailableOpportunity
-              details={item}
-              key={index}
-              selectedId={selectedId}
-              setSelectedId={setSelectedId}
-              setSelectedOpportunity={setSelectedOpportunity}
-              // isSelected={selectedCompanyId === company.id}
-            />
-          ))
-        ) : (
-          <div className="flex flex-col items-center justify-center w-full py-20 text-gray-400 space-y-3">
-            <Inbox className="w-12 h-12" />
-            <span className="text-lg font-medium">No opportunities found.</span>
-            <span className="text-sm text-gray-500">
-              Try adjusting your filters or check back later.
-            </span>
-          </div>
-        )}
+      <div className="min-h-0 flex-1 overflow-y-scroll pr-1">
+        <div
+          className={cn(
+            "grid gap-3",
+            "grid-cols-1",
+            "sm:grid-cols-2", // tablets / large phones
+            isDetailsOpen ? "lg:grid-cols-2" : "lg:grid-cols-3", // ✅ key change
+            "2xl:grid-cols-3",
+          )}
+        >
+          {opportunities.length ? (
+            opportunities.map((item, index) => (
+              <AvailableOpportunity
+                details={item}
+                key={index}
+                selectedId={selectedId}
+                setSelectedId={setSelectedId}
+                setSelectedOpportunity={setSelectedOpportunity}
+                // isSelected={selectedCompanyId === company.id}
+              />
+            ))
+          ) : (
+            <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-400 space-y-3">
+              <Inbox className="w-12 h-12" />
+              <span className="text-lg font-medium">
+                No opportunities found.
+              </span>
+              <span className="text-sm text-gray-500">
+                Try adjusting your filters or check back later.
+              </span>
+            </div>
+          )}
+        </div>
       </div>
 
-      <div> pagination</div>
+      <div className="shrink-0 pt-2">pagination</div>
     </main>
   );
 }

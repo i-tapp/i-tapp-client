@@ -8,15 +8,16 @@ export default function GridContainer({
   selectedId: string | null;
   children: ReactNode;
 }) {
+  const isDetailsOpen = !!selectedId;
+
   return (
     <div
       className={cn(
-        "grid gap-2 p-2 items-start",
+        "grid gap-2 p-2 items-start w-full",
         "grid-cols-1",
-        // "md:grid-cols-[1fr_360px]",
-        selectedId ? "md:grid-cols-[1fr_360px]" : "md:grid-cols-1",
+        isDetailsOpen ? "md:grid-cols-[1fr_320px]" : "md:grid-cols-1",
 
-        selectedId
+        isDetailsOpen
           ? "lg:grid-cols-[280px_1fr_360px]"
           : "lg:grid-cols-[280px_1fr]",
       )}

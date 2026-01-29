@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -21,6 +20,7 @@ import { toast } from "react-toastify";
 import SignupSuccessModal from "./success";
 import { z } from "zod";
 import { companySignup } from "@/actions/auth";
+import Input from "@/components/input";
 
 type CompanySignupSchema = z.infer<typeof companySignupSchema>;
 type FullFormData = z.infer<typeof fullCompanySignupSchema>;
@@ -54,11 +54,11 @@ export function CompanyInfo2({ formData }: CompanyInfo2Props) {
       },
       onError(error) {
         toast.error(
-          "Error signing up, please check your credentials and try again."
+          "Error signing up, please check your credentials and try again.",
         );
         console.error(error);
       },
-    }
+    },
   );
   const handleSignup = (data: CompanySignupSchema) => {
     // e.preventDefault();
@@ -107,7 +107,7 @@ export function CompanyInfo2({ formData }: CompanyInfo2Props) {
               <FormItem>
                 <FormLabel>RC number</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="Enter RC number e.g 123456" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -120,7 +120,7 @@ export function CompanyInfo2({ formData }: CompanyInfo2Props) {
               <FormItem>
                 <FormLabel>Year Founded</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="Enter year founded e.g 1988" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -133,7 +133,10 @@ export function CompanyInfo2({ formData }: CompanyInfo2Props) {
               <FormItem>
                 <FormLabel>Student Capacity</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input
+                    {...field}
+                    placeholder="Enter student capacity e.g 300"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -146,7 +149,7 @@ export function CompanyInfo2({ formData }: CompanyInfo2Props) {
               <FormItem>
                 <FormLabel>IT Duration</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} placeholder="Enter duration e.g 6" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

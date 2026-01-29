@@ -1,10 +1,12 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import Image from "next/image";
 import dp from "@/assets/images/dp.png";
 import moment from "moment";
 import { cn } from "@/utils/tailwind";
 import { Opportunity } from "@/types";
+import { Clock, Profile2User, Location, Wifi } from "iconsax-reactjs";
 
+// UI-only improvements: hierarchy, spacing, chips row, company + work-mode + location
 export default function AvailableOpportunity({
   details,
   setSelectedId,
@@ -18,40 +20,117 @@ export default function AvailableOpportunity({
 }) {
   const { id, title, location, duration, createdAt } = details;
 
+  // ✅ best-effort company name (adapt to your actual field when available)
+  const companyName =
+    // @ts-expect-error - depends on your Opportunity shape
+    details?.company?.name ||
+    // @ts-expect-error
+    details?.companyName ||
+    // @ts-expect-error
+    details?.company ||
+    "Company";
+
+  // ✅ best-effort work mode (adapt later)
+  const workMode =
+    // @ts-expect-error
+    details?.workMode ||
+    // @ts-expect-error
+    details?.mode ||
+    "Remote";
+
+  const isSelected = selectedId === id;
+
   return (
-    <div
+    <button
+      type="button"
       className={cn(
-        "bg-white  rounded-xl p-5 basis-60 grow cursor-pointer border-2 border-transparent transition-all",
-        selectedId === id && "border-primary/30 shadow-md border-2"
+        "w-full text-left bg-white rounded-2xl p-4 sm:p-5",
+        "border transition-all",
+        "hover:shadow-sm hover:border-gray-200",
+        isSelected
+          ? "border-primary/40 ring-2 ring-primary/10 shadow-sm"
+          : "border-gray-100",
       )}
       onClick={() => {
         setSelectedId(id);
         setSelectedOpportunity(details);
       }}
     >
-      <div className="flex gap-3">
+      {/* Header */}
+      <div className="flex items-start gap-3">
         <Image
           src={dp}
-          alt="companylogo"
-          width={50}
-          height={50}
-          className="bg-gray-100 rounded-md self-start"
+          alt="company logo"
+          width={44}
+          height={44}
+          className="bg-gray-100 rounded-xl shrink-0"
         />
-        <div>
-          <h6 className="text-h6 capitalize">{title ?? "title"}</h6>
-          <p className="text-primary capitalize">{location ?? "N/A"}</p>
+
+        <div className="min-w-0 flex-1">
+          {/* Title */}
+          <h6 className="text-[15px] sm:text-[16px] font-semibold leading-tight text-gray-900 capitalize truncate">
+            {title ?? "title"}
+          </h6>
+
+          {/* Company */}
+          <div className="flex flex-row gap-1">
+            <p className="text-[13px] sm:text-sm font-medium text-gray-500 truncate">
+              {companyName}
+            </p>
+
+            <div className="flex items-center gap-0.5 text-gray-400">
+              <Location size="14" />
+              <p className="text-sm capitalize">{location}</p>
+            </div>
+          </div>
+
+          {/* Meta line: location + work mode */}
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            {/* <MetaPill icon={<Location size="16" />} text={location ?? "N/A"} /> */}
+            <MetaPill icon={<Wifi size="16" />} text={workMode} />
+            <MetaPill text={`${duration ? duration : 0} Months`} />
+          </div>
         </div>
       </div>
 
-      <p className="bg-[#F0F0F5] rounded-[40px] px-3.5 py-1 my-4 inline-block text-sm">
-        {duration ? duration : 0} Months IT
-      </p>
-
-      <p className="text-primary text-sm">
-        {/* {postedAgo} */}
-
-        {moment(createdAt).startOf("day").fromNow()}
-      </p>
-    </div>
+      {/* Footer */}
+      <div className="mt-4 flex items-center justify-between">
+        <InfoText
+          icon={<Clock size="16" />}
+          value={moment(createdAt).startOf("day").fromNow()}
+        />
+        <InfoText icon={<Profile2User size="16" />} value={"45 Applicants"} />
+      </div>
+    </button>
   );
 }
+
+const InfoText = ({
+  value,
+  icon,
+}: {
+  value: React.ReactNode;
+  icon: React.ReactNode;
+}) => {
+  return (
+    <div className="flex items-center gap-1.5 text-xs font-medium text-gray-400">
+      <span className="opacity-80">{icon}</span>
+      <span className="truncate">{value}</span>
+    </div>
+  );
+};
+
+const MetaPill = ({
+  text,
+  icon,
+}: {
+  text: React.ReactNode;
+  icon?: React.ReactNode;
+}) => {
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F0F0F5] px-3 py-1 text-[12px] sm:text-[13px] font-semibold text-gray-700">
+      {icon ? <span className="text-gray-500">{icon}</span> : null}
+      <span className="leading-none">{text}</span>
+    </span>
+  );
+};

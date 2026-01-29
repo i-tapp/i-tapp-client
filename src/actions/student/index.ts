@@ -14,7 +14,7 @@ export const acceptOffer = actionClient
       const response = await mutate(
         `/offers/${id}/accept/`,
         undefined,
-        "PATCH"
+        "PATCH",
       );
       return response;
     } catch (error) {
@@ -30,7 +30,7 @@ export const declineOffer = actionClient
       const response = await mutate(
         `/offers/${id}/decline/`,
         undefined,
-        "PATCH"
+        "PATCH",
       );
       return response;
     } catch (error) {
@@ -43,7 +43,7 @@ export const apply = actionClient
   .inputSchema(applyJ)
   .action(async ({ parsedInput: { id } }) => {
     try {
-      const response = await mutate(`/applications/${id}/apply`);
+      const response = await mutate(`/a/${id}/apply`);
       return response?.data;
     } catch (error) {
       console.log(error);
@@ -55,11 +55,7 @@ export const withdraw = actionClient
   .inputSchema(applyJ)
   .action(async ({ parsedInput: { id } }) => {
     try {
-      const response = await mutate(
-        `/applications/${id}/withdraw`,
-        undefined,
-        "PATCH"
-      );
+      const response = await mutate(`/a/${id}/withdraw`, undefined, "PATCH");
       return response?.data;
     } catch (error) {
       console.log(error);
@@ -71,7 +67,7 @@ export const save = actionClient
   .inputSchema(applyJ)
   .action(async ({ parsedInput: { id } }) => {
     try {
-      const response = await mutate(`/applications/${id}/apply`);
+      const response = await mutate(`/a/${id}/apply`);
       return response;
     } catch (error) {
       console.log(error);
@@ -108,7 +104,7 @@ export const updateStudentProfilePicture = actionClient
   .inputSchema(
     z.object({
       profileImage: z.instanceof(File),
-    })
+    }),
   )
   .action(async ({ parsedInput: { profileImage } }) => {
     const formData = new FormData();

@@ -16,7 +16,7 @@ const useFetchAdmins = () => {
   return useQuery({
     queryKey: ["admin-admins"],
     queryFn: async () => {
-      const response = await query("/admins");
+      const response = await query("/admin");
       return response;
     },
   });
@@ -36,7 +36,7 @@ const useFetchCompanyApplications = (companyId: string) => {
   return useQuery({
     queryKey: ["admin-company-applications", companyId],
     queryFn: async () => {
-      const response = await query(`/applications/company/${companyId}`);
+      const response = await query(`/a/company/${companyId}`);
       return response;
     },
     enabled: !!companyId,
@@ -57,7 +57,7 @@ const useFetchAdminProfile = () => {
   return useQuery({
     queryKey: ["admin-profile"],
     queryFn: async () => {
-      const response = await query("/admins/profile");
+      const response = await query("/admin/profile");
       return response;
     },
   });
@@ -67,7 +67,7 @@ const useFetchAllApplications = () => {
   return useQuery({
     queryKey: ["admin-all-applications"],
     queryFn: async () => {
-      const response = await query("/applications/all");
+      const response = await query("/a/all");
       return response;
     },
   });

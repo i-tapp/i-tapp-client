@@ -21,12 +21,12 @@ export const updateCompanyStatus = actionClient
   .inputSchema(companyStatusSchema)
   .action(async ({ parsedInput: { companyId, status } }) => {
     const response = await mutate(
-      `/company/${companyId}/status`,
+      `/c/${companyId}/status`,
       {
         companyId,
         status,
       },
-      "PATCH"
+      "PATCH",
     );
     return { success: true, data: response };
   });
@@ -36,7 +36,7 @@ export const updateStudentStatus = actionClient
     z.object({
       studentId: z.string().min(1, "Student ID is required"),
       status: z.enum(["active", "inactive", "suspended"]),
-    })
+    }),
   )
   .action(async ({ parsedInput: { studentId, status } }) => {
     const response = await mutate(
@@ -45,7 +45,7 @@ export const updateStudentStatus = actionClient
         studentId,
         status,
       },
-      "PATCH"
+      "PATCH",
     );
     return { success: true, data: response };
   });
@@ -55,7 +55,7 @@ export const updateOpportunityStatus = actionClient
     z.object({
       opportunityId: z.string().min(1, "Opportunity ID is required"),
       status: z.enum(["open", "closed", "flagged"]),
-    })
+    }),
   )
   .action(async ({ parsedInput: { opportunityId, status } }) => {
     const response = await mutate(
@@ -64,7 +64,7 @@ export const updateOpportunityStatus = actionClient
         opportunityId,
         status,
       },
-      "PATCH"
+      "PATCH",
     );
     return { success: true, data: response };
   });
@@ -75,10 +75,10 @@ export const createAdmin = actionClient
       username: z.string().min(1, "Username is required"),
       email: z.email("Invalid email address"),
       role: z.enum(["superadmin", "admin", "moderator", "support"]),
-    })
+    }),
   )
   .action(async ({ parsedInput: { username, email, role } }) => {
-    const response = await mutate(`/admins/`, {
+    const response = await mutate(`/admin/`, {
       email,
       username,
       role,
@@ -91,15 +91,15 @@ export const updateAdminRole = actionClient
     z.object({
       adminId: z.string().min(1, "Admin ID is required"),
       role: z.enum(["superadmin", "admin", "moderator", "support"]),
-    })
+    }),
   )
   .action(async ({ parsedInput: { adminId, role } }) => {
     const response = await mutate(
-      `/admins/role/${adminId}`,
+      `/admin/role/${adminId}`,
       {
         role,
       },
-      "PATCH"
+      "PATCH",
     );
     return { success: true, data: response };
   });

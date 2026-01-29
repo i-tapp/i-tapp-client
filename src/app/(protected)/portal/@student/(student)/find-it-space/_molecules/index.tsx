@@ -6,11 +6,11 @@ import { Opportunity } from "@/types";
 import { useFetchOpportunities } from "@/hooks/query";
 import Results from "./results";
 import { OpportunityDetailsPanel } from "./opportunity-details-panel";
-import FilterCompanies from "./filter";
-import FilterSide from "./filter-side";
 import GridContainer from "./grid-container";
 import { FilterToggleButton } from "./filter-toggle-button";
 import { OpportunityDetailsMobile } from "./opportunity-details-mobile";
+import FilterPanel from "./filter-panel";
+import FilterMobile from "./filter-mobile";
 
 export default function FindITSpace() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -28,11 +28,11 @@ export default function FindITSpace() {
   if (error) return <div>Error loading opportunities.</div>;
 
   return (
-    <div className="min-h-screen bg-[#F0F0F5] pt-16">
+    <div className="h-screen overflow-hidden bg-[#F0F0F5] pt-16">
       <FilterToggleButton onToggle={() => setFilterActive((prev) => !prev)} />
 
       <GridContainer selectedId={selectedId}>
-        <FilterCompanies
+        <FilterPanel
           filter={filter}
           setFilter={setFilter}
           // filterActive={filterActive}
@@ -62,7 +62,7 @@ export default function FindITSpace() {
             onClick={() => setFilterActive(false)}
           />
 
-          <FilterSide
+          <FilterMobile
             filter={filter}
             setFilter={setFilter}
             filterActive={filterActive}

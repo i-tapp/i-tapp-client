@@ -15,7 +15,7 @@ export const useFetchOpportunities = (filter?: any) => {
       const queryObject: Record<string, any> = {};
 
       const selectedDuration = filter?.duration?.find(
-        (d: { checked: boolean; time: string }) => d.checked
+        (d: { checked: boolean; time: string }) => d.checked,
       )?.time;
 
       if (selectedDuration) {
@@ -46,7 +46,7 @@ export const useFetchOpportunities = (filter?: any) => {
 
       const qs = new URLSearchParams(queryObject).toString();
       console.log("queryString", qs);
-      const response = await query(`/opportunities${qs ? `?${qs}` : ""}`);
+      const response = await query(`/o${qs ? `?${qs}` : ""}`);
       return response.data;
     },
   });
@@ -66,7 +66,7 @@ export const useFetchCompanyProfile = () => {
   return useQuery({
     queryKey: ["company-profile"],
     queryFn: async () => {
-      const response = await query("/company/profile");
+      const response = await query("/c/profile");
       return response;
     },
   });
@@ -76,7 +76,7 @@ export const useFetchCompanyDetails = (id?: string) => {
   return useQuery({
     queryKey: ["company-details", id],
     queryFn: async () => {
-      const response = await query(`/company/profile/${id}/`);
+      const response = await query(`/c/profile/${id}/`);
       return response;
     },
     enabled: !!id,
@@ -87,7 +87,7 @@ export const useFetchApplication = () => {
   return useQuery({
     queryKey: ["application"],
     queryFn: async () => {
-      const response = await query("/applications/my-application");
+      const response = await query("/a/my-application");
       return response;
     },
   });
@@ -95,9 +95,9 @@ export const useFetchApplication = () => {
 
 export const useFetchSavedApplication = () => {
   return useQuery({
-    queryKey: ["saved-applocation"],
+    queryKey: ["saved-application"],
     queryFn: async () => {
-      const response = await query("/student/saved/applications");
+      const response = await query("/s/saved/applications");
       return response;
     },
   });
@@ -128,7 +128,7 @@ export const useFetchAllCompanyApplications = () => {
   return useQuery({
     queryKey: ["company-application"],
     queryFn: async () => {
-      const response = await query("/applications/applicants");
+      const response = await query("/a/applicants");
       return response;
     },
   });
@@ -138,7 +138,7 @@ export const useFetchCompanyJobs = () => {
   return useQuery({
     queryKey: ["company-jobs"],
     queryFn: async () => {
-      const response = await query("/company/jobs/all");
+      const response = await query("/c/jobs/all");
       return response;
     },
   });
@@ -148,7 +148,7 @@ export const useFetchCompanyOpportunities = () => {
   return useQuery({
     queryKey: ["company-opportunities"],
     queryFn: async () => {
-      const response = await query("/opportunities/me");
+      const response = await query("/o/me");
       return response;
     },
   });
@@ -158,7 +158,7 @@ export const useFetchOpportunityDetails = (id?: string) => {
   return useQuery({
     queryKey: ["opportunity-details", id],
     queryFn: async () => {
-      const response = await query(`/opportunities/${id}/details`);
+      const response = await query(`/o/${id}/details`);
       return response;
     },
     enabled: !!id,
@@ -180,7 +180,7 @@ export const useFetchApplicationDetails = (id?: string) => {
   return useQuery({
     queryKey: ["application-details", id],
     queryFn: async () => {
-      const response = await query(`/applications/${id}`);
+      const response = await query(`/a/${id}`);
       return response;
     },
     enabled: !!id,

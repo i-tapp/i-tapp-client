@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,6 +11,8 @@ import {
 } from "@/components/ui/form";
 import { verifyCompanySchema } from "@/lib/validations/auth";
 import { z } from "zod";
+import Input from "@/components/input";
+import { ButtonWithLoader } from "@/components/button-with-loader";
 
 type VerifyCompanySchema = z.infer<typeof verifyCompanySchema>;
 
@@ -53,7 +54,7 @@ export function CompanyInfo1({
             <FormItem>
               <FormLabel>Company Name</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} placeholder="Company name" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -66,7 +67,7 @@ export function CompanyInfo1({
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input {...field} type="email" />
+                <Input {...field} type="email" placeholder="name@company.com" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -79,7 +80,7 @@ export function CompanyInfo1({
             <FormItem>
               <FormLabel>Address</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} placeholder="1234 Main St, City, Country" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -92,16 +93,20 @@ export function CompanyInfo1({
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input {...field} type="password" />
+                <Input
+                  {...field}
+                  type="password"
+                  placeholder="Enter your password"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <div className="m-auto my-2">
-          <Button type="submit" disabled={!form.formState.isValid}>
+          <ButtonWithLoader type="submit" disabled={!form.formState.isValid}>
             Continue
-          </Button>
+          </ButtonWithLoader>
         </div>
       </form>
     </Form>
