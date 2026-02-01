@@ -8,12 +8,34 @@ const roleRedirects: Record<string, string> = {
   admin: "/admin",
 };
 
-export function proxy(req: NextRequest) {
+async function me(token: string) {
+  const response = await fetch("http://localhost:3000/auth/me", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch user info");
+  }
+  return response.json();
+}
+
+export async function proxy(req: NextRequest) {
+  const skipOnboarding = req.cookies.get("skip-onboarding")?.value === "true";
+  // do for email verification routes later
   const token = req.cookies.get("session-token")?.value; // || "fake-token";
   const role = req.cookies.get("role")?.value; // || "admin";
   const { pathname } = req.nextUrl;
 
+  const isCompanyRole = role === "company";
+  const isStudentRole = role === "student";
+
+  const isCompanyOnboardingRoute = pathname.startsWith("/portal/onboarding");
+  const isStudentOnboardingRoute = pathname.startsWith("/portal/onboarding");
+  // do for email verification routes later
   const isAdminRoute = pathname.startsWith("/admin");
+  const isProfileRoute = pathname.startsWith("/portal/profile");
   const isPortalRoute = pathname.startsWith("/portal");
   const isAuthRoute = [
     "/signin",
@@ -28,6 +50,7 @@ export function proxy(req: NextRequest) {
     const response = NextResponse.redirect(new URL("/signin", req.url));
     response.cookies.delete("session-token");
     response.cookies.delete("role");
+    response.cookies.delete("company-onboarded");
     return response;
   }
 
@@ -55,8 +78,43 @@ export function proxy(req: NextRequest) {
       return NextResponse.redirect(new URL("/signin", req.url));
     }
 
+    const profile = await me(token); // await me(token);
+    // console.log("Profile:", profile);
+
+    // const role = profile?.role; // "student" | "company" | "admin"
+    // const company = profile?.company;
+    // const student = profile?.student;
+    const companyOnboarded = profile?.company?.isOnboarded === true; // boolean
+    const studentOnboarded = profile?.student?.isOnboarded === true; // boolean
+
     if (role === "admin") {
       return NextResponse.redirect(new URL("/admin", req.url));
+    }
+
+    if (isCompanyRole) {
+      const canSkip = companyOnboarded || skipOnboarding;
+
+      if (canSkip && isCompanyOnboardingRoute) {
+        return NextResponse.redirect(new URL("/portal/dashboard", req.url));
+      }
+
+      // && !isProfileRoute
+
+      if (!canSkip && !isCompanyOnboardingRoute) {
+        return NextResponse.redirect(new URL("/portal/onboarding/", req.url));
+      }
+    }
+
+    if (isStudentRole) {
+      const canSkip = studentOnboarded || skipOnboarding;
+
+      if (canSkip && isStudentOnboardingRoute) {
+        return NextResponse.redirect(new URL("/portal/find-it-space", req.url));
+      }
+
+      if (!canSkip && !isStudentOnboardingRoute) {
+        return NextResponse.redirect(new URL("/portal/onboarding/", req.url));
+      }
     }
 
     const response = NextResponse.next();

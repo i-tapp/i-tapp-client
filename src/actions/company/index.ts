@@ -6,6 +6,7 @@ import {
   opportunityFormSchema,
   updateOpportunitySchema,
 } from "@/lib/validations/auth";
+import { onBoardCompanySchema } from "@/lib/validations/company";
 import { start } from "repl";
 import z from "zod";
 
@@ -225,6 +226,22 @@ export const bookmarkApplication = actionClient
       console.log(error);
       throw error;
     }
+  });
+
+export const onBoardCompany = actionClient
+  .inputSchema(onBoardCompanySchema)
+  .action(async ({ parsedInput }) => {
+    console.log("Onboarding company...", parsedInput);
+
+    const formData = new FormData();
+    Object.entries(parsedInput).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        formData.append(key, value);
+      }
+    });
+
+    const response = await mutate("/c/onboarding", formData, "POST");
+    return response;
   });
 
 export { createOpportunity };

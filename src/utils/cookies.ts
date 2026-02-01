@@ -10,16 +10,27 @@ const cookieOptions = {
   path: "/",
 };
 
-export async function setAuthCookies(token: string, role: string) {
+export async function setAuthCookies(
+  token: string,
+  role: string,
+  companyOnboarded?: boolean,
+) {
   const store = await cookies();
 
   store.set("session-token", token, cookieOptions);
   store.set("role", role, cookieOptions);
+  if (companyOnboarded !== undefined) {
+    store.set(
+      "company-onboarded",
+      companyOnboarded ? "true" : "false",
+      cookieOptions,
+    );
+  }
 }
 
 export async function clearAuthCookies() {
   const store = await cookies();
-
-  store.delete("token");
+  store.delete("session-token");
   store.delete("role");
+  store.delete("company-onboarded");
 }

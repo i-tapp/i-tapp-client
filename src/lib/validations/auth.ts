@@ -73,19 +73,22 @@ export const studentSignupSchema = z
     path: ["confirmPassword"],
   });
 
-export const verifyCompanySchema = z.object({
-  company_name: z.string().min(1, "Company name is required"),
-  email: z.email("Invalid email format"),
-  address: z.string().min(1, "Address is required"),
-  password: z.string().min(1, "Password is required"),
-});
+// export const verifyCompanySchema = z.object({
+//   company_name: z.string().min(1, "Company name is required"),
+//   email: z.email("Invalid email format"),
+//   address: z.string().min(1, "Address is required"),
+//   password: z.string().min(1, "Password is required"),
+// });
 
 export const companySignupSchema = z.object({
-  rc_number: z.string().min(1, "RC number is required"),
-  year_founded: z.string().min(1, "Year founded is required"),
-  student_capacity: z.string().min(1, "Student capacity must be at least 1"),
-  it_duration: z.string().min(1, "IT duration must be at least 1"),
-  // companyId: z.string().min(1, "Company ID is required"),
+  name: z.string().min(1, "Company name is required"),
+  email: z
+    .email("Please enter a valid email address")
+    .min(1, "Email address is required"),
+  registrationNumber: z
+    .string()
+    .min(1, "Company registration number is required"),
+  password: z.string().min(8, "Password must be at least 8 characters long"),
 });
 
 export const companyProfileSchema = z.object({
@@ -118,5 +121,5 @@ export const updateOpportunitySchema = opportunityFormSchema.extend({
   id: z.string().min(1, "Opportunity ID is required"),
 });
 
-export const fullCompanySignupSchema =
-  verifyCompanySchema.merge(companySignupSchema);
+// export const fullCompanySignupSchema =
+//   verifyCompanySchema.merge(companySignupSchema);

@@ -9,106 +9,138 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { verifyCompanySchema } from "@/lib/validations/auth";
 import { z } from "zod";
 import Input from "@/components/input";
 import { ButtonWithLoader } from "@/components/button-with-loader";
+import { companySignupSchema } from "@/lib/validations/auth";
+import { companySignup } from "@/actions/auth";
+import { useAction } from "next-safe-action/hooks";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
-type VerifyCompanySchema = z.infer<typeof verifyCompanySchema>;
+type CompanySignupSchema = z.infer<typeof companySignupSchema>;
 
-interface CompanyInfo1Props {
-  setFormStep: React.Dispatch<React.SetStateAction<number>>;
-  onFormDataUpdate: (data: VerifyCompanySchema) => void;
-}
+export function CompanyInfo1() {
+  const router = useRouter();
 
-export function CompanyInfo1({
-  setFormStep,
-  onFormDataUpdate,
-}: CompanyInfo1Props) {
-  const form = useForm<VerifyCompanySchema>({
+  const form = useForm<CompanySignupSchema>({
     mode: "onChange",
-    resolver: zodResolver(verifyCompanySchema),
+    resolver: zodResolver(companySignupSchema),
     defaultValues: {
-      company_name: "",
+      name: "",
       email: "",
-      address: "",
+      registrationNumber: "",
       password: "",
     },
   });
 
-  const onSubmit = (data: VerifyCompanySchema) => {
-    onFormDataUpdate(data);
-    setFormStep(1);
+  const { execute, isExecuting, result, hasErrored } = useAction(
+    companySignup,
+    {
+      onSuccess(data) {
+        if (data) {
+          toast.success("Company signup successful!");
+          router.push("/company/signin");
+        }
+      },
+      onError(error) {
+        console.error(error);
+      },
+    },
+  );
+
+  const onSubmit = (data: CompanySignupSchema) => {
+    execute(data);
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-3"
-      >
-        <FormField
-          control={form.control}
-          name="company_name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Company Name</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="Company name" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input {...field} type="email" placeholder="name@company.com" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="address"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Address</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="1234 Main St, City, Country" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  type="password"
-                  placeholder="Enter your password"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="m-auto my-2">
-          <ButtonWithLoader type="submit" disabled={!form.formState.isValid}>
+    <div className="w-full">
+      {hasErrored && (
+        <p className="text-red-500 text-sm font-medium mb-2 ">
+          {result?.serverError ?? "Something went wrong. Please try again."}
+        </p>
+      )}
+
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col gap-3"
+        >
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Company Name</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="Company name" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="email"
+                    placeholder="name@company.com"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="registrationNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Registration Number</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Registration Number e.g 123456789"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="password"
+                    placeholder="Enter your password"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <ButtonWithLoader
+            type="submit"
+            className="w-full my-3"
+            disabled={!form.formState.isValid}
+          >
             Continue
           </ButtonWithLoader>
-        </div>
-      </form>
-    </Form>
+        </form>
+      </Form>
+    </div>
   );
 }

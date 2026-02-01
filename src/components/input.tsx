@@ -21,15 +21,15 @@ export default function Input({
   return (
     <div
       className={cn(
-        "flex h-11 items-center gap-1 rounded border border-gray-300 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50",
-        wrapperClassName // 👈 override or extend outer container
+        "flex h-10 items-center gap-1 rounded border border-gray-300 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/50",
+        wrapperClassName, // 👈 override or extend outer container
       )}
     >
       <BaseInput
         type={isPasswordType ? (showPassword ? "text" : "password") : type}
         className={cn(
           "flex-1 border-none placeholder:text-sm outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus:ring-0 shadow-none",
-          className // 👈 allow additional input-level styling
+          className, // 👈 allow additional input-level styling
         )}
         {...props}
       />

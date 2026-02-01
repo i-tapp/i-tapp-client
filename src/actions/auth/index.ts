@@ -4,7 +4,7 @@ import { mutate } from "@/lib/api";
 import { actionClient } from "@/lib/safe-action";
 
 import {
-  fullCompanySignupSchema,
+  companySignupSchema,
   resetPasswordSchema,
   signinSchema,
   signupSchema,
@@ -34,7 +34,7 @@ export const signinCompany = actionClient
       role: "company",
     });
     const { token, user, role, profile } = response.data;
-    await setAuthCookies(token, user.role);
+    await setAuthCookies(token, user.role, profile.companyOnboarded);
     return { token, role, user, profile };
   });
 
@@ -78,14 +78,14 @@ export const studentSignup = actionClient
       });
 
       console.log(response);
-    }
+    },
   );
 
 export const resetPassword = actionClient
   .inputSchema(
     z.object({
       email: z.email("Please enter a valid email address"),
-    })
+    }),
   )
   .action(async ({ parsedInput: { email } }) => {
     const response = await mutate("/auth/reset-password", {
@@ -105,34 +105,8 @@ export const changePassword = actionClient
   });
 
 export const companySignup = actionClient
-
-  .inputSchema(fullCompanySignupSchema)
-  .action(
-    async ({
-      parsedInput: {
-        address,
-        company_name,
-        email,
-        it_duration,
-        password,
-        rc_number,
-        student_capacity,
-        year_founded,
-      },
-    }) => {
-      const response = await mutate("/auth/signup/company", {
-        address,
-        company_name,
-        email,
-        it_duration,
-        password,
-        rc_number,
-        student_capacity,
-        year_founded,
-      });
-
-      console.log(response);
-
-      return response;
-    }
-  );
+  .inputSchema(companySignupSchema)
+  .action(async ({ parsedInput }) => {
+    const response = await mutate("/auth/signup/company", parsedInput);
+    return response;
+  });
