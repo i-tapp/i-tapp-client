@@ -1,6 +1,6 @@
 "use client";
 
-import { updateStudentStatus } from "@/actions/admin";
+import { updateStudentStatus } from "@/actions";
 import { Button } from "@/components/ui/button";
 import { useFetchStudentDetails } from "@/hooks/query";
 import { useQueryClient } from "@tanstack/react-query";

@@ -13,10 +13,10 @@ import { z } from "zod";
 import Input from "@/components/input";
 import { ButtonWithLoader } from "@/components/button-with-loader";
 import { companySignupSchema } from "@/lib/validations/auth";
-import { companySignup } from "@/actions/auth";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { companySignup } from "@/actions";
 
 type CompanySignupSchema = z.infer<typeof companySignupSchema>;
 

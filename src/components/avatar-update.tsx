@@ -1,5 +1,5 @@
 "use client";
-import { updateStudentProfilePicture } from "@/actions/student";
+import { updateStudentProfilePicture } from "@/actions";
 import { Upload } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import Image from "next/image";
@@ -9,7 +9,7 @@ export default function AvatarUpdate() {
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    setter: React.Dispatch<React.SetStateAction<File | null>>
+    setter: React.Dispatch<React.SetStateAction<File | null>>,
   ) => {
     if (e.target.files?.[0]) setter(e.target.files[0]);
     execute({ profileImage: e.target.files?.[0]! });

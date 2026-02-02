@@ -1,3 +1,7 @@
+import {
+  companyProfileSchema,
+  opportunityFormSchema,
+} from "@/lib/validations/auth";
 import * as z from "zod";
 
 export const profileFormSchema = z.object({
@@ -24,15 +28,15 @@ export const profileFormSchema = z.object({
 });
 
 // 10MB
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
-const ACCEPTED_MIME_TYPES = [
+export const MAX_FILE_SIZE = 10 * 1024 * 1024;
+export const ACCEPTED_MIME_TYPES = [
   "application/pdf",
   "image/jpeg",
   "image/png",
   "image/webp",
 ];
 
-const fileSchema = z
+export const fileSchema = z
   .custom<File>((v) => v instanceof File, "File is required")
   .refine((file) => file.size <= MAX_FILE_SIZE, "Max file size is 10MB")
   .refine(
@@ -70,3 +74,10 @@ export const kycFormSchema = z.object({
 export const onBoardCompanySchema = profileFormSchema.extend(
   kycFormSchema.shape,
 );
+
+export type CompanyProfileFormSchema = z.infer<typeof profileFormSchema>;
+export type KycFormValues = z.infer<typeof kycFormSchema>;
+export type OnboardingData = z.infer<typeof onBoardCompanySchema>;
+export type OnboardingDraft = Partial<OnboardingData>;
+export type FormValues = z.infer<typeof opportunityFormSchema>;
+export type ProfileFormData = z.infer<typeof companyProfileSchema>;

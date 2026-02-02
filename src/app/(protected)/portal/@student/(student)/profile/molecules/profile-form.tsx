@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Upload } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "react-toastify";
@@ -22,13 +20,11 @@ import {
   FormControl,
 } from "@/components/ui/form";
 
-import { logout } from "@/actions/auth";
 import Input from "@/components/input";
-import { StudentProfileSchema, updateStudentProfile } from "@/actions/student";
 import { useQueryClient } from "@tanstack/react-query";
 import AvatarUpdate from "@/components/avatar-update";
-
-type ProfileFormData = z.infer<typeof StudentProfileSchema>;
+import { logout, StudentProfileSchema, updateStudentProfile } from "@/actions";
+import { ProfileFormData, StudentProfileFormData } from "@/schemas";
 
 export default function ProfileForm({
   student,
@@ -42,7 +38,7 @@ export default function ProfileForm({
 
   const queryClient = useQueryClient();
 
-  const form = useForm<ProfileFormData>({
+  const form = useForm<StudentProfileFormData>({
     resolver: zodResolver(StudentProfileSchema),
     defaultValues: {
       phone: "",
@@ -66,7 +62,7 @@ export default function ProfileForm({
         console.error("Failed to update profile", err);
         toast.error("Profile update failed");
       },
-    }
+    },
   );
 
   useEffect(() => {
@@ -83,12 +79,12 @@ export default function ProfileForm({
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    setter: React.Dispatch<React.SetStateAction<File | null>>
+    setter: React.Dispatch<React.SetStateAction<File | null>>,
   ) => {
     if (e.target.files?.[0]) setter(e.target.files[0]);
   };
 
-  const onSubmit = (data: ProfileFormData) => {
+  const onSubmit = (data: StudentProfileFormData) => {
     const payload = { ...data, profileImage, documents };
     updateProfileAction(payload);
   };
@@ -177,7 +173,7 @@ export default function ProfileForm({
                     }
                     onChange={(e) =>
                       field.onChange(
-                        e.target.value.split(",").map((s) => s.trim())
+                        e.target.value.split(",").map((s) => s.trim()),
                       )
                     }
                   />
@@ -201,7 +197,7 @@ export default function ProfileForm({
                     }
                     onChange={(e) =>
                       field.onChange(
-                        e.target.value.split(",").map((s) => s.trim())
+                        e.target.value.split(",").map((s) => s.trim()),
                       )
                     }
                   />

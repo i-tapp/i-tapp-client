@@ -18,7 +18,7 @@ export default function AuthLayoutUi({
           {children}
         </div>
         <div className="hidden lg:flex w-full lg:w-1/2 justify-center">
-          <div className="relative w-full max-w-md aspect-[4/4] rounded-md overflow-hidden shadow-sm">
+          <div className="relative w-full max-w-md aspect-4/4 rounded-md overflow-hidden shadow-sm">
             {" "}
             <Image
               src={LoginImg}

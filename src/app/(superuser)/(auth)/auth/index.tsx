@@ -1,6 +1,6 @@
 "use client";
 
-import { signinAdmin } from "@/actions/auth";
+import { signinAdmin } from "@/actions";
 import Input from "@/components/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";

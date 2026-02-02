@@ -1,4 +1,3 @@
-import { updateAdminRole } from "@/actions/admin";
 import { Button } from "@/components/ui/button";
 import { useFetchAdmins } from "@/queries/admin";
 import { useQueryClient } from "@tanstack/react-query";
@@ -7,6 +6,7 @@ import { useAction } from "next-safe-action/hooks";
 import Link from "next/link";
 import { useState } from "react";
 import { adminRole } from "../new-admin/new-admin";
+import { updateAdminRole } from "@/actions";
 
 export default function AdminList() {
   const { data, isLoading } = useFetchAdmins();

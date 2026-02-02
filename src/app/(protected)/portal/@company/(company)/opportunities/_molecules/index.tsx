@@ -9,10 +9,9 @@ import Link from "next/link";
 import { useFetchCompanyOpportunities } from "@/hooks/query";
 import { Opportunity } from "@/types";
 import OpportunityForm from "./opportunity-form";
-import { Spinner } from "@/components/spinner";
-import { createOpportunity } from "@/actions/company";
 import { useAction } from "next-safe-action/hooks";
 import OpportunityTable from "./opportunity-table";
+import { createOpportunity } from "@/actions";
 
 // Unified status type
 type OpportunityStatus = "open" | "closed" | "draft";
@@ -20,7 +19,7 @@ type OpportunityStatus = "open" | "closed" | "draft";
 export default function OpportunityPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<OpportunityStatus | "All">(
-    "open"
+    "open",
   );
   const [creating, setCreating] = useState(false);
 

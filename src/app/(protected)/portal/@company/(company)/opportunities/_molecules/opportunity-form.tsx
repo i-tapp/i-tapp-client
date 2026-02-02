@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -10,8 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Save } from "lucide-react";
-import Link from "next/link";
+import { Save } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -22,19 +20,17 @@ import {
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import z from "zod";
 import { useEffect, useState } from "react";
 import {
   OpportunityMode,
   OpportunityStatus,
   OpportunityType,
 } from "@/types/enums";
-import { Check } from "iconsax-reactjs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { opportunityFormSchema } from "@/lib/validations/auth";
 import Input from "@/components/input";
+import { FormValues } from "@/schemas";
 
-type FormValues = z.infer<typeof opportunityFormSchema>;
 type OpportunityFormProps = {
   initialData?: FormValues;
   onSubmit: (data: FormValues) => void;
@@ -192,7 +188,7 @@ export default function OpportunityForm({
                               <SelectItem key={value} value={value}>
                                 {label}
                               </SelectItem>
-                            )
+                            ),
                           )}
                         </SelectContent>
                       </Select>
@@ -223,7 +219,7 @@ export default function OpportunityForm({
                               <SelectItem key={value} value={value}>
                                 {label}
                               </SelectItem>
-                            )
+                            ),
                           )}
                         </SelectContent>
                       </Select>
@@ -254,7 +250,7 @@ export default function OpportunityForm({
                               <SelectItem key={value} value={value}>
                                 {label}
                               </SelectItem>
-                            )
+                            ),
                           )}
                         </SelectContent>
                       </Select>

@@ -6,8 +6,7 @@ import {
   opportunityFormSchema,
   updateOpportunitySchema,
 } from "@/lib/validations/auth";
-import { onBoardCompanySchema } from "@/lib/validations/company";
-import { start } from "repl";
+import { onBoardCompanySchema } from "@/schemas";
 import z from "zod";
 
 export const updateCompanyBanner = actionClient

@@ -1,6 +1,7 @@
 import { mutate, query } from "@/lib/api";
 import { actionClient } from "@/lib/safe-action";
 import { verifyStudentIdentitySchema } from "@/lib/validations/auth";
+import { studentOnboardingSchema } from "@/schemas";
 import z from "zod";
 
 const applyJ = z.object({
@@ -123,7 +124,6 @@ export const updateStudentProfilePicture = actionClient
   });
 
 export const verifyStudentIdentity = actionClient
-
   .inputSchema(verifyStudentIdentitySchema)
   .action(async ({ parsedInput: { matNo } }) => {
     // return true;
@@ -131,5 +131,55 @@ export const verifyStudentIdentity = actionClient
       // matriculation: matNo,
     });
     console.log("student data retrieved", response);
+    return response;
+  });
+
+function appendToFormData(fd: FormData, key: string, value: unknown) {
+  if (value === undefined || value === null) return;
+
+  // File / Blob
+  if (value instanceof File) {
+    fd.append(key, value, value.name);
+    return;
+  }
+  if (value instanceof Blob) {
+    fd.append(key, value);
+    return;
+  }
+
+  // Arrays (string[] or mixed)
+  if (Array.isArray(value)) {
+    // Option A: append multiple entries with same key
+    for (const item of value) {
+      if (item === undefined || item === null) continue;
+      if (item instanceof File) fd.append(key, item, item.name);
+      else fd.append(key, String(item));
+    }
+    return;
+
+    // Option B (alternative): fd.append(key, JSON.stringify(value))
+  }
+
+  // Objects (if any): stringify
+  if (typeof value === "object") {
+    fd.append(key, JSON.stringify(value));
+    return;
+  }
+
+  // Primitive (string/number/boolean)
+  fd.append(key, String(value));
+}
+
+export const onBoardStudent = actionClient
+  .inputSchema(studentOnboardingSchema)
+  .action(async ({ parsedInput }) => {
+    console.log("Onboarding student with data:", parsedInput);
+    const formData = new FormData();
+
+    for (const [key, value] of Object.entries(parsedInput)) {
+      appendToFormData(formData, key, value);
+    }
+
+    const response = await mutate("/s/onboarding", formData, "POST");
     return response;
   });

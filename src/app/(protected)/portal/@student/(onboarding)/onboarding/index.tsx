@@ -1,25 +1,98 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/tailwind";
-
-type Step = {
-  title: string;
-  description: string;
-};
-
-const steps: Step[] = [
-  { title: "Profile", description: "Basic student information" },
-  { title: "Education", description: "Academic background" },
-  { title: "Preferences", description: "Internship preferences" },
-];
+import { useMemo, useState } from "react";
+import SchoolInfoStep from "./_molecules/school-info";
+import PreferencesStep from "./_molecules/preferences";
+import DocumentStep from "./_molecules/document";
+import { Step } from "@/types/wizard";
+import { DocumentSchema, studentOnboardingSchema } from "@/schemas";
+import { useAction } from "next-safe-action/hooks";
+import { onBoardStudent } from "@/actions";
+import { useRouter } from "next/navigation";
 
 export default function StudentOnboardingPage() {
-  const currentStep = 0;
+  const router = useRouter();
+  const steps: Step[] = useMemo(
+    () => [
+      {
+        title: "Profile",
+        description: "Basic student information",
+        component: SchoolInfoStep,
+      },
+      {
+        title: "Education",
+        description: "Academic background",
+        component: PreferencesStep,
+      },
+      {
+        title: "Preferences",
+        description: "Internship preferences",
+        component: DocumentStep,
+      },
+      // {
+      //   title: "Submit",
+      //   description: "Review and submit your information",
+      //   component: null,
+      // },
+    ],
+    [],
+  );
+
+  const { execute, hasErrored, result } = useAction(onBoardStudent, {
+    onSuccess: (res) => {
+      console.log("Onboarding successful:", res);
+      router.push("/portal/dashboard");
+    },
+    onError: (error) => {
+      console.error("Onboarding error:", error);
+    },
+  });
+
+  const [onboardingData, setOnboardingData] = useState({});
+
+  const [currentStep, setCurrentStep] = useState(0);
+  const formIdByStep = [
+    "school-info-step-form",
+    "preferences-step-form",
+    "document-step-form",
+  ] as const;
+  const activeFormId = formIdByStep[currentStep];
+  const isFirst = currentStep === 0;
+  const isLast = currentStep === steps.length - 1;
+  const CurrentStepComponent = steps[currentStep]?.component;
+
+  const onBack = () => {};
+
+  // function next() {
+  //   const wasLastStep = currentStep === steps.length - 1;
+
+  //   if (wasLastStep) {
+  //     handleSubmit();
+  //   } else {
+  //     setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+  //   }
+  // }
+
+  const handleSubmit = (finalStepData?: DocumentSchema) => {
+    const completeData = { ...onboardingData, ...finalStepData };
+    console.log("Submitting final data...", onboardingData);
+
+    const parse = studentOnboardingSchema.safeParse(completeData);
+    if (!parse.success) {
+      console.error("Validation errors:", parse.error.format());
+      return;
+    }
+
+    execute(parse.data);
+  };
 
   return (
     <div className="min-h-screen w-full bg-background">
       <div className="mx-auto w-full max-w-6xl px-4 py-8">
         {/* Shell */}
-        <div className="w-full rounded-2xl border bg-card shadow-sm overflow-hidden">
+        <div className="w-full bg-card overflow-hidden">
           {/* Stepper */}
           <header className="border-b bg-card/60 px-6 py-5">
             <div className="flex items-start justify-between gap-4">
@@ -36,7 +109,7 @@ export default function StudentOnboardingPage() {
           </header>
 
           {/* Content */}
-          <main className="grid grid-cols-1 gap-8 p-6 md:grid-cols-2">
+          <main className="grid grid-cols-1 gap-8 p-6 md:grid-cols-2 items-start">
             {/* Left: form area */}
             <section className="min-w-0">
               <div className="space-y-2">
@@ -49,88 +122,54 @@ export default function StudentOnboardingPage() {
                 </p>
               </div>
 
-              <div className="mt-6 rounded-2xl border bg-card p-5">
-                <div className="flex items-center gap-2">
-                  <div className="h-9 w-9 rounded-xl bg-primary/10" />
-                  <div>
-                    <p className="text-sm font-semibold">
-                      Tell us about yourself
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Add your basic information to get started.
-                    </p>
-                  </div>
+              {hasErrored && (
+                <div className="mt-4 p-4 mb-0 rounded-lg bg-red-100 text-red-800 text-sm">
+                  {result.serverError ||
+                    "An error occurred while submitting your onboarding information."}
                 </div>
+              )}
 
-                <div className="mt-5 grid gap-3">
-                  <div className="h-11 rounded-xl border bg-background px-3 flex items-center text-sm text-muted-foreground">
-                    e.g. University of Lagos
+              <div className="mt-6 rounded-xl border p-5 bg-white">
+                {CurrentStepComponent ? (
+                  <CurrentStepComponent
+                    onNext={(data) => {
+                      setOnboardingData((prev) => ({ ...prev, ...data }));
+                      if (currentStep === steps.length - 1) {
+                        // Pass the data directly to handleSubmit
+                        handleSubmit(data);
+                      } else {
+                        setCurrentStep((prev) => prev + 1);
+                      }
+                    }}
+                    onBack={onBack}
+                  />
+                ) : (
+                  <div className="rounded-lg border bg-muted/30 p-4 text-sm text-muted-foreground">
+                    This step is not implemented yet.
                   </div>
-                  <div className="h-11 rounded-xl border bg-background px-3 flex items-center text-sm text-muted-foreground">
-                    e.g. Computer Science
-                  </div>
+                )}
+              </div>
+              <div className="mt-6 flex items-center justify-between gap-3">
+                <button className="text-sm text-muted-foreground hover:text-foreground transition">
+                  Skip for now
+                </button>
 
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    <div className="h-11 rounded-xl border bg-background px-3 flex items-center text-sm text-muted-foreground">
-                      Select level
-                    </div>
-                    <div className="h-11 rounded-xl border bg-background px-3 flex items-center text-sm text-muted-foreground">
-                      GPA (optional)
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6 flex items-center justify-between gap-3">
-                  <button className="text-sm text-muted-foreground hover:text-foreground transition">
-                    Skip for now
-                  </button>
-
-                  <Button className="rounded-xl px-6">Next Step →</Button>
-                </div>
+                <Button
+                  form={activeFormId}
+                  // type={!isLast ? "submit" : "button"}
+                  type="submit"
+                  // onClick={isLast ? handleSubmit : undefined}
+                  className="rounded-xl px-6"
+                >
+                  {isLast ? "Submit" : "Next Step →"}
+                </Button>
               </div>
             </section>
 
             {/* Right: preview/info card */}
             <aside className="min-w-0">
               <div className="relative h-full rounded-2xl border bg-muted/30 p-5 overflow-hidden">
-                <div className="absolute inset-0 opacity-40 [background:radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.25),transparent_40%),radial-gradient(circle_at_80%_60%,hsl(var(--primary)/0.12),transparent_45%)]" />
-
-                <div className="relative">
-                  <div className="rounded-2xl border bg-background/60 p-4 backdrop-blur-sm">
-                    <div className="aspect-[4/3] w-full rounded-xl bg-muted overflow-hidden" />
-                  </div>
-
-                  <div className="mt-5 rounded-2xl border bg-background p-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-semibold">
-                          Connect with top companies
-                        </p>
-                        <p className="mt-1 text-xs text-muted-foreground">
-                          Completing your profile helps us rank better
-                          internship matches at the top of your feed.
-                        </p>
-                      </div>
-
-                      <div className="shrink-0 rounded-xl border bg-primary/10 px-3 py-2 text-xs text-primary">
-                        Smart Match
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Floating badge */}
-                  <div className="pointer-events-none absolute bottom-8 left-8 rounded-2xl border bg-background px-4 py-3 shadow-sm">
-                    <div className="flex items-center gap-3">
-                      <div className="h-9 w-9 rounded-full bg-primary/10" />
-                      <div>
-                        <p className="text-sm font-semibold">Profile Setup</p>
-                        <p className="text-xs text-muted-foreground">
-                          Almost ready to apply
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                right side
               </div>
             </aside>
           </main>

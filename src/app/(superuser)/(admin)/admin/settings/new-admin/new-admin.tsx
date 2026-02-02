@@ -1,10 +1,9 @@
 "use client";
 
-import { createAdmin } from "@/actions/admin";
+import { createAdmin } from "@/actions";
 import Input from "@/components/input";
 import { Button } from "@/components/ui/button";
 import { useAction } from "next-safe-action/hooks";
-// import { RadioGroup } from "@headlessui/react";
 import { useState } from "react";
 
 export type adminRole = "superadmin" | "admin" | "moderator" | "support";

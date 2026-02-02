@@ -1,8 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import React from "react";
-import { SearchNormal1, ArrowDown2 } from "iconsax-reactjs";
+import { ArrowDown2 } from "iconsax-reactjs";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { Sort } from "@/components/sort";
 

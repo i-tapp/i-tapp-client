@@ -1,9 +1,7 @@
-import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-// import { Input } from "@/components/ui/input";
 import { ButtonWithLoader } from "@/components/button-with-loader";
 import {
   Form,
@@ -16,8 +14,8 @@ import {
 import { studentSignupSchema } from "@/lib/validations/auth";
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "react-toastify";
-import { studentSignup } from "@/actions/auth";
 import Input from "@/components/input";
+import { studentSignup } from "@/actions";
 
 type Login = {
   email: string;

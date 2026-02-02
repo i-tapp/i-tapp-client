@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import OfferCard from "../[offerId]/_molecules/offer-card";
 import CompanyDetailsPage from "../[offerId]/_molecules";

@@ -7,12 +7,6 @@ import { Button } from "@/components/ui/button";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "react-toastify";
 import moment from "moment";
-import {
-  acceptApplication,
-  createOffer,
-  declineApplication,
-  deleteOffer,
-} from "@/actions/company";
 import { GraduationCap } from "lucide-react";
 import {
   useFetchApplicationDetails,
@@ -25,6 +19,12 @@ import { Loader } from "@/components/ui/loader";
 import Loading from "@/components/loading";
 import Hr from "@/components/ui/hr";
 import { cn } from "@/utils/tailwind";
+import {
+  acceptApplication,
+  createOffer,
+  declineApplication,
+  deleteOffer,
+} from "@/actions";
 
 export default function CandidateProfile() {
   const [offerFormOpen, setOfferFormOpen] = useState(false);
@@ -32,11 +32,11 @@ export default function CandidateProfile() {
   const opportunityId = useSearchParams().get("opportunityId");
 
   const { data: studentDetails, isLoading } = useFetchStudentDetails(
-    studentId as string
+    studentId as string,
   );
 
   const { data: applicationDetails } = useFetchApplicationDetails(
-    opportunityId as string
+    opportunityId as string,
   );
 
   const offerId = applicationDetails?.offer?.id;
@@ -54,7 +54,7 @@ export default function CandidateProfile() {
         const errorMessage = serverError || "An error occurred.";
         toast.error(errorMessage);
       },
-    }
+    },
   );
 
   const { execute: acceptAction, isExecuting: isAccepting } = useAction(
@@ -68,7 +68,7 @@ export default function CandidateProfile() {
         const errorMessage = serverError || "An error occurred.";
         toast.error(errorMessage);
       },
-    }
+    },
   );
 
   const { execute: declineAction, isExecuting: isDeclining } = useAction(
@@ -82,7 +82,7 @@ export default function CandidateProfile() {
         const errorMessage = serverError || "An error occurred.";
         toast.error(errorMessage);
       },
-    }
+    },
   );
 
   const { execute: withdrawOffer, isExecuting: isWithdrawing } = useAction(
@@ -96,7 +96,7 @@ export default function CandidateProfile() {
         const errorMessage = serverError || "An error occurred.";
         toast.error(errorMessage);
       },
-    }
+    },
   );
 
   const handleCreate = (things: OfferFormData) => {

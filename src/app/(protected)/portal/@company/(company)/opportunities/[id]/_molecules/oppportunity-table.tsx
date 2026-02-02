@@ -8,7 +8,6 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import Image from "next/image";
-import { Overview } from "../../_molecules/overview";
 import { User, Calendar, Mail } from "lucide-react";
 import Link from "next/link";
 import { ArchiveAdd, ArrowRight2, SmsEdit } from "iconsax-reactjs";
@@ -16,7 +15,7 @@ import { Application } from "@/types";
 import { useState } from "react";
 import { cn } from "@/utils/tailwind";
 import { StatusBadge } from "@/components/application-status";
-import { ApplicationStatus, OpportunityStatus } from "@/types/enums";
+import { ApplicationStatus } from "@/types/enums";
 
 export default function OpportunityTable({ data }: { data: Application[] }) {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -30,7 +29,7 @@ export default function OpportunityTable({ data }: { data: Application[] }) {
       data?.filter((app) => app.status === "interviewing")?.length || 0,
     approved:
       data?.filter(
-        (app) => app.status === "approved" || app.status === "accepted"
+        (app) => app.status === "approved" || app.status === "accepted",
       )?.length || 0,
   };
 
@@ -145,7 +144,7 @@ export default function OpportunityTable({ data }: { data: Application[] }) {
                             year: "numeric",
                             month: "short",
                             day: "numeric",
-                          }
+                          },
                         )}
                       </div>
                     </TableCell>
@@ -174,7 +173,10 @@ export default function OpportunityTable({ data }: { data: Application[] }) {
                         <Link
                           href={`/portal/candidates/${student?.id}?opportunityId=${applicant?.id}`}
                           className={cn(
-                            buttonVariants({ variant: "secondary", size: "sm" })
+                            buttonVariants({
+                              variant: "secondary",
+                              size: "sm",
+                            }),
                           )}
                         >
                           View Profile
@@ -292,7 +294,7 @@ function ApplicantCard({
           href={`/portal/candidates/${student?.id}`}
           className={cn(
             buttonVariants({ variant: "default", size: "sm" }),
-            "flex-1 justify-center"
+            "flex-1 justify-center",
           )}
         >
           View

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -8,13 +8,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import { Input } from "@/components/ui/input";
-import { InputDescription } from "@/components/ui/input-description";
 import { verifyStudentIdentitySchema } from "@/lib/validations/auth";
 import { useAction } from "next-safe-action/hooks";
 import { ButtonWithLoader } from "@/components/button-with-loader";
 import { toast } from "react-toastify";
-import { verifyStudentIdentity } from "@/actions/student";
 import { db } from "../../../../../../db";
 import {
   Form,
@@ -26,6 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Input from "@/components/input";
+import { verifyStudentIdentity } from "@/actions";
 
 export function SchoolInfo({
   formIndex,
@@ -66,7 +64,7 @@ export function SchoolInfo({
         toast.error("Student data not found");
         console.log(error);
       },
-    }
+    },
   );
 
   const onSubmit = (values: any) => {

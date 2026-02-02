@@ -9,13 +9,12 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import UploadThing from "@/components/upload-thing";
-import { profileFormSchema } from "@/lib/validations/company";
+import { CompanyProfileFormSchema, profileFormSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CameraIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 
 export default function CompanyProfile({
   onNext,
@@ -25,7 +24,7 @@ export default function CompanyProfile({
   onBack: () => void;
 }) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const form = useForm<z.infer<typeof profileFormSchema>>({
+  const form = useForm<CompanyProfileFormSchema>({
     resolver: zodResolver(profileFormSchema),
     mode: "onBlur",
   });

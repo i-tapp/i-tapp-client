@@ -17,7 +17,6 @@ import { useParams } from "next/navigation";
 type Company = {
   id: string;
   name: string;
-  // whatever companyDetails contains
 };
 
 type ProfileHeaderBannerProps = {
@@ -29,7 +28,7 @@ export default function CompanyDetails() {
   const { companyId } = useParams();
 
   const { data: companyDetails, isLoading } = useFetchCompanyDetails(
-    companyId as string
+    companyId as string,
   );
 
   console.log("Company Details:", companyDetails);

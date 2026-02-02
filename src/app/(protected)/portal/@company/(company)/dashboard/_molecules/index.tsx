@@ -1,16 +1,13 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import {
-  ProfileAdd,
   ArrowRight,
   ProfileTick,
   TickCircle,
   Profile2User,
 } from "iconsax-reactjs";
 import { OverviewBox } from "@/components/overview-box";
-import { CheckCircle } from "lucide-react";
 
 import { Applicant, Opportunity } from "@/types";
 import {

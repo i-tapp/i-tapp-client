@@ -3,10 +3,13 @@ import AvatarCard from "./avatar-card";
 import Image from "next/image";
 import UploadThing from "./upload-thing";
 import { useAction } from "next-safe-action/hooks";
-import { updateStudentProfilePicture } from "@/actions/student";
 import { useQueryClient } from "@tanstack/react-query";
 import { query } from "@/lib/api";
-import { updateCompanyBanner, updateCompanyLogo } from "@/actions/company";
+import {
+  updateCompanyBanner,
+  updateCompanyLogo,
+  updateStudentProfilePicture,
+} from "@/actions";
 
 type type = "student" | "company";
 

@@ -7,13 +7,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { kycFormSchema } from "@/lib/validations/company";
+import { kycFormSchema, KycFormValues } from "@/schemas";
+import { cn } from "@/utils/tailwind";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FileUpIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
-
-type KycFormValues = z.infer<typeof kycFormSchema>;
 
 export default function CompanyKyc({
   onNext,
@@ -109,16 +107,23 @@ type Props = {
   description?: string;
 };
 
-const FileUploadThing = ({
+export const FileUploadThing = ({
   title,
   value,
   onChange,
   onBlur,
   description,
+  // width = "350px",
 }: Props) => {
   return (
     <>
-      <label className="border-2 border-dashed rounded-xl h-[140px] w-[350px] flex flex-col items-center justify-center px-4 py-3 cursor-pointer hover:border-primary/60 focus-within:ring-2 focus-within:ring-primary/30">
+      <label
+        className={cn(
+          "border-2 border-dashed rounded-xl h-[140px] flex flex-col items-center justify-center px-4 py-3 cursor-pointer hover:border-primary/60 focus-within:ring-2 focus-within:ring-primary/30",
+          // width ? "" : "w-full",
+        )}
+        // style={{ width }}
+      >
         <input
           type="file"
           className="hidden"

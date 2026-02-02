@@ -17,16 +17,13 @@ import {
 import { Button } from "@/components/ui/button";
 import Input from "@/components/input";
 import { Textarea } from "@/components/ui/textarea";
-
 import { companyProfileSchema } from "@/lib/validations/auth";
 import { useCompanyStore } from "@/lib/store/company";
-import { updateCompanyProfile } from "@/actions/company";
-import z from "zod";
 import { useFetchCompanyProfile } from "@/hooks/query";
 import { Spinner } from "@/components/spinner";
 import { useQueryClient } from "@tanstack/react-query";
-
-export type ProfileFormData = z.infer<typeof companyProfileSchema>;
+import { updateCompanyProfile } from "@/actions";
+import { ProfileFormData } from "@/schemas";
 
 export default function ProfileForm({ onClose }: { onClose: () => void }) {
   const company = useCompanyStore((s) => s.company);
@@ -55,7 +52,7 @@ export default function ProfileForm({ onClose }: { onClose: () => void }) {
       onError() {
         toast.error("Failed to update profile.");
       },
-    }
+    },
   );
 
   // populate on initial load

@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -21,9 +20,9 @@ import {
 import { ButtonWithLoader } from "@/components/button-with-loader";
 
 import { signinSchema } from "@/lib/validations/auth";
-import { signinCompany } from "@/actions/auth";
 import { useCompanyStore } from "@/lib/store/company";
 import Input from "@/components/input";
+import { signinCompany } from "@/actions";
 
 export function CompanySignIn() {
   const router = useRouter();
@@ -50,7 +49,7 @@ export function CompanySignIn() {
         toast.error(error?.error?.serverError ?? "Login failed. Try again.");
         console.error("Login failed:", error);
       },
-    }
+    },
   );
 
   return (

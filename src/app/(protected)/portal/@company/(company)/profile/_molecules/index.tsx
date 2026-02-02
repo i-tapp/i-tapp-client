@@ -3,7 +3,6 @@
 import { useState } from "react";
 import ProfileForm from "./profile-form";
 import { useCompanyStore } from "@/lib/store/company";
-import { logout } from "@/actions/auth";
 import {
   Building2,
   Mail,
@@ -17,6 +16,7 @@ import InfoCard from "@/components/info-card";
 import ProfileHeaderBanner from "@/components/profile-header-banner";
 import { useFetchCompanyProfile } from "@/hooks/query";
 import { Spinner } from "@/components/spinner";
+import { logout } from "@/actions";
 
 export default function CompanyProfilePage() {
   const [editing, setEditing] = useState(false);

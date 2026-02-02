@@ -2,12 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
-
-import { Button } from "@/components/ui/button";
 import { SchoolInfo } from "./school-info";
 import { SignupInfo } from "./signup-info";
 import { FormIndicator } from "@/components/ui/form-indicator";
-import { StudentInfo } from "./student-info";
 
 export function StudentOnboardingForm() {
   const [form, setForm] = useState<number>(0);

@@ -8,10 +8,7 @@ import {
   TableCell,
   TableFooter,
 } from "@/components/ui/table";
-import {
-  applicationStatusStyle,
-  opportunityStatusStyle,
-} from "@/utils/admin-status-style";
+import { opportunityStatusStyle } from "@/utils/admin-status-style";
 import { cn } from "@/utils/tailwind";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -60,7 +57,7 @@ export default function OpportunityTable({ data }: { data: any[] }) {
                   className={cn(
                     opportunityStatusStyle[
                       op.status as keyof typeof opportunityStatusStyle
-                    ]
+                    ],
                   )}
                 >
                   {op.status}

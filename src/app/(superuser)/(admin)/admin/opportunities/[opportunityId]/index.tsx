@@ -1,6 +1,6 @@
 "use client";
 
-import { updateOpportunityStatus } from "@/actions/admin";
+import { updateOpportunityStatus } from "@/actions";
 import { Button } from "@/components/ui/button";
 import { useFetchOpportunityDetails } from "@/hooks/query";
 import { useQueryClient } from "@tanstack/react-query";
@@ -21,7 +21,7 @@ export default function OpportunityDetailPage() {
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useFetchOpportunityDetails(
-    opportunityId as string
+    opportunityId as string,
   );
 
   const { execute, isExecuting } = useAction(updateOpportunityStatus, {

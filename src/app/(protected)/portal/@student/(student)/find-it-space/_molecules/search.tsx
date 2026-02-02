@@ -11,7 +11,7 @@ export default function Search() {
     <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 w-full max-w-2xl ">
       {/* Search Container */}
       <div className="flex flex-row items-center bg-white rounded-lg shadow-sm  w-full px-3 py-1 focus-within:ring-2 focus-within:ring-primary/30 transition-all">
-        <SearchIcon className="text-gray-600 flex-shrink-0" size={18} />
+        <SearchIcon className="text-gray-600 shrink-0" size={18} />
 
         {/* Search Input */}
         <Input
@@ -28,7 +28,7 @@ export default function Search() {
           className="flex flex-row items-center gap-1.5 text-gray-700 hover:text-primary transition-colors text-sm"
         >
           <MapPin size={18} />
-          <span className="truncate max-w-[100px] sm:max-w-[160px]">
+          <span className="truncate max-w-[100px] sm:max-w-40">
             Lagos State
           </span>
           <ChevronDown size={18} />

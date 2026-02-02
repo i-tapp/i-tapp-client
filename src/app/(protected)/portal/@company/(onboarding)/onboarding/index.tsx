@@ -7,25 +7,11 @@ import CompanyProfile from "./_molecules/company-profile";
 import Hr from "@/components/ui/hr";
 import { Button } from "@/components/ui/button";
 import CompanyKyc from "./_molecules/company-verification";
-import z from "zod";
 import { useAction } from "next-safe-action/hooks";
-import { onBoardCompany } from "@/actions/company";
-import { onBoardCompanySchema } from "@/lib/validations/company";
 import { useRouter } from "next/navigation";
-
-type StepComponentProps = {
-  onNext: (data?: any) => void;
-  onBack: () => void;
-};
-
-type Step = {
-  title: string;
-  description: string;
-  component?: React.ComponentType<StepComponentProps> | null;
-};
-
-type OnboardingData = z.infer<typeof onBoardCompanySchema>;
-type OnboardingDraft = Partial<OnboardingData>;
+import { onBoardCompanySchema, OnboardingDraft } from "@/schemas";
+import { onBoardCompany } from "@/actions";
+import { Step } from "@/types/wizard";
 
 export default function OnboardingPage() {
   const router = useRouter();

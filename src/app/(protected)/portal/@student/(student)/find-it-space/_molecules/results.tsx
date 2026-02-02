@@ -1,12 +1,8 @@
-import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/tailwind";
 import Search from "./search";
-import { companyListings } from "@/constants";
-import AvailableCompany from "./available-opportunity";
 import { Opportunity } from "@/types";
 import AvailableOpportunity from "./available-opportunity";
 import { Inbox } from "lucide-react";
-// import Featured from "../_molecules/featured";
 
 export default function Results({
   selectedId,

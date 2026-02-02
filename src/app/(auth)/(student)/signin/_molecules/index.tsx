@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -22,9 +21,9 @@ import { ButtonWithLoader } from "@/components/button-with-loader";
 
 import { toast } from "react-toastify";
 
-import { signinStudent } from "@/actions/auth";
 import { useStudentStore } from "@/lib/store/student";
 import Input from "@/components/input";
+import { signinStudent } from "@/actions";
 
 export function StudentSignIn() {
   const router = useRouter();
@@ -54,7 +53,7 @@ export function StudentSignIn() {
         toast.error(error?.error?.serverError ?? "Login failed. Try again.");
         console.error("Student login error:", error);
       },
-    }
+    },
   );
 
   return (

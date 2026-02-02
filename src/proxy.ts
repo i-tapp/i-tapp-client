@@ -16,7 +16,8 @@ async function me(token: string) {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch user info");
+    console.error("Failed to fetch profile:", response.statusText);
+    return null;
   }
   return response.json();
 }

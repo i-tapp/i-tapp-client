@@ -7,9 +7,9 @@ import { Menu } from "iconsax-reactjs";
 import { usePathname } from "next/navigation";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { logout } from "@/actions/auth";
 import { useCompanyStore } from "@/lib/store/company";
 import { cn } from "@/utils/tailwind";
+import { logout } from "@/actions";
 
 interface MobileNavProps {
   links: { text: string; href: string }[];
@@ -67,7 +67,7 @@ export function MobileNav({ links }: MobileNavProps) {
                 "text-base transition-colors hover:text-primary",
                 pathname.startsWith(link.href)
                   ? "font-medium text-primary"
-                  : "text-black"
+                  : "text-black",
               )}
               onClick={() => setOpen(false)}
             >

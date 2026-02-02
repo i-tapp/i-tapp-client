@@ -1,6 +1,6 @@
 "use client";
 
-import { changePassword, resetPassword } from "@/actions/auth";
+import { changePassword } from "@/actions";
 import Input from "@/components/input";
 import { Button } from "@/components/ui/button";
 import { resetPasswordSchema } from "@/lib/validations/auth";
@@ -35,13 +35,13 @@ export default function ResetPasswordPage() {
     onSuccess: () => {
       console.log("Password reset link sent successfully");
       setMessage(
-        "If an account with that email exists, a reset link has been sent."
+        "If an account with that email exists, a reset link has been sent.",
       );
     },
     onError: (error) => {
       console.error("Password reset error:", error);
       setMessage(
-        error?.error?.serverError || "Failed to send reset link. Try again."
+        error?.error?.serverError || "Failed to send reset link. Try again.",
       );
     },
   });

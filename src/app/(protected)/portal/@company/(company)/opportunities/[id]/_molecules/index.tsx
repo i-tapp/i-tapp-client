@@ -16,9 +16,8 @@ import {
 import { Calendar, MapPin, Briefcase } from "lucide-react";
 import OpportunityForm from "../../_molecules/opportunity-form";
 import { useAction } from "next-safe-action/hooks";
-import { closeOpportunity, updateOpportunity } from "@/actions/company";
 import { Spinner } from "@/components/spinner";
-import { OpportunityStatusBadge } from "@/components/opportunity-status";
+import { closeOpportunity, updateOpportunity } from "@/actions";
 
 export default function OpportunityDetailsPage() {
   const { id } = useParams();
@@ -47,7 +46,7 @@ export default function OpportunityDetailsPage() {
       onError(error) {
         console.error("Error updating opportunity:", error);
       },
-    }
+    },
   );
 
   if (isLoading) {

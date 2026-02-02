@@ -1,6 +1,6 @@
 "use client";
 
-import { updateCompanyStatus } from "@/actions/admin";
+import { updateCompanyStatus } from "@/actions";
 import { Button } from "@/components/ui/button";
 import { useFetchCompanyDetails } from "@/hooks/query";
 import { CompanyStatus } from "@/types/enums";

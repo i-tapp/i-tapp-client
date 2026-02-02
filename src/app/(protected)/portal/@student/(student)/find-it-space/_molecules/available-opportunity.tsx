@@ -22,21 +22,16 @@ export default function AvailableOpportunity({
 
   // ✅ best-effort company name (adapt to your actual field when available)
   const companyName =
-    // @ts-expect-error - depends on your Opportunity shape
     details?.company?.name ||
     // @ts-expect-error
     details?.companyName ||
-    // @ts-expect-error
     details?.company ||
     "Company";
 
   // ✅ best-effort work mode (adapt later)
   const workMode =
     // @ts-expect-error
-    details?.workMode ||
-    // @ts-expect-error
-    details?.mode ||
-    "Remote";
+    details?.workMode || details?.mode || "Remote";
 
   const isSelected = selectedId === id;
 

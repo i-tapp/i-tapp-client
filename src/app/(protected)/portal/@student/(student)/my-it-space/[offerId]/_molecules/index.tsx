@@ -10,17 +10,15 @@ import {
   Users,
   CheckCircle2,
 } from "lucide-react";
-// Adjust this import path to where your actual image is
 import somPng from "@/assets/images/company.png";
 import { useParams } from "next/navigation";
 import { useFetchOfferDetails } from "@/hooks/query";
 import { Spinner } from "@/components/spinner";
-import { off } from "process";
 import { Button } from "@/components/ui/button";
 import DownloadOfferLetterSection from "./offer-letter";
 import { useAction } from "next-safe-action/hooks";
-import { acceptOffer, declineOffer } from "@/actions/student";
 import Loading from "@/components/loading";
+import { acceptOffer, declineOffer } from "@/actions";
 
 // ---- Mock Data for this specific page view ----
 // This represents the data fetched for the single company being viewed
@@ -49,7 +47,7 @@ const CompanyDetailsPage = () => {
   const company = companyDetails;
 
   const { data: offerDetails, isLoading } = useFetchOfferDetails(
-    offerId as string
+    offerId as string,
   );
 
   const { execute: acceptOfferExecute, isExecuting: isAccepting } = useAction(
@@ -62,7 +60,7 @@ const CompanyDetailsPage = () => {
       onError: (error) => {
         console.error("Error accepting offer:", error);
       },
-    }
+    },
   );
 
   const { execute: declineOfferExecute, isExecuting: isDeclining } = useAction(
@@ -75,7 +73,7 @@ const CompanyDetailsPage = () => {
       onError: (error) => {
         console.error("Error accepting offer:", error);
       },
-    }
+    },
   );
 
   console.log("Viewing offer ID:", offerId);

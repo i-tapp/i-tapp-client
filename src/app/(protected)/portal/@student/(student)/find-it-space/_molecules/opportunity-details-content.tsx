@@ -1,4 +1,4 @@
-import { apply, save, withdraw } from "@/actions/student";
+import { apply, save, withdraw } from "@/actions";
 import { Button } from "@/components/ui/button";
 import Hr from "@/components/ui/hr";
 import { query } from "@/lib/api";
