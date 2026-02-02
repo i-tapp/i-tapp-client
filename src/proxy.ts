@@ -13,7 +13,6 @@ const roleRedirects: Record<string, string> = {
 const API_BASE_URL = process.env.NEXT_PUBLIC_APP_BACKEND_API_URL;
 
 async function me(token: string) {
-  console.log("api base url:", API_BASE_URL);
   const response = await fetch(`${API_BASE_URL}/auth/me`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -28,7 +27,10 @@ async function me(token: string) {
 }
 
 export async function proxy(req: NextRequest) {
-  const skipOnboarding = req.cookies.get("skip-onboarding")?.value === "true";
+  const skipStudentOnboarding =
+    req.cookies.get("skip-student-onboarding")?.value === "true";
+  const skipCompanyOnboarding =
+    req.cookies.get("skip-company-onboarding")?.value === "true";
   // do for email verification routes later
   const token = req.cookies.get("session-token")?.value; // || "fake-token";
   const role = req.cookies.get("role")?.value; // || "admin";
@@ -98,7 +100,7 @@ export async function proxy(req: NextRequest) {
     }
 
     if (isCompanyRole) {
-      const canSkip = companyOnboarded || skipOnboarding;
+      const canSkip = companyOnboarded || skipCompanyOnboarding;
 
       if (canSkip && isCompanyOnboardingRoute) {
         return NextResponse.redirect(new URL("/portal/dashboard", req.url));
@@ -112,7 +114,7 @@ export async function proxy(req: NextRequest) {
     }
 
     if (isStudentRole) {
-      const canSkip = studentOnboarded || skipOnboarding;
+      const canSkip = studentOnboarded || skipStudentOnboarding;
 
       if (canSkip && isStudentOnboardingRoute) {
         return NextResponse.redirect(new URL("/portal/find-it-space", req.url));

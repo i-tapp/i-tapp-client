@@ -114,7 +114,7 @@ export default function OnboardingPage() {
 
             <Button
               onClick={async () => {
-                await fetch("/api", { method: "POST" });
+                await fetch("/api/company/onboarding/skip", { method: "POST" });
                 router.push("/portal/dashboard");
               }}
             >

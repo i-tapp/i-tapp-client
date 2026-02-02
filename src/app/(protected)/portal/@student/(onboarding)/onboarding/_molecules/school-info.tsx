@@ -7,6 +7,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useFetchMyProfile } from "@/hooks/query";
 import { schoolInfoSchema, SchoolInfoSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -18,18 +19,21 @@ export default function SchoolInfoStep({
   onNext: (data?: any) => void;
   onBack: () => void;
 }) {
+  const { data } = useFetchMyProfile();
   const form = useForm<SchoolInfoSchema>({
     resolver: zodResolver(schoolInfoSchema),
     mode: "onSubmit",
-    defaultValues: {
-      school: "",
-      courseOfStudy: "",
+    values: {
+      school: data?.student?.school ?? "",
+      courseOfStudy: data?.student?.courseOfStudy ?? "",
       level: "",
       gpa: "",
       degreeType: "OND",
       graduationYear: "",
     },
   });
+
+  console.log("School Info Step - default values:", data);
   return (
     <>
       <Form {...form}>
@@ -45,7 +49,13 @@ export default function SchoolInfoStep({
               <FormItem>
                 <FormLabel>School Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g University of Benin" {...field} />
+                  <Input
+                    // disabled
+                    readOnly
+                    placeholder="e.g University of Benin"
+                    {...field}
+                    className="bg-muted/40 cursor-not-allowed"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -86,7 +96,9 @@ export default function SchoolInfoStep({
               name="gpa"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel>Current GPA (Optional)</FormLabel>
+                  <FormLabel className="line-clamp-2">
+                    Current GPA (Optional)
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="e.g 3.5" {...field} />
                   </FormControl>

@@ -43,7 +43,8 @@ export default function StudentOnboardingPage() {
   const { execute, hasErrored, result } = useAction(onBoardStudent, {
     onSuccess: (res) => {
       console.log("Onboarding successful:", res);
-      router.push("/portal/dashboard");
+      router.refresh();
+      router.push("/portal");
     },
     onError: (error) => {
       console.error("Onboarding error:", error);
@@ -90,7 +91,7 @@ export default function StudentOnboardingPage() {
 
   return (
     <div className="min-h-screen w-full bg-background">
-      <div className="mx-auto w-full max-w-6xl px-4 py-8">
+      <div className="mx-auto w-full max-w-6xl md:px-4 md:py-8">
         {/* Shell */}
         <div className="w-full bg-card overflow-hidden">
           {/* Stepper */}
@@ -109,7 +110,7 @@ export default function StudentOnboardingPage() {
           </header>
 
           {/* Content */}
-          <main className="grid grid-cols-1 gap-8 p-6 md:grid-cols-2 items-start">
+          <main className="grid grid-cols-1 gap-8 p-4 md:p-6 md:grid-cols-2 items-start">
             {/* Left: form area */}
             <section className="min-w-0">
               <div className="space-y-2">
@@ -150,9 +151,18 @@ export default function StudentOnboardingPage() {
                 )}
               </div>
               <div className="mt-6 flex items-center justify-between gap-3">
-                <button className="text-sm text-muted-foreground hover:text-foreground transition">
+                <Button
+                  onClick={async () => {
+                    await fetch("/api/student/onboarding/skip", {
+                      method: "POST",
+                    });
+                    router.push("/portal");
+                  }}
+                  variant={"ghost"}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Skip for now
-                </button>
+                </Button>
 
                 <Button
                   form={activeFormId}
@@ -167,7 +177,7 @@ export default function StudentOnboardingPage() {
             </section>
 
             {/* Right: preview/info card */}
-            <aside className="min-w-0">
+            <aside className="hidden md:block min-w-0">
               <div className="relative h-full rounded-2xl border bg-muted/30 p-5 overflow-hidden">
                 right side
               </div>
@@ -211,7 +221,7 @@ const ProgressStage = ({
         {!isLast && (
           <div
             className={cn(
-              "hidden md:block h-[2px] w-full max-w-[180px] rounded-full",
+              "hidden md:block h-0.5 w-full max-w-[180px] rounded-full",
               isDone ? "bg-primary" : "bg-border",
             )}
           />
@@ -222,13 +232,14 @@ const ProgressStage = ({
       <div className="min-w-0 pt-1">
         <div
           className={cn(
-            "text-sm font-medium truncate",
+            "text-sm font-medium leading-snug",
+            "whitespace-normal wrap-break-words line-clamp-2",
             isActive ? "text-primary font-semibold" : "text-foreground",
           )}
         >
           {step.title}
         </div>
-        <div className="text-xs text-muted-foreground truncate">
+        <div className="hidden md:block text-xs text-muted-foreground line-clamp-1">
           {step.description}
         </div>
       </div>

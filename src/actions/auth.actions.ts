@@ -34,7 +34,7 @@ export const signinCompany = actionClient
       role: "company",
     });
     const { token, user, role, profile } = response.data;
-    await setAuthCookies(token, user.role, profile.companyOnboarded);
+    await setAuthCookies(token, user.role);
     return { token, role, user, profile };
   });
 

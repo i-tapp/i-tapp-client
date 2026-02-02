@@ -7,6 +7,8 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
+import { useFetchMyProfile, useFetchProfile } from "@/hooks/query";
+import { useStudentStore } from "@/lib/store";
 import { preferencesSchema, PreferencesSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Laptop, Building, ArrowRightLeft } from "lucide-react";
@@ -35,6 +37,7 @@ export default function PreferencesStep({
     },
     mode: "onSubmit",
   });
+
   return (
     <>
       <Form {...form}>
@@ -82,7 +85,8 @@ export default function PreferencesStep({
                     value={(field.value ?? []).join(", ")}
                     onChange={(e) => {
                       const raw = e.target.value;
-                      const values = raw.split(",").map((v) => v.trim()); // no filter(Boolean)
+                      const values = raw.split(",").map((v) => v.trim());
+                      // .filter(Boolean);
                       field.onChange(values);
                     }}
                     onBlur={field.onBlur}
@@ -155,10 +159,10 @@ function WorkLocationItem({
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className={`flex flex-col items-center gap-2 rounded-lg border bg-primary/10 px-5 py-2 text-sm
+      className={`flex flex-col justify-between items-center gap-2 rounded-lg border bg-primary/10 w-35 h-15 py-2 text-sm
         ${selected ? "border-primary" : "border-border"}`}
     >
-      <Icon className="h-4 w-4" />
+      <Icon className="h-5 w-5" />
       {title}
     </button>
   );

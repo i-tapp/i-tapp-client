@@ -10,21 +10,9 @@ const options = {
   path: "/",
 };
 
-export async function setAuthCookies(
-  token: string,
-  role: string,
-  companyOnboarded?: boolean,
-) {
+export async function setAuthCookies(token: string, role: string) {
   const store = await cookies();
 
   store.set("session-token", token, options);
   store.set("role", role, options);
-
-  if (companyOnboarded !== undefined) {
-    store.set(
-      "company-onboarded",
-      companyOnboarded ? "true" : "false",
-      options,
-    );
-  }
 }

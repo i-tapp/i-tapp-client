@@ -186,3 +186,13 @@ export const useFetchApplicationDetails = (id?: string) => {
     enabled: !!id,
   });
 };
+
+export const useFetchMyProfile = () => {
+  return useQuery({
+    queryKey: ["my-profile"],
+    queryFn: async () => {
+      const response = await query("/auth/me");
+      return response;
+    },
+  });
+};
