@@ -11,6 +11,7 @@ import { DocumentSchema, studentOnboardingSchema } from "@/schemas";
 import { useAction } from "next-safe-action/hooks";
 import { onBoardStudent } from "@/actions";
 import { useRouter } from "next/navigation";
+import { set } from "zod";
 
 export default function StudentOnboardingPage() {
   const router = useRouter();
@@ -40,19 +41,22 @@ export default function StudentOnboardingPage() {
     [],
   );
 
-  const { execute, hasErrored, result } = useAction(onBoardStudent, {
-    onSuccess: (res) => {
-      console.log("Onboarding successful:", res);
-      router.refresh();
-      router.push("/portal");
+  const { execute, isExecuting, hasErrored, result } = useAction(
+    onBoardStudent,
+    {
+      onSuccess: (res) => {
+        console.log("Onboarding successful:", res);
+        router.refresh();
+        router.push("/portal");
+      },
+      onError: (error) => {
+        console.error("Onboarding error:", error);
+      },
     },
-    onError: (error) => {
-      console.error("Onboarding error:", error);
-    },
-  });
+  );
 
   const [onboardingData, setOnboardingData] = useState({});
-
+  const [isSkipping, setIsSkipping] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const formIdByStep = [
     "school-info-step-form",
@@ -152,16 +156,23 @@ export default function StudentOnboardingPage() {
               </div>
               <div className="mt-6 flex items-center justify-between gap-3">
                 <Button
+                  disabled={isExecuting || isSkipping}
                   onClick={async () => {
-                    await fetch("/api/student/onboarding/skip", {
-                      method: "POST",
-                    });
-                    router.push("/portal");
+                    try {
+                      setIsSkipping(true);
+                      const res = await fetch("/api/student/onboarding/skip", {
+                        method: "POST",
+                      });
+                      if (!res.ok) console.error("Skip failed!");
+                      router.push("/portal");
+                    } finally {
+                      setIsSkipping(false);
+                    }
                   }}
                   variant={"ghost"}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Skip for now
+                  {isSkipping ? "Skipping..." : "Skip for now"}
                 </Button>
 
                 <Button
@@ -169,9 +180,14 @@ export default function StudentOnboardingPage() {
                   // type={!isLast ? "submit" : "button"}
                   type="submit"
                   // onClick={isLast ? handleSubmit : undefined}
+                  disabled={isExecuting || isSkipping}
                   className="rounded-xl px-6"
                 >
-                  {isLast ? "Submit" : "Next Step →"}
+                  {isExecuting
+                    ? " Processing..."
+                    : isLast
+                      ? "Submit"
+                      : "Next Step →"}
                 </Button>
               </div>
             </section>

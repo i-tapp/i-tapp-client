@@ -142,6 +142,7 @@ function appendToFormData(fd: FormData, key: string, value: unknown) {
     fd.append(key, value, value.name);
     return;
   }
+
   if (value instanceof Blob) {
     fd.append(key, value);
     return;
@@ -149,15 +150,8 @@ function appendToFormData(fd: FormData, key: string, value: unknown) {
 
   // Arrays (string[] or mixed)
   if (Array.isArray(value)) {
-    // Option A: append multiple entries with same key
-    for (const item of value) {
-      if (item === undefined || item === null) continue;
-      if (item instanceof File) fd.append(key, item, item.name);
-      else fd.append(key, String(item));
-    }
+    fd.append(key, JSON.stringify(value));
     return;
-
-    // Option B (alternative): fd.append(key, JSON.stringify(value))
   }
 
   // Objects (if any): stringify
