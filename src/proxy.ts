@@ -1,6 +1,8 @@
 // middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { env } from "./utils";
+// import { env } from "process";
 
 const roleRedirects: Record<string, string> = {
   student: "/portal/find-it-space",
@@ -8,8 +10,11 @@ const roleRedirects: Record<string, string> = {
   admin: "/admin",
 };
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_APP_BACKEND_API_URL;
+
 async function me(token: string) {
-  const response = await fetch("http://localhost:3000/auth/me", {
+  console.log("api base url:", API_BASE_URL);
+  const response = await fetch(`${API_BASE_URL}/auth/me`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
