@@ -14,8 +14,6 @@ export const signinSchema = z.object({
   password: z.string().min(1),
 });
 
-export const logoutSchema = z.object({});
-
 export const companyIdSchema = z.object({
   companyId: z.string(),
 });

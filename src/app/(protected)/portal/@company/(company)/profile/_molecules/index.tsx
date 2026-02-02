@@ -16,7 +16,7 @@ import InfoCard from "@/components/info-card";
 import ProfileHeaderBanner from "@/components/profile-header-banner";
 import { useFetchCompanyProfile } from "@/hooks/query";
 import { Spinner } from "@/components/spinner";
-import { logout } from "@/actions";
+import { useLogout } from "@/hooks/use-logout";
 
 export default function CompanyProfilePage() {
   const [editing, setEditing] = useState(false);
@@ -24,12 +24,9 @@ export default function CompanyProfilePage() {
 
   const { data: companyProfile, isLoading } = useFetchCompanyProfile();
 
-  console.log("Company Profile:", companyProfile);
+  const logout = useLogout();
 
-  const handleLogout = async () => {
-    await logout();
-    window.location.href = "/";
-  };
+  console.log("Company Profile:", companyProfile);
 
   if (editing) {
     return (
@@ -89,7 +86,7 @@ export default function CompanyProfilePage() {
               bannerImage: companyProfile?.banner,
             }}
             setEditing={setEditing}
-            onLogout={handleLogout}
+            onLogout={logout}
             icon={<Building2 className="w-16 h-16 text-white" />}
           />
 

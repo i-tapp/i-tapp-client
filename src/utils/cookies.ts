@@ -2,10 +2,10 @@
 
 import { cookies } from "next/headers";
 
-const cookieOptions = {
+const options = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
-  sameSite: "strict" as const,
+  sameSite: "lax" as const,
   maxAge: 60 * 60 * 24 * 7, // 1 week
   path: "/",
 };
@@ -17,20 +17,14 @@ export async function setAuthCookies(
 ) {
   const store = await cookies();
 
-  store.set("session-token", token, cookieOptions);
-  store.set("role", role, cookieOptions);
+  store.set("session-token", token, options);
+  store.set("role", role, options);
+
   if (companyOnboarded !== undefined) {
     store.set(
       "company-onboarded",
       companyOnboarded ? "true" : "false",
-      cookieOptions,
+      options,
     );
   }
-}
-
-export async function clearAuthCookies() {
-  const store = await cookies();
-  store.delete("session-token");
-  store.delete("role");
-  store.delete("company-onboarded");
 }

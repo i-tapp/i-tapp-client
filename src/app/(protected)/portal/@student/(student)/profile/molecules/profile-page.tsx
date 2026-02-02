@@ -19,12 +19,11 @@ import {
 } from "lucide-react";
 import InfoCard from "@/components/info-card";
 import SkillCard from "@/components/skill-card";
-import AvatarCard from "@/components/avatar-card";
 import ProfileHeaderBanner from "@/components/profile-header-banner";
-import { logout } from "@/utils/auth";
 import { useFetchProfile } from "@/hooks/query";
 import { Spinner } from "@/components/spinner";
 import ProfileForm from "./profile-form";
+import { useLogout } from "@/hooks/use-logout";
 
 // Mock student data
 const mockStudent = {
@@ -49,17 +48,10 @@ const mockStudent = {
   profilePicture: null,
 };
 
-const StudentProfilePage = ({
-  student = mockStudent,
-  onEdit = () => {},
-  onLogout = async () => {
-    await logout();
-    window.location.href = "/";
-  },
-}) => {
+const StudentProfilePage = ({ student = mockStudent, onEdit = () => {} }) => {
   const [editing, setEditing] = useState(false);
-
   const { data: studentDetails, isLoading, error } = useFetchProfile();
+  const logout = useLogout();
 
   console.log("studentDetails", studentDetails);
 
@@ -87,7 +79,7 @@ const StudentProfilePage = ({
                     Cancel
                   </button>
                   <button
-                    onClick={onLogout}
+                    onClick={logout}
                     className="flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
                   >
                     <LogOut className="w-4 h-4 mr-2" />
@@ -124,7 +116,7 @@ const StudentProfilePage = ({
               profileImage: studentDetails.profileImage,
             }}
             setEditing={setEditing}
-            onLogout={onLogout}
+            onLogout={logout}
             icon={<User className="w-16 h-16 text-white" />}
           />
 
@@ -217,7 +209,7 @@ const StudentProfilePage = ({
                       month: "long",
                       day: "numeric",
                       year: "numeric",
-                    }
+                    },
                   )}
                 />
               )}

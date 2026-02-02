@@ -9,7 +9,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useCompanyStore } from "@/lib/store/company";
 import { cn } from "@/utils/tailwind";
-import { logout } from "@/actions";
+import { useLogout } from "@/hooks/use-logout";
 
 interface MobileNavProps {
   links: { text: string; href: string }[];
@@ -20,10 +20,7 @@ export function MobileNav({ links }: MobileNavProps) {
   const pathname = usePathname();
   const company = useCompanyStore((c) => c.company);
 
-  const handleLogout = () => {
-    logout();
-    window.location.href = "/";
-  };
+  const logout = useLogout();
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -77,11 +74,7 @@ export function MobileNav({ links }: MobileNavProps) {
         </nav>
 
         <div className="mt-auto">
-          <Button
-            onClick={handleLogout}
-            variant="destructive"
-            className="w-full"
-          >
+          <Button onClick={logout} variant="destructive" className="w-full">
             Logout
           </Button>
         </div>

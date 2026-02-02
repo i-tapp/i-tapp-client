@@ -23,8 +23,9 @@ import {
 import Input from "@/components/input";
 import { useQueryClient } from "@tanstack/react-query";
 import AvatarUpdate from "@/components/avatar-update";
-import { logout, StudentProfileSchema, updateStudentProfile } from "@/actions";
+import { StudentProfileSchema, updateStudentProfile } from "@/actions";
 import { ProfileFormData, StudentProfileFormData } from "@/schemas";
+import { useLogout } from "@/hooks/use-logout";
 
 export default function ProfileForm({
   student,
@@ -37,6 +38,7 @@ export default function ProfileForm({
   const [documents, setDocuments] = useState<File | null>(null);
 
   const queryClient = useQueryClient();
+  const logout = useLogout();
 
   const form = useForm<StudentProfileFormData>({
     resolver: zodResolver(StudentProfileSchema),
@@ -87,11 +89,6 @@ export default function ProfileForm({
   const onSubmit = (data: StudentProfileFormData) => {
     const payload = { ...data, profileImage, documents };
     updateProfileAction(payload);
-  };
-
-  const handleLogout = async () => {
-    await logout();
-    window.location.href = "/";
   };
 
   return (
@@ -317,7 +314,7 @@ export default function ProfileForm({
             type="button" // 👈 make sure it's not "submit"
             size="sm"
             variant="destructive"
-            onClick={handleLogout}
+            onClick={logout}
           >
             Logout
           </Button>

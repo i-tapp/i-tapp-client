@@ -79,14 +79,14 @@ export default function SideNav({
                 item.name === "Log out"
                   ? async (e) => {
                       e.preventDefault();
-                      await logout();
+                      logout();
                     }
                   : undefined
               }
               href={item.href || "#"}
               className={cn(
                 "w-full h-full flex items-center",
-                collapsed && "justify-center"
+                collapsed && "justify-center",
               )}
             >
               {/* Icon - Always visible */}

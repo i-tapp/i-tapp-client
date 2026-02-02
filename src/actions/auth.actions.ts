@@ -9,7 +9,7 @@ import {
   signinSchema,
   signupSchema,
 } from "@/lib/validations/auth";
-import { clearAuthCookies, setAuthCookies } from "@/utils/cookies";
+import { setAuthCookies } from "@/utils/cookies";
 import z from "zod";
 
 export const signinStudent = actionClient
@@ -50,10 +50,6 @@ export const signinAdmin = actionClient
     await setAuthCookies(token, user.role);
     return { token, role, user, profile };
   });
-
-export const logout = async () => {
-  await clearAuthCookies();
-};
 
 export const studentSignup = actionClient
   .inputSchema(signupSchema)
