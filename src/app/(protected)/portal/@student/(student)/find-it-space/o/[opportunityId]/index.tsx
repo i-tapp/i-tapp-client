@@ -36,11 +36,8 @@ import { toast } from "react-toastify";
 
 export default function OpportunityDetailsContent({
   selectedId,
-  setSelectedId,
 }: {
-  selectedId: string | null;
-  setSelectedId: (id: string | null) => void;
-  selectedOpportunity: Opportunity | null;
+  selectedId?: string | null;
 }) {
   const router = useRouter();
   const params = useParams();
@@ -59,7 +56,7 @@ export default function OpportunityDetailsContent({
   console.log("selectedOpportunity", selectedOpportunity);
 
   const app = selectedOpportunity?.applications?.find(
-    (a) => a.student.id === currentStudentId,
+    (a: any) => a.student.id === currentStudentId,
   );
 
   console.log("app", app);
