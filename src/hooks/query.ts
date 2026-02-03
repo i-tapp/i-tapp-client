@@ -165,6 +165,17 @@ export const useFetchOpportunityDetails = (id?: string) => {
   });
 };
 
+export const useFetchOpportunityPublicDetails = (id?: string) => {
+  return useQuery({
+    queryKey: ["opportunity-public-details", id],
+    queryFn: async () => {
+      const response = await query(`/o/${id}`);
+      return response;
+    },
+    enabled: !!id,
+  });
+};
+
 export const useFetchStudentDetails = (id?: string) => {
   return useQuery({
     queryKey: ["student-details", id],

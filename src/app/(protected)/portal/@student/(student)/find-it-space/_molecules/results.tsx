@@ -16,6 +16,7 @@ export default function Results({
   opportunities: Opportunity[];
 }) {
   const isDetailsOpen = !!selectedId;
+  console.log("Opportunities in Results:", opportunities);
   return (
     <main className="p-2 min-w-0 flex flex-col h-screen overflow-y-scroll pb-30">
       <div className="hidden md:block">

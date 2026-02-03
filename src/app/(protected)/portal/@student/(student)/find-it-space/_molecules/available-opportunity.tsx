@@ -5,6 +5,9 @@ import moment from "moment";
 import { cn } from "@/utils/tailwind";
 import { Opportunity } from "@/types";
 import { Clock, Profile2User, Location, Wifi } from "iconsax-reactjs";
+import { useRouter } from "next/navigation";
+import useIsResponsive from "@/utils/responsive";
+// import { useRouter } from "next/router";
 
 // UI-only improvements: hierarchy, spacing, chips row, company + work-mode + location
 export default function AvailableOpportunity({
@@ -18,7 +21,8 @@ export default function AvailableOpportunity({
   setSelectedId: (id: string | null) => void;
   setSelectedOpportunity: (name: Opportunity | null) => void;
 }) {
-  const { id, title, location, duration, createdAt } = details;
+  const { id, title, location, duration, createdAt, mode, totalApplications } =
+    details;
 
   // ✅ best-effort company name (adapt to your actual field when available)
   const companyName =
@@ -28,12 +32,10 @@ export default function AvailableOpportunity({
     details?.company ||
     "Company";
 
-  // ✅ best-effort work mode (adapt later)
-  const workMode =
-    // @ts-expect-error
-    details?.workMode || details?.mode || "Remote";
-
   const isSelected = selectedId === id;
+
+  const router = useRouter();
+  const { isMobile } = useIsResponsive();
 
   return (
     <button
@@ -47,6 +49,9 @@ export default function AvailableOpportunity({
           : "border-gray-100",
       )}
       onClick={() => {
+        if (isMobile) {
+          return router.push(`find-it-space/o/${id}`);
+        }
         setSelectedId(id);
         setSelectedOpportunity(details);
       }}
@@ -82,7 +87,7 @@ export default function AvailableOpportunity({
           {/* Meta line: location + work mode */}
           <div className="mt-2 flex flex-wrap items-center gap-2">
             {/* <MetaPill icon={<Location size="16" />} text={location ?? "N/A"} /> */}
-            <MetaPill icon={<Wifi size="16" />} text={workMode} />
+            <MetaPill icon={<Wifi size="16" />} text={mode} />
             <MetaPill text={`${duration ? duration : 0} Months`} />
           </div>
         </div>
@@ -94,7 +99,10 @@ export default function AvailableOpportunity({
           icon={<Clock size="16" />}
           value={moment(createdAt).startOf("day").fromNow()}
         />
-        <InfoText icon={<Profile2User size="16" />} value={"45 Applicants"} />
+        <InfoText
+          icon={<Profile2User size="16" />}
+          value={`${totalApplications} Applicants`}
+        />
       </div>
     </button>
   );
