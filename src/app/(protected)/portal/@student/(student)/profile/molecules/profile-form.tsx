@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Upload } from "lucide-react";
@@ -24,8 +24,10 @@ import Input from "@/components/input";
 import { useQueryClient } from "@tanstack/react-query";
 import AvatarUpdate from "@/components/avatar-update";
 import { StudentProfileSchema, updateStudentProfile } from "@/actions";
-import { ProfileFormData, StudentProfileFormData } from "@/schemas";
+import { StudentProfileFormData } from "@/schemas";
 import { useLogout } from "@/hooks/use-logout";
+import PickMe from "./pick-me";
+import { TagInput } from "@/components/tag-input";
 
 export default function ProfileForm({
   student,
@@ -96,7 +98,7 @@ export default function ProfileForm({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {/* Profile Image Upload */}
-        <AvatarUpdate />
+        {/* <AvatarUpdate /> */}
 
         {/* Basic Info */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -146,7 +148,36 @@ export default function ProfileForm({
               <FormItem>
                 <FormLabel>Phone Number</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter phone number" {...field} />
+                  <Input
+                    placeholder="Enter phone number"
+                    {...field}
+                    wrapperClassName="rounded-lg"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="preferredIndustry"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Preferred Industry</FormLabel>
+                <FormControl>
+                  <select
+                    {...field}
+                    className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/30"
+                  >
+                    <option value="">Select an industry</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Education">Education</option>
+                    <option value="Manufacturing">Manufacturing</option>
+                    <option value="Retail">Retail</option>
+                  </select>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -162,17 +193,12 @@ export default function ProfileForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Soft Skills</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="E.g communication, teamwork"
-                    value={
-                      Array.isArray(field.value) ? field.value.join(", ") : ""
-                    }
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value.split(",").map((s) => s.trim()),
-                      )
-                    }
+                <FormControl className="">
+                  <TagInput
+                    value={Array.isArray(field.value) ? field.value : []}
+                    onChange={field.onChange}
+                    placeholder="Add a soft skill (e.g communication, teamwork)"
+                    color="purple"
                   />
                 </FormControl>
                 <FormMessage />
@@ -187,38 +213,18 @@ export default function ProfileForm({
               <FormItem>
                 <FormLabel>Technical Skills</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="E.g JavaScript, React, Node.js"
-                    value={
-                      Array.isArray(field.value) ? field.value.join(", ") : ""
-                    }
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value.split(",").map((s) => s.trim()),
-                      )
-                    }
+                  <TagInput
+                    value={Array.isArray(field.value) ? field.value : []}
+                    onChange={field.onChange}
+                    placeholder="Add a technical skill (e.g JavaScript, React)"
+                    color="blue"
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="preferredIndustry"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Preferred Industry</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="E.g healthcare, IT, education"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
           {/* <FormField
             control={form.control}
             name="goals"
@@ -238,62 +244,25 @@ export default function ProfileForm({
         </div>
 
         {/* Bio + Documents */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <FormField
-            control={form.control}
-            name="bio"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Bio & Work Experience</FormLabel>
-                <FormControl>
-                  <Textarea
-                    rows={5}
-                    placeholder="Tell us something about yourself"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
-          <div className="border-2 border-dashed rounded-md p-4">
-            <h3 className="text-sm font-medium mb-2">Upload IT Letter</h3>
-            <label className="flex flex-col items-center justify-center w-full h-40 border border-gray-300 border-dashed rounded-md cursor-pointer">
-              {documents ? (
-                <p>{documents.name}</p>
-              ) : (
-                <>
-                  <Upload size={24} />
-                  <p className="text-gray-500 text-sm">Upload</p>
-                </>
-              )}
-              <input
-                type="file"
-                accept=".jpg,.jpeg,.png,.pdf"
-                onChange={(e) => handleFileChange(e, setDocuments)}
-                className="hidden"
-              />
-            </label>
-
-            {/* {student?.documentUrls?.length > 0 && (
-              <div className="mt-2 space-y-1">
-                <h4 className="text-sm font-medium">Your Documents:</h4>
-                {student.documentUrls.map((url: string, idx: number) => (
-                  <a
-                    key={idx}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 underline text-sm block"
-                  >
-                    View Document
-                  </a>
-                ))}
-              </div>
-            )} */}
-          </div>
-        </div>
+        <FormField
+          control={form.control}
+          name="bio"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Bio & Work Experience</FormLabel>
+              <FormControl>
+                <Textarea
+                  rows={5}
+                  placeholder="Tell us about your background, projects, and work experience..."
+                  {...field}
+                  className="full shadow-none rounded-2xl text-muted-foreground text-sm placeholder:text-gray-400 placeholder:text-sm"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         {/* Actions */}
         <div className="flex justify-between items-center">

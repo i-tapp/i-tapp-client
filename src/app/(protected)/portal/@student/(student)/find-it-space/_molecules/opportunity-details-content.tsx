@@ -149,6 +149,9 @@ export default function OpportunityDetailsContent({
   }
 
   const visible = Boolean(selectedId);
+
+  if (!visible) return null;
+
   return (
     <div className="flex flex-col gap-5 p-4">
       {/* Header */}

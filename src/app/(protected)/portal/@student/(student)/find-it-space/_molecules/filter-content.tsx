@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Hr from "@/components/ui/hr";
 import { cn } from "@/utils/tailwind";
 import { ArrowLeft2 } from "iconsax-reactjs";
+import { X } from "lucide-react";
 import React from "react";
 
 /**
@@ -91,10 +92,13 @@ export default function FilterCompanies({
     <div className="w-full space-y-4 px-4 py-3">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <ArrowLeft2
+        <Button
           onClick={() => setFilterActive(false)}
-          className="sm:hidden cursor-pointer"
-        />
+          variant={"ghost"}
+          className="sm:hidden cursor-pointer font-semibold"
+        >
+          <ArrowLeft2 size={20} />
+        </Button>
         <h1 className="hidden sm:block text-lg font-semibold">Filters</h1>
 
         <Button

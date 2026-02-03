@@ -9,14 +9,30 @@ export default function FilterMobile(props: {
   filterActive: boolean;
 }) {
   return (
+    // <aside
+    //   className={cn(
+    //     "fixed left-0 top-0  bg-white border-r border-gray-200 z-50 lg:hidden ",
+    //     "transition-all duration-300 ease-in-out",
+    //     props.filterActive ? " w-72" : "w-0",
+    //   )}
+    // >
+    //   <div className="h-screen overflow-y-scroll pb-16">
+    //     <FilterCompanies {...props} />
+    //   </div>
+    // </aside>
+
     <aside
       className={cn(
-        "fixed left-0 top-14 h-[calc(100vh-3.5rem)] w-72 bg-white border z-50 p-2 lg:hidden",
-        "transition-transform duration-200 ease-out",
-        props.filterActive ? "translate-x-0" : "translate-x-full",
+        "fixed left-0 top-0 bg-white border-r border-gray-200 z-50 lg:hidden",
+        "transition-all duration-300 ease-in-out overflow-hidden", // ✅ important
+        props.filterActive
+          ? "w-72 opacity-100"
+          : "w-0 opacity-0 pointer-events-none",
       )}
     >
-      <FilterCompanies {...props} />
+      <div className="h-screen overflow-y-auto pb-16 w-72">
+        <FilterCompanies {...props} />
+      </div>
     </aside>
   );
 }

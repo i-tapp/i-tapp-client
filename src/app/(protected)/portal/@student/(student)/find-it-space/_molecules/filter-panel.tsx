@@ -7,8 +7,10 @@ export default function FilterPanel(props: {
   onBack?: () => void;
 }) {
   return (
-    <aside className="hidden lg:block bg-white p-2 rounded-lg shadow-sm border border-gray-200">
-      <FilterCompanies {...props} />
+    <aside className="hidden lg:block bg-white rounded-lg shadow-sm border border-gray-200 ">
+      <div className="overflow-y-auto h-screen min-h-0 pb-12">
+        <FilterCompanies {...props} />
+      </div>
     </aside>
   );
 }

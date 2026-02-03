@@ -52,7 +52,7 @@ export interface Student {
   // user: User;
   phone: string;
   email: string;
-  avatarUrl: string;
+  profileImage: string;
   isVerified: boolean;
   role: string;
   courseOfStudy?: string;

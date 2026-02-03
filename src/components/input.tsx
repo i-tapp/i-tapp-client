@@ -28,7 +28,7 @@ export default function Input({
       <BaseInput
         type={isPasswordType ? (showPassword ? "text" : "password") : type}
         className={cn(
-          "flex-1 border-none placeholder:text-sm outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus:ring-0 shadow-none",
+          "flex-1 border-none  text-sm placeholder:text-sm outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus:ring-0 shadow-none",
           className, // 👈 allow additional input-level styling
         )}
         {...props}

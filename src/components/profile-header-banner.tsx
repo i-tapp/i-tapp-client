@@ -84,12 +84,12 @@ export default function ProfileHeaderBanner({
           <Image
             src={bannerImage}
             alt="Banner"
-            width={50}
-            height={50}
-            className="w-full h-56 object-cover"
+            width={40}
+            height={40}
+            className="w-full h-40 object-cover"
           />
         ) : (
-          <div className="w-full h-56 bg-linear-to-r from-primary to-red-500" />
+          <div className="w-full h-40 bg-linear-to-r from-primary to-primary" />
         )}
       </UploadThing>
 
@@ -99,16 +99,16 @@ export default function ProfileHeaderBanner({
         <div className="absolute top-4 right-4 flex gap-3">
           <button
             onClick={() => setEditing(true)}
-            className="flex items-center px-4 py-2 bg-white hover:bg-gray-100 text-gray-900 rounded-lg transition-colors shadow-lg font-medium"
+            className="flex gap-2 items-center px-2 py-1 bg-white hover:bg-gray-100 text-gray-900 rounded-lg transition-colors shadow-lg font-medium text-sm"
           >
-            <Edit3 className="w-4 h-4 mr-2" />
+            <Edit3 size={16} />
             Edit Profile
           </button>
           <button
             onClick={onLogout}
-            className="flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors shadow-lg font-medium"
+            className="flex gap-2 items-center px-2 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors shadow-lg font-medium text-sm"
           >
-            <LogOut className="w-4 h-4 mr-2" />
+            <LogOut size={16} />
             Logout
           </button>
         </div>
@@ -122,14 +122,14 @@ export default function ProfileHeaderBanner({
           profile.type === "company" && logo({ logo: img! });
         }}
       >
-        <div className="absolute -bottom-12 left-8">
+        <div className="absolute -bottom-10 left-8">
           {profileImage ? (
             <Image
               src={profileImage}
               alt="Profile"
-              width={50}
-              height={50}
-              className="w-24 h-24 rounded-2xl object-cover border-4 border-white shadow-xl bg-white"
+              width={40}
+              height={40}
+              className="w-22 h-22 rounded-2xl object-cover border-4 border-white shadow-xl bg-white"
             />
           ) : (
             <AvatarCard icon={icon} />

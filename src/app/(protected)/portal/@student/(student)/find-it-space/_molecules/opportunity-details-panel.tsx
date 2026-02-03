@@ -11,7 +11,6 @@ export function OpportunityDetailsPanel(props: {
   selectedOpportunity: Opportunity | null;
 }) {
   const visible = Boolean(props.selectedId);
-
   return (
     <aside
       className={cn(

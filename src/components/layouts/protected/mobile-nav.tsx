@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu } from "iconsax-reactjs";
 import { usePathname } from "next/navigation";
+import { Menu } from "iconsax-reactjs";
+import { X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useCompanyStore } from "@/lib/store/company";
+import { useStudentStore } from "@/lib/store";
 import { cn } from "@/utils/tailwind";
 import { useLogout } from "@/hooks/use-logout";
 
@@ -15,68 +17,141 @@ interface MobileNavProps {
   links: { text: string; href: string }[];
 }
 
+function isActiveLink(pathname: string, href: string) {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(href + "/");
+}
+
 export function MobileNav({ links }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const company = useCompanyStore((c) => c.company);
 
+  const company = useCompanyStore((s) => s.company);
+  const student = useStudentStore((s) => s.student);
   const logout = useLogout();
+
+  const user = useMemo(() => {
+    if (company) {
+      return {
+        name: company.name,
+        avatar: company.logoUrl ?? "/applicant.png",
+        profileHref: "/portal/profile",
+        meta: "Company",
+      };
+    }
+
+    if (student) {
+      return {
+        name: student.firstName + " " + student.lastName,
+        avatar: student.profileImage ?? "/applicant.png",
+        profileHref: "/portal/profile",
+        meta: "Student",
+      };
+    }
+
+    return {
+      name: "Guest User",
+      avatar: "/applicant.png",
+      profileHref: null as string | null,
+      meta: null as string | null,
+    };
+  }, [company, student]);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger className="md:hidden" aria-label="Open navigation menu">
-        <Menu size={24} />
+      <SheetTrigger asChild>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="md:hidden"
+          aria-label={open ? "Close navigation menu" : "Open navigation menu"}
+        >
+          {open ? <X size={22} /> : <Menu size={22} />}
+        </Button>
       </SheetTrigger>
 
-      <SheetContent className="w-full bg-white max-w-[300px] py-10 flex flex-col gap-8 md:hidden">
-        {company ? (
-          <div className="flex items-center gap-3 border-b pb-4">
-            <Image
-              src={company.logoUrl ?? "/applicant.png"}
-              alt={company.name}
-              width={50}
-              height={50}
-              className="object-cover rounded-full border"
-            />
-            <div>
-              <p className="font-medium text-sm">{company.name}</p>
-              <Link
-                href="/portal/profile"
-                className="text-xs text-primary hover:underline"
-              >
-                View profile
-              </Link>
+      <SheetContent className="w-full max-w-[320px] bg-white p-0 md:hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-4 border-b">
+          <p className="text-sm font-semibold">Menu</p>
+          {/* <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label="Close menu"
+            onClick={() => setOpen(false)}
+          >
+            <X className="h-5 w-5" />
+          </Button> */}
+        </div>
+
+        <div className="flex h-full flex-col px-4 py-5 gap-6">
+          {/* Profile block */}
+          <div className="flex items-center gap-3">
+            <div className="relative h-11 w-11 overflow-hidden rounded-full border bg-gray-50">
+              <Image
+                src={user.avatar}
+                alt={user.name}
+                fill
+                sizes="44px"
+                className="object-cover"
+              />
+            </div>
+
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium">{user.name}</p>
+
+              {user.profileHref ? (
+                <Link
+                  href={user.profileHref}
+                  className="text-xs text-primary hover:underline"
+                >
+                  View profile
+                </Link>
+              ) : (
+                <p className="text-xs text-muted-foreground">Not signed in</p>
+              )}
             </div>
           </div>
-        ) : (
-          <div className="flex items-center gap-3 border-b pb-4">
-            <Image src="/applicant.png" alt="Guest" width={50} height={50} />
-            <p className="text-sm">Guest User</p>
-          </div>
-        )}
 
-        <nav className="flex flex-col gap-3">
-          {links.map((link) => (
-            <Link
-              key={link.text}
-              href={link.href}
-              className={cn(
-                "text-base transition-colors hover:text-primary",
-                pathname.startsWith(link.href)
-                  ? "font-medium text-primary"
-                  : "text-black",
-              )}
-              onClick={() => setOpen(false)}
+          {/* Links */}
+          <nav className="flex flex-col gap-1">
+            {links.map((link) => {
+              const active = isActiveLink(pathname, link.href);
+
+              return (
+                <Link
+                  key={link.text}
+                  href={link.href}
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "rounded-lg px-3 py-2 text-sm transition-colors",
+                    active
+                      ? "bg-primary/10 text-primary font-medium"
+                      : "text-muted-foreground hover:bg-gray-100",
+                  )}
+                  onClick={() => setOpen(false)}
+                >
+                  {link.text}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Footer actions */}
+          <div className="mt-auto pb-15">
+            <Button
+              onClick={() => {
+                setOpen(false);
+                logout();
+              }}
+              variant="destructive"
+              className="w-full"
             >
-              {link.text}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="mt-auto">
-          <Button onClick={logout} variant="destructive" className="w-full">
-            Logout
-          </Button>
+              Logout
+            </Button>
+          </div>
         </div>
       </SheetContent>
     </Sheet>

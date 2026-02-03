@@ -16,7 +16,6 @@ export function OpportunityDetailsMobile(props: {
       <div className="h-14 border-b flex items-center px-3">
         <button onClick={() => props.setSelectedId(null)}>Back</button>
       </div>
-
       {/* optional: make content scroll */}
       <div className="h-[calc(100vh-56px)] overflow-auto">
         <OpportunityDetailsContent {...props} />

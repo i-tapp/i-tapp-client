@@ -13,12 +13,12 @@ export default function GridContainer({
   return (
     <div
       className={cn(
-        "grid gap-2 p-2 items-start w-full",
+        "grid gap-2 p-2 items-start w-full h-full  ",
         "grid-cols-1",
-        isDetailsOpen ? "md:grid-cols-[1fr_320px]" : "md:grid-cols-1",
+        isDetailsOpen ? "md:grid-cols-[1fr_330px]" : "md:grid-cols-1",
 
         isDetailsOpen
-          ? "lg:grid-cols-[280px_1fr_360px]"
+          ? "lg:grid-cols-[280px_1fr_345px]"
           : "lg:grid-cols-[280px_1fr]",
       )}
     >

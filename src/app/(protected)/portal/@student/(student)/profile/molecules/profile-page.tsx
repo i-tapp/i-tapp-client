@@ -61,34 +61,34 @@ const StudentProfilePage = ({ student = mockStudent, onEdit = () => {} }) => {
 
   if (editing) {
     return (
-      <div className="min-h-screen mt-12 py-8 px-4 bg-gray-50">
-        <div className="max-w-5xl mx-auto">
+      <div className="min-h-screen mt-10 md:mt-12 md:py-8 md:px-4 bg-gray-50">
+        <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div className="bg-linear-to-r from-primary to-primary px-8 py-6">
               <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                  <Edit3 className="w-6 h-6" />
+                <h1 className=" font-bold text-white flex items-center gap-2">
+                  <Edit3 size={16} />
                   Edit Profile
                 </h1>
                 <div className="flex gap-3">
                   <button
                     onClick={() => setEditing(false)}
-                    className="flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors border border-white/30"
+                    className="flex text-sm items-center px-4 py-1 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors border border-white/30"
                   >
-                    <X className="w-4 h-4 mr-2" />
+                    <X size={14} className="mr-2" />
                     Cancel
                   </button>
                   <button
                     onClick={logout}
-                    className="flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+                    className="flex text-sm items-center px-4 py-1 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
                   >
-                    <LogOut className="w-4 h-4 mr-2" />
+                    <LogOut size={14} className="mr-2" />
                     Logout
                   </button>
                 </div>
               </div>
             </div>
-            <div className="p-8">
+            <div className="p-4 md:p-8">
               {/* <p className="text-center text-gray-500">
                 Profile Form Component Goes Here
               </p> */}
@@ -105,7 +105,7 @@ const StudentProfilePage = ({ student = mockStudent, onEdit = () => {} }) => {
   }
 
   return (
-    <div className="min-h-screen mt-12 bg-gray-50 py-8 px-4">
+    <div className="min-h-screen mt-11 md:mt-12 bg-gray-50 md:py-8 md:px-4">
       <div className="max-w-5xl mx-auto">
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           {/* Header Banner */}
@@ -121,30 +121,30 @@ const StudentProfilePage = ({ student = mockStudent, onEdit = () => {} }) => {
           />
 
           {/* Student Name & Basic Info */}
-          <div className="pt-20 px-8 pb-6 border-b border-gray-200">
+          <div className="pt-20 px-4 md:px-8 pb-6 border-b border-gray-200">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">
                   {studentDetails.firstName} {studentDetails.lastName}
                 </h1>
                 <div className="flex flex-wrap items-center gap-4 text-gray-600">
                   <div className="flex items-center gap-2">
-                    <GraduationCap className="w-4 h-4" />
-                    <span className="text-sm font-medium">
-                      {student.department}
+                    <GraduationCap size={18} />
+                    <span className="text-sm capitalize font-medium">
+                      {studentDetails.courseOfStudy}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <FileText className="w-4 h-4" />
+                    <FileText size={16} />
                     <span className="text-sm font-medium">
                       {studentDetails.level} Level
                     </span>
                   </div>
-                  {studentDetails.cgpa && (
+                  {studentDetails.gpa && (
                     <div className="flex items-center gap-2">
-                      <Award className="w-4 h-4 text-yellow-600" />
+                      <Award size={18} className="text-yellow-600" />
                       <span className="text-sm font-medium">
-                        CGPA: {studentDetails.cgpa}
+                        GPA: {studentDetails.gpa}
                       </span>
                     </div>
                   )}
@@ -165,35 +165,35 @@ const StudentProfilePage = ({ student = mockStudent, onEdit = () => {} }) => {
 
           {/* Bio Section */}
           {studentDetails.bio && (
-            <div className="px-8 py-6 bg-gray-50 border-b border-gray-200">
+            <div className="px-4 md:px-8 py-6 bg-gray-50 border-b border-gray-200">
               <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
                 About Me
               </h2>
-              <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+              <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
                 {studentDetails.bio}
               </p>
             </div>
           )}
 
           {/* Contact Information */}
-          <div className="p-8 border-b border-gray-200">
+          <div className="p-3 md:p-8 border-b border-gray-200">
             <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-6">
               Contact Information
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <InfoCard
-                icon={<Mail className="w-5 h-5" />}
+                icon={<Mail size={18} />}
                 label="Email Address"
                 value={studentDetails?.user?.email}
               />
               <InfoCard
-                icon={<Phone className="w-5 h-5" />}
+                icon={<Phone size={18} />}
                 label="Phone Number"
                 value={studentDetails.phone}
               />
               {student.address && (
                 <InfoCard
-                  icon={<MapPin className="w-5 h-5" />}
+                  icon={<MapPin size={18} />}
                   label="Address"
                   value={studentDetails.address}
                   fullWidth
@@ -201,7 +201,7 @@ const StudentProfilePage = ({ student = mockStudent, onEdit = () => {} }) => {
               )}
               {student.dateOfBirth && (
                 <InfoCard
-                  icon={<Calendar className="w-5 h-5" />}
+                  icon={<Calendar size={18} />}
                   label="Date of Birth"
                   value={new Date(student.dateOfBirth).toLocaleDateString(
                     "en-US",
@@ -217,31 +217,31 @@ const StudentProfilePage = ({ student = mockStudent, onEdit = () => {} }) => {
           </div>
 
           {/* Skills & Preferences */}
-          <div className="p-8 bg-gray-50">
+          <div className="p-3 md:p-8 bg-gray-50">
             <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-6">
               Skills & Career Goals
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <SkillCard
-                icon={<Code className="w-5 h-5" />}
+                icon={<Code size={18} />}
                 label="Technical Skills"
                 value={studentDetails.techSkills}
                 color="blue"
               />
               <SkillCard
-                icon={<Heart className="w-5 h-5" />}
+                icon={<Heart size={18} />}
                 label="Soft Skills"
                 value={studentDetails.softSkills}
                 color="purple"
               />
               <SkillCard
-                icon={<Briefcase className="w-5 h-5" />}
+                icon={<Briefcase size={18} />}
                 label="Preferred Industry"
                 value={studentDetails.preferredIndustry}
                 color="green"
               />
               <SkillCard
-                icon={<Target className="w-5 h-5" />}
+                icon={<Target size={18} />}
                 label="Career Goals"
                 value={studentDetails.goals}
                 color="orange"

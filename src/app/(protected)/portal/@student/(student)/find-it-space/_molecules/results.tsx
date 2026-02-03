@@ -17,7 +17,7 @@ export default function Results({
 }) {
   const isDetailsOpen = !!selectedId;
   return (
-    <main className="p-2 min-w-0 h-full min-h-0 flex flex-col">
+    <main className="p-2 min-w-0 flex flex-col h-screen overflow-y-scroll pb-30">
       <div className="hidden md:block">
         <Search />
       </div>
@@ -32,7 +32,7 @@ export default function Results({
         </p>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-scroll pr-1">
+      <div className="flex-1 pr-1 ">
         <div
           className={cn(
             "grid gap-3",
