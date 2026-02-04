@@ -8,6 +8,7 @@ import { AppProvider } from "@/components/providers/app-provider";
 import { ReactQueryProvider } from "@/provider/react-query-provider";
 import { ToastContainer } from "react-toastify";
 import { app } from "@/config/app";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 
 export const montserrat = Montserrat({
@@ -107,6 +108,7 @@ export default function RootLayout({
           hideProgressBar
         />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

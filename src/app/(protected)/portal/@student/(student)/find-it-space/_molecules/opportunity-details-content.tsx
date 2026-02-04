@@ -1,3 +1,5 @@
+"use client";
+
 import { apply, save, withdraw } from "@/actions";
 import Loading from "@/components/loading";
 import { Spinner } from "@/components/spinner";
