@@ -59,11 +59,11 @@ export default function AvailableOpportunity({
       {/* Header */}
       <div className="flex items-start gap-3">
         <Image
-          src={dp}
+          src={details?.company?.logo ?? dp}
           alt="company logo"
           width={44}
           height={44}
-          className="bg-gray-100 rounded-xl shrink-0"
+          className="h-11 w-11 bg-gray-100 rounded-xl shrink-0"
         />
 
         <div className="min-w-0 flex-1">

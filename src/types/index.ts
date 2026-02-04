@@ -36,6 +36,7 @@ export interface Company {
   phone: string;
   email: string;
   avatarUrl: string;
+  logo: string;
 
   role: string;
   // user?: User;

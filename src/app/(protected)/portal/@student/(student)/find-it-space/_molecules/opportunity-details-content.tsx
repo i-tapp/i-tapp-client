@@ -16,6 +16,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import dp from "@/assets/images/dp.png";
 
 export default function OpportunityDetailsContent({
   selectedId,
@@ -147,7 +148,7 @@ export default function OpportunityDetailsContent({
       {/* Header */}
       <div className="flex items-center justify-between ">
         <Image
-          src={logo ?? "/logo.png"}
+          src={logo ?? dp}
           alt="Company Logo"
           width={44}
           height={44}
