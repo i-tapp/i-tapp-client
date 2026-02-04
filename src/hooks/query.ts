@@ -172,7 +172,8 @@ export const useFetchOpportunityPublicDetails = (id?: string) => {
       const response = await query(`/o/${id}`);
       return response;
     },
-    enabled: !!id,
+    enabled: Boolean(id),
+    staleTime: 0,
   });
 };
 
