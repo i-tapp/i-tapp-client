@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import type { Metadata } from "next";
 import { Montserrat, Open_Sans } from "next/font/google";
 import "./globals.css";
@@ -100,7 +100,11 @@ export default function RootLayout({
         className={`${opensans.variable} ${montserrat.variable} antialiased`}
       >
         <ReactQueryProvider>
-          <AppProvider>{children}</AppProvider>
+          <AppProvider>
+            {/* <Suspense fallback={<Loading />}> */}
+            {children}
+            {/* </Suspense> */}
+          </AppProvider>
         </ReactQueryProvider>
         <ToastContainer
           position="top-center"

@@ -1,5 +1,3 @@
-"use client";
-
 import { apply, save, withdraw } from "@/actions";
 import Loading from "@/components/loading";
 import { Spinner } from "@/components/spinner";
@@ -59,9 +57,14 @@ export default function OpportunityDetailsContent({
     });
   };
 
-  const { execute: applyAction, isExecuting: isApplying } = useAction(apply, {
+  const {
+    execute: applyAction,
+    isExecuting: isApplying,
+    result: applyResult,
+    hasErrored,
+  } = useAction(apply, {
     onSuccess(data) {
-      toast.success(data?.data?.message || "Applied successfully!");
+      toast.success(data?.data?.data?.message || "Applied successfully!");
       invalidateDetails();
     },
     onError(err) {

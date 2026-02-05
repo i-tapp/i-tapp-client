@@ -43,13 +43,9 @@ export const declineOffer = actionClient
 export const apply = actionClient
   .inputSchema(applyJ)
   .action(async ({ parsedInput: { id } }) => {
-    try {
-      const response = await mutate(`/a/${id}/apply`);
-      return response?.data;
-    } catch (error) {
-      console.log(error);
-      return error; // Ensure the error is propagated back to the frontend
-    }
+    const response = await mutate(`/a/${id}/apply`);
+    const data = response?.data;
+    return { success: true, data };
   });
 
 export const withdraw = actionClient

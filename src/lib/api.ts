@@ -3,8 +3,11 @@ import { cookies } from "next/headers";
 import { isAbsoluteUrl } from "next/dist/shared/lib/utils";
 import axios, { AxiosInstance } from "axios";
 import { env } from "@/utils";
+import { ServerActionError } from "./server-action-error";
 
 const API_BASE_URL = env().apiBaseUrl;
+
+if (!API_BASE_URL) throw new Error("Missing API base URL (apiBaseUrl).");
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -21,42 +24,41 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    // if (config.data instanceof FormData) {
-    //   config.headers["Content-Type"] = "multipart/form-data";
-    // }
-
     return config;
   },
-  (error) => Promise.reject(error),
+  (error) => {
+    return Promise.reject(error);
+  },
 );
 
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    return response;
+  },
   (error) => {
-    const apiError = error.response?.data;
-    const message = apiError?.message || apiError?.error;
-    return Promise.reject(new Error(message));
+    const response = error.response?.data;
+    const message =
+      response?.message ?? error?.message ?? "An unexpected error occurred.";
+
+    console.error("API Error:", {
+      ...response,
+    });
+    return Promise.reject(message);
   },
 );
-
 export async function api<T = any>(
   url: string,
   { method = "GET", data, headers, ...options }: any = {},
 ): Promise<T> {
   const requestUrl = isAbsoluteUrl(url) ? url : `${API_BASE_URL}${url}`;
-  try {
-    const response = await axiosInstance.request<T>({
-      url: requestUrl,
-      method,
-      data,
-      headers,
-      ...options,
-    });
-    return response.data;
-  } catch (error) {
-    // console.error("API request failed:", error);
-    throw error; // don’t swallow
-  }
+  const response = await axiosInstance.request<T>({
+    url: requestUrl,
+    method,
+    data,
+    headers,
+    ...options,
+  });
+  return response.data;
 }
 
 // ✅ Mutate helper with your desired signature
@@ -65,7 +67,7 @@ export async function mutate<T = any>(
   data?: any,
   method: "POST" | "PATCH" | "PUT" | "DELETE" = "POST",
 ): Promise<T> {
-  return api<T>(url, { method, data });
+  return await api<T>(url, { method, data });
 }
 
 // ✅ Query helper (GET by default)
@@ -73,5 +75,5 @@ export async function query<T = any>(
   url: string,
   options: RequestInit = {},
 ): Promise<T> {
-  return api<T>(url, { method: "GET", ...options });
+  return await api<T>(url, { method: "GET", ...options });
 }
