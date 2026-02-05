@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 import { isAbsoluteUrl } from "next/dist/shared/lib/utils";
 import axios, { AxiosInstance } from "axios";
 import { env } from "@/utils";
-import { ServerActionError } from "./server-action-error";
 
 const API_BASE_URL = env().apiBaseUrl;
 
