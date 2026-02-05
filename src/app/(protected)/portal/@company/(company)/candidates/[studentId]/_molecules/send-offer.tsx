@@ -3,22 +3,20 @@ import { useState } from "react";
 import Input from "@/components/input";
 import Modal from "@/components/modal";
 import { Button } from "@/components/ui/button";
-import { FileUpIcon, X, FileText, Trash2 } from "lucide-react";
-import FileUpload from "@/components/file-upload";
-import UploadThing from "@/components/a";
+import { X } from "lucide-react";
 
-export interface OfferFormData {
-  startDate: string;
-  endDate?: string;
-  stipend?: string;
-  file: File | null;
-}
-
-interface OfferFormErrors {
-  startDate?: string;
-  endDate?: string;
-  file?: string;
-}
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { OfferFormData, offerSchema } from "@/schemas";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { FileUploadThing } from "@/components/file-upload-thing";
 
 interface OfferModalProps {
   onClose: () => void;
@@ -31,53 +29,10 @@ export default function OfferModal({
   offerFormOpen,
   onCreate,
 }: OfferModalProps) {
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [formData, setFormData] = useState({
-    startDate: "",
-    endDate: "",
-    stipend: "",
+  const form = useForm({
+    resolver: zodResolver(offerSchema),
+    mode: "onChange",
   });
-  const [errors, setErrors] = useState<OfferFormErrors>({});
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name as keyof OfferFormErrors]) {
-      setErrors((prev) => ({ ...prev, [name]: null }));
-    }
-  };
-
-  const validateForm = (file: File | null) => {
-    const newErrors: OfferFormErrors = {};
-
-    if (!formData.startDate) {
-      newErrors.startDate = "Start date is required";
-    }
-
-    if (!file) {
-      newErrors.file = "Offer letter is required";
-    }
-
-    if (
-      formData.endDate &&
-      formData.startDate &&
-      new Date(formData.endDate) < new Date(formData.startDate)
-    ) {
-      newErrors.endDate = "End date must be after start date";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (validateForm(uploadedFile)) {
-      onCreate({ ...formData, file: uploadedFile });
-      // console.log("Form submitted", { ...formData, file: uploadedFile });
-    }
-  };
 
   return (
     <Modal open={offerFormOpen} onClose={onClose}>
@@ -98,93 +53,98 @@ export default function OfferModal({
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {/* Dates */}
-          <div className="flex gap-4">
-            <div className="flex flex-col w-full">
-              <label
-                className="font-medium mb-1 text-sm text-gray-700"
-                htmlFor="startDate"
-              >
-                Start Date <span className="text-red-500">*</span>
-              </label>
-              <Input
-                id="startDate"
-                type="date"
-                name="startDate"
-                value={formData.startDate}
-                onChange={handleInputChange}
-                className={errors.startDate ? "border-red-500" : ""}
-                required
-              />
-              {errors.startDate && (
-                <p className="text-xs text-red-500 mt-1">{errors.startDate}</p>
-              )}
-            </div>
-
-            <div className="flex flex-col w-full">
-              <label
-                className="font-medium mb-1 text-sm text-gray-700"
-                htmlFor="endDate"
-              >
-                End Date{" "}
-                <span className="text-gray-400 text-xs">(Optional)</span>
-              </label>
-              <Input
-                id="endDate"
-                type="date"
-                name="endDate"
-                value={formData.endDate}
-                onChange={handleInputChange}
-                className={errors.endDate ? "border-red-500" : ""}
-              />
-              {errors.endDate && (
-                <p className="text-xs text-red-500 mt-1">{errors.endDate}</p>
-              )}
-            </div>
-          </div>
-
-          {/* Stipend */}
-          <div className="flex flex-col">
-            <label
-              className="font-medium mb-1 text-sm text-gray-700"
-              htmlFor="stipend"
-            >
-              Stipend <span className="text-gray-400 text-xs">(Optional)</span>
-            </label>
-            <Input
-              id="stipend"
-              type="text"
-              name="stipend"
-              value={formData.stipend}
-              onChange={handleInputChange}
-              placeholder="e.g. ₦150,000"
-            />
-          </div>
-
-          {/* Upload */}
-          <UploadThing
-            onChange={(file, error) => {
-              setUploadedFile(file);
-              if (error) {
-                setErrors((prev) => ({ ...prev, file: error }));
-              }
-            }}
-          />
-          {errors.file && (
-            <p className="text-xs text-red-500 mt-1">{errors.file}</p>
-          )}
-
-          {/* Submit Button */}
-          <Button
-            className="w-full text-white font-medium mt-2 py-3"
-            type="submit"
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onCreate)}
+            className="flex flex-col gap-4"
           >
-            Send Offer
-          </Button>
+            {/* Dates */}
+            <div className="flex gap-4">
+              <FormField
+                control={form.control}
+                name="startDate"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel className="text-xs font-black">
+                      Start Date
+                    </FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          {/* <FileUpload /> */}
-        </form>
+              <FormField
+                control={form.control}
+                name="endDate"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel className="text-xs font-black">
+                      End Date
+                    </FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Stipend */}
+
+            <FormField
+              control={form.control}
+              name="stipend"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel className="text-xs font-black">
+                    Stipend{" "}
+                    <span className="text-gray-400 text-xs">(Optional)</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="text" {...field} placeholder="e.g. ₦150,000" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="offerLetter"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel className="text-xs font-black">
+                    Upload Offer Letter{" "}
+                  </FormLabel>
+                  <FormControl>
+                    <FileUploadThing
+                      title="Upload Offer Letter"
+                      value={field.value} // current value (url/key/etc)
+                      onChange={field.onChange} // set value into RHF
+                      onBlur={field.onBlur}
+                      description="Max 10MB. PDF/JPG/PNG/WEBP."
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Submit Button */}
+            <Button
+              className="w-full text-white font-medium mt-2 py-3"
+              type="submit"
+            >
+              Send Offer
+            </Button>
+
+            {/* <FileUpload /> */}
+          </form>
+        </Form>
       </div>
     </Modal>
   );

@@ -15,33 +15,23 @@ import {
   useFetchCompanyOpportunities,
   useFetchCompanyProfile,
 } from "@/hooks/query";
-import { useCompanyStore } from "@/lib/store/company";
 import OpportunityCard from "./opportunity-card";
 import { ApplicantCard } from "@/components/applicant-card";
+import { useFetchApplicationsCount } from "@/queries/company";
+import { Spinner } from "@/components/spinner";
 
 export function Dashboard() {
-  const company = useCompanyStore((s) => s.company);
-
   const { data, isLoading } = useFetchAllCompanyApplications();
-
+  const { data: applicationsCount } = useFetchApplicationsCount();
   const { data: opportunities } = useFetchCompanyOpportunities();
-
   const { data: companyProfile } = useFetchCompanyProfile();
 
-  // if (isLoading) {
-  //   return <p>Loading...</p>;
-  // }
+  if (isLoading) {
+    return <Spinner />;
+  }
 
-  // ✅ Safe destructuring from API response
   const totalApplicants = data?.data?.totalApplicants || [[], 0];
-  const acceptedApplicants = data?.data?.acceptedApplicants || [[], 0];
-  const shortlistedApplicants = data?.data?.shortListedApplicants || [[], 0];
-
   const totalApplicantsList = totalApplicants[0];
-  const totalApplicantsCount = totalApplicants[1];
-
-  const acceptedApplicantsCount = acceptedApplicants[1];
-  const shortlistedApplicantsCount = shortlistedApplicants[1];
 
   console.log("opportunities", opportunities);
 
@@ -59,19 +49,19 @@ export function Dashboard() {
       <div className="flex flex-col md:flex-row gap-4 w-full">
         <OverviewBox
           title="Total"
-          number={totalApplicantsCount}
+          number={applicationsCount?.total}
           icon={<Profile2User />}
           link={"/portal/overview/applicants"}
         />
         <OverviewBox
           title="Shortlisted"
-          number={shortlistedApplicantsCount}
+          number={applicationsCount?.counts?.shortlisted ?? 0}
           icon={<ProfileTick />}
           link={"/portal/candidates/shortlisted"}
         />
         <OverviewBox
           title="Accepted"
-          number={8}
+          number={applicationsCount?.counts?.accepted ?? 0}
           icon={<TickCircle />}
           link={"/portal/candidates/accepted"}
         />

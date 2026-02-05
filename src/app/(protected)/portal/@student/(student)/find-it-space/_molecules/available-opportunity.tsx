@@ -68,13 +68,13 @@ export default function AvailableOpportunity({
 
         <div className="min-w-0 flex-1">
           {/* Title */}
-          <h6 className="text-[15px] sm:text-[16px] font-semibold leading-tight text-gray-900 capitalize truncate">
+          <h6 className="text-[15px] sm:text-[16px] font-semibold leading-tight text-primary capitalize truncate">
             {title ?? "title"}
           </h6>
 
           {/* Company */}
           <div className="flex flex-row gap-1">
-            <p className="text-[13px] sm:text-sm font-medium text-gray-500 truncate">
+            <p className="text-[13px] sm:text-sm font-medium text-gray-500  truncate">
               {companyName}
             </p>
 

@@ -13,8 +13,17 @@ import { onBoardCompanySchema, OnboardingDraft } from "@/schemas";
 import { onBoardCompany } from "@/actions";
 import { Step } from "@/types/wizard";
 
+/**
+ * ✅ What this implements:
+ * - Desktop: sidebar step list + facts always visible
+ * - Mobile: condensed header stepper + progress bar + optional "View steps" / "Why this matters"
+ * - Skip: subtle link-style button (not competing with primary CTA)
+ * - Review step: real review UI with "Edit" actions
+ */
+
 export default function OnboardingPage() {
   const router = useRouter();
+
   const steps: Step[] = useMemo(
     () => [
       {
@@ -38,49 +47,55 @@ export default function OnboardingPage() {
   );
 
   const { execute, hasErrored, result } = useAction(onBoardCompany, {
-    onSuccess: (res) => {
-      console.log("Onboarding successful:", res);
-    },
-    onError: (error) => {
-      console.error("Onboarding error:", error);
-    },
+    onSuccess: (res) => console.log("Onboarding successful:", res),
+    onError: (error) => console.error("Onboarding error:", error),
   });
 
   const [currentStep, setCurrentStep] = useState(0);
   const formIdByStep = ["company-profile-form", "kyc-form", null] as const;
   const activeFormId = formIdByStep[currentStep];
   const CurrentStepComponent = steps[currentStep]?.component;
+
   const isFirst = currentStep === 0;
   const isLast = currentStep === steps.length - 1;
 
   const [onboardingData, setOnboardingData] = useState<OnboardingDraft>({});
 
+  // mobile-only toggles
+  const [mobileShowSteps, setMobileShowSteps] = useState(false);
+  const [mobileShowFacts, setMobileShowFacts] = useState(false);
+
   function next() {
     setCurrentStep((s) => Math.min(s + 1, steps.length - 1));
+    setMobileShowSteps(false);
+    setMobileShowFacts(false);
   }
 
   function back() {
     setCurrentStep((s) => Math.max(s - 1, 0));
+    setMobileShowSteps(false);
+    setMobileShowFacts(false);
+  }
+
+  async function skip() {
+    await fetch("/api/company/onboarding/skip", { method: "POST" });
+    router.push("/portal/dashboard");
   }
 
   function handleSubmit() {
-    console.log("Submitting onboarding data:", onboardingData);
-
     const parsed = onBoardCompanySchema.safeParse(onboardingData);
-
     if (!parsed.success) {
       console.log("Validation failed:", parsed.error.flatten());
       return;
     }
-
     execute(parsed.data);
   }
 
   return (
     <div className="min-h-screen w-full flex justify-center px-4 py-6">
-      <div className="w-full max-w-6xl flex flex-col md:flex-row gap-30">
-        {/* Sidebar */}
-        <aside className="w-full md:w-70 shrink-0">
+      <div className="w-full max-w-6xl flex flex-col md:flex-row md:gap-10">
+        {/* ✅ Desktop sidebar only */}
+        <aside className="hidden md:block w-72 shrink-0">
           <div className="text-2xl font-semibold">
             Welcome, Company User! 👋
           </div>
@@ -89,71 +104,116 @@ export default function OnboardingPage() {
             for your company.
           </p>
 
-          {steps.map((step, index) => (
-            <ProgressStage
-              key={index}
-              index={index}
-              step={step}
-              currentStep={currentStep}
-            />
-          ))}
+          <div className="mt-4">
+            {steps.map((step, index) => (
+              <ProgressStage
+                key={index}
+                index={index}
+                step={step}
+                currentStep={currentStep}
+              />
+            ))}
+          </div>
 
-          <Facts />
+          <div className="mt-4">
+            <Facts />
+          </div>
         </aside>
 
         {/* Main content */}
-        <main className="flex-1 bg-white rounded-xl border p-2 overflow-hidden gap-6 flex flex-col">
-          {/* onboarding form / steps go here */}
-          <div className="p-6 border-b">
-            <h1 className="font-semibold text-xl">
-              {steps[currentStep]?.title}
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              {steps[currentStep]?.description}
-            </p>
+        <main className="flex-1 bg-white rounded-xl border overflow-hidden flex flex-col">
+          {/* ✅ Mobile header stepper */}
+          <div className="md:hidden border-b">
+            <MobileHeader
+              steps={steps}
+              currentStep={currentStep}
+              mobileShowSteps={mobileShowSteps}
+              setMobileShowSteps={setMobileShowSteps}
+              mobileShowFacts={mobileShowFacts}
+              setMobileShowFacts={setMobileShowFacts}
+              onSkip={skip}
+            />
 
-            <Button
-              onClick={async () => {
-                await fetch("/api/company/onboarding/skip", { method: "POST" });
-                router.push("/portal/dashboard");
-              }}
-            >
-              Skip
-            </Button>
+            {/* Collapsible mobile steps list */}
+            {mobileShowSteps && (
+              <div className="px-4 pb-3">
+                <div className="rounded-xl border bg-muted/30 p-3">
+                  {steps.map((step, index) => (
+                    <ProgressStage
+                      key={index}
+                      index={index}
+                      step={step}
+                      currentStep={currentStep}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Collapsible mobile facts */}
+            {mobileShowFacts && (
+              <div className="px-4 pb-4">
+                <div className="rounded-xl border bg-muted/30 p-3">
+                  <Facts />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* ✅ Desktop step header */}
+          <div className="hidden md:block p-6 border-b">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h1 className="font-semibold text-xl">
+                  {steps[currentStep]?.title}
+                </h1>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {steps[currentStep]?.description}
+                </p>
+              </div>
+
+              {/* Skip as subtle link-style button */}
+              <Button
+                variant="ghost"
+                className="h-auto px-2 py-1 text-sm"
+                onClick={skip}
+              >
+                Skip for now
+              </Button>
+            </div>
           </div>
 
           {/* Error display */}
           {hasErrored && (
-            <div className="p-4 mx-6 mb-0 rounded-lg bg-red-100 text-red-800 text-sm">
+            <div className="p-4 mx-4 md:mx-6 mt-4 rounded-lg bg-red-100 text-red-800 text-sm">
               {result.serverError ||
                 "An error occurred while submitting your onboarding information."}
             </div>
           )}
 
-          {/* Form component goes here */}
-
-          <div className="px-6">
+          {/* Body */}
+          <div className="px-4 md:px-6 py-6 flex-1">
             {CurrentStepComponent ? (
               <CurrentStepComponent
-                onNext={(data) => {
-                  setOnboardingData((prev) => ({
-                    ...prev,
-                    ...data,
-                  }));
+                onNext={(data: Partial<OnboardingDraft>) => {
+                  setOnboardingData((prev) => ({ ...prev, ...data }));
                   next();
                 }}
                 onBack={back}
               />
             ) : (
-              <div className="rounded-lg border bg-muted/30 p-4 text-sm text-muted-foreground">
-                This step is not implemented yet.
-              </div>
+              <ReviewStep
+                data={onboardingData}
+                onEditProfile={() => setCurrentStep(0)}
+                onEditKyc={() => setCurrentStep(1)}
+              />
             )}
           </div>
 
           <Hr />
 
-          <div className="p-6 pt-4 flex items-center justify-between gap-3">
+          {/* Footer nav */}
+          <div className="p-4 md:p-6 pt-3 flex items-center justify-between gap-3">
             <Button
               variant="outline"
               onClick={back}
@@ -178,6 +238,94 @@ export default function OnboardingPage() {
   );
 }
 
+/* ----------------------------- Mobile Header ----------------------------- */
+
+function MobileHeader(props: {
+  steps: Step[];
+  currentStep: number;
+  mobileShowSteps: boolean;
+  setMobileShowSteps: (v: boolean) => void;
+  mobileShowFacts: boolean;
+  setMobileShowFacts: (v: boolean) => void;
+  onSkip: () => void;
+}) {
+  const {
+    steps,
+    currentStep,
+    mobileShowSteps,
+    setMobileShowSteps,
+    mobileShowFacts,
+    setMobileShowFacts,
+    onSkip,
+  } = props;
+
+  const total = steps.length;
+  const stepIndex = currentStep + 1;
+  const progressPct = Math.round((stepIndex / total) * 100);
+
+  return (
+    <div className="px-4 pt-4 pb-3">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="text-sm text-muted-foreground">
+            Step {stepIndex} of {total}
+          </div>
+          <div className="font-semibold text-base truncate">
+            {steps[currentStep]?.title}
+          </div>
+          <div className="text-sm text-muted-foreground mt-0.5 line-clamp-2">
+            {steps[currentStep]?.description}
+          </div>
+        </div>
+
+        <Button
+          variant="ghost"
+          className="h-auto px-2 py-1 text-sm shrink-0"
+          onClick={onSkip}
+        >
+          Skip
+        </Button>
+      </div>
+
+      {/* progress bar */}
+      <div className="mt-3">
+        <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+          <div
+            className="h-full bg-primary"
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
+
+        <div className="mt-3 flex gap-2">
+          <Button
+            variant="outline"
+            className="flex-1"
+            onClick={() => {
+              setMobileShowSteps(!mobileShowSteps);
+              if (!mobileShowSteps) setMobileShowFacts(false);
+            }}
+          >
+            {mobileShowSteps ? "Hide steps" : "View steps"}
+          </Button>
+
+          <Button
+            variant="outline"
+            className="flex-1"
+            onClick={() => {
+              setMobileShowFacts(!mobileShowFacts);
+              if (!mobileShowFacts) setMobileShowSteps(false);
+            }}
+          >
+            {mobileShowFacts ? "Hide info" : "Why this matters"}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------- Progress Stage ---------------------------- */
+
 const ProgressStage = ({
   index,
   step,
@@ -189,6 +337,7 @@ const ProgressStage = ({
 }) => {
   const isActive = currentStep === index;
   const isDone = currentStep > index;
+
   return (
     <div className="flex flex-row gap-3 items-start py-3">
       <div
@@ -201,6 +350,7 @@ const ProgressStage = ({
       >
         {index + 1}
       </div>
+
       <div className="min-w-0">
         <div
           className={cn(
@@ -215,3 +365,138 @@ const ProgressStage = ({
     </div>
   );
 };
+
+/* ------------------------------ Review Step ------------------------------ */
+
+function ReviewStep(props: {
+  data: OnboardingDraft;
+  onEditProfile: () => void;
+  onEditKyc: () => void;
+}) {
+  const { data, onEditProfile, onEditKyc } = props;
+
+  // NOTE: I don’t know your exact field names in OnboardingDraft.
+  // So this is intentionally defensive and “display what exists”.
+  // Replace keys below with your actual schema keys for a cleaner review.
+
+  const profileKeys = [
+    "companyName",
+    "website",
+    "industry",
+    "size",
+    "location",
+    "about",
+    "logoUrl",
+  ] as const;
+
+  const kycKeys = [
+    "contactName",
+    "contactEmail",
+    "contactPhone",
+    "cacDocument",
+    "addressProof",
+  ] as const;
+
+  const profileItems = pickKnown(data, profileKeys);
+  const kycItems = pickKnown(data, kycKeys);
+
+  return (
+    <div className="space-y-4">
+      <div className="rounded-xl border p-4">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <div className="font-semibold">
+              Public profile (students can see this)
+            </div>
+            <div className="text-sm text-muted-foreground mt-1">
+              Make sure this represents your company well.
+            </div>
+          </div>
+          <Button variant="outline" onClick={onEditProfile}>
+            Edit
+          </Button>
+        </div>
+
+        <div className="mt-4 grid gap-2 text-sm">
+          {profileItems.length ? (
+            profileItems.map(([k, v]) => <Row key={k} label={k} value={v} />)
+          ) : (
+            <div className="text-muted-foreground">
+              No profile fields detected here yet. Wire your real keys into the
+              review step.
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="rounded-xl border p-4">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <div className="font-semibold">
+              Private verification (only your team + admin)
+            </div>
+            <div className="text-sm text-muted-foreground mt-1">
+              This is used for verification and account approval.
+            </div>
+          </div>
+          <Button variant="outline" onClick={onEditKyc}>
+            Edit
+          </Button>
+        </div>
+
+        <div className="mt-4 grid gap-2 text-sm">
+          {kycItems.length ? (
+            kycItems.map(([k, v]) => <Row key={k} label={k} value={v} />)
+          ) : (
+            <div className="text-muted-foreground">
+              No verification fields detected here yet. Wire your real keys into
+              the review step.
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="rounded-xl border bg-muted/30 p-4 text-sm text-muted-foreground">
+        When you click{" "}
+        <span className="font-medium text-foreground">Submit</span>, your
+        account will be reviewed for approval.
+      </div>
+    </div>
+  );
+}
+
+function Row({ label, value }: { label: string; value: unknown }) {
+  return (
+    <div className="flex gap-3">
+      <div className="w-44 shrink-0 text-muted-foreground capitalize truncate">
+        {label.replace(/([A-Z])/g, " $1")}
+      </div>
+      <div className="min-w-0">
+        <div className="break-words text-foreground">{formatValue(value)}</div>
+      </div>
+    </div>
+  );
+}
+
+function formatValue(v: unknown) {
+  if (v == null) return "—";
+  if (typeof v === "string") return v.length ? v : "—";
+  if (typeof v === "number" || typeof v === "boolean") return String(v);
+  if (Array.isArray(v)) return v.length ? v.join(", ") : "—";
+  if (typeof v === "object") return "[object]";
+  return String(v);
+}
+
+function pickKnown<T extends Record<string, any>, K extends readonly string[]>(
+  data: T,
+  keys: K,
+): [string, unknown][] {
+  return keys
+    .map((k) => [k, data?.[k as keyof T]] as [string, unknown])
+    .filter(
+      ([, v]) =>
+        v !== undefined &&
+        v !== null &&
+        !(typeof v === "string" && v.trim() === ""),
+    );
+}

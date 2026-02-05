@@ -1,4 +1,4 @@
-import { FileUploadThing } from "@/app/(protected)/portal/@company/(onboarding)/onboarding/_molecules/company-verification";
+import { FileUploadThing } from "@/components/file-upload-thing";
 import {
   Form,
   FormControl,

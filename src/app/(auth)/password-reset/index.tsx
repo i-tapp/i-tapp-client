@@ -34,9 +34,7 @@ export default function ResetPasswordPage() {
   const { execute, isExecuting, hasErrored } = useAction(changePassword, {
     onSuccess: () => {
       console.log("Password reset link sent successfully");
-      setMessage(
-        "If an account with that email exists, a reset link has been sent.",
-      );
+      setMessage("Password has been reset successfully.");
     },
     onError: (error) => {
       console.error("Password reset error:", error);
@@ -105,7 +103,7 @@ export default function ResetPasswordPage() {
         )}
 
         <Button className="w-full mt-6" disabled={isExecuting}>
-          {isExecuting ? "Sending..." : "Send Reset Link"}
+          {isExecuting ? "Resetting..." : "Reset Password"}
         </Button>
       </form>
       <Button variant="link" className="w-full mt-2">

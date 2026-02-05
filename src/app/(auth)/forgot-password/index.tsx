@@ -1,6 +1,6 @@
 "use client";
 
-import { resetPassword } from "@/actions";
+import { requestPasswordReset } from "@/actions";
 import Input from "@/components/input";
 import { Button } from "@/components/ui/button";
 import { useAction } from "next-safe-action/hooks";
@@ -10,7 +10,7 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  const { execute, isExecuting, hasErrored } = useAction(resetPassword, {
+  const { execute, isExecuting, hasErrored } = useAction(requestPasswordReset, {
     onSuccess: () => {
       console.log("Password reset link sent successfully");
       setMessage(

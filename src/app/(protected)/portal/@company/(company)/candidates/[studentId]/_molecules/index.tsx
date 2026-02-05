@@ -14,9 +14,7 @@ import {
 } from "@/hooks/query";
 import { useParams, useSearchParams } from "next/navigation";
 import { Spinner } from "@/components/spinner";
-import OfferModal, { OfferFormData } from "./send-offer";
-import { Loader } from "@/components/ui/loader";
-import Loading from "@/components/loading";
+import OfferModal from "./send-offer";
 import Hr from "@/components/ui/hr";
 import { cn } from "@/utils/tailwind";
 import {
@@ -25,6 +23,9 @@ import {
   declineApplication,
   deleteOffer,
 } from "@/actions";
+import Link from "next/link";
+import { ApplicationStatus } from "@/types/enums";
+import { OfferFormData } from "@/schemas";
 
 export default function CandidateProfile() {
   const [offerFormOpen, setOfferFormOpen] = useState(false);
@@ -35,13 +36,14 @@ export default function CandidateProfile() {
     studentId as string,
   );
 
-  const { data: applicationDetails } = useFetchApplicationDetails(
-    opportunityId as string,
-  );
+  const { data: applicationDetails, isLoading: applicationLoading } =
+    useFetchApplicationDetails(opportunityId as string);
 
   const offerId = applicationDetails?.offer?.id;
 
   const name = studentDetails?.firstName + " " + studentDetails?.lastName;
+
+  console.log("studentDetails", studentDetails);
 
   const { execute: createAction, isExecuting: isCreating } = useAction(
     createOffer,
@@ -125,10 +127,13 @@ export default function CandidateProfile() {
               className="object-cover w-full h-full"
             />
           </div>
-          <div>
+          <div className="grid grid-cols-1">
             <h1 className="font-semibold text-2xl text-foreground">{name}</h1>
-            <p className="text-base pt-1 text-muted-foreground">
+            <p className="text-base text-muted-foreground">
               {studentDetails?.courseOfStudy || "Not specified"}
+            </p>
+            <p className="text-base text-semibold text-muted-foreground">
+              {studentDetails?.school || "Not specified"}
             </p>
           </div>
         </div>
@@ -137,9 +142,8 @@ export default function CandidateProfile() {
 
         <div className="flex flex-row justify-between gap-4">
           <SectionWrapper className="flex flex-col rounded-lg border bg-white px-6 py-6 gap-4 w-full ">
-            <div className=" h-80">
-              <h1 className="font-semibold"> Bio & Contact</h1>
-
+            <div className=" flex flex-col gap-2">
+              <h1 className="font-semibold">Candidate Profile</h1>
               <div className="mt-4">
                 <h1 className="uppercase text-muted-foreground text-sm font-semibold">
                   about
@@ -152,6 +156,23 @@ export default function CandidateProfile() {
 
             <Hr />
             <div className=" flex flex-col gap-2">
+              <HeaderLabel title="Education" />
+              <InfoCard
+                icon={GraduationCap}
+                label="School"
+                value={studentDetails?.school || "Not provided"}
+              />
+
+              <InfoCard
+                icon={Note1}
+                label="Course of Study"
+                value={studentDetails?.courseOfStudy || "Not provided"}
+              />
+            </div>
+
+            <Hr />
+            <div className="flex flex-col gap-2">
+              <HeaderLabel title="Contact Information" />
               <InfoCard
                 icon={Sms}
                 label="Email"
@@ -174,7 +195,7 @@ export default function CandidateProfile() {
             <SectionWrapper className="flex flex-col gap-2">
               <HeaderLabel title="Application Info" />
               <div className="flex flex-row justify-between">
-                <p className="text-xs">status:</p>{" "}
+                <p className="text-xs">Current status:</p>{" "}
                 <p className="italic text-xs font-semibold">
                   {applicationDetails?.status
                     ? applicationDetails.status.charAt(0).toUpperCase() +
@@ -183,7 +204,7 @@ export default function CandidateProfile() {
                 </p>
               </div>
               <div className="flex text-sm flex-row justify-between">
-                <p className="text-xs">applied date:</p>{" "}
+                <p className="text-xs">Applied date:</p>{" "}
                 <p className="italic text-xs font-semibold">
                   {applicationDetails?.appliedAt
                     ? moment(applicationDetails.appliedAt).format("ll")
@@ -192,112 +213,51 @@ export default function CandidateProfile() {
               </div>
 
               <div className="flex gap-3">
-                {applicationDetails?.status === "in_review" && (
-                  <>
-                    <Button
-                      onClick={() => setOfferFormOpen(true)}
-                      size="default"
-                      className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-                    >
-                      {"Send Offer"}
-                    </Button>
-
-                    <Button
-                      onClick={() =>
-                        declineAction({ id: opportunityId as string })
-                      }
-                      size="default"
-                      disabled={isDeclining}
-                      className="flex-1 bg-red-600 hover:bg-red-700 text-white"
-                    >
-                      {isDeclining ? "Processing..." : "Decline"}
-                    </Button>
-                  </>
-                )}
-
-                {applicationDetails?.status === "accepted" && (
-                  <Button
-                    disabled
-                    size="default"
-                    variant={"outline"}
-                    className="flex-1 w-full text-center py-2 rounded bg-green-100 text-green-700 font-medium"
-                  >
-                    Accepted
-                  </Button>
-                )}
-
-                {applicationDetails?.status === "declined" && (
-                  // <div className="w-full text-center py-2 rounded bg-red-100 text-red-700 font-medium">
-                  //   Declined
-                  // </div>
-
-                  <Button
-                    disabled
-                    size="default"
-                    variant={"outline"}
-                    className="flex-1 w-full text-center py-2 rounded bg-red-100 text-red-700 font-medium"
-                  >
-                    Declined
-                  </Button>
-                )}
-
-                {applicationDetails?.status === "rejected" && (
-                  <Button
-                    disabled
-                    size="default"
-                    variant={"outline"}
-                    className="flex-1 w-full text-center py-2 rounded bg-red-100 text-red-700 font-medium"
-                  >
-                    Student Rejected Offer
-                  </Button>
-                )}
-
-                {applicationDetails?.status === "offered" && (
-                  <div className="flex flex-row justify-center gap-2">
-                    <p className="flex w-full text-center px-2 py-2 rounded bg-yellow-100 text-yellow-700 font-medium">
-                      Waiting for student response
-                    </p>
-
-                    <Button
-                      disabled={isWithdrawing}
-                      size="default"
-                      variant={"outline"}
-                      onClick={() => withdrawOffer({ id: offerId as string })}
-                      className="flex-1 w-full text-center py-2 rounded bg-red-100 text-red-700 font-medium"
-                    >
-                      {isWithdrawing ? (
-                        <>
-                          <Loader /> <Loading />
-                        </>
-                      ) : (
-                        "Withdraw Offer"
-                      )}
-                    </Button>
-                  </div>
-                )}
+                {renderApplicationActions({
+                  application: applicationDetails,
+                  offer: applicationDetails?.offer,
+                  setOfferFormOpen,
+                  declineAction,
+                  withdrawOffer,
+                  isDeclining,
+                  isWithdrawing,
+                })}
               </div>
             </SectionWrapper>
 
-            <SectionWrapper className="">
+            {/* <SectionWrapper className="">
               <HeaderLabel title="Student Info" />
 
-              <InfoCard
-                icon={GraduationCap}
-                label="School"
-                value={studentDetails?.school || "Not provided"}
-              />
-
-              <InfoCard
-                icon={Note1}
-                label="Course of Study"
-                value={studentDetails?.courseOfStudy || "Not provided"}
-              />
-            </SectionWrapper>
+             
+            </SectionWrapper> */}
 
             <SectionWrapper className="h-30">
               <HeaderLabel title="Documents" />
 
-              <p className="text-xs mt-3"> No documents uploaded</p>
+              {studentDetails?.itLetter || studentDetails?.cv ? (
+                <div className="grid grid-cols-1 gap-2">
+                  {studentDetails?.itLetter && (
+                    <Link
+                      href={studentDetails?.itLetter}
+                      target="_blank"
+                      className="text-left text-sm text-primary underline"
+                    >
+                      View IT Letter
+                    </Link>
+                  )}
+                  {studentDetails?.cv && (
+                    <Link
+                      href={studentDetails?.cv}
+                      target="_blank"
+                      className="text-left text-sm text-primary underline"
+                    >
+                      View CV
+                    </Link>
+                  )}
+                </div>
+              ) : (
+                <p className="text-xs mt-3"> No documents uploaded</p>
+              )}
             </SectionWrapper>
           </div>
         </div>
@@ -339,6 +299,109 @@ function SectionWrapper({
 }) {
   return (
     <div className={cn(`bg-white p-4 border rounded-lg`, className)}>
+      {children}
+    </div>
+  );
+}
+
+type ApplicationActionProps = {
+  application: any;
+  offer: any;
+  setOfferFormOpen: (open: boolean) => void;
+  declineAction: (data: { id: string }) => void;
+  withdrawOffer: (data: { id: string }) => void;
+  isDeclining: boolean;
+  isWithdrawing: boolean;
+};
+
+function renderApplicationActions({
+  application,
+  offer,
+  setOfferFormOpen,
+  declineAction,
+  withdrawOffer,
+  isDeclining,
+  isWithdrawing,
+}: ApplicationActionProps) {
+  const status = application?.status;
+  const offerStatus = offer?.status;
+
+  if (
+    status === ApplicationStatus.IN_REVIEW ||
+    status === ApplicationStatus.SHORTLISTED
+  ) {
+    return (
+      <>
+        <Button
+          onClick={() => setOfferFormOpen(true)}
+          className="flex-1 bg-green-600 text-white"
+        >
+          Send Offer
+        </Button>
+        <Button
+          disabled={isDeclining}
+          onClick={() => declineAction({ id: application.opportunityId })}
+          className="flex-1 bg-red-600 text-white"
+        >
+          Decline
+        </Button>
+      </>
+    );
+  }
+
+  if (status === ApplicationStatus.OFFERED) {
+    if (offerStatus === "sent") {
+      return (
+        <>
+          <p className="flex-1 bg-yellow-100 text-yellow-700 text-center py-2 rounded">
+            Waiting for student response
+          </p>
+
+          <Button
+            disabled={isWithdrawing}
+            onClick={() => withdrawOffer({ id: offer.id })}
+          >
+            Withdraw Offer
+          </Button>
+        </>
+      );
+    }
+
+    if (offerStatus === "accepted") {
+      return <StatusBadge color="green">Hired</StatusBadge>;
+    }
+
+    if (offerStatus === "declined") {
+      return <StatusBadge color="red">Student Declined Offer</StatusBadge>;
+    }
+  }
+
+  if (status === "rejected") {
+    return <StatusBadge color="red">Rejected</StatusBadge>;
+  }
+
+  if (status === "hired") {
+    return <StatusBadge color="green">Hired</StatusBadge>;
+  }
+
+  return null;
+}
+
+function StatusBadge({
+  children,
+  color,
+}: {
+  children: React.ReactNode;
+  color: "green" | "red";
+}) {
+  return (
+    <div
+      className={`px-4 py-2 rounded ${
+        color === "green"
+          ? "bg-green-100 text-green-700"
+          : "bg-red-100 text-red-700"
+      }`}
+    >
       {children}
     </div>
   );

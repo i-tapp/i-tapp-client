@@ -4,6 +4,22 @@ import {
 } from "@/lib/validations/auth";
 import * as z from "zod";
 
+export const offerSchema = z.object({
+  startDate: z.string().min(1, "Start date is required"),
+  endDate: z.string().optional(),
+  stipend: z.string().optional(),
+  offerLetter: z
+    .custom<File>((v) => v instanceof File, "File is required")
+    .refine((file) => file.size <= 10 * 1024 * 1024, "Max file size is 10MB")
+    .refine(
+      (file) =>
+        ["application/pdf", "image/jpeg", "image/png", "image/webp"].includes(
+          file.type,
+        ),
+      "Only PDF, JPG, PNG, or WEBP allowed",
+    ),
+});
+
 export const profileFormSchema = z.object({
   industry: z.string().min(1, "Industry is required"),
 
@@ -55,7 +71,7 @@ export const kycFormSchema = z.object({
 
   // required documents
   cacDocument: fileSchema,
-  proofOfAddress: fileSchema,
+  proofOfAddress: fileSchema.optional(), // make optional if you want to collect later or it's not always required
 
   // optional extras
   repId: z
@@ -74,7 +90,7 @@ export const kycFormSchema = z.object({
 export const onBoardCompanySchema = profileFormSchema.extend(
   kycFormSchema.shape,
 );
-
+export type OfferFormData = z.infer<typeof offerSchema>;
 export type CompanyProfileFormSchema = z.infer<typeof profileFormSchema>;
 export type KycFormValues = z.infer<typeof kycFormSchema>;
 export type OnboardingData = z.infer<typeof onBoardCompanySchema>;

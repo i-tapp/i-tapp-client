@@ -20,7 +20,7 @@ export function OverviewBox({
         "
     >
       {/* Top number */}
-      <h6 className="font-semibold text-2xl">{number ?? 5}</h6>
+      <h6 className="font-semibold text-2xl">{number ?? 0}</h6>
       {/* Bottom row */}
       <div className="flex items-end gap-6 justify-between">
         <p className="text-sm font-medium ">{title} applicant</p>

@@ -1,6 +1,6 @@
 "use server";
 
-import { mutate } from "@/lib/api";
+import { mutate, query } from "@/lib/api";
 import { actionClient } from "@/lib/safe-action";
 
 import {
@@ -77,26 +77,51 @@ export const studentSignup = actionClient
     },
   );
 
-export const resetPassword = actionClient
+export const requestPasswordReset = actionClient
   .inputSchema(
     z.object({
       email: z.email("Please enter a valid email address"),
     }),
   )
   .action(async ({ parsedInput: { email } }) => {
-    const response = await mutate("/auth/reset-password", {
+    const response = await mutate("/auth/password-reset/request", {
       email,
     });
+    return response;
+  });
+
+export const verifyEmail = actionClient
+  .inputSchema(
+    z.object({
+      token: z.string().min(1, "Token is required"),
+    }),
+  )
+  .action(async ({ parsedInput: { token } }) => {
+    const response = await query(`/auth/verify?token=${token}`);
+    return response;
+  });
+
+export const resendEmailVerification = actionClient
+  .inputSchema(
+    z.object({
+      email: z.string().min(1, "Email is required"),
+    }),
+  )
+  .action(async ({ parsedInput: { email } }) => {
+    const response = await mutate("/auth/resend-verification", { email });
     return response;
   });
 
 export const changePassword = actionClient
   .inputSchema(resetPasswordSchema)
   .action(async ({ parsedInput: { npassword, token } }) => {
-    const response = await mutate("/auth/change-password", {
-      token,
-      password: npassword,
-    });
+    console.log("Changing password with token:", token);
+    const response = await mutate(
+      `/auth/password-reset/confirm?token=${encodeURIComponent(token!)}`,
+      {
+        password: npassword,
+      },
+    );
     return response;
   });
 

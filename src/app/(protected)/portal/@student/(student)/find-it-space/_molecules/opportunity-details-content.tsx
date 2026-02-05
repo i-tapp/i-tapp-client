@@ -1,5 +1,4 @@
 import { apply, save, withdraw } from "@/actions";
-import Loading from "@/components/loading";
 import { Spinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
 import { useFetchOpportunityPublicDetails } from "@/hooks/query";
@@ -15,6 +14,7 @@ import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import dp from "@/assets/images/dp.png";
+import { useEffect, useState } from "react";
 
 export default function OpportunityDetailsContent({
   selectedId,
@@ -32,12 +32,23 @@ export default function OpportunityDetailsContent({
 
   const opportunityId = isPage ? String(id) : selectedId;
 
+  const [error, setError] = useState<{ message: string; id: number } | null>(
+    null,
+  );
+
   const { data: selectedOpportunity, isLoading } =
     useFetchOpportunityPublicDetails(opportunityId ?? undefined);
 
   const { data: myApplicationStatus } = useFetchMyApplicationStatus(
     opportunityId ?? undefined,
   );
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message);
+      // setError(null);
+    }
+  }, [error]);
 
   const exists = myApplicationStatus?.exists ?? false;
   const status = myApplicationStatus?.status ?? null;
@@ -63,21 +74,26 @@ export default function OpportunityDetailsContent({
     result: applyResult,
     hasErrored,
   } = useAction(apply, {
-    onSuccess(data) {
+    onSuccess: (data) => {
       toast.success(data?.data?.data?.message || "Applied successfully!");
       invalidateDetails();
     },
-    onError(err) {
-      console.error(err);
-      toast.error(
-        err?.error?.serverError || "Failed to apply. Please try again.",
-      );
+    onError: (err) => {
+      console.error("Apply action error:", err);
+      // toast.error(
+      //   err?.error?.serverError || "Failed to apply. Please try again.",
+      // );
+      setError({
+        message:
+          err?.error?.serverError || "Failed to apply. Please try again.",
+        id: Date.now(),
+      });
     },
   });
 
   const { execute: saveAction } = useAction(save, {
     onError(err) {
-      console.error(err);
+      // console.error(err);
       toast.error(
         err?.error?.serverError || "Failed to save job. Please try again.",
       );
@@ -92,7 +108,7 @@ export default function OpportunityDetailsContent({
         invalidateDetails();
       },
       onError(err) {
-        console.error(err);
+        // console.error(err);
         toast.error(
           err?.error?.serverError || "Failed to withdraw. Please try again.",
         );
