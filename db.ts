@@ -3,7 +3,7 @@ export const db = {
     {
       id: "kl",
       companyName: "k",
-      email: "j",
+      email: "j@gmail.com",
       password: "j",
       confirmPassword: "jk",
     },
