@@ -40,12 +40,12 @@ export default function SideNav({
 
           // Mobile overlay behavior
           isMobile && "fixed inset-y-0 left-0 w-64 transform",
-          isMobile && collapsed ? "-translate-x-full" : "translate-x-0"
+          isMobile && collapsed ? "-translate-x-full" : "translate-x-0",
         )}
       >
         {/* Header */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-gray-100">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/portal" className="flex items-center gap-2">
             <Logo />
           </Link>
 
@@ -81,7 +81,8 @@ export default function SideNav({
               key={index}
               className={cn(
                 "relative group flex items-center rounded-md my-1 px-3 py-3 text-sm text-black/70 hover:bg-gray-100 hover:text-primary",
-                isActive(item.href) && "bg-secondary font-semibold text-primary"
+                isActive(item.href) &&
+                  "bg-secondary font-semibold text-primary",
               )}
             >
               <span className="shrink-0">{item.icon}</span>

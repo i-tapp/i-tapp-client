@@ -63,3 +63,15 @@ export enum CompanyStatus {
   REJECTED = "rejected",
   SUSPENDED = "suspended", // previously approved, later disabled
 }
+
+export enum DocumentReviewStatus {
+  PENDING = "pending",
+  APPROVED = "approved",
+  REJECTED = "rejected",
+}
+
+export enum CompanyDocumentType {
+  CAC_CERTIFICATE = "cac_certificate",
+  ADDRESS_PROOF = "address_proof",
+  OTHER = "other",
+}

@@ -12,3 +12,13 @@ export const useFetchMyApplicationStatus = (opportunityId?: string) => {
     staleTime: 0,
   });
 };
+
+export const useFetchSavedOpportunities = () => {
+  return useQuery({
+    queryKey: ["saved-opportunities"],
+    queryFn: async () => {
+      const response = await query("/o/saved/me");
+      return response;
+    },
+  });
+};

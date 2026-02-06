@@ -26,8 +26,6 @@ export default function CompanyProfilePage() {
 
   const logout = useLogout();
 
-  console.log("Company Profile:", companyProfile);
-
   if (editing) {
     return (
       // <div className="min-h-screen py-8 px-4">

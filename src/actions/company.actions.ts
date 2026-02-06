@@ -1,13 +1,14 @@
 import { mutate, query } from "@/lib/api";
 import { actionClient } from "@/lib/safe-action";
+
 import {
   acceptSchema,
   companyProfileSchema,
+  onBoardCompanySchema,
   opportunityFormSchema,
   updateOpportunitySchema,
-} from "@/lib/validations/auth";
-import { onBoardCompanySchema } from "@/schemas";
-import z from "zod";
+} from "@/schemas";
+import * as z from "zod";
 
 export const updateCompanyBanner = actionClient
   .inputSchema(
@@ -218,13 +219,15 @@ export const declineApplication = actionClient
 export const bookmarkApplication = actionClient
   .inputSchema(acceptSchema)
   .action(async ({ parsedInput: { id } }) => {
-    try {
-      const response = await mutate(`/c/applicants/accept/`, id, "PATCH");
-      return response;
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
+    const response = await mutate(`/c/applicants/accept/`, id, "PATCH");
+    return response;
+  });
+
+export const shortlistApplicant = actionClient
+  .inputSchema(acceptSchema)
+  .action(async ({ parsedInput: { id } }) => {
+    const response = await mutate(`/a/${id}/shortlist`, undefined, "PATCH");
+    return response;
   });
 
 export const onBoardCompany = actionClient

@@ -3,6 +3,8 @@ import { useRouter } from "next/navigation";
 import { students as studentData } from "./student-detail";
 import { useState } from "react";
 import { studentStatusStyle } from "@/utils/admin-status-style";
+import { Button, buttonVariants } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function StudentTable({
   // onView,
@@ -43,9 +45,12 @@ export default function StudentTable({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+        <Link
+          href="student/new"
+          className={buttonVariants({ variant: "default" })}
+        >
           Add Student
-        </button>
+        </Link>
       </div>
 
       <table className="min-w-full text-sm text-left">

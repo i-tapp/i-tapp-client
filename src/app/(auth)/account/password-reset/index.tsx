@@ -3,7 +3,7 @@
 import { changePassword } from "@/actions";
 import Input from "@/components/input";
 import { Button } from "@/components/ui/button";
-import { resetPasswordSchema } from "@/lib/validations/auth";
+import { resetPasswordSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
 import { useSearchParams } from "next/navigation";

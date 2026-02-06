@@ -17,13 +17,12 @@ import {
 import { Button } from "@/components/ui/button";
 import Input from "@/components/input";
 import { Textarea } from "@/components/ui/textarea";
-import { companyProfileSchema } from "@/lib/validations/auth";
 import { useCompanyStore } from "@/lib/store/company";
 import { useFetchCompanyProfile } from "@/hooks/query";
 import { Spinner } from "@/components/spinner";
 import { useQueryClient } from "@tanstack/react-query";
 import { updateCompanyProfile } from "@/actions";
-import { ProfileFormData } from "@/schemas";
+import { companyProfileSchema, ProfileFormData } from "@/schemas";
 
 export default function ProfileForm({ onClose }: { onClose: () => void }) {
   const company = useCompanyStore((s) => s.company);

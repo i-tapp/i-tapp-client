@@ -1,10 +1,10 @@
 import { getStatusConfig } from "@/utils/application-status-config";
 import { formatDate } from "@/utils/format-date";
 import { Building2, MapPin, Users, Calendar, Briefcase } from "lucide-react";
-export default function ApplicationTable({
-  application,
+export default function SavedOpportunityTable({
+  opportunity,
 }: {
-  application: any[];
+  opportunity: any[];
 }) {
   return (
     <div className="hidden lg:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -33,7 +33,7 @@ export default function ApplicationTable({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {application.length === 0 ? (
+            {opportunity.length === 0 ? (
               <tr>
                 <td colSpan={6} className="px-6 py-12 text-center">
                   <div className="flex flex-col items-center justify-center">
@@ -48,10 +48,8 @@ export default function ApplicationTable({
                 </td>
               </tr>
             ) : (
-              application.map((application, key) => {
-                const statusConfig = getStatusConfig(
-                  application?.opportunity?.status,
-                );
+              opportunity.map((opportunity, key) => {
+                const statusConfig = getStatusConfig(opportunity?.status);
                 return (
                   <tr
                     key={key}
@@ -60,12 +58,11 @@ export default function ApplicationTable({
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center w-10 h-10 bg-blue-600 text-white rounded-lg text-sm font-bold">
-                          {application?.opportunity?.company?.name?.charAt(0) ||
-                            "C"}
+                          {opportunity?.company?.name?.charAt(0) || "C"}
                         </div>
                         <div>
                           <p className="font-semibold text-gray-900">
-                            {application?.opportunity?.company?.name}
+                            {opportunity?.company?.name}
                           </p>
                         </div>
                       </div>
@@ -74,23 +71,21 @@ export default function ApplicationTable({
                       <div className="flex items-center text-gray-600">
                         <Calendar size={16} className="mr-2 text-gray-400" />
                         <span className="text-sm">
-                          {formatDate(application.appliedAt)}
+                          {formatDate(opportunity.appliedAt)}
                         </span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center text-gray-600">
                         <MapPin size={16} className="mr-2 text-gray-400" />
-                        <span className="text-sm">
-                          {application?.opportunity?.location}
-                        </span>
+                        <span className="text-sm">{opportunity?.location}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center text-gray-600">
                         <Building2 size={16} className="mr-2 text-gray-400" />
                         <span className="text-sm">
-                          {application.opportunity?.company?.industry}
+                          {opportunity?.company?.industry}
                         </span>
                       </div>
                     </td>
@@ -98,7 +93,7 @@ export default function ApplicationTable({
                       <div className="flex items-center text-gray-600">
                         <Users size={16} className="mr-2 text-gray-400" />
                         <span className="text-sm font-medium">
-                          {application?.opportunity?.totalApplications || 0}
+                          {opportunity?.totalApplications || 0}
                         </span>
                       </div>
                     </td>
@@ -109,7 +104,7 @@ export default function ApplicationTable({
                         <span
                           className={`w-1.5 h-1.5 rounded-full mr-2 ${statusConfig.dot}`}
                         ></span>
-                        {application?.opportunity?.status}
+                        {opportunity?.status}
                       </span>
                     </td>
                   </tr>

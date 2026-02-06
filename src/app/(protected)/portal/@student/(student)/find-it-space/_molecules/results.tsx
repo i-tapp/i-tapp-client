@@ -9,18 +9,20 @@ export default function Results({
   setSelectedId,
   opportunities,
   setSelectedOpportunity,
+  setFilter,
 }: {
   selectedId: string | null;
   setSelectedId: (id: string | null) => void;
   setSelectedOpportunity: (name: Opportunity | null) => void;
   opportunities: Opportunity[];
+  setFilter: (filter: any) => void;
 }) {
   const isDetailsOpen = !!selectedId;
   console.log("Opportunities in Results:", opportunities);
   return (
     <main className="p-2 min-w-0 flex flex-col h-screen overflow-y-scroll pb-30">
       <div className="hidden md:block">
-        <Search />
+        <Search setFilter={setFilter} />
       </div>
 
       <div className="text-center md:flex justify-between my-2 shrink-0">

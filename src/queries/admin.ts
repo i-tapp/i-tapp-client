@@ -73,6 +73,17 @@ const useFetchAllApplications = () => {
   });
 };
 
+const useFetchCompanyDocuments = (companyId: string) => {
+  return useQuery({
+    queryKey: ["admin-company-documents", companyId],
+    queryFn: async () => {
+      const response = await query(`/c/documents/${companyId}`);
+      return response;
+    },
+    enabled: !!companyId,
+  });
+};
+
 export {
   useFetchCompanies,
   useFetchAllStudents,
@@ -81,4 +92,5 @@ export {
   useFetchCompanyApplications,
   useFetchOffers,
   useFetchAdmins,
+  useFetchCompanyDocuments,
 };

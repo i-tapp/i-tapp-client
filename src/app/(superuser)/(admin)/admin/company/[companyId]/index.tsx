@@ -1,18 +1,27 @@
 "use client";
 
-import { updateCompanyStatus } from "@/actions";
-import { Button } from "@/components/ui/button";
-import { useFetchCompanyDetails } from "@/hooks/query";
-import { CompanyStatus } from "@/types/enums";
-import { useAction } from "next-safe-action/hooks";
-import { useParams } from "next/navigation";
 import { useState } from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+
+import { useQueryClient } from "@tanstack/react-query";
+import { useAction } from "next-safe-action/hooks";
+import { toast } from "react-toastify";
+
+import { reviewCompanyDocuments, updateCompanyStatus } from "@/actions";
+import { useFetchCompanyDetails } from "@/hooks/query";
+import { useFetchCompanyDocuments } from "@/queries";
+import { CompanyStatus, DocumentReviewStatus } from "@/types/enums";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 export default function CompanyDetailPage() {
+  const queryClient = useQueryClient();
   const { companyId } = useParams();
-  const [activeTab, setActiveTab] = useState("Overview");
 
-  const tabs = ["Overview", "Placements", "Reviews"];
+  const tabs = ["Overview", "Documents", "Reviews"];
+  const [activeTab, setActiveTab] = useState("Overview");
+  const [rejectingDocId, setRejectingDocId] = useState<string | null>(null);
+  const [rejectionReason, setRejectionReason] = useState("");
 
   const {
     data: companyDetails,
@@ -20,12 +29,37 @@ export default function CompanyDetailPage() {
     error,
   } = useFetchCompanyDetails(companyId as string);
 
+  const { data: companyDocuments = [], isLoading: isDocumentsLoading } =
+    useFetchCompanyDocuments(companyId as string);
+
   const { execute, isExecuting } = useAction(updateCompanyStatus, {
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["company-details", companyId],
+      });
+      toast.success("Company status updated successfully");
       console.log("Company status updated successfully");
     },
     onError: (err) => {
+      toast.error("Error updating company status");
       console.error("Error updating company status:", err);
+    },
+  });
+
+  const {
+    execute: reviewCompanyDocumentsExecute,
+    isExecuting: isReviewExecuting,
+  } = useAction(reviewCompanyDocuments, {
+    onSuccess: () => {
+      console.log("Company documents reviewed successfully");
+      queryClient.invalidateQueries({
+        queryKey: ["company-details", companyId],
+      });
+      toast.success("Document review submitted successfully");
+    },
+    onError: (err) => {
+      toast.error("Error submitting document review");
+      console.error("Error reviewing company documents:", err);
     },
   });
 
@@ -39,9 +73,11 @@ export default function CompanyDetailPage() {
     );
   }
 
-  const isSuspended = companyDetails?.status === "suspended";
-  const isApproved = companyDetails?.status === "active";
-  const isPending = companyDetails?.status === "pending";
+  const isSuspended = companyDetails?.status === CompanyStatus.SUSPENDED;
+  const isApproved = companyDetails?.status === CompanyStatus.APPROVED;
+  const isPending = companyDetails?.status === CompanyStatus.PENDING;
+
+  console.log("docs", companyDocuments);
 
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -67,34 +103,40 @@ export default function CompanyDetailPage() {
             Message Company
           </Link> */}
 
-          <Button
-            variant="default"
-            disabled={isApproved}
-            onClick={() =>
-              execute({
-                companyId: companyId as string,
-                status: CompanyStatus.APPROVED,
-              })
-            }
-          >
-            Approve Company
-          </Button>
+          <div className="flex items-center gap-2">
+            {/* Suspend */}
+            {isApproved && (
+              <Button
+                variant="destructive"
+                className="bg-orange-500"
+                disabled={isExecuting}
+                onClick={() =>
+                  execute({
+                    companyId: companyId as string,
+                    status: CompanyStatus.SUSPENDED,
+                  })
+                }
+              >
+                Suspend Company
+              </Button>
+            )}
 
-          <Button
-            variant="destructive"
-            className="bg-orange-500"
-            onClick={() =>
-              execute({
-                companyId: companyId as string,
-                status: CompanyStatus.SUSPENDED,
-              })
-            }
-            disabled={isSuspended || isPending}
-          >
-            Suspend Company
-          </Button>
-
-          {/* {isSuspended && <Button variant="default">Reinstate</Button>} */}
+            {/* Reinstate */}
+            {isSuspended && (
+              <Button
+                variant="default"
+                disabled={isExecuting}
+                onClick={() =>
+                  execute({
+                    companyId: companyId as string,
+                    status: CompanyStatus.APPROVED,
+                  })
+                }
+              >
+                Reinstate Company
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -139,7 +181,7 @@ export default function CompanyDetailPage() {
         {/* RIGHT SECTION */}
         <div className="flex-1 border rounded-lg bg-white shadow flex flex-col">
           {/* TABS */}
-          <div className="border-b  flex gap-6">
+          <div className="border-b flex gap-6">
             {tabs.map((tab) => (
               <button
                 key={tab}
@@ -163,20 +205,183 @@ export default function CompanyDetailPage() {
               </p>
             )}
 
+            {activeTab === "Documents" && (
+              <div className="space-y-3">
+                {isDocumentsLoading ? (
+                  <p className="text-sm text-gray-500">Loading documents…</p>
+                ) : companyDocuments.length === 0 ? (
+                  <p className="text-sm text-gray-500">
+                    No documents uploaded yet.
+                  </p>
+                ) : (
+                  <ul className="space-y-2">
+                    {companyDocuments.map((doc: any) => (
+                      <DocumentItem
+                        key={doc.id}
+                        item={doc}
+                        companyId={companyId as string}
+                        rejectingDocId={rejectingDocId}
+                        setRejectingDocId={setRejectingDocId}
+                        rejectionReason={rejectionReason}
+                        setRejectionReason={setRejectionReason}
+                        reviewCompanyDocumentsExecute={
+                          reviewCompanyDocumentsExecute
+                        }
+                      />
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
+
             {activeTab === "Placements" && (
               <p className="text-gray-700">
                 List of placements/opportunities will go here.
               </p>
             )}
 
-            {activeTab === "Reviews" && (
-              <p className="text-gray-700">
-                Company reviews and ratings will appear here.
-              </p>
-            )}
+            {activeTab === "Reviews" && <p> Reviews will go here.</p>}
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+type ReviewStatusInput = Exclude<
+  DocumentReviewStatus,
+  DocumentReviewStatus.PENDING
+>;
+
+const DocumentItem = ({
+  item,
+  companyId,
+  rejectingDocId,
+  setRejectingDocId,
+  rejectionReason,
+  setRejectionReason,
+  reviewCompanyDocumentsExecute,
+}: {
+  item: {
+    id: string;
+    type: string;
+    url: string;
+    reviewStatus: DocumentReviewStatus;
+  };
+  companyId: string;
+  rejectingDocId: string | null;
+  setRejectingDocId: (id: string | null) => void;
+  rejectionReason: string;
+  setRejectionReason: (reason: string) => void;
+  reviewCompanyDocumentsExecute: ({
+    companyId,
+    documentType,
+    reviewStatus,
+    rejectionReason,
+  }: {
+    companyId: string;
+    documentType: string;
+    reviewStatus: ReviewStatusInput;
+    rejectionReason?: string;
+  }) => void;
+}) => {
+  const isRejectingThisDoc = rejectingDocId === item.id;
+
+  return (
+    <div className="flex flex-col gap-2 border rounded-md p-3">
+      <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-row gap-2 items-center">
+          <p className="text-sm font-semibold">{item.type}</p>
+          <span className="text-xs">{item.reviewStatus}</span>
+        </div>
+
+        <div className="flex flex-row gap-2">
+          <Link
+            className={buttonVariants({ variant: "outline", size: "sm" })}
+            href={item.url}
+            target="_blank"
+          >
+            View
+          </Link>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs bg-green-500 text-white"
+            disabled={item.reviewStatus === DocumentReviewStatus.APPROVED}
+            onClick={() => {
+              if (isRejectingThisDoc) {
+                setRejectingDocId(null);
+                setRejectionReason("");
+              }
+
+              reviewCompanyDocumentsExecute({
+                companyId,
+                documentType: item.type,
+                reviewStatus: DocumentReviewStatus.APPROVED,
+              });
+            }}
+          >
+            Approve
+          </Button>
+
+          {!isRejectingThisDoc ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={item.reviewStatus === DocumentReviewStatus.REJECTED}
+              className="bg-red-500 text-white text-xs"
+              onClick={() => {
+                setRejectingDocId(item.id);
+                setRejectionReason("");
+              }}
+            >
+              Reject
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="bg-gray-200 text-xs"
+              onClick={() => {
+                setRejectingDocId(null);
+                setRejectionReason("");
+              }}
+            >
+              Cancel
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {isRejectingThisDoc && (
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-semibold">Rejection reason</label>
+          <textarea
+            className="border rounded px-2 py-1 text-sm"
+            value={rejectionReason}
+            onChange={(e) => setRejectionReason(e.target.value)}
+            placeholder="Explain what’s wrong (blurred, mismatch name, missing page...)"
+          />
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => {
+              reviewCompanyDocumentsExecute({
+                companyId,
+                documentType: item.type,
+                reviewStatus: DocumentReviewStatus.REJECTED,
+                rejectionReason: rejectionReason || "No reason provided",
+              });
+
+              setRejectingDocId(null);
+              setRejectionReason("");
+            }}
+          >
+            Confirm Reject
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+};

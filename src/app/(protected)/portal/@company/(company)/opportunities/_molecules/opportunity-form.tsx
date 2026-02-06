@@ -27,9 +27,8 @@ import {
   OpportunityType,
 } from "@/types/enums";
 import { Checkbox } from "@/components/ui/checkbox";
-import { opportunityFormSchema } from "@/lib/validations/auth";
 import Input from "@/components/input";
-import { FormValues } from "@/schemas";
+import { FormValues, opportunityFormSchema } from "@/schemas";
 
 type OpportunityFormProps = {
   initialData?: FormValues;
@@ -160,7 +159,7 @@ export default function OpportunityForm({
                   <FormItem className="flex items-center gap-4">
                     <FormLabel className="w-32">Location</FormLabel>
                     <FormControl>
-                      <Input placeholder="San Francisco, CA" {...field} />
+                      <Input placeholder="Lagos" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

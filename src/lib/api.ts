@@ -42,7 +42,7 @@ axiosInstance.interceptors.response.use(
     console.error("API Error:", {
       ...response,
     });
-    return Promise.reject(message);
+    return Promise.reject(new Error(message));
   },
 );
 export async function api<T = any>(

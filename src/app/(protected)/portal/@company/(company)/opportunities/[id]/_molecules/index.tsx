@@ -240,7 +240,10 @@ export default function OpportunityDetailsPage() {
             </span>
           </h2>
 
-          <OpportunityTable data={opportunity?.applications || []} />
+          <OpportunityTable
+            opportunityId={opportunity?.id}
+            data={opportunity?.applications || []}
+          />
         </div>
       </div>
     </div>

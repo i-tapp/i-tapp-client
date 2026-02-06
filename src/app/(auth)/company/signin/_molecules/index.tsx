@@ -19,10 +19,10 @@ import {
 } from "@/components/ui/form";
 import { ButtonWithLoader } from "@/components/button-with-loader";
 
-import { signinSchema } from "@/lib/validations/auth";
 import { useCompanyStore } from "@/lib/store/company";
 import Input from "@/components/input";
 import { signinCompany } from "@/actions";
+import { signinSchema } from "@/schemas";
 
 export function CompanySignIn() {
   const router = useRouter();
@@ -43,7 +43,7 @@ export function CompanySignIn() {
         setCompany({ ...user, ...profile });
 
         toast.success("Welcome back!");
-        router.push("/portal/dashboard");
+        router.replace("/portal/");
       },
       onError(error) {
         toast.error(error?.error?.serverError ?? "Login failed. Try again.");

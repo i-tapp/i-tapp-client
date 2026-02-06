@@ -2,15 +2,15 @@
 
 import { mutate, query } from "@/lib/api";
 import { actionClient } from "@/lib/safe-action";
-
 import {
   companySignupSchema,
   resetPasswordSchema,
   signinSchema,
   signupSchema,
-} from "@/lib/validations/auth";
+} from "@/schemas";
+
 import { setAuthCookies } from "@/utils/cookies";
-import z from "zod";
+import * as z from "zod";
 
 export const signinStudent = actionClient
   .inputSchema(signinSchema)
@@ -76,6 +76,15 @@ export const studentSignup = actionClient
       console.log(response);
     },
   );
+
+export const claimAccount = actionClient
+  .inputSchema(resetPasswordSchema)
+  .action(async ({ parsedInput: { npassword, token, cpassword } }) => {
+    const response = await mutate(`/admin/claim?token=${token}`, {
+      password: cpassword,
+    });
+    return response;
+  });
 
 export const requestPasswordReset = actionClient
   .inputSchema(

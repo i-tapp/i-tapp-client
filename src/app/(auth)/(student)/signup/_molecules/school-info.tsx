@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { verifyStudentIdentitySchema } from "@/lib/validations/auth";
 import { useAction } from "next-safe-action/hooks";
 import { ButtonWithLoader } from "@/components/button-with-loader";
 import { toast } from "react-toastify";
@@ -24,6 +23,7 @@ import {
 } from "@/components/ui/form";
 import Input from "@/components/input";
 import { verifyStudentIdentity } from "@/actions";
+import { verifyStudentIdentitySchema } from "@/schemas";
 
 export function SchoolInfo({
   formIndex,

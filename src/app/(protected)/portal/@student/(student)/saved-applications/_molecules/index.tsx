@@ -10,6 +10,9 @@ import ApplicationTable from "@/components/application-table";
 import ApplicationCard from "@/components/application-card";
 import { FilterBy } from "@/components/filter-by";
 import { filtered } from "@/utils/filtered";
+import { useFetchSavedOpportunities } from "@/queries/student";
+import SavedOpportunityTable from "@/components/saved-opportunity-table";
+import SavedOpportunityCard from "@/components/saved-opportunity-card";
 
 export default function SavedApplication({
   searchParams,
@@ -21,20 +24,22 @@ export default function SavedApplication({
 
   const query = searchParams?.query || "";
 
-  // Fetch applications with react-query
-  const { data, isLoading, isError, error } = useFetchApplication();
+  const { data: saved, isLoading } = useFetchSavedOpportunities();
 
-  const applications = data?.data?.applications ?? [];
+  console.log("saved opportunities", saved);
 
   const { setCurrentPage, postPerPage, currentPage, paginate } = usePaginator(
     6,
-    applications
+    saved?.length || 0,
   );
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   const filteredApplications = filtered(
-    applications,
+    saved,
     { query, status: filterStatus },
-    (item: any) => item.opportunity?.company?.name
+    (item: any) => item?.company?.name,
   );
 
   return (
@@ -72,14 +77,14 @@ export default function SavedApplication({
         </div>
 
         {/* Desktop Table View */}
-        <ApplicationTable application={filteredApplications} />
+        <SavedOpportunityTable opportunity={filteredApplications} />
 
         {/* Mobile/Tablet Card View */}
-        <ApplicationCard application={filteredApplications} />
+        <SavedOpportunityCard opportunity={filteredApplications} />
       </div>
 
       <SitePagination
-        totalPosts={applications.length}
+        totalPosts={filteredApplications.length}
         postsPerPage={postPerPage}
         paginate={paginate}
         currentPage={currentPage}

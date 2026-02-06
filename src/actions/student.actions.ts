@@ -1,8 +1,10 @@
 import { mutate, query } from "@/lib/api";
 import { actionClient } from "@/lib/safe-action";
-import { verifyStudentIdentitySchema } from "@/lib/validations/auth";
-import { studentOnboardingSchema } from "@/schemas";
-import z from "zod";
+import {
+  studentOnboardingSchema,
+  verifyStudentIdentitySchema,
+} from "@/schemas";
+import * as z from "zod";
 
 const applyJ = z.object({
   id: z.string(),
@@ -64,7 +66,7 @@ export const save = actionClient
   .inputSchema(applyJ)
   .action(async ({ parsedInput: { id } }) => {
     try {
-      const response = await mutate(`/a/${id}/apply`);
+      const response = await mutate(`/o/${id}/saved`, undefined);
       return response;
     } catch (error) {
       console.log(error);

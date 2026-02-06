@@ -2,14 +2,14 @@ import { MapPin, Users, Calendar, Briefcase } from "lucide-react";
 import { formatDate } from "@/utils/format-date";
 import { getStatusConfig } from "@/utils/application-status-config";
 
-export default function ApplicationCard({
-  application,
+export default function SavedOpportunityCard({
+  opportunity,
 }: {
-  application: any[];
+  opportunity: any[];
 }) {
   return (
     <div className="lg:hidden space-y-4">
-      {application.length === 0 ? (
+      {opportunity.length === 0 ? (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
           <Briefcase size={48} className="text-gray-300 mx-auto mb-3" />
           <p className="text-gray-500 font-medium">No applications found</p>
@@ -18,10 +18,8 @@ export default function ApplicationCard({
           </p>
         </div>
       ) : (
-        application.map((application, key) => {
-          const statusConfig = getStatusConfig(
-            application?.opportunity?.status,
-          );
+        opportunity.map((opportunity, key) => {
+          const statusConfig = getStatusConfig(opportunity?.status);
           return (
             <div
               key={key}
@@ -31,14 +29,14 @@ export default function ApplicationCard({
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center w-12 h-12 bg-blue-600 text-white rounded-lg text-lg font-bold flex-shrink-0">
-                    {application?.opportunity?.company?.name?.charAt(0) || "C"}
+                    {opportunity?.company?.name?.charAt(0) || "C"}
                   </div>
                   <div>
                     <h3 className="font-bold text-gray-900 text-lg">
-                      {application?.opportunity?.company?.name}
+                      {opportunity?.company?.name}
                     </h3>
                     <p className="text-sm text-gray-500">
-                      {application.opportunity?.company?.industry}
+                      {opportunity?.company?.industry}
                     </p>
                   </div>
                 </div>
@@ -48,7 +46,7 @@ export default function ApplicationCard({
                   <span
                     className={`w-1.5 h-1.5 rounded-full mr-2 ${statusConfig.dot}`}
                   ></span>
-                  {application?.opportunity?.status}
+                  {opportunity?.status}
                 </span>
               </div>
 
@@ -60,9 +58,9 @@ export default function ApplicationCard({
                     className="mr-2 text-gray-400 flex-shrink-0"
                   />
                   <div>
-                    <p className="text-xs text-gray-500">Applied</p>
+                    <p className="text-xs text-gray-500">Saved</p>
                     <p className="text-sm font-medium">
-                      {formatDate(application.appliedAt)}
+                      {formatDate(opportunity.savedAt)}
                     </p>
                   </div>
                 </div>
@@ -75,7 +73,7 @@ export default function ApplicationCard({
                   <div>
                     <p className="text-xs text-gray-500">Applicants</p>
                     <p className="text-sm font-medium">
-                      {application?.opportunity?.totalApplications || 0}
+                      {opportunity?.totalApplications || 0}
                     </p>
                   </div>
                 </div>
@@ -88,16 +86,16 @@ export default function ApplicationCard({
                   <div>
                     <p className="text-xs text-gray-500">Location</p>
                     <p className="text-sm font-medium">
-                      {application?.opportunity?.location}
+                      {opportunity?.location}
                     </p>
                   </div>
                 </div>
               </div>
 
               {/* Action Button */}
-              <button className="w-full mt-4 px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium text-sm">
+              {/* <button className="w-full mt-4 px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium text-sm">
                 View Details
-              </button>
+              </button> */}
             </div>
           );
         })

@@ -8,6 +8,9 @@ import useIsResponsive from "@/utils/responsive";
 
 import { Menu, X } from "lucide-react";
 import SideNav from "../company-sidenav";
+import Image from "next/image";
+import { useCompanyStore } from "@/lib/store";
+import { useFetchCompanyProfile } from "@/hooks/query";
 
 const links = [
   {
@@ -38,6 +41,7 @@ export function CompanyLayout({ children }: { children: React.ReactNode }) {
   const { collapsed, isMobile, setCollapsed } = useIsResponsive();
   const profile = pathname.includes("/portal/profile");
   const candidates = pathname.includes("/portal/candidates");
+  const { data: companyProfile, isLoading } = useFetchCompanyProfile();
 
   const isActive = (href: string) => {
     return pathname.startsWith(href);
@@ -68,8 +72,14 @@ export function CompanyLayout({ children }: { children: React.ReactNode }) {
             <h2 className="text-lg font-semibold text-gray-800">Dashboard</h2>
           </div>
           <Link href={"/portal/profile"}>
-            <div className="rounded-full border w-[50px] h-[50px]">
-              {/* Avatar Placeholder */}
+            <div className="rounded-full h-10 w-10">
+              <Image
+                src={companyProfile?.logo || "/applicant.png"}
+                alt=""
+                className="object-cover w-full h-full rounded-full"
+                width={35}
+                height={35}
+              />
             </div>
           </Link>
         </header>

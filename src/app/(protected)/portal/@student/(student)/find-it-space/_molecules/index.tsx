@@ -46,6 +46,7 @@ export default function FindITSpace() {
           }}
           opportunities={opportunities || []}
           setSelectedOpportunity={setSelectedOpportunity}
+          setFilter={setFilter}
         />
 
         <OpportunityDetailsPanel

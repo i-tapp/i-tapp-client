@@ -6,8 +6,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
-
-// import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -16,7 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { signinSchema } from "@/lib/validations/auth";
+
 import { ButtonWithLoader } from "@/components/button-with-loader";
 
 import { toast } from "react-toastify";
@@ -24,6 +22,7 @@ import { toast } from "react-toastify";
 import { useStudentStore } from "@/lib/store/student";
 import Input from "@/components/input";
 import { signinStudent } from "@/actions";
+import { signinSchema } from "@/schemas";
 
 export function StudentSignIn() {
   const router = useRouter();
@@ -41,13 +40,9 @@ export function StudentSignIn() {
       onSuccess(data) {
         const user = data?.data?.user;
         const profile = data?.data?.profile;
-
-        console.log("userrrrrrr", user);
         setStudent({ ...user, ...profile });
-
         toast.success("Welcome back!");
-        router.push("/portal/find-it-space");
-        // router.refresh();
+        router.replace("/portal/");
       },
       onError(error) {
         toast.error(error?.error?.serverError ?? "Login failed. Try again.");

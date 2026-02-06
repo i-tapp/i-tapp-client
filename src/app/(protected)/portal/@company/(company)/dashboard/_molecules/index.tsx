@@ -30,6 +30,8 @@ export function Dashboard() {
     return <Spinner />;
   }
 
+  console.log("applications count", applicationsCount);
+
   const totalApplicants = data?.data?.totalApplicants || [[], 0];
   const totalApplicantsList = totalApplicants[0];
 
@@ -61,7 +63,7 @@ export function Dashboard() {
         />
         <OverviewBox
           title="Accepted"
-          number={applicationsCount?.counts?.accepted ?? 0}
+          number={applicationsCount?.counts?.hired ?? 0}
           icon={<TickCircle />}
           link={"/portal/candidates/accepted"}
         />

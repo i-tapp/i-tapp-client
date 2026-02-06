@@ -28,7 +28,7 @@ export default function CompanyTable({}: // onView,
     data?.filter(
       (c: any) =>
         c.name.toLowerCase().includes(search.toLowerCase()) ||
-        c.industry.toLowerCase().includes(search.toLowerCase())
+        c.industry.toLowerCase().includes(search.toLowerCase()),
     ) || [];
 
   return (

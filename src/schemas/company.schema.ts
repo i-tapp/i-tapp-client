@@ -1,8 +1,5 @@
-import {
-  companyProfileSchema,
-  opportunityFormSchema,
-} from "@/lib/validations/auth";
 import * as z from "zod";
+import { companyProfileSchema, opportunityFormSchema } from "./auth.schema";
 
 export const offerSchema = z.object({
   startDate: z.string().min(1, "Start date is required"),

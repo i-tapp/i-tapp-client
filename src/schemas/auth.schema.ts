@@ -3,15 +3,15 @@ import {
   OpportunityStatus,
   OpportunityType,
 } from "@/types/enums";
-import { z } from "zod";
+import * as z from "zod";
 
 const modeValues = Object.values(OpportunityMode) as string[];
 const statusValues = Object.values(OpportunityStatus) as string[];
 const typeValues = Object.values(OpportunityType) as string[];
 
 export const signinSchema = z.object({
-  email: z.email(),
-  password: z.string().min(1),
+  email: z.email().min(1, "Email is required"),
+  password: z.string().min(1, "Password is required"),
 });
 
 export const companyIdSchema = z.object({
@@ -27,6 +27,12 @@ export const companyStatusSchema = z.object({
     "rejected",
     "suspended",
   ]),
+});
+
+export const reviewDocumentSchema = z.object({
+  companyId: z.string(),
+  documentType: z.string(),
+  reviewStatus: z.enum(["approved", "rejected"]),
 });
 
 export const signupSchema = z.object({
@@ -71,13 +77,6 @@ export const studentSignupSchema = z
     path: ["confirmPassword"],
   });
 
-// export const verifyCompanySchema = z.object({
-//   company_name: z.string().min(1, "Company name is required"),
-//   email: z.email("Invalid email format"),
-//   address: z.string().min(1, "Address is required"),
-//   password: z.string().min(1, "Password is required"),
-// });
-
 export const companySignupSchema = z.object({
   name: z.string().min(1, "Company name is required"),
   email: z
@@ -118,6 +117,3 @@ export const opportunityFormSchema = z.object({
 export const updateOpportunitySchema = opportunityFormSchema.extend({
   id: z.string().min(1, "Opportunity ID is required"),
 });
-
-// export const fullCompanySignupSchema =
-//   verifyCompanySchema.merge(companySignupSchema);

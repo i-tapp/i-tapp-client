@@ -11,11 +11,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { studentSignupSchema } from "@/lib/validations/auth";
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "react-toastify";
 import Input from "@/components/input";
 import { studentSignup } from "@/actions";
+import { useRouter } from "next/navigation";
+import { studentSignupSchema } from "@/schemas";
 
 type Login = {
   email: string;
@@ -31,6 +32,7 @@ export function SignupInfo({
   setForm: Dispatch<SetStateAction<number>>;
   studentData: any;
 }) {
+  const router = useRouter();
   const form = useForm<z.infer<typeof studentSignupSchema>>({
     mode: "all",
     resolver: zodResolver(studentSignupSchema),
@@ -51,23 +53,16 @@ export function SignupInfo({
   } = useAction(studentSignup, {
     onSuccess(data) {
       toast.success("Sign up successful!");
-      setTimeout(() => {
-        setForm(++formIndex);
-      }, 1000);
+      router.replace("/signin/");
     },
     onError(error) {
       toast.error(" Error signing up");
-
-      console.log(error?.error);
     },
   });
 
   const handleSignup = (data: Login) => {
     const old = studentData.data;
     const payLoad = { ...old, ...data };
-
-    console.log("paypaload", payLoad);
-
     signupAction(payLoad);
   };
 

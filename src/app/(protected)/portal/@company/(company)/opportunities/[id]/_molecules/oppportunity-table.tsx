@@ -16,9 +16,28 @@ import { useState } from "react";
 import { cn } from "@/utils/tailwind";
 import { StatusBadge } from "@/components/application-status";
 import { ApplicationStatus } from "@/types/enums";
+import { useAction } from "next-safe-action/hooks";
+import { shortlistApplicant } from "@/actions";
+import { toast } from "react-toastify";
 
-export default function OpportunityTable({ data }: { data: Application[] }) {
+export default function OpportunityTable({
+  data,
+  opportunityId,
+}: {
+  data: Application[];
+  opportunityId: string;
+}) {
   const [activeFilter, setActiveFilter] = useState("all");
+
+  const { execute } = useAction(shortlistApplicant, {
+    onSuccess(data) {
+      console.log("Shortlisted successfully", data);
+      toast.success("Applicant shortlisted successfully");
+    },
+    onError(error) {
+      console.error("Error shortlisting applicant:", error);
+    },
+  });
 
   // Calculate stats from real data
   const stats = {
@@ -69,6 +88,10 @@ export default function OpportunityTable({ data }: { data: Application[] }) {
     { label: "Shortlisted", value: "shortlisted", count: stats.shortlisted },
     { label: "Interviewing", value: "interviewing", count: stats.interviewing },
   ];
+
+  const handleShortlist = () => {
+    execute({ id: opportunityId });
+  };
 
   return (
     <div className="space-y-6 rounded-md">
@@ -124,6 +147,7 @@ export default function OpportunityTable({ data }: { data: Application[] }) {
             {filteredData?.length > 0 ? (
               filteredData.map((applicant) => {
                 const student = applicant?.student;
+                console.log("Rendering applicant:", applicant);
 
                 return (
                   <TableRow key={applicant.id} className="hover:bg-gray-50">
@@ -155,6 +179,7 @@ export default function OpportunityTable({ data }: { data: Application[] }) {
                           size="sm"
                           className="h-8 w-8 p-0"
                           title="Shortlist"
+                          onClick={() => execute({ id: applicant.id })}
                         >
                           <ArchiveAdd size={18} />
                         </Button>

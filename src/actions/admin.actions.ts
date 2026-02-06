@@ -1,7 +1,14 @@
+import { createCompanySchema } from "@/app/(superuser)/(admin)/admin/company/new";
+import { createStudentSchema } from "@/app/(superuser)/(admin)/admin/student/new";
 import { mutate } from "@/lib/api";
 import { actionClient } from "@/lib/safe-action";
-import { companyIdSchema, companyStatusSchema } from "@/lib/validations/auth";
-import z from "zod";
+import {
+  companyIdSchema,
+  companyStatusSchema,
+  reviewDocumentSchema,
+} from "@/schemas";
+
+import * as z from "zod";
 
 export const approveCompany = actionClient
   .inputSchema(companyIdSchema)
@@ -28,6 +35,31 @@ export const updateCompanyStatus = actionClient
       },
       "PATCH",
     );
+    return { success: true, data: response };
+  });
+
+export const reviewCompanyDocuments = actionClient
+  .inputSchema(reviewDocumentSchema)
+  .action(async ({ parsedInput }) => {
+    const response = await mutate(
+      `/c/documents/review/${parsedInput.companyId}`,
+      parsedInput,
+      "PATCH",
+    );
+    return { success: true, data: response };
+  });
+
+export const createStudent = actionClient
+  .inputSchema(createStudentSchema)
+  .action(async ({ parsedInput }) => {
+    const response = await mutate(`/admin/create-student`, parsedInput);
+    return { success: true, data: response };
+  });
+
+export const inviteCompany = actionClient
+  .inputSchema(createCompanySchema)
+  .action(async ({ parsedInput }) => {
+    const response = await mutate(`/a/invite-company`, parsedInput);
     return { success: true, data: response };
   });
 

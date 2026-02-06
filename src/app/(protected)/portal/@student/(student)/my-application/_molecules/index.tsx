@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Wrapper } from "@/components/wrapper";
 import { SitePagination } from "@/components/ui/site-pagination";
 import usePaginator from "@/hooks/use-paginator";
 import { useFetchApplication } from "@/hooks/query";
-import ApplicationSearch from "@/components/application-search";
 import ApplicationTable from "@/components/application-table";
 import ApplicationCard from "@/components/application-card";
 import { FilterBy } from "@/components/filter-by";
@@ -28,13 +27,13 @@ export default function MyApplication({
 
   const { setCurrentPage, postPerPage, currentPage, paginate } = usePaginator(
     6,
-    applications
+    applications,
   );
 
   const filteredApplications = filtered(
     applications,
     { query, status: filterStatus },
-    (item: any) => item.opportunity?.company?.name
+    (item: any) => item.opportunity?.company?.name,
   );
 
   return (

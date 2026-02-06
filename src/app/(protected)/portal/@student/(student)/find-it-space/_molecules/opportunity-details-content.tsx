@@ -32,23 +32,12 @@ export default function OpportunityDetailsContent({
 
   const opportunityId = isPage ? String(id) : selectedId;
 
-  const [error, setError] = useState<{ message: string; id: number } | null>(
-    null,
-  );
-
   const { data: selectedOpportunity, isLoading } =
     useFetchOpportunityPublicDetails(opportunityId ?? undefined);
 
   const { data: myApplicationStatus } = useFetchMyApplicationStatus(
     opportunityId ?? undefined,
   );
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error.message);
-      // setError(null);
-    }
-  }, [error]);
 
   const exists = myApplicationStatus?.exists ?? false;
   const status = myApplicationStatus?.status ?? null;
@@ -80,18 +69,16 @@ export default function OpportunityDetailsContent({
     },
     onError: (err) => {
       console.error("Apply action error:", err);
-      // toast.error(
-      //   err?.error?.serverError || "Failed to apply. Please try again.",
-      // );
-      setError({
-        message:
-          err?.error?.serverError || "Failed to apply. Please try again.",
-        id: Date.now(),
-      });
+      toast.error(
+        err?.error?.serverError || "Failed to apply. Please try again.",
+      );
     },
   });
 
   const { execute: saveAction } = useAction(save, {
+    onSuccess(data) {
+      toast.success("Saved successfully!");
+    },
     onError(err) {
       // console.error(err);
       toast.error(
@@ -178,8 +165,7 @@ export default function OpportunityDetailsContent({
           type="button"
           className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 shadow-sm transition hover:bg-gray-50 active:scale-[0.98]"
           aria-label="Save / Like"
-          disabled
-          // onClick={handleSave}
+          onClick={handleSave}
         >
           <Heart size={18} />
         </button>

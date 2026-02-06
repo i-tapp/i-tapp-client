@@ -1,12 +1,15 @@
 "use client";
 
-import React from "react";
 import { Input } from "@/components/ui/input";
-import { ChevronDown, MapPin, SearchIcon } from "lucide-react";
+import { MapPin, SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Gps } from "iconsax-reactjs";
+import { NIGERIAN_STATES } from "@/constants";
 
-export default function Search() {
+export default function Search({
+  setFilter,
+}: {
+  setFilter: (filter: any) => void;
+}) {
   return (
     <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 w-full max-w-2xl ">
       {/* Search Container */}
@@ -28,10 +31,21 @@ export default function Search() {
           className="flex flex-row items-center gap-1.5 text-gray-700 hover:text-primary transition-colors text-sm"
         >
           <MapPin size={18} />
-          <span className="truncate max-w-[100px] sm:max-w-40">
-            Lagos State
-          </span>
-          <ChevronDown size={18} />
+          <select
+            onChange={(e) =>
+              setFilter((prev: any) => ({ ...prev, location: e.target.value }))
+            }
+            className="bg-transparent focus:outline-none text-sm"
+          >
+            <option value="">All Locations</option>
+            {NIGERIAN_STATES.map((state) => (
+              <option key={state.value} value={state.value} className="text-sm">
+                {state.label}
+              </option>
+            ))}
+          </select>
+
+          {/* <ChevronDown size={18} /> */}
         </button>
       </div>
 
