@@ -52,7 +52,7 @@ export const data: {
   ],
   faqs: [
     {
-      question: "What is iTapp?",
+      question: "What is i-Tapp?",
       answer:
         "I-Tapp is a web-based platform where students can find, apply, and get industrial training placement in companies all from the comfort of their homes without having to move from one location to another.",
     },
