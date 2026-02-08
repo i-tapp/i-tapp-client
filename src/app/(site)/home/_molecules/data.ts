@@ -69,7 +69,7 @@ export const data: {
     {
       question: "How can I contact I-TAPP support?",
       answer:
-        "You can contact I-Tapp support using the email and WhatsApp phone number below itappsoftware@gmail.com, +2348081047072",
+        "You can contact I-Tapp support using the email and WhatsApp phone number below support@i-tapp.com, +2348081047072",
     },
   ],
 };

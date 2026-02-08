@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Boy from "@/assets/images/boy.jpg";
+import Boy from "@/assets/images/itapp-company.jpeg";
 import Girl from "@/assets/images/girl.jpg";
 import { Wrapper } from "@/components/wrapper";
 import { buttonVariants } from "@/components/ui/button";
