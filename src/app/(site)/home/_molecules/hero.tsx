@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Boy from "@/assets/images/itapp-company.jpeg";
-import Girl from "@/assets/images/girl.jpg";
+import Girl from "@/assets/images/itapp-company2.jpeg";
 import { Wrapper } from "@/components/wrapper";
 import { buttonVariants } from "@/components/ui/button";
 import { app } from "@/config/app";
