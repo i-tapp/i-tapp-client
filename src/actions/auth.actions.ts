@@ -99,19 +99,6 @@ export const requestPasswordReset = actionClient
     return response;
   });
 
-// export const requestPasswordReset = actionClient
-//   .inputSchema(
-//     z.object({
-//       email: z.string().min(1, "Email is required"),
-//     }),
-//   )
-//   .action(async ({ parsedInput: { email } }) => {
-//     const response = await mutate("/auth/password-reset/request", {
-//       email,
-//     });
-//     return response;
-//   });
-
 export const verifyEmail = actionClient
   .inputSchema(
     z.object({
