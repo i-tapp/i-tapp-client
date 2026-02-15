@@ -14,21 +14,11 @@
 // import { useAction } from "next-safe-action/hooks";
 // import { useForm } from "react-hook-form";
 // import { toast } from "sonner";
+// import {
+//   createCompanySchema,
+//   type CreateCompanyInput,
+// } from "@/schemas/company.schema";
 // import * as z from "zod";
-
-// export const createCompanySchema = z.object({
-//   name: z.string().min(2, "Company name is required"),
-//   email: z.string().email("Invalid email address"),
-//   industry: z
-//     .string()
-//     .min(1, "Industry is required")
-//     .optional()
-//     .or(z.literal("")),
-//   phone: z.string().optional().or(z.literal("")),
-//   website: z.string().optional().or(z.literal("")),
-// });
-
-// type CreateCompanyInput = z.infer<typeof createCompanySchema>;
 
 // export default function AddCompany() {
 //   const form = useForm<CreateCompanyInput>({
@@ -206,16 +196,18 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation"; // ← Add this if you want navigation
 import {
   createCompanySchema,
   type CreateCompanyInput,
 } from "@/schemas/company.schema";
 
 export default function AddCompany() {
+  const router = useRouter(); // ← Add this if you want navigation
+
   const form = useForm<CreateCompanyInput>({
-    // ← Add the type parameter here
     resolver: zodResolver(createCompanySchema),
     mode: "all",
     defaultValues: {
@@ -231,23 +223,19 @@ export default function AddCompany() {
     onSuccess: (data) => {
       toast.success("Company invite sent successfully");
       form.reset();
-      console.log("Company invite sent successfully:", data);
+      console.log("Company invite sent successfully");
+
+      // OPTIONAL: Navigate back to companies list after success
+      // Uncomment if you want to redirect after creating:
+      // setTimeout(() => {
+      //   router.push("/admin/company");
+      // }, 1500);
     },
     onError: (error) => {
       toast.error("Failed to send company invite");
       console.error("Error sending company invite:", error);
     },
   });
-
-  const handleSubmit: SubmitHandler<CreateCompanyInput> = (values) => {
-    console.log("Form submitted with values:", values);
-    execute(values);
-  };
-
-  // const handleSubmit = (values: CreateCompanyInput) => {
-  //   console.log("Form submitted with values:", values);
-  //   execute(values);
-  // };
 
   return (
     <div className="w-full max-w-xl px-6 py-6">
@@ -266,7 +254,7 @@ export default function AddCompany() {
           <Form {...form}>
             <form
               className="flex flex-col gap-4"
-              onSubmit={form.handleSubmit(handleSubmit)}
+              onSubmit={form.handleSubmit((values) => execute(values))}
               id="add-company-form"
             >
               <FormField

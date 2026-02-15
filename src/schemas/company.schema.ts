@@ -101,10 +101,14 @@ import { companyProfileSchema, opportunityFormSchema } from "./auth.schema";
 // Added create company schema here
 export const createCompanySchema = z.object({
   name: z.string().min(2, "Company name is required"),
-  email: z.string().email("Invalid email address"),
-  industry: z.string().default(""),
-  phone: z.string().default(""),
-  website: z.string().default(""),
+  email: z.email("Invalid email address"),
+  industry: z
+    .string()
+    .min(1, "Industry is required")
+    .optional()
+    .or(z.literal("")),
+  phone: z.string().optional().or(z.literal("")),
+  website: z.string().optional().or(z.literal("")),
 });
 
 export const offerSchema = z.object({
@@ -184,7 +188,6 @@ export const onBoardCompanySchema = profileFormSchema.extend(
   kycFormSchema.shape,
 );
 
-// Add the type export
 export type CreateCompanyInput = z.infer<typeof createCompanySchema>;
 export type OfferFormData = z.infer<typeof offerSchema>;
 export type CompanyProfileFormSchema = z.infer<typeof profileFormSchema>;
