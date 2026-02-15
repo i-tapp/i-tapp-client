@@ -1,4 +1,5 @@
-import { createCompanySchema } from "@/app/(superuser)/(admin)/admin/company/new";
+// import { createCompanySchema } from "@/app/(superuser)/(admin)/admin/company/new";
+import { createCompanySchema } from "@/schemas/company.schema";
 import { createStudentSchema } from "@/app/(superuser)/(admin)/admin/student/new";
 import { mutate } from "@/lib/api";
 import { actionClient } from "@/lib/safe-action";
