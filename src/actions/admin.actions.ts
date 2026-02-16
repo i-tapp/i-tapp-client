@@ -60,7 +60,7 @@ export const createStudent = actionClient
 export const inviteCompany = actionClient
   .inputSchema(createCompanySchema)
   .action(async ({ parsedInput }) => {
-    const response = await mutate(`/a/invite-company`, parsedInput);
+    const response = await mutate(`/admin/invite-company`, parsedInput);
     return { success: true, data: response };
   });
 
