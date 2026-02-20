@@ -21,7 +21,7 @@ export default function OpportunityTable({
   const filtered = data.filter(
     (item: any) =>
       item.title.toLowerCase().includes(search.toLowerCase()) ||
-      item.company.name.toLowerCase().includes(search.toLowerCase())
+      item.company.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   const getStatusColor = (status: string) => {
@@ -77,14 +77,16 @@ export default function OpportunityTable({
                 className="border-b hover:bg-gray-50 transition"
               >
                 <td className="p-3">{item.title}</td>
-                <td className="p-3">{item.company.name}</td>
+                <td className="p-3">{item?.company?.name ?? "N/A"}</td>
                 <td className="p-3">{item.department}</td>
                 <td className="p-3">{item.location}</td>
-                <td className="p-3">{item.company.studentCapacity ?? "N/A"}</td>
+                <td className="p-3">
+                  {item?.company?.studentCapacity ?? "N/A"}
+                </td>
                 <td className="p-3">
                   <span
                     className={`px-2 py-1 rounded text-xs ${getStatusColor(
-                      item.status
+                      item.status,
                     )}`}
                   >
                     {item.status}

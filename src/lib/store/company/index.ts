@@ -7,9 +7,11 @@ interface CompanyState {
   companyJobs: any[];
   selectedJob: any;
   totalApplicants: number;
+  dismissed: boolean;
   acceptedApplicants: number;
   shortlistedApplicants: number;
   selectedApplicant: any;
+  setDismissed: (dismissed: boolean) => void;
   setCompany: (c: Company | null) => void;
   setCompanyJobs: (jobs: any[]) => void;
   setTotalApplicants: (count: number) => void;
@@ -24,6 +26,7 @@ export const useCompanyStore = create<CompanyState>()(
   persist(
     (set) => ({
       company: null,
+      dismissed: false,
       companyJobs: [],
       selectedJob: null,
       totalApplicants: 0,
@@ -31,6 +34,7 @@ export const useCompanyStore = create<CompanyState>()(
       shortlistedApplicants: 0,
       selectedApplicant: null,
 
+      setDismissed: (dismissed) => set({ dismissed }),
       setCompany: (c) => set({ company: c }),
       setSelectedJob: (job) => set({ selectedJob: job }),
       setCompanyJobs: (jobs) => set({ companyJobs: jobs }),
@@ -45,6 +49,6 @@ export const useCompanyStore = create<CompanyState>()(
           company: state.company ? { ...state.company, ...updates } : null,
         })),
     }),
-    { name: "company-store" }
-  )
+    { name: "company-store" },
+  ),
 );

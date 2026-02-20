@@ -1,3 +1,4 @@
+import { updateCompanyLogo } from "@/actions";
 import Input from "@/components/input";
 import {
   Form,
@@ -12,9 +13,11 @@ import UploadThing from "@/components/upload-thing";
 import { CompanyProfileFormSchema, profileFormSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CameraIcon } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
 import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 export default function CompanyProfile({
   onNext,
@@ -26,7 +29,29 @@ export default function CompanyProfile({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const form = useForm<CompanyProfileFormSchema>({
     resolver: zodResolver(profileFormSchema),
-    mode: "onBlur",
+    mode: "all",
+    defaultValues: {
+      industry: "",
+      companySize: undefined,
+      foundedYear: "",
+      website: "",
+      phone: "",
+      address: "",
+      city: "",
+      state: "",
+      bio: "",
+    },
+  });
+
+  const { execute: logo } = useAction(updateCompanyLogo, {
+    onSuccess: (res) => {
+      console.log("Profile image updated successfully:", res);
+      toast.success("Company logo updated!");
+      // queryClient.invalidateQueries({ queryKey: ["student-profile"] });
+    },
+    onError: (error) => {
+      console.error("Error updating profile image:", error);
+    },
   });
 
   return (
@@ -46,9 +71,18 @@ export default function CompanyProfile({
                 <FormItem className="flex-1">
                   <FormLabel>Industry</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Technology, Finance" {...field} />
+                    <Input
+                      placeholder="e.g., Technology, Finance"
+                      type="text"
+                      {...field}
+                    />
                   </FormControl>
-                  <FormMessage />
+                  {/* <FormMessage /> */}
+                  {form.formState.errors.industry && (
+                    <p className="text-red-500 font-semibold text-xs mt-1">
+                      {form.formState.errors.industry.message}
+                    </p>
+                  )}
                 </FormItem>
               )}
             />
@@ -104,7 +138,16 @@ export default function CompanyProfile({
                   <FormControl>
                     <Input placeholder="https://www.example.com" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  {/* <FormMessage /> */}
+                  {form.formState.errors.website ? (
+                    <p className="text-red-500 font-semibold text-xs mt-1">
+                      {form.formState.errors.website.message}
+                    </p>
+                  ) : (
+                    <p className="text-xs">
+                      Must be a valid URL starting with http:// or https://
+                    </p>
+                  )}
                 </FormItem>
               )}
             />
@@ -186,6 +229,7 @@ export default function CompanyProfile({
                   <Textarea
                     placeholder="Tell students what your company does..."
                     {...field}
+                    typeof="text"
                     className="h-28 resize-none"
                   />
                 </FormControl>
@@ -196,14 +240,15 @@ export default function CompanyProfile({
         </form>
       </Form>
 
-      {/* <UploadThing
+      <UploadThing
         onSelect={(file) => {
           console.log(file);
           setSelectedFile(file);
+          logo({ logo: file! });
         }}
       >
         <LogoChange selectedFile={selectedFile} />
-      </UploadThing> */}
+      </UploadThing>
     </>
   );
 }
@@ -227,7 +272,7 @@ const LogoChange = ({ selectedFile }: { selectedFile: File | null }) => {
           )}
         </div>
         <div>
-          <h1 className="text-primary font-semibold text-sm">Upload Photo</h1>
+          <h1 className="text-primary font-semibold text-sm">Upload Logo</h1>
           <p className="text-xs text-gray-500">
             PNG, JPG, GIF up to 5MB(400*400 recommended)
           </p>

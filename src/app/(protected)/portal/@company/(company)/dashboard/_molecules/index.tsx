@@ -19,6 +19,10 @@ import OpportunityCard from "./opportunity-card";
 import { ApplicantCard } from "@/components/applicant-card";
 import { useFetchApplicationsCount } from "@/queries/company";
 import { Spinner } from "@/components/spinner";
+import Welcome from "./welcome";
+import { useState } from "react";
+import { CompanyStatus } from "@/types/enums";
+import { useCommonStore, useCompanyStore } from "@/lib/store";
 
 export function Dashboard() {
   const { data, isLoading } = useFetchAllCompanyApplications();
@@ -26,16 +30,17 @@ export function Dashboard() {
   const { data: opportunities } = useFetchCompanyOpportunities();
   const { data: companyProfile } = useFetchCompanyProfile();
 
+  const { dismissed, setDismissed } = useCompanyStore();
+
+  const showWelcome =
+    companyProfile?.status === CompanyStatus.PENDING && !dismissed;
+
   if (isLoading) {
     return <Spinner />;
   }
 
-  console.log("applications count", applicationsCount);
-
   const totalApplicants = data?.data?.totalApplicants || [[], 0];
   const totalApplicantsList = totalApplicants[0];
-
-  console.log("opportunities", opportunities);
 
   return (
     <div className="flex flex-col gap-4">
@@ -99,6 +104,14 @@ export function Dashboard() {
           ))}
         </div>
       </div>
+
+      <Welcome
+        status={companyProfile?.status}
+        onClose={() => {
+          setDismissed(true);
+        }}
+        open={showWelcome}
+      />
     </div>
   );
 }

@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 import { onBoardCompanySchema, OnboardingDraft } from "@/schemas";
 import { onBoardCompany } from "@/actions";
 import { Step } from "@/types/wizard";
+import * as z from "zod";
+import { toast } from "react-toastify";
 
 /**
  * ✅ What this implements:
@@ -46,10 +48,25 @@ export default function OnboardingPage() {
     [],
   );
 
-  const { execute, hasErrored, result } = useAction(onBoardCompany, {
-    onSuccess: (res) => console.log("Onboarding successful:", res),
-    onError: (error) => console.error("Onboarding error:", error),
-  });
+  const { execute, hasErrored, result, isExecuting } = useAction(
+    onBoardCompany,
+    {
+      onSuccess: (res) => {
+        console.log("Onboarding successful:", res);
+        toast.success(
+          "Onboarding submitted! Your account will be reviewed shortly.",
+        );
+        router.replace("/portal");
+      },
+      onError: (error) => {
+        console.error("Onboarding error:", error);
+        // toast.error(
+        //   error?.error?.serverError ||
+        //     "Failed to submit onboarding. Please try again.",
+        // );
+      },
+    },
+  );
 
   const [currentStep, setCurrentStep] = useState(0);
   const formIdByStep = ["company-profile-form", "kyc-form", null] as const;
@@ -78,21 +95,22 @@ export default function OnboardingPage() {
   }
 
   async function skip() {
+    router.replace("/portal/dashboard");
     await fetch("/api/company/onboarding/skip", { method: "POST" });
-    router.push("/portal/dashboard");
   }
 
   function handleSubmit() {
     const parsed = onBoardCompanySchema.safeParse(onboardingData);
     if (!parsed.success) {
       console.log("Validation failed:", parsed.error.flatten());
+      console.log("error", z.treeifyError(parsed.error));
       return;
     }
     execute(parsed.data);
   }
 
   return (
-    <div className="min-h-screen w-full flex justify-center px-4 py-6">
+    <div className="h-screen w-full flex justify-center px-4 py-6">
       <div className="w-full max-w-6xl flex flex-col md:flex-row md:gap-10">
         {/* ✅ Desktop sidebar only */}
         <aside className="hidden md:block w-72 shrink-0">
@@ -121,7 +139,7 @@ export default function OnboardingPage() {
         </aside>
 
         {/* Main content */}
-        <main className="flex-1 bg-white rounded-xl border overflow-hidden flex flex-col">
+        <main className="flex-1 rounded-xl border overflow-hidden flex flex-col">
           {/* ✅ Mobile header stepper */}
           <div className="md:hidden border-b">
             <MobileHeader
@@ -186,13 +204,13 @@ export default function OnboardingPage() {
           {/* Error display */}
           {hasErrored && (
             <div className="p-4 mx-4 md:mx-6 mt-4 rounded-lg bg-red-100 text-red-800 text-sm">
-              {result.serverError ||
+              {result?.serverError ||
                 "An error occurred while submitting your onboarding information."}
             </div>
           )}
 
           {/* Body */}
-          <div className="px-4 md:px-6 py-6 flex-1">
+          <div className="px-4 md:px-6 py-6 overflow-x-scroll flex-1">
             {CurrentStepComponent ? (
               <CurrentStepComponent
                 onNext={(data: Partial<OnboardingDraft>) => {
@@ -228,8 +246,12 @@ export default function OnboardingPage() {
               type={!isLast ? "submit" : "button"}
               onClick={isLast ? handleSubmit : undefined}
               className="min-w-40"
+              disabled={isExecuting}
             >
-              {isLast ? "Submit" : "Continue"}
+              {isExecuting ? "Submitting..." : isLast ? "Submit" : "Continue"}
+              {isExecuting && (
+                <div className="ml-2 h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              )}
             </Button>
           </div>
         </main>

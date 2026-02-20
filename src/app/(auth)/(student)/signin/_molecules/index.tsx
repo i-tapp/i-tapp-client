@@ -105,7 +105,7 @@ export function StudentSignIn() {
               Remember me
             </div>
 
-            <Link href={"/forgot-password"} className="text-primary">
+            <Link href={"/account/forgot-password"} className="text-primary">
               Forgot Password?
             </Link>
           </div>

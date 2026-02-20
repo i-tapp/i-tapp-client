@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import { CompanySignIn } from "./_molecules";
 
 export const metadata: Metadata = {
-  title: "I-TAPP | Login",
+  title: "Login",
   description: "",
 };
 
