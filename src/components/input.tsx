@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Eye, EyeSlash } from "iconsax-reactjs";
-import { Input as BaseInput } from "./ui/input";
 import { Button } from "./ui/button";
 import { cn } from "@/utils/tailwind";
 
@@ -12,6 +11,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ type, className, wrapperClassName, ...props }, ref) => {
     const [showPassword, setShowPassword] = React.useState(false);
     const isPasswordType = type === "password";
+    const actualType = isPasswordType
+      ? showPassword
+        ? "text"
+        : "password"
+      : type;
 
     return (
       <div
@@ -20,11 +24,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           wrapperClassName,
         )}
       >
-        <BaseInput
-          ref={ref} // ✅ forward RHF ref
-          type={isPasswordType ? (showPassword ? "text" : "password") : type}
+        <input
+          ref={ref}
+          type={actualType}
           className={cn(
-            "flex-1 border-none text-sm placeholder:text-sm outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none focus:ring-0 shadow-none",
+            "flex-1 h-9 w-full bg-transparent px-3 py-1 text-base shadow-0 transition-colors placeholder:text-muted-foreground",
+            "border-none outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0",
+            "disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
             className,
           )}
           {...props}

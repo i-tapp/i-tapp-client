@@ -97,6 +97,7 @@
 
 import * as z from "zod";
 import { companyProfileSchema, opportunityFormSchema } from "./auth.schema";
+import { error } from "console";
 
 // Added create company schema here
 export const createCompanySchema = z.object({
@@ -128,7 +129,9 @@ export const offerSchema = z.object({
 });
 
 export const profileFormSchema = z.object({
-  industry: z.string().min(1, "Industry is required"),
+  industry: z
+    .string({ error: "Industry is required" })
+    .min(1, { error: "Industry is required" }),
 
   companySize: z.enum([
     "1-10",
@@ -142,12 +145,16 @@ export const profileFormSchema = z.object({
     .string()
     .regex(/^\d{4}$/, "Enter a valid year")
     .optional(),
-  website: z.url("Invalid URL").optional(),
-  phone: z.string().min(7, "Phone number is too short").optional(),
+  website: z.url({
+    message: "Must be a valid URL starting with http:// or https://",
+  }),
+  phone: z.string().min(10, "Phone number is too short"),
   address: z.string().min(5, "Address is required"),
   city: z.string().min(2, "City is required"),
   state: z.string().min(2, "State is required"),
-  bio: z.string().max(500, "Bio must be at most 500 characters").optional(),
+  bio: z
+    .string({ error: "Bio is required" })
+    .max(500, "Bio must be at most 500 characters"),
 });
 
 // 10MB
@@ -168,7 +175,9 @@ export const fileSchema = z
   );
 
 export const kycFormSchema = z.object({
-  registrationNumber: z.string().min(3, "Registration number is required"),
+  registrationNumber: z
+    .string({ error: "CAC/Registration Number is required" })
+    .min(3, "Registration number is required"),
   cacDocument: fileSchema,
   proofOfAddress: fileSchema.optional(),
   repId: z

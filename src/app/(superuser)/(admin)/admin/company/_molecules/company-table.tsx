@@ -119,14 +119,26 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFetchCompanies } from "@/queries/admin";
 import { companyStatusStyle } from "@/utils/admin-status-style";
+import { Button, buttonVariants } from "@/components/ui/button";
+import Link from "next/link";
+import { useAction } from "next-safe-action/hooks";
+import { resendCompanyInvite } from "@/actions";
+import { toast } from "react-toastify";
 
 export default function CompanyTable() {
   const { data, isLoading, error } = useFetchCompanies();
 
-  console.log("Fetched companies:", data);
-
   const [search, setSearch] = useState("");
   const router = useRouter();
+
+  const { execute, isExecuting } = useAction(resendCompanyInvite, {
+    onSuccess: () => {
+      toast.success("Invitation resent successfully");
+    },
+    onError: () => {
+      toast.error("Error resending invitation");
+    },
+  });
 
   if (isLoading) {
     return <div className="p-4">Loading companies...</div>;
@@ -154,12 +166,13 @@ export default function CompanyTable() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button
-          onClick={() => router.push("/admin/company/new")} // ← Added onClick
-          className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+
+        <Link
+          href="/admin/company/new"
+          className={buttonVariants({ variant: "default" })}
         >
           Add Company
-        </button>
+        </Link>
       </div>
 
       {/* Table */}
@@ -178,38 +191,46 @@ export default function CompanyTable() {
         </thead>
 
         <tbody>
-          {filteredCompanies.map((c: any, index: number) => (
-            <tr key={c.id} className="border-b hover:bg-gray-50 transition">
-              <td className="p-3">{index + 1}</td>
-              <td className="p-3 font-medium">{c.name}</td>
-              <td className="p-3">
-                <span
-                  className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                    companyStatusStyle[
-                      c.status as keyof typeof companyStatusStyle
-                    ]
-                  }`}
-                >
-                  {c.status}
-                </span>
-              </td>
-              <td className="p-3">{c.industry}</td>
-              <td className="p-3">{c.registrationDate}</td>
-              <td className="p-3">{c.cacDocument}</td>
-              <td className="p-3">{c.opportunities.length}</td>
-              <td className="p-3 flex gap-2">
-                <button
-                  onClick={() => router.push(`/admin/company/${c.id}`)}
-                  className="text-indigo-600 hover:underline"
-                >
-                  View
-                </button>
-                <button className="text-red-600 hover:underline">
-                  Deactivate
-                </button>
-              </td>
-            </tr>
-          ))}
+          {filteredCompanies.map((c: any, index: number) => {
+            console.log("Rendering company row:", c);
+            return (
+              <tr key={c.id} className="border-b hover:bg-gray-50 transition">
+                <td className="p-3">{index + 1}</td>
+                <td className="p-3 font-medium">{c.name}</td>
+                <td className="p-3">
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                      companyStatusStyle[
+                        c.status as keyof typeof companyStatusStyle
+                      ]
+                    }`}
+                  >
+                    {c.status}
+                  </span>
+                </td>
+                <td className="p-3">{c.industry}</td>
+                <td className="p-3">{c.registrationDate}</td>
+                <td className="p-3">{c.cacDocument}</td>
+                <td className="p-3">{c.opportunities.length}</td>
+                <td className="p-3 flex gap-2">
+                  <Link
+                    href={`/admin/company/${c.id}`}
+                    className={buttonVariants({ variant: "link" })}
+                  >
+                    View
+                  </Link>
+
+                  <Button
+                    className="cursor-pointer"
+                    variant={"link"}
+                    onClick={execute.bind(null, { email: c?.user?.email })}
+                  >
+                    {isExecuting ? "Resending..." : "Resend Invite"}
+                  </Button>
+                </td>
+              </tr>
+            );
+          })}
 
           {filteredCompanies.length === 0 && (
             <tr>

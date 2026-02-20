@@ -24,7 +24,8 @@ export default function CompanyKyc({
   const form = useForm<KycFormValues>({
     resolver: zodResolver(kycFormSchema),
     defaultValues: {
-      // confirmAddress: false,
+      cacDocument: undefined,
+      proofOfAddress: undefined,
     },
     mode: "onBlur",
   });
@@ -47,6 +48,11 @@ export default function CompanyKyc({
                 <Input placeholder="e.g., RC 1234567" {...field} />
               </FormControl>
               <FormMessage />
+              {form.formState.errors.registrationNumber && (
+                <p className="text-sm text-red-500 mt-1">
+                  {form.formState.errors.registrationNumber.message}
+                </p>
+              )}
             </FormItem>
           )}
         />

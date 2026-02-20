@@ -13,6 +13,7 @@ import { useFetchCompanyDetails } from "@/hooks/query";
 import { useFetchCompanyDocuments } from "@/queries";
 import { CompanyStatus, DocumentReviewStatus } from "@/types/enums";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { useDelete } from "../../../danger";
 
 export default function CompanyDetailPage() {
   const queryClient = useQueryClient();
@@ -22,6 +23,8 @@ export default function CompanyDetailPage() {
   const [activeTab, setActiveTab] = useState("Overview");
   const [rejectingDocId, setRejectingDocId] = useState<string | null>(null);
   const [rejectionReason, setRejectionReason] = useState("");
+
+  const { executeDelete, isDeleting, executePurge, isPurging } = useDelete();
 
   const {
     data: companyDetails,
@@ -77,7 +80,7 @@ export default function CompanyDetailPage() {
   const isApproved = companyDetails?.status === CompanyStatus.APPROVED;
   const isPending = companyDetails?.status === CompanyStatus.PENDING;
 
-  console.log("docs", companyDocuments);
+  const userId = companyDetails?.user?.id;
 
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -136,6 +139,33 @@ export default function CompanyDetailPage() {
                 Reinstate Company
               </Button>
             )}
+
+            <Button
+              variant="link"
+              disabled={isDeleting}
+              onClick={() =>
+                executeDelete({
+                  id: userId as string,
+                })
+              }
+              aria-description="deactivate company and remove access to dashboard"
+            >
+              {isDeleting ? "Deactivating..." : "Deactivate (soft delete)"}
+            </Button>
+
+            {/* <Button
+              variant="link"
+              disabled={isExecuting}
+              onClick={() =>
+                execute({
+                  companyId: companyId as string,
+                  status: CompanyStatus.APPROVED,
+                })
+              }
+              aria-description="deactivate company and remove access to dashboard"
+            >
+              Deactivate (soft delete)
+            </Button> */}
           </div>
         </div>
       </div>

@@ -137,6 +137,33 @@ export const updateAdminRole = actionClient
     return { success: true, data: response };
   });
 
+export const resendCompanyInvite = actionClient
+  .inputSchema(
+    z.object({
+      email: z.email("Invalid email address"),
+    }),
+  )
+  .action(async ({ parsedInput: { email } }) => {
+    const response = await mutate(`/admin/invite-company/resend`, {
+      email,
+    });
+    return { success: true, data: response };
+  });
+
+export const softDelete = actionClient
+  .inputSchema(z.object({ id: z.string().min(1, "UserID is required") }))
+  .action(async ({ parsedInput: { id } }) => {
+    const response = await mutate(`/admin/${id}`, {}, "DELETE");
+    return { success: true, data: response };
+  });
+
+export const purge = actionClient
+  .inputSchema(z.object({ id: z.string().min(1, "UserID is required") }))
+  .action(async ({ parsedInput: { id } }) => {
+    const response = await mutate(`/admin/${id}/purge`, {}, "DELETE");
+    return { success: true, data: response };
+  });
+
 // export const logout = actionClient.schema(logoutSchema).action(async ({}) => {
 //   (await cookies()).set("token", "", {
 //     httpOnly: true,
