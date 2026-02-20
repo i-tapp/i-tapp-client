@@ -196,14 +196,14 @@ export default function CompanyProfile({
         </form>
       </Form>
 
-      <UploadThing
+      {/* <UploadThing
         onSelect={(file) => {
           console.log(file);
           setSelectedFile(file);
         }}
       >
         <LogoChange selectedFile={selectedFile} />
-      </UploadThing>
+      </UploadThing> */}
     </>
   );
 }
