@@ -33,11 +33,9 @@ export default function ResetPasswordPage() {
 
   const { execute, isExecuting, hasErrored } = useAction(changePassword, {
     onSuccess: () => {
-      console.log("Password reset link sent successfully");
       setMessage("Password has been reset successfully.");
     },
     onError: (error) => {
-      console.error("Password reset error:", error);
       setMessage(
         error?.error?.serverError || "Failed to send reset link. Try again.",
       );

@@ -21,7 +21,6 @@ export const acceptOffer = actionClient
       );
       return response;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   });
@@ -37,7 +36,6 @@ export const declineOffer = actionClient
       );
       return response;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   });
@@ -57,7 +55,6 @@ export const withdraw = actionClient
       const response = await mutate(`/a/${id}/withdraw`, undefined, "PATCH");
       return response?.data;
     } catch (error) {
-      console.log(error);
       throw error; // Ensure the error is propagated back to the frontend
     }
   });
@@ -69,7 +66,6 @@ export const save = actionClient
       const response = await mutate(`/o/${id}/saved`, undefined);
       return response;
     } catch (error) {
-      console.log(error);
       throw error; // Ensure the error is propagated back to the frontend
     }
   });
@@ -94,7 +90,6 @@ export const updateStudentProfile = actionClient
       const response = await mutate("/s/profile", parsedInput, "PATCH");
       return response;
     } catch (error) {
-      console.error("Profile update error:", error);
       throw error;
     }
   });
@@ -116,7 +111,6 @@ export const updateStudentProfilePicture = actionClient
       const response = await mutate("/s/profile-picture", formData, "PATCH");
       return response;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   });
@@ -128,7 +122,6 @@ export const verifyStudentIdentity = actionClient
     const response = await query(`/s/matric/${encodeURIComponent(matNo)}`, {
       // matriculation: matNo,
     });
-    console.log("student data retrieved", response);
     return response;
   });
 
@@ -165,7 +158,6 @@ function appendToFormData(fd: FormData, key: string, value: unknown) {
 export const onBoardStudent = actionClient
   .inputSchema(studentOnboardingSchema)
   .action(async ({ parsedInput }) => {
-    console.log("Onboarding student with data:", parsedInput);
     const formData = new FormData();
 
     for (const [key, value] of Object.entries(parsedInput)) {

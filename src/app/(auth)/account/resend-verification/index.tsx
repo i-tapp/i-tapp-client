@@ -37,7 +37,7 @@ export default function ResendVerificationPage() {
       toast.success("Verification email resent successfully");
     },
     onError(error) {
-      console.error("Resend verification error:", error);
+      toast.error("Failed to resend verification email");
     },
   });
 

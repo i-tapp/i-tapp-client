@@ -47,7 +47,6 @@ export function CompanySignIn() {
       },
       onError(error) {
         toast.error(error?.error?.serverError ?? "Login failed. Try again.");
-        console.error("Login failed:", error);
       },
     },
   );

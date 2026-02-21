@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
-
 import Input from "@/components/input";
 import { Button } from "@/components/ui/button";
 import { claimAccount } from "@/actions";
@@ -22,6 +21,7 @@ import {
 import { resetPasswordSchema } from "@/schemas";
 
 export default function ClaimAccountPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") ?? "";
 
@@ -36,15 +36,14 @@ export default function ClaimAccountPage() {
 
   const { execute, isExecuting, hasErrored, result } = useAction(claimAccount, {
     onSuccess: () => {
-      console.log("Account activated successfully");
-      toast.success("");
+      toast.success("Account activated successfully! You can now sign in.");
+      router.replace("/signin");
     },
     onError: (error) => {
       toast.error(
         error?.error?.serverError ||
           "There was an Error activating your account",
       );
-      console.log("Error activating account;", error);
     },
   });
 
@@ -60,7 +59,7 @@ export default function ClaimAccountPage() {
           </div>
 
           <Link
-            href="/login"
+            href="/signin"
             className="text-center text-xs underline underline-offset-4 text-muted-foreground hover:text-foreground transition-colors"
           >
             Back to sign in
