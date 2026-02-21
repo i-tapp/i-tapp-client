@@ -135,9 +135,10 @@ export function CompanyInfo1() {
           <ButtonWithLoader
             type="submit"
             className="w-full my-3"
-            disabled={!form.formState.isValid}
+            isPending={isExecuting}
+            disabled={!form.formState.isValid || isExecuting}
           >
-            Continue
+            Sign up
           </ButtonWithLoader>
         </form>
       </Form>

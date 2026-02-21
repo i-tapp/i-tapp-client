@@ -72,8 +72,6 @@ export const studentSignup = actionClient
         matriculationNumber: matriculation,
         school,
       });
-
-      console.log(response);
     },
   );
 
@@ -124,7 +122,6 @@ export const resendEmailVerification = actionClient
 export const changePassword = actionClient
   .inputSchema(resetPasswordSchema)
   .action(async ({ parsedInput: { npassword, token } }) => {
-    console.log("Changing password with token:", token);
     const response = await mutate(
       `/auth/password-reset/confirm?token=${encodeURIComponent(token!)}`,
       {

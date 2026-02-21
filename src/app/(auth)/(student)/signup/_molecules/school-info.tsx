@@ -62,7 +62,6 @@ export function SchoolInfo({
       },
       onError(error) {
         toast.error("Student data not found");
-        console.log(error);
       },
     },
   );

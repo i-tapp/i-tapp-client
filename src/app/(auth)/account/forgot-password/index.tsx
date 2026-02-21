@@ -13,13 +13,11 @@ export default function ForgotPasswordPage() {
 
   const { execute, isExecuting, hasErrored } = useAction(requestPasswordReset, {
     onSuccess: () => {
-      console.log("Password reset link sent successfully");
       setMessage(
         "If an account with that email exists, a reset link has been sent.",
       );
     },
     onError: (error) => {
-      console.error("Password reset error:", error);
       setMessage(
         error?.error?.serverError ||
           error?.error?.validationErrors?.email?._errors?.[0] ||

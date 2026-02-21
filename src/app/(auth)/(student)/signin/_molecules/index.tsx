@@ -46,7 +46,6 @@ export function StudentSignIn() {
       },
       onError(error) {
         toast.error(error?.error?.serverError ?? "Login failed. Try again.");
-        console.error("Student login error:", error);
       },
     },
   );

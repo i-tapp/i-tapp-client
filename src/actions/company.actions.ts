@@ -44,7 +44,6 @@ export const updateCompanyLogo = actionClient
 export const updateCompanyProfile = actionClient
   .inputSchema(companyProfileSchema)
   .action(async ({ parsedInput }) => {
-    console.log("Updating company profile...", parsedInput);
     const formData = new FormData();
 
     if (parsedInput.logoImage) {
@@ -68,10 +67,8 @@ export const updateCompanyProfile = actionClient
 
     try {
       const response = await mutate("/c/profile/update", formData, "PATCH");
-      console.log("Update company profile response:", response);
       return response;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   });
@@ -80,12 +77,10 @@ export const updateCompanyProfile = actionClient
 const createOpportunity = actionClient
   .inputSchema(opportunityFormSchema)
   .action(async ({ parsedInput }) => {
-    console.log("Creating opportunity...");
     try {
       const response = await mutate("/o", parsedInput);
       return response.data;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   });
@@ -97,7 +92,6 @@ export const closeOpportunity = actionClient
       const response = await mutate(`/o/${id}/`, { status: "closed" }, "PATCH");
       return response.data;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   });
@@ -110,7 +104,6 @@ export const updateOpportunity = actionClient
       const response = await mutate(`/o/${id}`, updateData, "PATCH");
       return response.data;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   });
@@ -121,7 +114,7 @@ export const fetchCompanyJobs = actionClient.action(async () => {
     const data = await response.json();
     return data.data;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 });
 
@@ -132,7 +125,7 @@ export const fetchAllCompanyApplications = actionClient.action(async () => {
     const data = await response.json();
     return data.data;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 });
 
@@ -143,7 +136,6 @@ export const deleteOffer = actionClient
       const response = await mutate(`/offers/${id}/`, undefined, "DELETE");
       return response;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   });
@@ -159,10 +151,7 @@ export const createOffer = actionClient
     }),
   )
   .action(async ({ parsedInput }) => {
-    console.log("Creating offer...", parsedInput);
-
     const formData = new FormData();
-
     if (parsedInput.startDate) {
       formData.append("startDate", parsedInput.startDate);
     }
@@ -183,11 +172,8 @@ export const createOffer = actionClient
         formData,
         "POST",
       );
-
-      console.log("create offer response", response);
       return response;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   });
@@ -199,7 +185,6 @@ export const acceptApplication = actionClient
       const response = await mutate(`/a/${id}/accept/`, undefined, "PATCH");
       return response;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   });
@@ -211,7 +196,6 @@ export const declineApplication = actionClient
       const response = await mutate(`/a/${id}/reject/`, undefined, "PATCH");
       return response;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   });
@@ -233,8 +217,6 @@ export const shortlistApplicant = actionClient
 export const onBoardCompany = actionClient
   .inputSchema(onBoardCompanySchema)
   .action(async ({ parsedInput }) => {
-    console.log("Onboarding company...", parsedInput);
-
     const formData = new FormData();
     Object.entries(parsedInput).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
