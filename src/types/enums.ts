@@ -34,7 +34,7 @@ export enum StudentStatus {
 
 export enum OpportunityMode {
   REMOTE = "remote",
-  ONSITE = "on_site",
+  ONSITE = "onsite",
   HYBRID = "hybrid",
   FLEXIBLE = "flexible",
 }

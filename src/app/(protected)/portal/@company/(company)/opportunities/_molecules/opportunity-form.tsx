@@ -58,9 +58,7 @@ export default function OpportunityForm({
       maxApplicants: undefined,
       applicationDeadline: undefined,
       autoCloseOnDeadline: false,
-      skills: "",
-      resumeRequired: false,
-      schoolLetterRequired: false,
+      // skills: "",
     },
 
     mode: "onChange", // better UX: validates while typing
@@ -376,61 +374,7 @@ export default function OpportunityForm({
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="skills"
-                render={({ field }) => (
-                  <FormItem className="md:col-span-2">
-                    <FormLabel>Required Skills</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="e.g. JavaScript, React, TypeScript"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Enter the skills required for this opportunity.
-                    </p>
-                  </FormItem>
-                )}
-              />
-
               {/* Required Documents */}
-              <FormField
-                control={form.control}
-                name="resumeRequired"
-                render={({ field }) => (
-                  <FormItem className="flex items-center gap-3 md:col-span-2">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value || false}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormLabel className="text-sm cursor-pointer">
-                      Resume/CV required
-                    </FormLabel>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="schoolLetterRequired"
-                render={({ field }) => (
-                  <FormItem className="flex items-center gap-3 md:col-span-2">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value || false}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormLabel className="text-sm cursor-pointer">
-                      Cover letter required
-                    </FormLabel>
-                  </FormItem>
-                )}
-              />
             </div>
           </div>
 

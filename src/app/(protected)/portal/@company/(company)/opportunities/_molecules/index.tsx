@@ -12,6 +12,7 @@ import OpportunityForm from "./opportunity-form";
 import { useAction } from "next-safe-action/hooks";
 import OpportunityTable from "./opportunity-table";
 import { createOpportunity } from "@/actions";
+import { toast } from "react-toastify";
 
 // Unified status type
 type OpportunityStatus = "open" | "closed" | "draft";
@@ -28,11 +29,14 @@ export default function OpportunityPage() {
 
   const { execute, isExecuting } = useAction(createOpportunity, {
     onSuccess(data) {
-      console.log("Success", data);
       setCreating(false);
+      toast.success("Opportunity posted");
     },
     onError(error) {
-      console.error("Error creating opportunity:", error);
+      toast.error(
+        error?.error?.serverError ||
+          "Error posting opportunity, please try agian",
+      );
     },
   });
 
@@ -63,7 +67,7 @@ export default function OpportunityPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 h-screen">
       {/* Search bar */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="bg-white border border-gray-200 flex items-center px-1 rounded-md w-full max-w-lg">
