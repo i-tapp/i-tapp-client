@@ -109,9 +109,7 @@ export const opportunityFormSchema = z.object({
   maxApplicants: z.number().optional(),
   applicationDeadline: z.string().optional(),
   autoCloseOnDeadline: z.boolean().optional(),
-  resumeRequired: z.boolean().optional(),
-  schoolLetterRequired: z.boolean().optional(),
-  skills: z.string().optional(),
+  // skills: z.string().optional(),
 });
 
 export const updateOpportunitySchema = opportunityFormSchema.extend({
