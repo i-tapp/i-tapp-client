@@ -67,6 +67,10 @@ export const metadata: Metadata = {
     images: ["/placeholder.jpg"],
   },
 
+  verification: {
+    google: "SgVK8kUBhOUn5GdrmUT4m1-HtKsHDcNW9AHWdqJ-GSo",
+  },
+
   other: {
     keywords: ["I-TAPP", "ITAPP", "SIWES", "IT Placement", "Nigeria"],
     author: "I-TAPP",
