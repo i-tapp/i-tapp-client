@@ -4,8 +4,9 @@ import { Metadata } from "next";
 import { StudentSignIn } from "./_molecules";
 
 export const metadata: Metadata = {
-  title: "Login",
-  description: "",
+  title: "Sign in",
+  description:
+    "Sign in to your I-TAPP (ITAPP) account to manage applications and track SIWES or industrial training placements.",
 };
 
 export default function SigninPage() {

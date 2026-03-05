@@ -24,29 +24,55 @@ export const opensans = Open_Sans({
   variable: "--font-opensans",
   display: "swap",
 });
-const siteUrl = "https://i-tapp.com";
+const siteUrl = "https://www.i-tapp.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+
   title: {
     default: app.title,
     template: `%s | ${app.name}`,
   },
   description: app.description,
-  icons: {
-    icon: app.favicon_url,
-    apple: [{ url: "/apple-touch-icon.png" }],
-  },
+
   alternates: {
     canonical: "/",
   },
+
+  authors: [{ name: "I-TAPP" }],
+
+  keywords: [
+    "i-tapp",
+    "itapp",
+    "I-TAPP",
+    "ITAPP",
+    "SIWES placement",
+    "industrial training placement",
+    "IT placement Nigeria",
+    "internship placement Nigeria",
+    "student industrial work experience scheme",
+    "SIWES companies Nigeria",
+    "find SIWES placement",
+    "apply for SIWES",
+    "Nigerian students internship",
+    "industrial training portal Nigeria",
+  ],
+
   robots: {
     index: true,
     follow: true,
     googleBot: {
       index: true,
       follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
     },
+  },
+
+  icons: {
+    icon: app.favicon_url,
+    apple: [{ url: "/apple-touch-icon.png" }],
   },
 
   openGraph: {
@@ -56,7 +82,12 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_NG",
     images: [
-      "/placeholder.jpg", // if you have an absolute URL, even better
+      {
+        url: new URL("/placeholder.jpg", siteUrl).toString(),
+        width: 1200,
+        height: 630,
+        alt: app.title,
+      },
     ],
   },
 
@@ -64,16 +95,11 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: app.title,
     description: app.description,
-    images: ["/placeholder.jpg"],
+    images: [new URL("/placeholder.jpg", siteUrl).toString()],
   },
 
   verification: {
     google: "SgVK8kUBhOUn5GdrmUT4m1-HtKsHDcNW9AHWdqJ-GSo",
-  },
-
-  other: {
-    keywords: ["I-TAPP", "ITAPP", "SIWES", "IT Placement", "Nigeria"],
-    author: "I-TAPP",
   },
 };
 
@@ -94,8 +120,13 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebSite",
               name: "i-Tapp",
-              alternateName: "I-Tapp",
+              alternateName: ["ITAPP", "i-tapp", "itapp", "I-Tapp"],
               url: siteUrl,
+              potentialAction: {
+                "@type": "SearchAction",
+                target: `${siteUrl}/search?q={search_term_string}`,
+                "query-input": "required name=search_term_string",
+              },
             }),
           }}
         />

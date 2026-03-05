@@ -1,6 +1,14 @@
 import { Wrapper } from "@/components/wrapper";
 import React from "react";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description:
+    "Review the terms of service governing the use of the I-TAPP platform and services.",
+};
+
 export default function page() {
   return (
     <Wrapper className="py-8 sm:py-10 text-sm lg:text-base ">
