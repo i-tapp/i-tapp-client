@@ -1,6 +1,13 @@
 import { Wrapper } from "@/components/wrapper";
+import { Metadata } from "next";
 import Image from "next/image";
 import React from "react";
+
+export const metadata: Metadata = {
+  title: "Partner with",
+  description:
+    "Partner with I-TAPP (ITAPP) to connect your company with Nigerian students seeking SIWES and industrial training opportunities.",
+};
 
 export default function Partnership() {
   return (

@@ -2,7 +2,7 @@ export const app = {
   name: "I-TAPP",
   title: "I-Tapp - Bringing opportunities closer",
   description:
-    "Login to I-Tapp to search, find and secure SIWES/IT placement across different companies in Nigeria.",
+    "I-TAPP (ITAPP) helps Nigerian students find and secure SIWES/industrial training placements across verified companies.",
   logo_url: "/logo.png",
   favicon_url: "/favicon.ico",
   nav_links: [

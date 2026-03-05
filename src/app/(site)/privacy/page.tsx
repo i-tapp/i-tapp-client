@@ -1,6 +1,14 @@
 import { Wrapper } from "@/components/wrapper";
 import React from "react";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description:
+    "Read the I-TAPP privacy policy to understand how we collect, use, and protect your information.",
+};
+
 export default function Privacy() {
   return (
     <Wrapper className="sm:py-10 py-10 text-sm lg:text-base flex flex-col gap-3">
@@ -44,7 +52,10 @@ export default function Privacy() {
       </div>
 
       <div>
-        <h2 className="text-md font-bold flex flex-col gap-y-4"> How We Collect Your Information</h2>
+        <h2 className="text-md font-bold flex flex-col gap-y-4">
+          {" "}
+          How We Collect Your Information
+        </h2>
         <p>
           Directly from you when you register, submit applications, or interact
           with the website.
@@ -149,7 +160,9 @@ export default function Privacy() {
         </ul>
       </div>
       <div>
-        <h2 className=" font-bold text-md">Cookies and Tracking Technologies</h2>
+        <h2 className=" font-bold text-md">
+          Cookies and Tracking Technologies
+        </h2>
         <p>
           We use cookies to enhance user experience, analyze traffic, and
           personalize content.
