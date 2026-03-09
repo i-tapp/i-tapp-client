@@ -7,6 +7,7 @@ import { Opportunity } from "@/types";
 import { Clock, Profile2User, Location, Wifi } from "iconsax-reactjs";
 import { useRouter } from "next/navigation";
 import useIsResponsive from "@/utils/responsive";
+import { BadgeCheck } from "lucide-react";
 // import { useRouter } from "next/router";
 
 // UI-only improvements: hierarchy, spacing, chips row, company + work-mode + location
@@ -33,6 +34,7 @@ export default function AvailableOpportunity({
     "Company";
 
   const isSelected = selectedId === id;
+  const isVerified = details?.company?.status === "approved";
 
   const router = useRouter();
   const { isMobile } = useIsResponsive();
@@ -73,10 +75,23 @@ export default function AvailableOpportunity({
           </h6>
 
           {/* Company */}
-          <div className="flex flex-row gap-1">
-            <p className="text-[13px] sm:text-sm font-medium text-gray-500  truncate">
-              {companyName}
-            </p>
+          <div className="flex flex-col gap-1">
+            <div className="flex flex-row items-center gap-1">
+              <p className="text-[13px] sm:text-sm font-medium text-gray-500  truncate">
+                {companyName}
+              </p>
+
+              {isVerified && (
+                <div className="relative group inline-block">
+                  <BadgeCheck className="w-3 h-3 text-blue-500 cursor-pointer" />
+
+                  <div className="absolute z-0 bottom-full mb-1 w-48 hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded shadow">
+                    This company is verified. Companies without this badge have
+                    not been verified yet.
+                  </div>
+                </div>
+              )}
+            </div>
 
             <div className="flex items-center gap-0.5 text-gray-400">
               <Location size="14" />

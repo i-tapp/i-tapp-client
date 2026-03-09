@@ -14,7 +14,7 @@ export const filters = {
     { id: 3, time: "12", checked: false },
   ],
   status: [
-    { id: 1, status: "open", checked: false },
+    { id: 1, status: "open", checked: true },
     { id: 2, status: "closed", checked: false },
   ],
   location: "",

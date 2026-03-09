@@ -183,8 +183,8 @@ export default function CompanyTable() {
             <th className="font-medium p-3">Company Name</th>
             <th className="font-medium p-3">Status</th>
             <th className="font-medium p-3">Industry</th>
-            <th className="font-medium p-3">Registration Date</th>
-            <th className="font-medium p-3">CAC Document</th>
+            {/* <th className="font-medium p-3">Registration Date</th> */}
+            <th className="font-medium p-3">Onboarded</th>
             <th className="font-medium p-3">Opportunities</th>
             <th className="font-medium p-3">Actions</th>
           </tr>
@@ -209,9 +209,15 @@ export default function CompanyTable() {
                   </span>
                 </td>
                 <td className="p-3">{c.industry}</td>
-                <td className="p-3">{c.registrationDate}</td>
-                <td className="p-3">{c.cacDocument}</td>
-                <td className="p-3">{c.opportunities.length}</td>
+                {/* <td className="p-3">{c.registrationDate}</td> */}
+                <td className="p-3 text-center">
+                  {c.isOnboarded ? (
+                    <span className="text-green-500">●</span>
+                  ) : (
+                    <span className="text-red-500">○</span>
+                  )}
+                </td>
+                <td className="p-3 text-center">{c.opportunities.length}</td>
                 <td className="p-3 flex gap-2">
                   <Link
                     href={`/admin/company/${c.id}`}
@@ -220,13 +226,15 @@ export default function CompanyTable() {
                     View
                   </Link>
 
-                  <Button
-                    className="cursor-pointer"
-                    variant={"link"}
-                    onClick={execute.bind(null, { email: c?.user?.email })}
-                  >
-                    {isExecuting ? "Resending..." : "Resend Invite"}
-                  </Button>
+                  {!c.isOnboarded && (
+                    <Button
+                      className="cursor-pointer"
+                      variant={"link"}
+                      onClick={execute.bind(null, { email: c?.user?.email })}
+                    >
+                      {isExecuting ? "Resending..." : "Resend Invite"}
+                    </Button>
+                  )}
                 </td>
               </tr>
             );

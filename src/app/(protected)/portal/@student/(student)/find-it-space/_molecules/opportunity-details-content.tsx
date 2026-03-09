@@ -7,7 +7,7 @@ import { ApplicationStatus } from "@/types/enums";
 import { formatDate } from "@/utils/format-date";
 import { useQueryClient } from "@tanstack/react-query";
 import { Bank, Calendar, Heart } from "iconsax-reactjs";
-import { Banknote, ClockIcon, Globe } from "lucide-react";
+import { BadgeCheck, Banknote, ClockIcon, Globe } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import Image from "next/image";
 import Link from "next/link";
@@ -178,12 +178,25 @@ export default function OpportunityDetailsContent({
         </p>
 
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
-          <Link
-            href={`/portal/company/${selectedOpportunity?.company?.id}`}
-            className="font-semibold text-gray-900 hover:underline"
-          >
-            {selectedOpportunity?.company?.name}
-          </Link>
+          <div className="flex flex-row items-center gap-1">
+            <Link
+              href={`/portal/company/${selectedOpportunity?.company?.id}`}
+              className="font-semibold text-primary hover:underline"
+            >
+              {selectedOpportunity?.company?.name}
+            </Link>
+
+            {selectedOpportunity?.company?.status === "approved" && (
+              <div className="relative group inline-block">
+                <BadgeCheck className="w-3 h-3 text-blue-500 cursor-pointer" />
+
+                <div className="absolute bottom-full mb-1 w-48 hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded shadow">
+                  This company is verified. Companies without this badge have
+                  not been verified yet.
+                </div>
+              </div>
+            )}
+          </div>
 
           <span className="text-gray-300">•</span>
 

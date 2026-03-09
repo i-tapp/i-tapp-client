@@ -38,6 +38,8 @@ export interface Company {
   avatarUrl: string;
   logo: string;
 
+  status: string;
+
   role: string;
   // user?: User;
 }
