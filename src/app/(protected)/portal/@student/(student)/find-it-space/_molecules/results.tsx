@@ -3,6 +3,7 @@ import Search from "./search";
 import { Opportunity } from "@/types";
 import AvailableOpportunity from "./available-opportunity";
 import { Inbox } from "lucide-react";
+import { Spinner } from "@/components/spinner";
 
 export default function Results({
   selectedId,
@@ -10,12 +11,14 @@ export default function Results({
   opportunities,
   setSelectedOpportunity,
   setFilter,
+  isLoading,
 }: {
   selectedId: string | null;
   setSelectedId: (id: string | null) => void;
   setSelectedOpportunity: (name: Opportunity | null) => void;
   opportunities: Opportunity[];
   setFilter: (filter: any) => void;
+  isLoading: boolean;
 }) {
   const isDetailsOpen = !!selectedId;
   console.log("Opportunities in Results:", opportunities);
@@ -56,6 +59,13 @@ export default function Results({
                 // isSelected={selectedCompanyId === company.id}
               />
             ))
+          ) : isLoading ? (
+            <div className="flex flex-col items-center justify-center col-span-full mt-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-primary mb-4" />
+              <p className="text-gray-600 text-center text-sm">
+                Fetching opportunities... Hang tight!
+              </p>
+            </div>
           ) : (
             <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-400 space-y-3">
               <Inbox className="w-12 h-12" />

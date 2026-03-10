@@ -184,7 +184,7 @@ export default function CompanyTable() {
             <th className="font-medium p-3">Status</th>
             <th className="font-medium p-3">Industry</th>
             {/* <th className="font-medium p-3">Registration Date</th> */}
-            <th className="font-medium p-3">Onboarded</th>
+            <th className="font-medium p-3">Active status/Onboarded</th>
             <th className="font-medium p-3">Opportunities</th>
             <th className="font-medium p-3">Actions</th>
           </tr>
@@ -210,11 +210,35 @@ export default function CompanyTable() {
                 </td>
                 <td className="p-3">{c.industry}</td>
                 {/* <td className="p-3">{c.registrationDate}</td> */}
-                <td className="p-3 text-center">
+                {/* <td className="p-3 text-center">
                   {c.isOnboarded ? (
                     <span className="text-green-500">●</span>
                   ) : (
                     <span className="text-red-500">○</span>
+                  )}
+                </td> */}
+
+                <td className="p-3 text-center flex justify-center gap-4">
+                  {/* Account Active Status */}
+                  {c.user.password ? (
+                    <span className="text-green-500" title="Account Active">
+                      ●
+                    </span>
+                  ) : (
+                    <span className="text-red-500" title="Account Inactive">
+                      ●
+                    </span>
+                  )}
+
+                  {/* Onboarding Status */}
+                  {c.isOnboarded ? (
+                    <span className="text-green-500" title="Onboarded">
+                      ●
+                    </span>
+                  ) : (
+                    <span className="text-red-500" title="Not Onboarded">
+                      ●
+                    </span>
                   )}
                 </td>
                 <td className="p-3 text-center">{c.opportunities.length}</td>
@@ -226,7 +250,7 @@ export default function CompanyTable() {
                     View
                   </Link>
 
-                  {!c.isOnboarded && (
+                  {!c.isOnboarded && !c.user.password && (
                     <Button
                       className="cursor-pointer"
                       variant={"link"}
