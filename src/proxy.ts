@@ -13,17 +13,14 @@ const roleRedirects: Record<string, string> = {
 const API_BASE_URL = process.env.NEXT_PUBLIC_APP_BACKEND_API_URL;
 
 async function me(token: string) {
-  const response = await fetch(`${API_BASE_URL}/auth/me`, {
+  const res = await fetch(`${API_BASE_URL}/auth/me`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 
-  if (!response.ok) {
-    console.error("Failed to fetch profile:", response.statusText);
-    return null;
-  }
-  return response.json();
+  if (!res.ok) return null;
+  return res.json();
 }
 
 export async function proxy(req: NextRequest) {

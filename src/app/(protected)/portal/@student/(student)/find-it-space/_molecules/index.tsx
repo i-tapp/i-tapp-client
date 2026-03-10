@@ -44,7 +44,8 @@ export default function FindITSpace() {
           setSelectedId={(id) => {
             setSelectedId(id);
           }}
-          opportunities={opportunities || []}
+          isLoading={isLoading}
+          opportunities={opportunities}
           setSelectedOpportunity={setSelectedOpportunity}
           setFilter={setFilter}
         />
