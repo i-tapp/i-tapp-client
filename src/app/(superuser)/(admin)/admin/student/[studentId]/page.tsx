@@ -8,40 +8,38 @@ import { PlusIcon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useParams } from "next/navigation";
 import { useState } from "react";
+import { useDelete } from "../../../danger";
+import Image from "next/image";
+import { toast } from "react-toastify";
 
 export default function StudentDetailsPage() {
   const { studentId } = useParams();
+  const { executeDelete, isDeleting, executePurge, isPurging } = useDelete();
 
   const { data, isLoading } = useFetchStudentDetails(studentId as string);
   const [activeTab, setActiveTab] = useState("Personal Information");
+  const userId = data?.user?.id;
+  const student = data;
 
   const queryClient = useQueryClient();
 
   const { execute, isExecuting } = useAction(updateStudentStatus, {
     onSuccess: () => {
-      console.log("Student status updated successfully");
+      toast.success("Student status updated successfully");
       queryClient.invalidateQueries({
         queryKey: ["student-details", studentId],
       });
     },
     onError: (err) => {
-      console.error("Error updating student status:", err);
+      toast.error("Error updating student status");
     },
   });
 
-  // Placeholder data (replace with API fetch later)
-  const student = {
-    name: "Sam Adebayo",
-    matricNo: "1234567890",
-    verified: true,
-    avatar: "",
-  };
-
   const tabs = [
     "Personal Information",
-    "Applications",
-    "Activities",
-    "Messages",
+    // "Applications",
+    // "Activities",
+    // "Messages",
   ];
 
   if (isLoading) {
@@ -77,11 +75,14 @@ export default function StudentDetailsPage() {
         <div className="min-w-[230px] flex flex-col items-center py-6 gap-4">
           <div className="rounded-full border w-[150px] h-[150px] bg-gray-100 flex items-center justify-center">
             {/* Avatar Placeholder */}
+
             {student.avatar ? (
-              <img
-                src={student.avatar}
-                alt={student.name}
-                className="rounded-full"
+              <Image
+                src={data?.profileImage || "/applicant.png"}
+                alt={name}
+                width={150}
+                height={150}
+                className="rounded-full object-cover"
               />
             ) : (
               <span className="text-gray-400">No Avatar</span>
@@ -94,8 +95,8 @@ export default function StudentDetailsPage() {
               Matric No: {data?.matriculationNumber}
             </p>
             <p
-              className={`text-sm font-medium ${
-                data?.user?.isVerified ? "text-green-600" : "text-red-500"
+              className={`text-xs font-medium ${
+                data?.user?.isVerified ? "text-green-600" : "text-gray-600"
               }`}
             >
               {data?.user?.isVerified ? "Verified" : "Not Verified"}
@@ -107,7 +108,7 @@ export default function StudentDetailsPage() {
 
             {data?.status !== "suspended" && (
               <Button
-                variant="destructive"
+                variant="secondary"
                 onClick={() =>
                   execute({
                     studentId: studentId as string,
@@ -115,7 +116,7 @@ export default function StudentDetailsPage() {
                   })
                 }
               >
-                Deactivate / Suspend Account
+                Suspend Account
               </Button>
             )}
 
@@ -132,6 +133,20 @@ export default function StudentDetailsPage() {
                 Reactivate Account
               </Button>
             )}
+
+            <Button
+              variant="link"
+              disabled={isDeleting}
+              className="text-red-600 font-semibold"
+              onClick={() =>
+                executeDelete({
+                  id: userId as string,
+                })
+              }
+              aria-description="deactivate company and remove access to dashboard"
+            >
+              {isDeleting ? "Deactivating..." : "Deactivate (soft delete)"}
+            </Button>
 
             {/* <Button variant="outline">More Options</Button> */}
           </div>
@@ -157,16 +172,56 @@ export default function StudentDetailsPage() {
           </div>
 
           {/* Tab Content */}
-          <div className="p-2">
-            {activeTab === "Personal Information" && (
-              <div>
-                <p>Here is the personal information of {student.name}.</p>
-                {/* Add more info later */}
+          <div className="p-4 space-y-3">
+            {activeTab === "Personal Information" && student && (
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between border-b pb-1">
+                  <span className="text-muted-foreground">Full Name</span>
+                  <span className="font-medium">
+                    {student.firstName} {student.lastName}
+                  </span>
+                </div>
+
+                <div className="flex justify-between border-b pb-1">
+                  <span className="text-muted-foreground">Matric Number</span>
+                  <span className="font-medium">
+                    {student.matriculationNumber}
+                  </span>
+                </div>
+
+                <div className="flex justify-between border-b pb-1">
+                  <span className="text-muted-foreground">School</span>
+                  <span className="font-medium">{student.school}</span>
+                </div>
+
+                <div className="flex justify-between border-b pb-1">
+                  <span className="text-muted-foreground">Course</span>
+                  <span className="font-medium">{student.courseOfStudy}</span>
+                </div>
+
+                <div className="flex justify-between border-b pb-1">
+                  <span className="text-muted-foreground">Level</span>
+                  <span className="font-medium">{student.level}</span>
+                </div>
+
+                {student.gender && (
+                  <div className="flex justify-between border-b pb-1">
+                    <span className="text-muted-foreground">Gender</span>
+                    <span className="font-medium">{student.gender}</span>
+                  </div>
+                )}
+
+                {student.dob && (
+                  <div className="flex justify-between border-b pb-1">
+                    <span className="text-muted-foreground">Date of Birth</span>
+                    <span className="font-medium">{student.dob}</span>
+                  </div>
+                )}
               </div>
             )}
-            {activeTab === "Applications" && <p>Applications content...</p>}
+            {/* {activeTab === "Applications" && <p>Applications content...</p>}
             {activeTab === "Activities" && <p>Activities content...</p>}
-            {activeTab === "Messages" && <p>Messages content...</p>}
+            {activeTab === "Messages" && <p>Messages content...</p>} */}
           </div>
         </div>
       </div>

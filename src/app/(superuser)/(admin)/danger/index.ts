@@ -9,26 +9,26 @@ export const useDelete = () => {
     softDelete,
     {
       onSuccess: () => {
-        toast.success("User deleted successfully");
-        console.log("User deleted successfully");
+        toast.success("Account deleted successfully");
+        console.log("Account deleted successfully");
         router.back();
       },
       onError: (err) => {
-        toast.error("Error deleting user");
-        console.error("Error deleting user:", err);
+        toast.error("Error deleting account");
+        console.error("Error deleting account:", err);
       },
     },
   );
 
   const { execute: executePurge, isExecuting: isPurging } = useAction(purge, {
     onSuccess: () => {
-      toast.success("User purged successfully");
-      console.log("User purged successfully");
+      toast.success("Account purged successfully");
+      console.log("Account purged successfully");
       router.back();
     },
     onError: (err) => {
-      toast.error("Error purging user");
-      console.error("Error purging user:", err);
+      toast.error("Error purging account");
+      console.error("Error purging account:", err);
     },
   });
 
