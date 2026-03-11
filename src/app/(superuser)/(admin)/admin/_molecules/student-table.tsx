@@ -5,6 +5,7 @@ import { useState } from "react";
 import { studentStatusStyle } from "@/utils/admin-status-style";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function StudentTable({
   // onView,
@@ -62,7 +63,7 @@ export default function StudentTable({
             <th className="p-3">Email</th>
             <th className="p-3">Program</th>
             <th className="p-3">Status</th>
-            <th className="p-3">Applications</th>
+            {/* <th className="p-3">Applications</th> */}
             <th className="p-3">Actions</th>
           </tr>
         </thead>
@@ -75,11 +76,15 @@ export default function StudentTable({
             >
               <td className="p-3">{index + 1}</td>
               <td className="p-3">
-                <img
-                  src={s.profileUrl}
-                  alt={s.name}
-                  className="w-10 h-10 rounded-full"
-                />
+                <div className="rounded-full h-10 w-10">
+                  <Image
+                    src={s?.profileImage || "/applicant.png"}
+                    width={20}
+                    height={20}
+                    className="rounded-full w-full h-full object-cover"
+                    alt="profile"
+                  />
+                </div>
               </td>
               {/* <td className="p-3">{s?.name}</td>
                */}
@@ -100,7 +105,7 @@ export default function StudentTable({
                   {s.status}
                 </span>
               </td>
-              <td className="p-3">{s.applications}</td>
+              {/* <td className="p-3">{s.applications}</td> */}
               <td className="p-3">
                 <button
                   // onClick={() => onView(s)}
