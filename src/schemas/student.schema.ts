@@ -4,7 +4,7 @@ import { StudentProfileSchema } from "@/actions";
 
 export const documentStepSchema = z.object({
   itLetter: fileSchema,
-  resume: fileSchema.optional(),
+  cv: fileSchema.optional(),
 });
 
 export const schoolInfoSchema = z.object({

@@ -20,11 +20,11 @@ export default function DocumentStep({
 }) {
   const form = useForm<DocumentSchema>({
     resolver: zodResolver(documentStepSchema),
-    mode: "onBlur",
-    // defaultValues: {
-    //   itLetter: undefined,
-    //   resume: undefined,
-    // },
+    mode: "onChange",
+    defaultValues: {
+      itLetter: undefined,
+      cv: undefined,
+    },
   });
 
   return (
@@ -62,15 +62,15 @@ export default function DocumentStep({
 
         <FormField
           control={form.control}
-          name="resume"
+          name="cv"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="font-semibold mb-5">
-                Resume (optional)
+                CV (optional)
               </FormLabel>
               <FormControl>
                 <FileUploadThing
-                  title="Upload Resume"
+                  title="Upload CV"
                   value={field.value} // current value (url/key/etc)
                   onChange={field.onChange} // set value into RHF
                   onBlur={field.onBlur}

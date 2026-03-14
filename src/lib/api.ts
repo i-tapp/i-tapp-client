@@ -42,22 +42,29 @@ axiosInstance.interceptors.response.use(
     console.error("API Error:", {
       ...response,
     });
-    return Promise.reject(new Error(message));
+
+    const err = new Error(message);
+    (err as any).data = response;
+    return Promise.reject(err);
   },
 );
 export async function api<T = any>(
   url: string,
   { method = "GET", data, headers, ...options }: any = {},
 ): Promise<T> {
-  const requestUrl = isAbsoluteUrl(url) ? url : `${API_BASE_URL}${url}`;
-  const response = await axiosInstance.request<T>({
-    url: requestUrl,
-    method,
-    data,
-    headers,
-    ...options,
-  });
-  return response.data;
+  try {
+    const requestUrl = isAbsoluteUrl(url) ? url : `${API_BASE_URL}${url}`;
+    const response = await axiosInstance.request<T>({
+      url: requestUrl,
+      method,
+      data,
+      headers,
+      ...options,
+    });
+    return response.data;
+  } catch (error) {
+    throw error; // Ensure the error is propagated back to the frontend
+  }
 }
 
 // ✅ Mutate helper with your desired signature
