@@ -50,7 +50,15 @@ export default function StudentOnboardingPage() {
         router.push("/portal");
       },
       onError: (error) => {
-        console.error("Onboarding error:", error);
+        // console.error("Onboarding error:", error);
+
+        if (error.error.validationErrors) {
+          console.error("Validation errors:", error.error.validationErrors);
+        }
+
+        if (error.error.serverError) {
+          console.error("Server error:", error.error.serverError);
+        }
       },
     },
   );

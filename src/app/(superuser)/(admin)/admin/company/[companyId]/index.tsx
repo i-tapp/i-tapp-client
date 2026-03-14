@@ -188,6 +188,17 @@ export default function CompanyDetailPage() {
                 {companyDetails?.user?.email}
               </p>
               <p>
+                <span className="font-medium">Phone:</span>{" "}
+                <ol className="list-inside list-disc ml-1">
+                  <li className="text-xs">
+                    Personal: {companyDetails?.user?.phone ?? "N/A"}
+                  </li>
+                  <li className="text-xs">
+                    Work: {companyDetails?.phone ?? "N/A"}
+                  </li>
+                </ol>
+              </p>
+              <p>
                 <span className="font-medium">Industry:</span>{" "}
                 {companyDetails?.industry}
               </p>

@@ -20,6 +20,7 @@ export default function StudentDetailsPage() {
   const [activeTab, setActiveTab] = useState("Personal Information");
   const userId = data?.user?.id;
   const student = data;
+  console.log("Student Details:", data);
 
   const queryClient = useQueryClient();
 
@@ -202,6 +203,13 @@ export default function StudentDetailsPage() {
                 <div className="flex justify-between border-b pb-1">
                   <span className="text-muted-foreground">Level</span>
                   <span className="font-medium">{student.level}</span>
+                </div>
+
+                <div className="flex justify-between border-b pb-1">
+                  <span className="text-muted-foreground">phone</span>
+                  <span className="font-medium">
+                    {student.phone ?? student?.user?.phone ?? "N/A"}
+                  </span>
                 </div>
 
                 {student.gender && (
