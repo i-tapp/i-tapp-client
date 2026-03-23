@@ -8,6 +8,7 @@ import {
   opportunityFormSchema,
   updateOpportunitySchema,
 } from "@/schemas";
+import { onboardingSchema } from "@/schemas/site.schema";
 import * as z from "zod";
 
 export const updateCompanyBanner = actionClient
@@ -226,6 +227,13 @@ export const onBoardCompany = actionClient
 
     const response = await mutate("/c/onboarding", formData, "POST");
     return response;
+  });
+
+export const quickCreateCompany = actionClient
+  .inputSchema(onboardingSchema)
+  .action(async ({ parsedInput }) => {
+    const response = await mutate("/c/quick-create", parsedInput, "POST");
+    return response.data;
   });
 
 export { createOpportunity };
