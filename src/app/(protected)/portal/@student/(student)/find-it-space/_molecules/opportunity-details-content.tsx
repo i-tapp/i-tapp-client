@@ -37,6 +37,8 @@ export default function OpportunityDetailsContent({
   const { data: fetchedOpportunity, isLoading } =
     useFetchOpportunityPublicDetails(opportunityId ?? undefined);
 
+  console.log("Fetched Opportunity:", fetchedOpportunity);
+
   // Fallback to propOpportunity for any fields the backend detail endpoint misses (like preferredFields)
   const selectedOpportunity =
     fetchedOpportunity || propOpportunity
