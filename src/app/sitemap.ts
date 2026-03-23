@@ -46,6 +46,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
       changeFrequency: "monthly" as const,
     },
+    {
+      path: "/company-onboarding",
+      priority: 0.6, // adjust based on importance
+      changeFrequency: "monthly" as const,
+    },
   ];
 
   return routes.map((route) => ({
