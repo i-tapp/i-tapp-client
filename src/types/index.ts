@@ -101,6 +101,8 @@ export interface Opportunity {
   company: Company;
   applications: Application[];
   // applicants?: Applicant[];
+
+  preferredFields?: { id?: string; field?: string }[];
 }
 
 export interface Application {

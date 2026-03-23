@@ -35,9 +35,11 @@ export const onboardingSchema = z.object({
   // Internship / Opportunity info
   internshipTitle: z.string().min(1, "Internship title is required"),
   stipend: z.enum(["stipend provided", "unpaid", "depends"]),
+  duration: z.string().min(0, "Duration must be a positive number"),
   location: z.string().optional(), // default to "Remote" if missing
+  // .min(1, "Porvide a location")
   // type: z.enum(["INTERNSHIP", "JOB"]),
-  // mode: z.enum(["REMOTE", "ONSITE", "HYBRID"]),
+  mode: z.enum(["remote", "onsite", "hybrid", "flexible"]).optional(),
   preferredFieldsOfStudy: z
     .array(z.enum(studyFields))
     .min(1, "At least one field of study must be selected"),

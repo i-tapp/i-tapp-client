@@ -19,9 +19,11 @@ import { useEffect, useState } from "react";
 export default function OpportunityDetailsContent({
   selectedId,
   setSelectedId,
+  selectedOpportunity: propOpportunity,
 }: {
   selectedId?: string | null;
   setSelectedId?: (id: string | null) => void;
+  selectedOpportunity?: any;
 }) {
   const queryClient = useQueryClient();
   const pathname = usePathname();
@@ -32,8 +34,21 @@ export default function OpportunityDetailsContent({
 
   const opportunityId = isPage ? String(id) : selectedId;
 
-  const { data: selectedOpportunity, isLoading } =
+  const { data: fetchedOpportunity, isLoading } =
     useFetchOpportunityPublicDetails(opportunityId ?? undefined);
+
+  // Fallback to propOpportunity for any fields the backend detail endpoint misses (like preferredFields)
+  const selectedOpportunity =
+    fetchedOpportunity || propOpportunity
+      ? {
+          ...propOpportunity,
+          ...fetchedOpportunity,
+          preferredFields:
+            fetchedOpportunity?.preferredFields?.length > 0
+              ? fetchedOpportunity?.preferredFields
+              : propOpportunity?.preferredFields,
+        }
+      : null;
 
   const { data: myApplicationStatus } = useFetchMyApplicationStatus(
     opportunityId ?? undefined,
@@ -261,6 +276,27 @@ export default function OpportunityDetailsContent({
         <p className="text-sm leading-relaxed text-gray-600">
           {selectedOpportunity?.description ?? "No description provided."}
         </p>
+      </section>
+
+      <section className="space-y-2">
+        <SectionTitle title="Preferred Fields of Study" />
+
+        {selectedOpportunity?.preferredFields?.length > 0 ? (
+          <div className="text-sm leading-relaxed text-gray-600">
+            {selectedOpportunity?.preferredFields?.map(
+              (field: any, index: number) => (
+                <p
+                  key={field?.id || index}
+                  className="capitalize bg-secondary/30 px-2 py-1 rounded mb-1"
+                >
+                  {typeof field === "string" ? field : field?.field}
+                </p>
+              ),
+            )}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-600">No fields specified.</p>
+        )}
       </section>
 
       {/* Actions */}

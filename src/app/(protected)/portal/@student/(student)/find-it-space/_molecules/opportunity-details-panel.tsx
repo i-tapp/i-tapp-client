@@ -14,7 +14,7 @@ export function OpportunityDetailsPanel(props: {
   return (
     <aside
       className={cn(
-        "hidden md:block bg-white rounded-lg shadow-sm border border-gray-200 self-start h-fit",
+        "hidden md:block bg-white rounded-lg shadow-sm border border-gray-200 self-start overflow-scroll h-fit",
         "transition-[opacity,transform] duration-200 ease-out",
         visible
           ? "opacity-100 translate-x-0"
