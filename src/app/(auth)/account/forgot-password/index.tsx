@@ -3,8 +3,8 @@
 import { requestPasswordReset } from "@/actions";
 import Input from "@/components/input";
 import { Button } from "@/components/ui/button";
-import { Link } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function ForgotPasswordPage() {
