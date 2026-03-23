@@ -22,8 +22,16 @@ export default function AvailableOpportunity({
   setSelectedId: (id: string | null) => void;
   setSelectedOpportunity: (name: Opportunity | null) => void;
 }) {
-  const { id, title, location, duration, createdAt, mode, totalApplications } =
-    details;
+  const {
+    id,
+    title,
+    location,
+    duration,
+    createdAt,
+    mode,
+    totalApplications,
+    preferredFields,
+  } = details;
 
   // ✅ best-effort company name (adapt to your actual field when available)
   const companyName =
@@ -112,7 +120,7 @@ export default function AvailableOpportunity({
       <div className="mt-4 flex items-center justify-between">
         <InfoText
           icon={<Clock size="16" />}
-          value={moment(createdAt).startOf("day").fromNow()}
+          value={moment(createdAt).fromNow()}
         />
         <InfoText
           icon={<Profile2User size="16" />}

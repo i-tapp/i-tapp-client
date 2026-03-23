@@ -1,16 +1,16 @@
 export const next = [
   {
-    text: "set up your free company profile ",
+    text: "Set up a free company profile",
     description:
-      "Create a comprehensive profile to showcase your company and attract top talent.",
+      "A free Comprehensive compnay profile will be automatically setup to showcase your company and attract top telents.",
   },
   {
-    text: "Start receiving intern applications ",
+    text: "Start Receiving intern",
     description:
       "Once your profile is live, you'll start getting applications from qualified students.",
   },
   {
-    text: "Get access to verified student profiles ",
+    text: "Get access to verified student profile",
     description:
       "Browse through our database of verified student profiles to find the perfect fit for your team.",
   },
@@ -29,7 +29,7 @@ export default function WelcomeLayout({
         <div className="sticky top-6">
           <h1 className="text-lg font-bold mb-2">What happens next</h1>
           <p className="text-sm text-gray-600 mb-4">
-            Once you submit this form, our team will reach out to help you:
+            Once you submit this form;
           </p>
 
           <div className="space-y-4">

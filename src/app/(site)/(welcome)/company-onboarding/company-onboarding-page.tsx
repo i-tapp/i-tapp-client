@@ -17,6 +17,7 @@ import {
   onboardingSchema,
   studyFields,
 } from "@/schemas/site.schema";
+import { OpportunityMode } from "@/types/enums";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Building2, User, Users } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
@@ -35,6 +36,8 @@ export default function CompanyOnboarding() {
       internshipTitle: "",
       stipend: "stipend provided",
       location: "",
+      duration: "3",
+      mode: undefined,
 
       preferredFieldsOfStudy: [],
 
@@ -63,14 +66,20 @@ export default function CompanyOnboarding() {
     },
   });
 
+  const OpportunityModeLabels = {
+    [OpportunityMode.ONSITE]: "onsite",
+    [OpportunityMode.REMOTE]: "remote",
+    [OpportunityMode.HYBRID]: "hybrid",
+    [OpportunityMode.FLEXIBLE]: "flexible",
+  } as const;
+
   return (
     <div className="flex flex-col  ">
       <div className="max-w-3xl">
         <h1 className="text-3xl font-bold">Join I-Tapp</h1>
         <p className="text-sm text-muted-foreground">
           Connect your organization with high-potential students. Complete the
-          onboarding process to start posting opportunities and engaging with
-          the next generation of talent.
+          Onboarding form and start engaging with next generation of Talent.
         </p>
       </div>
 
@@ -203,7 +212,7 @@ export default function CompanyOnboarding() {
               name="acceptingStudents"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
+                  <FormLabel className="uppercase font-black text-xs">
                     Are you currently open to accepting student interns?
                   </FormLabel>
 
@@ -250,6 +259,57 @@ export default function CompanyOnboarding() {
                 </FormItem>
               )}
             />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="uppercase font-black text-xs">
+                      Location
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="Lagos" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="duration"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="uppercase font-black text-xs">
+                      What category of student can you accept?
+                    </FormLabel>
+                    <FormControl>
+                      <select
+                        {...field}
+                        className="w-full border rounded-md px-3 py-2"
+                      >
+                        <option value="">Duration</option>
+                        <option value="4">
+                          Colleges of Education (4Months)
+                        </option>
+                        <option value="4">
+                          Polytechnics, Monotechnics, Colleges of Technology
+                          (4Months)
+                        </option>
+                        <option value="6">University Students (6Months)</option>
+                        <option value="12">
+                          Polytechnics, Monotechnics, Colleges of Technology
+                          (12Months)
+                        </option>
+                      </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
@@ -319,6 +379,34 @@ export default function CompanyOnboarding() {
                     </div>
                   </FormControl>
 
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="mode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="uppercase font-black text-xs">
+                    Internship Mode
+                  </FormLabel>
+                  <FormControl>
+                    <select
+                      {...field}
+                      className="w-full border rounded-md px-3 py-2"
+                    >
+                      <option value="">Internship Mode</option>
+                      {Object.entries(OpportunityModeLabels).map(
+                        ([value, label]) => (
+                          <option key={value} value={value}>
+                            {label}
+                          </option>
+                        ),
+                      )}
+                    </select>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

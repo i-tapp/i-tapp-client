@@ -45,7 +45,6 @@ export const useFetchOpportunities = (filter?: any) => {
       }
 
       const qs = new URLSearchParams(queryObject).toString();
-      console.log("queryString", qs);
       const response = await query(`/o${qs ? `?${qs}` : ""}`);
       return response.data;
     },
