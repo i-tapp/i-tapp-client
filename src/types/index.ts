@@ -58,6 +58,8 @@ export interface Student {
   profileImage: string;
   isVerified: boolean;
   role: string;
+  dob: string;
+  address: string;
   courseOfStudy?: string;
   softSkills?: string[];
   techSkills?: string[];
