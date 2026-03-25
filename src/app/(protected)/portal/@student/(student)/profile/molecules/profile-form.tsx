@@ -79,6 +79,10 @@ export default function ProfileForm({
         techSkills: student.techSkills || [],
         softSkills: student.softSkills || [],
         preferredIndustry: student.preferredIndustry || "",
+        dob: student.dob
+          ? new Date(student.dob).toISOString().split("T")[0]
+          : "",
+        address: student.address || "",
       });
     }
   }, [student, form]);

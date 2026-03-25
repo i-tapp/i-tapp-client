@@ -44,7 +44,7 @@ const mockStudent = {
   goals:
     "Secure a software engineering role at a leading tech company and contribute to building scalable solutions that impact millions of users.",
   address: "University of Lagos, Akoka, Lagos",
-  dateOfBirth: "1999-05-15",
+  dob: "1999-05-15",
   profilePicture: null,
 };
 
@@ -199,12 +199,12 @@ const StudentProfilePage = ({ student = mockStudent, onEdit = () => {} }) => {
                   fullWidth
                 />
               )}
-              {student.dateOfBirth && (
+              {student.dob && (
                 <InfoCard
                   icon={<Calendar size={18} />}
                   label="Date of Birth"
-                  value={new Date(student.dateOfBirth).toLocaleDateString(
-                    "en-US",
+                  value={new Date(studentDetails.dob).toLocaleDateString(
+                    "en-NG",
                     {
                       month: "long",
                       day: "numeric",
