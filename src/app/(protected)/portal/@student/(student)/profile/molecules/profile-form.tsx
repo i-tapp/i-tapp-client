@@ -51,6 +51,8 @@ export default function ProfileForm({
       softSkills: [],
       techSkills: [],
       preferredIndustry: "",
+      address: "",
+      dob: "",
     },
   });
 
@@ -241,6 +243,43 @@ export default function ProfileForm({
               </FormItem>
             )}
           /> */}
+
+          <FormField
+            control={form.control}
+            name="dob"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date of Birth</FormLabel>
+                <FormControl>
+                  <Input
+                    type="date"
+                    placeholder="Enter date of birth"
+                    {...field}
+                    wrapperClassName="rounded-lg"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Address</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Enter address (e.g 123 Main St, City, Country)"
+                    {...field}
+                    wrapperClassName="rounded-lg"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
         {/* Bio + Documents */}
