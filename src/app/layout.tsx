@@ -99,7 +99,10 @@ export const metadata: Metadata = {
   },
 
   verification: {
-    google: "SgVK8kUBhOUn5GdrmUT4m1-HtKsHDcNW9AHWdqJ-GSo",
+    google: [
+      "SgVK8kUBhOUn5GdrmUT4m1-HtKsHDcNW9AHWdqJ-GSo",
+      "ca-pub-2231106094660297",
+    ],
   },
 };
 
