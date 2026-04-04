@@ -65,6 +65,16 @@ export default function OpportunityDetailsContent({
   const canWithdraw =
     exists && status === ApplicationStatus.APPLIED && Boolean(applicationId);
 
+  const address = selectedOpportunity?.company?.addresses?.[0] ?? null;
+
+  const formatAddress = (address?: any) => {
+    if (!address) return "No address available";
+
+    return [address.line1, address.city, address.state, address.country]
+      .filter((val) => val && val !== "N/A")
+      .join(", ");
+  };
+
   const invalidateDetails = () => {
     queryClient.invalidateQueries({
       queryKey: ["my-application-status", opportunityId],
@@ -218,8 +228,7 @@ export default function OpportunityDetailsContent({
           <span className="text-gray-300">•</span>
 
           <p className="text-gray-500">
-            {selectedOpportunity?.company?.address ?? "Location not available"},
-            Nigeria
+            {address ? formatAddress(address) : "Location not available"},
           </p>
 
           {/* <p>{opportunityId}</p> */}

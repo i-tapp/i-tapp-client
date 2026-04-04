@@ -36,6 +36,8 @@ export default function StudentTable({
     );
   });
 
+  console.log("Filtered Students:", filteredStudents);
+
   return (
     <div className="border rounded-xl overflow-x-auto bg-white shadow">
       <div className="p-4 flex justify-between items-center">
@@ -62,6 +64,7 @@ export default function StudentTable({
             <th className="p-3">Name</th>
             <th className="p-3">Email</th>
             <th className="p-3">Program</th>
+            <th className="p-3">Account</th>
             <th className="p-3">Status</th>
             {/* <th className="p-3">Applications</th> */}
             <th className="p-3">Actions</th>
@@ -94,6 +97,9 @@ export default function StudentTable({
 
               <td className="p-3">{s?.user?.email}</td>
               <td className="p-3">{s?.courseOfStudy}</td>
+              <td className="p-3">
+                {s?.user?.isActive ? "Active" : "Inactive"}
+              </td>
               <td className="p-3">
                 <span
                   className={`px-2 py-1 rounded-full text-xs font-semibold ${
