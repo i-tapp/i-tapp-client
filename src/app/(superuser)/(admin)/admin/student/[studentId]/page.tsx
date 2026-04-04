@@ -32,7 +32,10 @@ export default function StudentDetailsPage() {
       });
     },
     onError: (err) => {
-      toast.error("Error updating student status");
+      console.log("Error updating student status:", err.error.serverError);
+      if (err.error.serverError) {
+        toast.error(err.error.serverError, { data });
+      }
     },
   });
 
@@ -107,21 +110,19 @@ export default function StudentDetailsPage() {
           <div className="flex flex-col gap-2 w-full">
             {/* <Button>Verify Student</Button> */}
 
-            {data?.status !== "suspended" && (
-              <Button
-                variant="secondary"
-                onClick={() =>
-                  execute({
-                    studentId: studentId as string,
-                    status: "suspended",
-                  })
-                }
-              >
-                Suspend Account
-              </Button>
-            )}
+            <Button
+              variant="default"
+              onClick={() =>
+                execute({
+                  studentId: studentId as string,
+                  status: "approved",
+                })
+              }
+            >
+              Approve Account
+            </Button>
 
-            {data?.status === "suspended" && (
+            {/* {data?.status === "suspended" && (
               <Button
                 variant="default"
                 onClick={() =>
@@ -133,7 +134,7 @@ export default function StudentDetailsPage() {
               >
                 Reactivate Account
               </Button>
-            )}
+            )} */}
 
             <Button
               variant="link"

@@ -12,15 +12,28 @@ const roleRedirects: Record<string, string> = {
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_APP_BACKEND_API_URL;
 
-async function me(token: string) {
-  const res = await fetch(`${API_BASE_URL}/auth/me`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+if (!API_BASE_URL) {
+  console.warn(
+    "⚠️ WARNING: NEXT_PUBLIC_APP_BACKEND_API_URL is not set. API calls will fail.",
+  );
+  process.exit(1);
+}
 
-  if (!res.ok) return null;
-  return res.json();
+async function me(token: string) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store", // important in middleware
+    });
+
+    if (!res.ok) return null;
+
+    return await res.json();
+  } catch (err) {
+    return null;
+  }
 }
 
 export async function proxy(req: NextRequest) {
@@ -83,7 +96,20 @@ export async function proxy(req: NextRequest) {
       return NextResponse.redirect(new URL("/signin", req.url));
     }
 
-    const profile = await me(token); // await me(token);
+    const profile = await me(token);
+
+    if (!profile) {
+      const response = NextResponse.redirect(new URL("/signin", req.url));
+
+      response.cookies.delete("session-token");
+      response.cookies.delete("role");
+      response.cookies.delete("company-onboarded");
+      response.cookies.delete("skip-student-onboarding");
+      response.cookies.delete("skip-company-onboarding");
+
+      return response;
+    }
+
     // console.log("Profile:", profile);
 
     // const role = profile?.role; // "student" | "company" | "admin"

@@ -291,18 +291,13 @@ export default function CompanyOnboarding() {
                         className="w-full border rounded-md px-3 py-2"
                       >
                         <option value="">Duration</option>
-                        <option value="4">
-                          Colleges of Education (4Months)
-                        </option>
-                        <option value="4">
-                          Polytechnics, Monotechnics, Colleges of Technology
-                          (4Months)
-                        </option>
-                        <option value="6">University Students (6Months)</option>
-                        <option value="12">
+                        <option value="4">0 - 4 Months</option>
+                        <option value="4">4 - 6 Months</option>
+                        <option value="6">6 - 12 Months</option>
+                        {/* <option value="12">
                           Polytechnics, Monotechnics, Colleges of Technology
                           (12Months)
-                        </option>
+                        </option> */}
                       </select>
                     </FormControl>
                     <FormMessage />
@@ -491,7 +486,7 @@ export default function CompanyOnboarding() {
   );
 }
 
-function Card({
+export function Card({
   children,
   title,
   icon,

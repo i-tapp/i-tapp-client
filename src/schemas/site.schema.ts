@@ -53,4 +53,14 @@ export const onboardingSchema = z.object({
   }),
 });
 
+export const forStudentsSchema = z.object({
+  firstName: z.string().min(2, "First name is required"),
+  lastName: z.string().min(2, "Last name is required"),
+  email: z.email("Invalid email address"),
+  school: z.string().min(2, "School is required"),
+  courseOfStudy: z.string().min(2, "Course of study is required"),
+  matriculationNumber: z.string().min(2, "Matriculation number is required"),
+});
+
 export type OnboardingData = z.infer<typeof onboardingSchema>;
+export type ForStudentsData = z.infer<typeof forStudentsSchema>;

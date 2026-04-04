@@ -68,7 +68,7 @@ export const updateStudentStatus = actionClient
   .inputSchema(
     z.object({
       studentId: z.string().min(1, "Student ID is required"),
-      status: z.enum(["active", "inactive", "suspended"]),
+      status: z.enum(["approved", "rejected", "suspended"]),
     }),
   )
   .action(async ({ parsedInput: { studentId, status } }) => {
