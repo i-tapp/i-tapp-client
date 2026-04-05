@@ -30,6 +30,7 @@ export default function Welcome() {
       lastName: "",
       school: "",
       matriculationNumber: "",
+      preferredLocation: "",
     },
   });
 
@@ -170,6 +171,19 @@ export default function Welcome() {
                   <FormLabel>Course of study</FormLabel>
                   <FormControl>
                     <Input {...field} placeholder="Computer Science" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="preferredLocation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Preferred IT Location</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="e.g., Lagos" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
