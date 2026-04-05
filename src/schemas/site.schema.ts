@@ -60,6 +60,7 @@ export const forStudentsSchema = z.object({
   school: z.string().min(2, "School is required"),
   courseOfStudy: z.string().min(2, "Course of study is required"),
   matriculationNumber: z.string().min(2, "Matriculation number is required"),
+  preferredLocation: z.string().min(2, "Preferred location is required"),
 });
 
 export type OnboardingData = z.infer<typeof onboardingSchema>;
