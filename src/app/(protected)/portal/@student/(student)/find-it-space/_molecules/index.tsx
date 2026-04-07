@@ -30,7 +30,7 @@ export default function FindITSpace() {
   if (error) return <div>Error loading opportunities.</div>;
 
   return (
-    <div className="pt-13 min-h-0 h-[calc(100vh-20px)]">
+    <div className="pt-13 min-h-0 h-full">
       <FilterToggleButton onToggle={() => setFilterActive((prev) => !prev)} />
       {/* <div className="bg-[#F0F0F5] pt-16 min-h-screen overflow-y-auto lg:h-screen lg:overflow-hidden"></div> */}
       <GridContainer selectedId={selectedId}>

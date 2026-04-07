@@ -2,9 +2,11 @@
 
 import { useFetchOpportunities } from "@/hooks/query";
 import OpportunityTable from "./_molecules/opportunity-table";
+import { useState } from "react";
 
 export default function OpportunitiesPage() {
-  const { data, isLoading, error } = useFetchOpportunities();
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data, isLoading, error } = useFetchOpportunities({}, currentPage, 10);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -20,7 +22,12 @@ export default function OpportunitiesPage() {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-semibold mb-6">Opportunities</h1>
-      <OpportunityTable data={data} isLoading={isLoading} />
+      <OpportunityTable
+        data={data}
+        isLoading={isLoading}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   );
 }
