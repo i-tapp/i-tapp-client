@@ -8,7 +8,7 @@ const StudentLayout = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <Header link={studentNavLinks} />
-      <main className="min-h-screen">{children}</main>
+      <main className=" bg-[#F0F0F5]">{children}</main>
     </>
   );
 };

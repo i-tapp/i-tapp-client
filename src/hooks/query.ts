@@ -8,9 +8,9 @@ import { useQuery } from "@tanstack/react-query";
 //   location?: string;
 // };
 
-export const useFetchOpportunities = (filter?: any) => {
+export const useFetchOpportunities = (filter?: any, page = 1, limit = 10) => {
   return useQuery({
-    queryKey: ["opportunities", filter ?? {}],
+    queryKey: ["opportunities", filter ?? {}, page, limit],
     queryFn: async () => {
       const queryObject: Record<string, any> = {};
 
@@ -44,7 +44,11 @@ export const useFetchOpportunities = (filter?: any) => {
         queryObject.location = filter.location.trim();
       }
 
+      queryObject.page = page;
+      queryObject.limit = limit;
+
       const qs = new URLSearchParams(queryObject).toString();
+      console.log("Querying with:", queryObject, "QS:", qs);
       const response = await query(`/o${qs ? `?${qs}` : ""}`);
       return response.data;
     },

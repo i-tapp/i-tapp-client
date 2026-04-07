@@ -4,6 +4,7 @@ import { Opportunity } from "@/types";
 import AvailableOpportunity from "./available-opportunity";
 import { Inbox } from "lucide-react";
 import { Spinner } from "@/components/spinner";
+import { SitePagination } from "@/components/ui/site-pagination";
 
 export default function Results({
   selectedId,
@@ -23,7 +24,7 @@ export default function Results({
   const isDetailsOpen = !!selectedId;
   // console.log("Opportunities in Results:", opportunities);
   return (
-    <main className="p-2 min-w-0 flex flex-col h-screen overflow-y-scroll pb-30">
+    <main className="p-2 min-w-0 flex flex-col h-screen min-h-0 overflow-y-auto pb-20">
       <div className="hidden md:block">
         <Search setFilter={setFilter} />
       </div>
@@ -78,17 +79,13 @@ export default function Results({
             </div>
           )}
         </div>
+        {/* <SitePagination
+          totalPosts={50}
+          postsPerPage={10}
+          currentPage={1}
+          setCurrentPage={() => console.log(1)}
+        /> */}
       </div>
-
-      <div className="shrink-0 pt-2">pagination</div>
     </main>
   );
 }
-
-//  <Button onClick={() => setCompanyId(1)}>Select Company</Button>
-
-//         {/* Mobile-only: show Left panel */}
-//         <div className="mt-4 md:hidden">
-//           <Button variant="outline" onClick={onShowLeft}>
-//             Show Left Panel
-//           </Button>

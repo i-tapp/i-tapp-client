@@ -77,13 +77,13 @@ export default function MyApplication({
         <ApplicationCard application={filteredApplications} />
       </div>
 
-      <SitePagination
+      {/* <SitePagination
         totalPosts={applications.length}
         postsPerPage={postPerPage}
         paginate={paginate}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
-      />
+      /> */}
     </Wrapper>
   );
 }

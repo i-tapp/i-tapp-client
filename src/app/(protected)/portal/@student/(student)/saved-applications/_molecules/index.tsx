@@ -83,13 +83,13 @@ export default function SavedApplication({
         <SavedOpportunityCard opportunity={filteredApplications} />
       </div>
 
-      <SitePagination
+      {/* <SitePagination
         totalPosts={filteredApplications.length}
         postsPerPage={postPerPage}
         paginate={paginate}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
-      />
+      /> */}
     </Wrapper>
   );
 }
