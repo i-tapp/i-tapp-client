@@ -29,6 +29,9 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import Input from "@/components/input";
 import { FormValues, opportunityFormSchema } from "@/schemas";
+import ReactSelect from "react-select";
+import { departments } from "@/types";
+import { studyFields } from "@/schemas/site.schema";
 
 type OpportunityFormProps = {
   initialData?: FormValues;
@@ -47,8 +50,7 @@ export default function OpportunityForm({
     resolver: zodResolver(opportunityFormSchema),
     defaultValues: initialData ?? {
       title: "",
-      industry: "",
-      department: "",
+      department: [],
       location: "",
       mode: OpportunityMode.REMOTE,
       type: OpportunityType.FULL_TIME,
@@ -58,6 +60,7 @@ export default function OpportunityForm({
       maxApplicants: undefined,
       applicationDeadline: undefined,
       autoCloseOnDeadline: false,
+      preferredFieldsOfStudy: [],
       // skills: "",
     },
 
@@ -67,8 +70,15 @@ export default function OpportunityForm({
   useEffect(() => form.reset(initialData), [initialData, form]);
 
   const handleSubmit = (data: FormValues) => {
-    onSubmit(data);
-    console.log("Errors:", form.formState.errors);
+    const formattedData = {
+      ...data,
+      applicationDeadline: data.applicationDeadline
+        ? new Date(data.applicationDeadline).toISOString()
+        : undefined,
+    };
+    onSubmit(formattedData);
+    // console.log("Form data:", formattedData);
+    // console.log("Errors:", form.formState.errors);
   };
 
   const OpportunityTypeLabels = {
@@ -92,11 +102,19 @@ export default function OpportunityForm({
   } as const;
 
   return (
-    <div className="p-6 w-full max-w-6xl mx-auto">
+    <div className="w-full max-w-6xl mx-auto">
       {/* Header */}
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+        <form
+          onSubmit={form.handleSubmit(
+            (values) => handleSubmit(values),
+            (e) => {
+              console.log("Validation errors:", form.formState.errors);
+            },
+          )}
+          className="space-y-6"
+        >
           {/* Opportunity Details Section */}
           <div className="border-2 border-primary/20 rounded-lg bg-card p-6">
             <h2 className="text-xl font-bold text-foreground mb-6">
@@ -109,7 +127,7 @@ export default function OpportunityForm({
                 control={form.control}
                 name="title"
                 render={({ field }) => (
-                  <FormItem className="flex items-center gap-4">
+                  <FormItem className="">
                     <FormLabel className="w-32">Title</FormLabel>
                     <FormControl>
                       <Input placeholder="Job title" {...field} />
@@ -122,12 +140,27 @@ export default function OpportunityForm({
               {/* Industry */}
               <FormField
                 control={form.control}
-                name="industry"
+                name="preferredFieldsOfStudy"
                 render={({ field }) => (
-                  <FormItem className="flex items-center gap-4">
-                    <FormLabel className="w-32">Industry</FormLabel>
+                  <FormItem className="">
+                    <FormLabel className="w-32">
+                      Preferred Fields of Study
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Technology" {...field} />
+                      <ReactSelect
+                        className=" text-sm"
+                        isMulti
+                        options={studyFields.map((dept) => ({
+                          value: dept,
+                          label: dept,
+                        }))}
+                        value={studyFields
+                          .map((dept) => ({ value: dept, label: dept }))
+                          .filter((opt) => field.value?.includes(opt.value))}
+                        onChange={(selected) => {
+                          field.onChange(selected.map((item) => item.value));
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -139,10 +172,24 @@ export default function OpportunityForm({
                 control={form.control}
                 name="department"
                 render={({ field }) => (
-                  <FormItem className="flex items-center gap-4">
+                  <FormItem className="">
                     <FormLabel className="w-32">Department</FormLabel>
                     <FormControl>
-                      <Input placeholder="Engineering" {...field} />
+                      {/* <Input placeholder="Engineering" {...field} /> */}
+                      <ReactSelect
+                        className=" text-sm"
+                        isMulti
+                        options={departments.map((dept) => ({
+                          value: dept,
+                          label: dept,
+                        }))}
+                        value={departments
+                          .map((dept) => ({ value: dept, label: dept }))
+                          .filter((opt) => field.value?.includes(opt.value))}
+                        onChange={(selected) => {
+                          field.onChange(selected.map((item) => item.value));
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -154,7 +201,7 @@ export default function OpportunityForm({
                 control={form.control}
                 name="location"
                 render={({ field }) => (
-                  <FormItem className="flex items-center gap-4">
+                  <FormItem className="">
                     <FormLabel className="w-32">Location</FormLabel>
                     <FormControl>
                       <Input placeholder="Lagos" {...field} />
@@ -169,7 +216,7 @@ export default function OpportunityForm({
                 control={form.control}
                 name="mode"
                 render={({ field }) => (
-                  <FormItem className="flex items-center gap-4">
+                  <FormItem className="">
                     <FormLabel className="w-32">Work Mode</FormLabel>
                     <FormControl>
                       <Select
@@ -200,7 +247,7 @@ export default function OpportunityForm({
                 control={form.control}
                 name="type"
                 render={({ field }) => (
-                  <FormItem className="flex items-center gap-4">
+                  <FormItem className="">
                     <FormLabel className="w-32">Opportunity Type</FormLabel>
                     <FormControl>
                       <Select
@@ -231,7 +278,7 @@ export default function OpportunityForm({
                 control={form.control}
                 name="status"
                 render={({ field }) => (
-                  <FormItem className="flex items-center gap-4">
+                  <FormItem className="">
                     <FormLabel className="w-32">Status</FormLabel>
                     <FormControl>
                       <Select
@@ -262,7 +309,7 @@ export default function OpportunityForm({
                 control={form.control}
                 name="duration"
                 render={({ field }) => (
-                  <FormItem className="flex items-center gap-4">
+                  <FormItem className="">
                     <FormLabel className="w-32">Duration (months)</FormLabel>
                     <FormControl>
                       <Input

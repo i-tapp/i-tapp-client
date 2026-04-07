@@ -14,7 +14,6 @@ import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import dp from "@/assets/images/dp.png";
-import { useEffect, useState } from "react";
 
 export default function OpportunityDetailsContent({
   selectedId,
@@ -275,7 +274,11 @@ export default function OpportunityDetailsContent({
           />
           <InfoItem
             label="Department"
-            value={selectedOpportunity?.department ?? "Not specified"}
+            value={
+              selectedOpportunity?.department
+                ?.map((dept: string) => dept)
+                .join(", ") ?? "Not specified"
+            }
             icon={<Bank size={18} />}
           />
         </div>
@@ -352,13 +355,13 @@ const InfoItem = ({
 }) => {
   return (
     <div className="flex items-center gap-3">
-      <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-blue-50 text-blue-400">
+      <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-blue-50 text-blue-400 shrink-0">
         {icon}
       </div>
 
       <div className="leading-tight">
         <p className="text-xs text-gray-400">{label}</p>
-        <p className="text-xs font-semibold text-gray-900 capitalize">
+        <p className="text-xs font-semibold text-gray-900 wrap-break-word">
           {value}
         </p>
       </div>

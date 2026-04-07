@@ -226,16 +226,15 @@ export default function StudentDetailsPage() {
                     <span className="font-medium">{student.dob}</span>
                   </div>
                 )}
-                {student.preferredLocation && (
-                  <div className="flex justify-between border-b pb-1">
-                    <span className="text-muted-foreground">
-                      Preferred IT Location
-                    </span>
-                    <span className="font-medium">
-                      {student.preferredLocation}
-                    </span>
-                  </div>
-                )}
+
+                <div className="flex justify-between border-b pb-1">
+                  <span className="text-muted-foreground">
+                    Preferred IT Location
+                  </span>
+                  <span className="font-medium">
+                    {student?.preferredLocation || "N/A"}
+                  </span>
+                </div>
               </div>
             )}
             {/* {activeTab === "Applications" && <p>Applications content...</p>}
