@@ -1,16 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { SitePagination } from "@/components/ui/site-pagination";
 
 export default function OpportunityTable({
   data,
   isLoading,
+  currentPage,
+  setCurrentPage,
 }: {
   data: any[];
   isLoading: boolean;
+  currentPage: number;
+  setCurrentPage: Dispatch<SetStateAction<number>>;
 }) {
   const [search, setSearch] = useState("");
 
@@ -112,6 +117,20 @@ export default function OpportunityTable({
               </tr>
             ))}
           </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan={7} className="text-center text-gray-500 py-4">
+                <SitePagination
+                  currentPage={currentPage}
+                  postsPerPage={10}
+                  totalPosts={20}
+                  setCurrentPage={setCurrentPage}
+                />
+                {/* {filtered.length} opportunity
+                {filtered.length !== 1 ? "ies" : "y"} found */}
+              </td>
+            </tr>
+          </tfoot>
         </table>
       </div>
     </div>

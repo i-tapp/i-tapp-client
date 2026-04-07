@@ -317,7 +317,7 @@ export default function OpportunityDetailsContent({
       <div className="mt-1 flex flex-col gap-2">
         {actionButton}
 
-        {/* <Button
+        <Button
           variant="ghost"
           onClick={() => {
             if (isPage) {
@@ -329,7 +329,7 @@ export default function OpportunityDetailsContent({
           className="w-full rounded-xl border border-gray-200 bg-white text-gray-800 hover:bg-gray-50"
         >
           Back to Listings
-        </Button> */}
+        </Button>
       </div>
     </div>
   );
