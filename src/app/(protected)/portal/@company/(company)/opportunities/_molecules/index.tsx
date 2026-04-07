@@ -127,7 +127,7 @@ export default function OpportunityPage() {
 type CardProps = {
   id: string;
   title: string;
-  department: string;
+  department: string[];
   location: string;
   status: OpportunityStatus;
   totalApplications: number;
@@ -171,7 +171,7 @@ export function CardView({
         <div>
           <h1 className="text-sm font-semibold">{title}</h1>
           <p className="text-xs text-gray-500">
-            {department ?? "Engineering"} &#8226; {location}
+            {department ?? "Not specified"} &#8226; {location}
           </p>
         </div>
       </div>
@@ -246,7 +246,7 @@ function MobileCardView({
           <div>
             <h1 className="text-sm font-semibold">{title}</h1>
             <p className="text-xs text-gray-500">
-              {department ?? "Engineering"} &#8226; {location}
+              {department ?? "Not specified"} &#8226; {location}
             </p>
           </div>
         </div>

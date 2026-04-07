@@ -43,7 +43,7 @@ export default function CandidateProfile() {
 
   const name = studentDetails?.firstName + " " + studentDetails?.lastName;
 
-  console.log("studentDetails", studentDetails);
+  // console.log("studentDetails", studentDetails);
 
   const { execute: createAction, isExecuting: isCreating } = useAction(
     createOffer,
@@ -111,7 +111,7 @@ export default function CandidateProfile() {
     return <Spinner placeholder="Loading student details..." />;
   }
 
-  console.log("applicationDetails", applicationDetails);
+  // console.log("applicationDetails", applicationDetails);
 
   return (
     <div className="min-h-screen bg-gray-50/60 ">
@@ -188,6 +188,17 @@ export default function CandidateProfile() {
                 icon={Location}
                 label="Address"
                 value={studentDetails?.user?.address || "Not provided"}
+              />
+            </div>
+
+            <Hr />
+            <div className="flex flex-col gap-2">
+              {/* <HeaderLabel title="IT" /> */}
+
+              <InfoCard
+                icon={Location}
+                label="Preferred IT Location"
+                value={studentDetails?.preferredLocation || "Not provided"}
               />
             </div>
           </SectionWrapper>

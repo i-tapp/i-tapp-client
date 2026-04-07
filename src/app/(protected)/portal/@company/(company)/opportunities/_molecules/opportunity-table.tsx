@@ -46,7 +46,7 @@ export default function OpportunityTable({ data }: { data: any[] }) {
                       {op.title}
                     </h1>
                     <p className="text-xs text-gray-500">
-                      {op.department ?? "Engineering"} &#8226; {op.location}
+                      {op.department ?? "Not specified"} &#8226; {op.location}
                     </p>
                   </div>
                 </div>

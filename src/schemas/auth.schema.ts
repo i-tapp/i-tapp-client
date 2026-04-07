@@ -98,8 +98,7 @@ export const companyProfileSchema = z.object({
 
 export const opportunityFormSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters"),
-  department: z.string().min(1, "Department is required"),
-  industry: z.string().min(1, "Industry is required"),
+  department: z.array(z.string()).min(1, "Department is required"),
   location: z.string().min(2, "Location is required"),
   mode: z.enum(modeValues),
   type: z.enum(typeValues),
@@ -109,6 +108,7 @@ export const opportunityFormSchema = z.object({
   maxApplicants: z.number().optional(),
   applicationDeadline: z.string().optional(),
   autoCloseOnDeadline: z.boolean().optional(),
+  preferredFieldsOfStudy: z.array(z.string()).optional(),
   // skills: z.string().optional(),
 });
 

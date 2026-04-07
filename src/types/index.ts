@@ -85,7 +85,7 @@ export interface Opportunity {
   status: OpportunityStatus;
 
   duration: number;
-  department: string;
+  department: string[];
   industry: string;
   totalApplications: number;
 
@@ -104,7 +104,8 @@ export interface Opportunity {
   applications: Application[];
   // applicants?: Applicant[];
 
-  preferredFields?: { id?: string; field?: string }[];
+  preferredFields?: { id: string; field: string }[];
+  preferredFieldsOfStudy?: { id: string; field: string }[];
 }
 
 export interface Application {
@@ -141,3 +142,16 @@ export interface Env {
   apiBaseUrl?: string;
   frontendUrl?: string;
 }
+
+export const departments = [
+  "Science",
+  "Law",
+  "Management Sciences / Business Administration",
+  "Social Sciences",
+  "Arts / Humanities",
+  "Education",
+  "Environmental Sciences",
+  "Agriculture",
+  "Engineering / Technology",
+  "Health Sciences / Medical Sciences",
+];

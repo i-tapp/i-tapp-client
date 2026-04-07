@@ -18,6 +18,7 @@ import OpportunityForm from "../../_molecules/opportunity-form";
 import { useAction } from "next-safe-action/hooks";
 import { Spinner } from "@/components/spinner";
 import { closeOpportunity, updateOpportunity } from "@/actions";
+import { toast } from "react-toastify";
 
 export default function OpportunityDetailsPage() {
   const { id } = useParams();
@@ -25,14 +26,17 @@ export default function OpportunityDetailsPage() {
   const [editing, setEditing] = useState(false);
 
   const opportunity = data as Opportunity;
+  console.log("Fetched opportunity details:", opportunity);
 
   const { execute, isExecuting } = useAction(updateOpportunity, {
     onSuccess(data) {
       console.log("Success", data);
       setEditing(false);
+      toast.success("Opportunity updated successfully!");
     },
     onError(error) {
       console.error("Error updating opportunity:", error);
+      toast.error("Failed to update opportunity.");
     },
   });
 
@@ -42,9 +46,11 @@ export default function OpportunityDetailsPage() {
       onSuccess(data) {
         console.log("Success", data);
         setEditing(false);
+        toast.success("Opportunity closed successfully!");
       },
       onError(error) {
         console.error("Error updating opportunity:", error);
+        toast.error("Failed to close opportunity.");
       },
     },
   );
@@ -76,13 +82,17 @@ export default function OpportunityDetailsPage() {
       duration: opportunity.duration,
       department: opportunity.department,
       industry: opportunity.industry,
-      maxApplicants: opportunity.maxApplicants,
+      maxApplicants: opportunity.maxApplicants ?? 0,
       skills: opportunity.skills,
-      applicationDeadline: opportunity.applicationDeadline,
+      applicationDeadline: opportunity.applicationDeadline
+        ? new Date(opportunity.applicationDeadline).toISOString().split("T")[0]
+        : "",
       status: opportunity.status,
       autoCloseOnDeadline: opportunity.autoCloseOnDeadline,
       resumeRequired: opportunity.resumeRequired,
       schoolLetterRequired: opportunity.schoolLetterRequired,
+      preferredFieldsOfStudy:
+        opportunity.preferredFields?.map((f) => f.field) ?? [],
     };
   };
 
@@ -94,7 +104,6 @@ export default function OpportunityDetailsPage() {
         isExecuting={isExecuting}
         onSubmit={(data) => {
           execute({ id: opportunity.id, ...data });
-          setEditing(false);
         }}
       />
     );
@@ -148,7 +157,7 @@ export default function OpportunityDetailsPage() {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
           <div className="flex-1">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl capitalize md:text-3xl font-bold text-gray-900 mb-2">
               {opportunity?.title || "Untitled Opportunity"}
             </h1>
             <div
@@ -176,10 +185,11 @@ export default function OpportunityDetailsPage() {
             <Button
               variant="secondary"
               className="flex items-center gap-2"
+              disabled={isClosing}
               onClick={() => close({ id: opportunity.id })}
             >
-              <Lock size={16} />
-              Close
+              <CloseCircle size={16} />
+              Close Opportunity
             </Button>
           </div>
         </div>
@@ -191,7 +201,7 @@ export default function OpportunityDetailsPage() {
               Department
             </span>
             <span className="text-sm text-gray-900 font-semibold mt-1 capitalize">
-              {opportunity?.department || "N/A"}
+              {opportunity?.department?.map((dept) => dept).join(", ") || "N/A"}
             </span>
           </div>
           <div className="flex flex-col">
