@@ -11,6 +11,7 @@ import { FilterToggleButton } from "./filter-toggle-button";
 import { OpportunityDetailsMobile } from "./opportunity-details-mobile";
 import FilterPanel from "./filter-panel";
 import FilterMobile from "./filter-mobile";
+import { SitePagination } from "@/components/ui/site-pagination";
 
 export default function FindITSpace() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -18,17 +19,18 @@ export default function FindITSpace() {
     useState<Opportunity | null>(null);
   const [filterActive, setFilterActive] = useState(false);
   const [filter, setFilter] = useState(filters);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const {
     data: opportunities = [],
     isLoading,
     error,
-  } = useFetchOpportunities(filter);
+  } = useFetchOpportunities(filter, currentPage, 10);
 
   if (error) return <div>Error loading opportunities.</div>;
 
   return (
-    <div className="bg-[#F0F0F5] h-screen overflow-hidden pt-12">
+    <div className="pt-13 min-h-0 h-[calc(100vh-20px)]">
       <FilterToggleButton onToggle={() => setFilterActive((prev) => !prev)} />
       {/* <div className="bg-[#F0F0F5] pt-16 min-h-screen overflow-y-auto lg:h-screen lg:overflow-hidden"></div> */}
       <GridContainer selectedId={selectedId}>
@@ -38,7 +40,6 @@ export default function FindITSpace() {
           // filterActive={filterActive}
           setFilterActive={setFilterActive}
         />
-
         <Results
           selectedId={selectedId}
           setSelectedId={(id) => {
@@ -49,14 +50,12 @@ export default function FindITSpace() {
           setSelectedOpportunity={setSelectedOpportunity}
           setFilter={setFilter}
         />
-
         <OpportunityDetailsPanel
           selectedId={selectedId}
           selectedOpportunity={selectedOpportunity}
           setSelectedId={setSelectedId}
         />
       </GridContainer>
-
       {filterActive && (
         <>
           <div
@@ -72,12 +71,21 @@ export default function FindITSpace() {
           />
         </>
       )}
-
       <OpportunityDetailsMobile
         selectedId={selectedId}
         selectedOpportunity={selectedOpportunity}
         setSelectedId={setSelectedId}
       />
+
+      <div className=" p-1 w-full">
+        <SitePagination
+          totalPosts={50}
+          postsPerPage={10}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          // className="mt-0 pt-0 self-center mx-0 m-0"
+        />
+      </div>
     </div>
   );
 }
