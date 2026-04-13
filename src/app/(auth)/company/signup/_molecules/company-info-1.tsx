@@ -29,7 +29,6 @@ export function CompanyInfo1() {
     defaultValues: {
       name: "",
       email: "",
-      registrationNumber: "",
       password: "",
     },
   });
@@ -97,7 +96,7 @@ export function CompanyInfo1() {
             )}
           />
 
-          <FormField
+          {/* <FormField
             control={form.control}
             name="registrationNumber"
             render={({ field }) => (
@@ -112,7 +111,7 @@ export function CompanyInfo1() {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
 
           <FormField
             control={form.control}
