@@ -53,7 +53,7 @@ export default function PreferencesStep({
               <FormItem>
                 <FormLabel>Preferred Work Location</FormLabel>
                 <FormControl>
-                  <div className="flex flex-row gap-4">
+                  <div className="grid grid-cols-3 gap-3">
                     {workLocations.map((location) => {
                       const selected = field.value === location.value;
                       return (
@@ -159,7 +159,7 @@ function WorkLocationItem({
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className={`flex flex-col justify-between items-center gap-2 rounded-lg border bg-primary/10 w-35 h-15 py-2 text-sm
+      className={`flex flex-col items-center justify-center gap-2 rounded-lg border bg-primary/10 w-full py-3 text-sm
         ${selected ? "border-primary" : "border-border"}`}
     >
       <Icon className="h-5 w-5" />

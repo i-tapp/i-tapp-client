@@ -39,7 +39,7 @@ export default function OnboardingForm({
       address: "",
       city: "",
       state: "",
-      bio: "",
+      description: "",
       companySize: undefined,
       foundedYear: "",
       website: "",
@@ -155,7 +155,7 @@ export default function OnboardingForm({
         <FieldRow>
           <FormField
             control={form.control}
-            name="bio"
+            name="description"
             render={({ field }) => (
               <FormItem>
                 <FieldLabel label="Company Bio" required />
@@ -272,7 +272,7 @@ export default function OnboardingForm({
         </FieldRow>
 
         <FieldRow last>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="cacDocument"

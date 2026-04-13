@@ -7,7 +7,6 @@ import { onBoardCompanySchema, OnboardingData } from "@/schemas";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import * as z from "zod";
 import Facts from "./_molecules/facts";
 import OnboardingForm from "./_molecules/company-profile";
 
@@ -23,8 +22,8 @@ export default function OnboardingPage() {
         );
         router.replace("/portal");
       },
-      onError: (error) => {
-        console.error("Onboarding error:", error);
+      onError: ({ error }) => {
+        toast.error(error.serverError ?? "Onboarding failed. Please try again.");
       },
     },
   );
@@ -36,10 +35,7 @@ export default function OnboardingPage() {
 
   function handleSubmit(data: OnboardingData) {
     const parsed = onBoardCompanySchema.safeParse(data);
-    if (!parsed.success) {
-      console.log("Validation failed:", z.treeifyError(parsed.error));
-      return;
-    }
+    if (!parsed.success) return;
     execute(parsed.data);
   }
 
@@ -59,7 +55,7 @@ export default function OnboardingPage() {
         </aside>
 
         {/* Main content */}
-        <main className="flex-1 rounded-xl border overflow-hidden flex flex-col">
+        <main className="flex-1 min-w-0 rounded-xl border overflow-hidden flex flex-col">
           {/* Header */}
           <div className="p-6 border-b flex items-start justify-between gap-4">
             <div>

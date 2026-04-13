@@ -137,8 +137,7 @@ export const profileFormSchema = z.object({
     .enum(["1-10", "11-50", "51-200", "201-500", "501-1000", "1000+"])
     .optional(),
   foundedYear: z
-    .string()
-    .regex(/^\d{4}$/, "Enter a valid year")
+    .union([z.literal(""), z.string().regex(/^\d{4}$/, "Enter a valid year")])
     .optional(),
   website: z
     .union([
@@ -150,8 +149,9 @@ export const profileFormSchema = z.object({
   address: z.string().min(5, "Address is required"),
   city: z.string().min(2, "City is required"),
   state: z.string().min(2, "State is required"),
-  bio: z
+  description: z
     .string({ error: "Bio is required" })
+    .min(1, "Bio is required")
     .max(500, "Bio must be at most 500 characters"),
 });
 
@@ -173,7 +173,9 @@ export const fileSchema = z
   );
 
 export const kycFormSchema = z.object({
-  registrationNumber: z.string().min(3, "Invalid registration number").optional(),
+  registrationNumber: z
+    .union([z.literal(""), z.string().min(3, "Invalid registration number")])
+    .optional(),
   cacDocument: fileSchema.optional(),
   proofOfAddress: fileSchema.optional(),
   repId: z
