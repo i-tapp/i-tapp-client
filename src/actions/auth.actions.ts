@@ -22,6 +22,7 @@ export const signinStudent = actionClient
     });
     const { user, token, profile } = response.data;
     await setAuthCookies(token, user.role);
+    await query("/auth/me");
     return { user, token, profile };
   });
 
@@ -35,6 +36,7 @@ export const signinCompany = actionClient
     });
     const { token, user, role, profile } = response.data;
     await setAuthCookies(token, user.role);
+    await query("/auth/me");
     return { token, role, user, profile };
   });
 
@@ -48,6 +50,7 @@ export const signinAdmin = actionClient
     });
     const { token, user, role, profile } = response.data;
     await setAuthCookies(token, user.role);
+    await query("/auth/me");
     return { token, role, user, profile };
   });
 
