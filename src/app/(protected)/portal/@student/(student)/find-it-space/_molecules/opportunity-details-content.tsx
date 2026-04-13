@@ -1,17 +1,27 @@
 import { apply, save, withdraw } from "@/actions";
 import { Spinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { useFetchOpportunityPublicDetails } from "@/hooks/query";
 import { useFetchMyApplicationStatus } from "@/queries/student";
+import { useStudentStore } from "@/lib/store";
 import { ApplicationStatus } from "@/types/enums";
 import { formatDate } from "@/utils/format-date";
 import { useQueryClient } from "@tanstack/react-query";
 import { Bank, Calendar, Heart } from "iconsax-reactjs";
-import { BadgeCheck, Banknote, ClockIcon, Globe } from "lucide-react";
+import { BadgeCheck, Banknote, ClockIcon, Globe, TriangleAlert } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import dp from "@/assets/images/dp.png";
 
@@ -36,8 +46,6 @@ export default function OpportunityDetailsContent({
   const { data: fetchedOpportunity, isLoading } =
     useFetchOpportunityPublicDetails(opportunityId ?? undefined);
 
-  console.log("Fetched Opportunity:", fetchedOpportunity);
-
   // Fallback to propOpportunity for any fields the backend detail endpoint misses (like preferredFields)
   const selectedOpportunity =
     fetchedOpportunity || propOpportunity
@@ -55,6 +63,9 @@ export default function OpportunityDetailsContent({
     opportunityId ?? undefined,
   );
 
+  const student = useStudentStore((s) => s.student);
+  const [locationWarningOpen, setLocationWarningOpen] = useState(false);
+
   const exists = myApplicationStatus?.exists ?? false;
   const status = myApplicationStatus?.status ?? null;
   const applicationId = myApplicationStatus?.applicationId ?? null;
@@ -68,10 +79,35 @@ export default function OpportunityDetailsContent({
 
   const formatAddress = (address?: any) => {
     if (!address) return "No address available";
-
     return [address.line1, address.city, address.state, address.country]
       .filter((val) => val && val !== "N/A")
       .join(", ");
+  };
+
+  /** Returns true when the student's preferred location doesn't match the opportunity */
+  const isLocationMismatch = (): boolean => {
+    const preferred = student?.preferredLocation?.trim().toLowerCase();
+    if (!preferred) return false;
+
+    const haystack = [
+      selectedOpportunity?.location,
+      address?.city,
+      address?.state,
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+
+    return haystack.length > 0 && !haystack.includes(preferred);
+  };
+
+  const opportunityLocationLabel = (): string => {
+    const parts = [
+      selectedOpportunity?.location,
+      address?.city,
+      address?.state,
+    ].filter(Boolean);
+    return parts.length > 0 ? parts.join(", ") : "Not specified";
   };
 
   const invalidateDetails = () => {
@@ -86,15 +122,12 @@ export default function OpportunityDetailsContent({
   const {
     execute: applyAction,
     isExecuting: isApplying,
-    result: applyResult,
-    hasErrored,
   } = useAction(apply, {
     onSuccess: (data) => {
       toast.success(data?.data?.data?.message || "Applied successfully!");
       invalidateDetails();
     },
     onError: (err) => {
-      console.error("Apply action error:", err);
       toast.error(
         err?.error?.serverError || "Failed to apply. Please try again.",
       );
@@ -102,11 +135,10 @@ export default function OpportunityDetailsContent({
   });
 
   const { execute: saveAction } = useAction(save, {
-    onSuccess(data) {
+    onSuccess() {
       toast.success("Saved successfully!");
     },
     onError(err) {
-      // console.error(err);
       toast.error(
         err?.error?.serverError || "Failed to save job. Please try again.",
       );
@@ -121,7 +153,6 @@ export default function OpportunityDetailsContent({
         invalidateDetails();
       },
       onError(err) {
-        // console.error(err);
         toast.error(
           err?.error?.serverError || "Failed to withdraw. Please try again.",
         );
@@ -129,9 +160,17 @@ export default function OpportunityDetailsContent({
     },
   );
 
-  const handleApply = () => {
+  const executeApply = () => {
     if (!opportunityId) return;
     applyAction({ id: opportunityId });
+  };
+
+  const handleApply = () => {
+    if (isLocationMismatch()) {
+      setLocationWarningOpen(true);
+      return;
+    }
+    executeApply();
   };
 
   const handleWithdraw = () => {
@@ -175,163 +214,222 @@ export default function OpportunityDetailsContent({
   if (!visible) return null;
 
   if (isLoading) return <Spinner />;
+
   return (
-    <div className="flex flex-col gap-5 p-4">
-      {/* Header */}
-      <div className="flex items-center justify-between ">
-        <Image
-          src={logo ?? dp}
-          alt="Company Logo"
-          width={44}
-          height={44}
-          className="h-11 w-11 rounded-xl border border-gray-200 bg-white shadow-sm"
-        />
+    <>
+      <div className="flex flex-col gap-5 p-4">
+        {/* Header */}
+        <div className="flex items-center justify-between ">
+          <Image
+            src={logo ?? dp}
+            alt="Company Logo"
+            width={44}
+            height={44}
+            className="h-11 w-11 rounded-xl border border-gray-200 bg-white shadow-sm"
+          />
 
-        <button
-          type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 shadow-sm transition hover:bg-gray-50 active:scale-[0.98]"
-          aria-label="Save / Like"
-          onClick={handleSave}
-        >
-          <Heart size={18} />
-        </button>
-      </div>
+          <button
+            type="button"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 shadow-sm transition hover:bg-gray-50 active:scale-[0.98]"
+            aria-label="Save / Like"
+            onClick={handleSave}
+          >
+            <Heart size={18} />
+          </button>
+        </div>
 
-      {/* Title & Company */}
-      <section className="space-y-1">
-        <p className="text-xl font-semibold tracking-tight text-gray-900">
-          {selectedOpportunity?.title}
-        </p>
-
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
-          <div className="flex flex-row items-center gap-1">
-            <Link
-              href={`/portal/company/${selectedOpportunity?.company?.id}`}
-              className="font-semibold text-primary hover:underline"
-            >
-              {selectedOpportunity?.company?.name}
-            </Link>
-
-            {selectedOpportunity?.company?.status === "approved" && (
-              <div className="relative group inline-block">
-                <BadgeCheck className="w-3 h-3 text-blue-500 cursor-pointer" />
-
-                <div className="absolute bottom-full mb-1 w-48 hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded shadow">
-                  This company is verified. Companies without this badge have
-                  not been verified yet.
-                </div>
-              </div>
-            )}
-          </div>
-
-          <span className="text-gray-300">•</span>
-
-          <p className="text-gray-500">
-            {address ? formatAddress(address) : "Location not available"},
+        {/* Title & Company */}
+        <section className="space-y-1">
+          <p className="text-xl font-semibold tracking-tight text-gray-900">
+            {selectedOpportunity?.title}
           </p>
 
-          {/* <p>{opportunityId}</p> */}
-        </div>
-      </section>
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
+            <div className="flex flex-row items-center gap-1">
+              <Link
+                href={`/portal/company/${selectedOpportunity?.company?.id}`}
+                className="font-semibold text-primary hover:underline"
+              >
+                {selectedOpportunity?.company?.name}
+              </Link>
 
-      {/* Highlights */}
-      <section className="grid grid-cols-2 gap-3">
-        <StatCard
-          label="Applicants"
-          value={selectedOpportunity?.totalApplications ?? 0}
-        />
-        <StatCard
-          label="Duration"
-          value={`${selectedOpportunity?.duration || "N/A"} Months`}
-        />
-      </section>
+              {selectedOpportunity?.company?.status === "approved" && (
+                <div className="relative group inline-block">
+                  <BadgeCheck className="w-3 h-3 text-blue-500 cursor-pointer" />
+                  <div className="absolute bottom-full mb-1 w-48 hidden group-hover:block bg-black text-white text-xs px-2 py-1 rounded shadow">
+                    This company is verified. Companies without this badge have
+                    not been verified yet.
+                  </div>
+                </div>
+              )}
+            </div>
 
-      {/* Job info */}
-      <section className="space-y-3">
-        <SectionTitle title="Job Information" />
+            <span className="text-gray-300">•</span>
 
-        <div className="grid grid-cols-2 gap-3">
-          <InfoItem
+            <p className="text-gray-500">
+              {address ? formatAddress(address) : "Location not available"},
+            </p>
+          </div>
+        </section>
+
+        {/* Highlights */}
+        <section className="grid grid-cols-2 gap-3">
+          <StatCard
+            label="Applicants"
+            value={selectedOpportunity?.totalApplications ?? 0}
+          />
+          <StatCard
             label="Duration"
             value={`${selectedOpportunity?.duration || "N/A"} Months`}
-            icon={<ClockIcon size={18} />}
           />
-          <InfoItem
-            label="Stipend"
-            value={selectedOpportunity?.stipend ?? "N/A"}
-            icon={<Banknote size={18} />}
-          />
-          <InfoItem
-            label="Mode"
-            value={selectedOpportunity?.mode ?? "N/A"}
-            icon={<Globe size={18} />}
-          />
-          <InfoItem
-            label="Posted"
-            // value="Oct 24, 2023"
-            value={formatDate(selectedOpportunity?.createdAt ?? "")}
-            icon={<Calendar size={18} />}
-          />
-          <InfoItem
-            label="Department"
-            value={
-              selectedOpportunity?.department
-                ?.map((dept: string) => dept)
-                .join(", ") ?? "Not specified"
-            }
-            icon={<Bank size={18} />}
-          />
-        </div>
-      </section>
+        </section>
 
-      {/* Description */}
-      <section className="space-y-2">
-        <SectionTitle title="Description" />
-        <p className="text-sm leading-relaxed text-gray-600">
-          {selectedOpportunity?.description ?? "No description provided."}
-        </p>
-      </section>
+        {/* Job info */}
+        <section className="space-y-3">
+          <SectionTitle title="Job Information" />
 
-      <section className="space-y-2">
-        <SectionTitle title="Preferred Fields of Study" />
-
-        {selectedOpportunity?.preferredFields?.length > 0 ? (
-          <div className="text-sm leading-relaxed text-gray-600">
-            {selectedOpportunity?.preferredFields?.map(
-              (field: any, index: number) => (
-                <p
-                  key={field?.id || index}
-                  className="capitalize bg-secondary/30 px-2 py-1 rounded mb-1"
-                >
-                  {typeof field === "string" ? field : field?.field}
-                </p>
-              ),
-            )}
+          <div className="grid grid-cols-2 gap-3">
+            <InfoItem
+              label="Duration"
+              value={`${selectedOpportunity?.duration || "N/A"} Months`}
+              icon={<ClockIcon size={18} />}
+            />
+            <InfoItem
+              label="Stipend"
+              value={selectedOpportunity?.stipend ?? "N/A"}
+              icon={<Banknote size={18} />}
+            />
+            <InfoItem
+              label="Mode"
+              value={selectedOpportunity?.mode ?? "N/A"}
+              icon={<Globe size={18} />}
+            />
+            <InfoItem
+              label="Posted"
+              value={formatDate(selectedOpportunity?.createdAt ?? "")}
+              icon={<Calendar size={18} />}
+            />
+            <InfoItem
+              label="Department"
+              value={
+                selectedOpportunity?.department
+                  ?.map((dept: string) => dept)
+                  .join(", ") ?? "Not specified"
+              }
+              icon={<Bank size={18} />}
+            />
           </div>
-        ) : (
-          <p className="text-sm text-gray-600">No fields specified.</p>
-        )}
-      </section>
+        </section>
 
-      {/* Actions */}
-      <div className="mt-1 flex flex-col gap-2">
-        {actionButton}
+        {/* Description */}
+        <section className="space-y-2">
+          <SectionTitle title="Description" />
+          <p className="text-sm leading-relaxed text-gray-600">
+            {selectedOpportunity?.description ?? "No description provided."}
+          </p>
+        </section>
 
-        <Button
-          variant="ghost"
-          onClick={() => {
-            if (isPage) {
-              router.back();
-              return;
-            }
-            setSelectedId?.(null);
-          }}
-          className="w-full rounded-xl border border-gray-200 bg-white text-gray-800 hover:bg-gray-50"
-        >
-          Back to Listings
-        </Button>
+        <section className="space-y-2">
+          <SectionTitle title="Preferred Fields of Study" />
+
+          {selectedOpportunity?.preferredFields?.length > 0 ? (
+            <div className="text-sm leading-relaxed text-gray-600">
+              {selectedOpportunity?.preferredFields?.map(
+                (field: any, index: number) => (
+                  <p
+                    key={field?.id || index}
+                    className="capitalize bg-secondary/30 px-2 py-1 rounded mb-1"
+                  >
+                    {typeof field === "string" ? field : field?.field}
+                  </p>
+                ),
+              )}
+            </div>
+          ) : (
+            <p className="text-sm text-gray-600">No fields specified.</p>
+          )}
+        </section>
+
+        {/* Actions */}
+        <div className="mt-1 flex flex-col gap-2">
+          {actionButton}
+
+          <Button
+            variant="ghost"
+            onClick={() => {
+              if (isPage) {
+                router.back();
+                return;
+              }
+              setSelectedId?.(null);
+            }}
+            className="w-full rounded-xl border border-gray-200 bg-white text-gray-800 hover:bg-gray-50"
+          >
+            Back to Listings
+          </Button>
+        </div>
       </div>
-    </div>
+
+      {/* Location mismatch warning modal */}
+      <Dialog open={locationWarningOpen} onOpenChange={setLocationWarningOpen}>
+        <DialogContent className="w-[calc(100%-2rem)] max-w-md mx-auto rounded-xl">
+          <DialogHeader>
+            <div className="flex items-center gap-2">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-500">
+                <TriangleAlert size={18} />
+              </span>
+              <DialogTitle className="text-base leading-snug">
+                Location Mismatch
+              </DialogTitle>
+            </div>
+            <DialogDescription className="mt-3 text-sm leading-relaxed">
+              This opportunity is outside your preferred IT location.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="rounded-lg border border-amber-100 bg-amber-50 px-4 py-3 text-sm space-y-2">
+            <div className="flex items-start justify-between gap-2">
+              <span className="text-muted-foreground shrink-0">Your preferred location</span>
+              <span className="font-medium text-right capitalize">
+                {student?.preferredLocation ?? "—"}
+              </span>
+            </div>
+            <div className="border-t border-amber-100" />
+            <div className="flex items-start justify-between gap-2">
+              <span className="text-muted-foreground shrink-0">Opportunity location</span>
+              <span className="font-medium text-right capitalize">
+                {opportunityLocationLabel()}
+              </span>
+            </div>
+          </div>
+
+          <p className="text-sm text-muted-foreground">
+            You can still apply, but note that this placement may require
+            relocation or commuting outside your preferred area.
+          </p>
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              className="w-full sm:w-auto"
+              onClick={() => setLocationWarningOpen(false)}
+            >
+              Go Back
+            </Button>
+            <Button
+              className="w-full sm:w-auto"
+              disabled={isApplying}
+              onClick={() => {
+                setLocationWarningOpen(false);
+                executeApply();
+              }}
+            >
+              {isApplying ? "Applying..." : "Apply Anyway"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
