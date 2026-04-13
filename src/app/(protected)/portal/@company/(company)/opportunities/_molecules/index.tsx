@@ -7,6 +7,7 @@ import { TickCircle, CloseCircle, DocumentText } from "iconsax-reactjs";
 import { ArrowRight, Search } from "lucide-react";
 import Link from "next/link";
 import { useFetchCompanyOpportunities } from "@/hooks/query";
+import { useInvalidateOpportunities } from "@/hooks/use-invalidate";
 import { Opportunity } from "@/types";
 import OpportunityForm from "./opportunity-form";
 import { useAction } from "next-safe-action/hooks";
@@ -26,16 +27,18 @@ export default function OpportunityPage() {
 
   const { data, isLoading, error } = useFetchCompanyOpportunities();
   const opportunities = (data as Opportunity[]) || [];
+  const invalidateOpportunities = useInvalidateOpportunities();
 
   const { execute, isExecuting } = useAction(createOpportunity, {
-    onSuccess(data) {
+    onSuccess() {
       setCreating(false);
       toast.success("Opportunity posted");
+      invalidateOpportunities();
     },
     onError(error) {
       toast.error(
         error?.error?.serverError ||
-          "Error posting opportunity, please try agian",
+          "Error posting opportunity, please try again",
       );
     },
   });

@@ -86,11 +86,20 @@ export const companySignupSchema = z.object({
 });
 
 export const companyProfileSchema = z.object({
-  website: z.url().optional(),
+  website: z.union([z.literal(""), z.url()]).optional(),
   address: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
   description: z.string().optional(),
+  phone: z.string().optional(),
+  industry: z.string().optional(),
+  foundedYear: z.union([z.literal(""), z.string().regex(/^\d{4}$/, "Enter a valid year")]).optional(),
+  companySize: z.enum(["1-10", "11-50", "51-200", "201-500", "501-1000", "1000+"]).optional(),
+  registrationNumber: z.union([z.literal(""), z.string().min(3, "RC number must be at least 3 characters")]).optional(),
   logoImage: z.instanceof(File).optional(),
   bannerImage: z.instanceof(File).optional(),
+  cacDocument: z.instanceof(File).optional(),
+  proofOfAddress: z.instanceof(File).optional(),
 });
 
 export const opportunityFormSchema = z.object({

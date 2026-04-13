@@ -171,8 +171,6 @@ export default function OnboardingForm({
             )}
           />
         </FieldRow>
-
-        {/* ── Optional fields ── */}
         <SectionHeader title="Optional Information" className="mt-4" />
 
         <FieldRow>
@@ -317,8 +315,6 @@ export default function OnboardingForm({
   );
 }
 
-/* ─── Shared sub-components ─── */
-
 function SectionHeader({
   title,
   className,
@@ -343,11 +339,7 @@ function FieldRow({
   children: React.ReactNode;
   last?: boolean;
 }) {
-  return (
-    <div className={cn("py-4", !last && "border-b")}>
-      {children}
-    </div>
-  );
+  return <div className={cn("py-4", !last && "border-b")}>{children}</div>;
 }
 
 function FieldLabel({

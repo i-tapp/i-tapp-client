@@ -25,11 +25,15 @@ export interface Company {
   name: string;
   registrationNumber: string;
   address: string;
+  city?: string;
+  state?: string;
   website: string;
   logoUrl: string;
   bannerUrl: string;
   isVerified: boolean;
   studentCapacity: number;
+  foundedYear?: string;
+  companySize?: string;
 
   description: string;
 
