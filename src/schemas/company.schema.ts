@@ -133,27 +133,25 @@ export const profileFormSchema = z.object({
     .string({ error: "Industry is required" })
     .min(1, { error: "Industry is required" }),
 
-  companySize: z.enum([
-    "1-10",
-    "11-50",
-    "51-200",
-    "201-500",
-    "501-1000",
-    "1000+",
-  ]),
-  foundedYear: z
-    .string()
-    .regex(/^\d{4}$/, "Enter a valid year")
+  companySize: z
+    .enum(["1-10", "11-50", "51-200", "201-500", "501-1000", "1000+"])
     .optional(),
-  website: z.url({
-    message: "Must be a valid URL starting with http:// or https://",
-  }),
+  foundedYear: z
+    .union([z.literal(""), z.string().regex(/^\d{4}$/, "Enter a valid year")])
+    .optional(),
+  website: z
+    .union([
+      z.literal(""),
+      z.url({ message: "Must be a valid URL starting with http:// or https://" }),
+    ])
+    .optional(),
   phone: z.string().min(10, "Phone number is too short"),
   address: z.string().min(5, "Address is required"),
   city: z.string().min(2, "City is required"),
   state: z.string().min(2, "State is required"),
-  bio: z
+  description: z
     .string({ error: "Bio is required" })
+    .min(1, "Bio is required")
     .max(500, "Bio must be at most 500 characters"),
 });
 
@@ -176,9 +174,9 @@ export const fileSchema = z
 
 export const kycFormSchema = z.object({
   registrationNumber: z
-    .string({ error: "CAC/Registration Number is required" })
-    .min(3, "Registration number is required"),
-  cacDocument: fileSchema,
+    .union([z.literal(""), z.string().min(3, "Invalid registration number")])
+    .optional(),
+  cacDocument: fileSchema.optional(),
   proofOfAddress: fileSchema.optional(),
   repId: z
     .custom<File | undefined>((v) => v === undefined || v instanceof File)

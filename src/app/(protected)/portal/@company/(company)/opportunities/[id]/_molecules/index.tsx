@@ -19,38 +19,37 @@ import { useAction } from "next-safe-action/hooks";
 import { Spinner } from "@/components/spinner";
 import { closeOpportunity, updateOpportunity } from "@/actions";
 import { toast } from "react-toastify";
+import { useInvalidateOpportunities } from "@/hooks/use-invalidate";
 
 export default function OpportunityDetailsPage() {
   const { id } = useParams();
   const { data, isLoading, error } = useFetchOpportunityDetails(id as string);
   const [editing, setEditing] = useState(false);
+  const invalidateOpportunities = useInvalidateOpportunities();
 
   const opportunity = data as Opportunity;
-  console.log("Fetched opportunity details:", opportunity);
 
   const { execute, isExecuting } = useAction(updateOpportunity, {
-    onSuccess(data) {
-      console.log("Success", data);
+    onSuccess() {
       setEditing(false);
       toast.success("Opportunity updated successfully!");
+      invalidateOpportunities();
     },
     onError(error) {
-      console.error("Error updating opportunity:", error);
-      toast.error("Failed to update opportunity.");
+      toast.error(error?.error?.serverError ?? "Failed to update opportunity.");
     },
   });
 
   const { execute: close, isExecuting: isClosing } = useAction(
     closeOpportunity,
     {
-      onSuccess(data) {
-        console.log("Success", data);
+      onSuccess() {
         setEditing(false);
         toast.success("Opportunity closed successfully!");
+        invalidateOpportunities();
       },
       onError(error) {
-        console.error("Error updating opportunity:", error);
-        toast.error("Failed to close opportunity.");
+        toast.error(error?.error?.serverError ?? "Failed to close opportunity.");
       },
     },
   );

@@ -14,6 +14,7 @@ export const schoolInfoSchema = z.object({
   gpa: z.string().optional(),
   degreeType: z.enum(["OND", "BSC", "MSC"], "Select a valid degree type"),
   graduationYear: z.string().min(1, "Graduation year is required"),
+  phone: z.string().min(10, "Phone number is too short"),
 });
 
 export const preferencesSchema = z.object({

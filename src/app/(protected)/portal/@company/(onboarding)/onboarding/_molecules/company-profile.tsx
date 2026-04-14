@@ -1,4 +1,7 @@
+"use client";
+
 import { updateCompanyLogo } from "@/actions";
+import { FileUploadThing } from "@/components/file-upload-thing";
 import Input from "@/components/input";
 import {
   Form,
@@ -10,7 +13,8 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import UploadThing from "@/components/upload-thing";
-import { CompanyProfileFormSchema, profileFormSchema } from "@/schemas";
+import { OnboardingData, onBoardCompanySchema } from "@/schemas";
+import { cn } from "@/utils/tailwind";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CameraIcon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
@@ -19,84 +23,181 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-export default function CompanyProfile({
-  onNext,
-  onBack,
+export default function OnboardingForm({
+  onSubmit,
 }: {
-  onNext: (data?: any) => void;
-  onBack: () => void;
+  onSubmit: (data: OnboardingData) => void;
 }) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const form = useForm<CompanyProfileFormSchema>({
-    resolver: zodResolver(profileFormSchema),
+
+  const form = useForm<OnboardingData>({
+    resolver: zodResolver(onBoardCompanySchema),
     mode: "all",
     defaultValues: {
       industry: "",
-      companySize: undefined,
-      foundedYear: "",
-      website: "",
       phone: "",
       address: "",
       city: "",
       state: "",
-      bio: "",
+      description: "",
+      companySize: undefined,
+      foundedYear: "",
+      website: "",
+      registrationNumber: "",
+      cacDocument: undefined,
+      proofOfAddress: undefined,
+      repId: undefined,
     },
   });
 
-  const { execute: logo } = useAction(updateCompanyLogo, {
-    onSuccess: (res) => {
-      console.log("Profile image updated successfully:", res);
-      toast.success("Company logo updated!");
-      // queryClient.invalidateQueries({ queryKey: ["student-profile"] });
-    },
-    onError: (error) => {
-      console.error("Error updating profile image:", error);
-    },
+  const { execute: uploadLogo } = useAction(updateCompanyLogo, {
+    onSuccess: () => toast.success("Company logo updated!"),
+    onError: () => {},
   });
 
   return (
-    <>
-      <Form {...form}>
-        <form
-          id="company-profile-form"
-          onSubmit={form.handleSubmit((values) => onNext(values))}
-          className="flex flex-col gap-4"
-        >
-          {/* Industry + Company Size */}
-          <div className="flex w-full flex-row gap-4">
+    <Form {...form}>
+      <form
+        id="onboarding-form"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col"
+      >
+        {/* ── Required fields ── */}
+        <SectionHeader title="Required Information" />
+
+        <FieldRow>
+          <FormField
+            control={form.control}
+            name="industry"
+            render={({ field }) => (
+              <FormItem>
+                <FieldLabel label="Industry" required />
+                <FormControl>
+                  <Input
+                    placeholder="e.g., Technology, Finance"
+                    type="text"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </FieldRow>
+
+        <FieldRow>
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FieldLabel label="Contact Phone Number" required />
+                <FormControl>
+                  <Input placeholder="e.g., +234 801 234 5678" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </FieldRow>
+
+        <FieldRow>
+          <FormField
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+              <FormItem>
+                <FieldLabel label="Full Address" required />
+                <FormControl>
+                  <Textarea
+                    placeholder="Street, area, landmark"
+                    className="resize-none"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </FieldRow>
+
+        <FieldRow>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="industry"
+              name="city"
               render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Industry</FormLabel>
+                <FormItem>
+                  <FieldLabel label="City" required />
                   <FormControl>
-                    <Input
-                      placeholder="e.g., Technology, Finance"
-                      type="text"
-                      {...field}
-                    />
+                    <Input placeholder="e.g., Lagos" {...field} />
                   </FormControl>
-                  {/* <FormMessage /> */}
-                  {form.formState.errors.industry && (
-                    <p className="text-red-500 font-semibold text-xs mt-1">
-                      {form.formState.errors.industry.message}
-                    </p>
-                  )}
+                  <FormMessage />
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="state"
+              render={({ field }) => (
+                <FormItem>
+                  <FieldLabel label="State" required />
+                  <FormControl>
+                    <Input placeholder="e.g., Lagos State" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </FieldRow>
 
+        <FieldRow>
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FieldLabel label="Company Bio" required />
+                <FormControl>
+                  <Textarea
+                    placeholder="Tell students what your company does..."
+                    className="h-28 resize-none"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </FieldRow>
+        <SectionHeader title="Optional Information" className="mt-4" />
+
+        <FieldRow>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="foundedYear"
+              render={({ field }) => (
+                <FormItem>
+                  <FieldLabel label="Founded Year" />
+                  <FormControl>
+                    <Input placeholder="e.g., 2018" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="companySize"
               render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Company Size</FormLabel>
+                <FormItem>
+                  <FieldLabel label="Company Size" />
                   <FormControl>
                     <select
                       {...field}
-                      className="w-full border rounded-md px-3 py-2"
+                      className="w-full border rounded-md px-3 py-2 text-sm h-10 bg-background"
                     >
                       <option value="">Select size</option>
                       <option value="1-10">1–10</option>
@@ -112,172 +213,180 @@ export default function CompanyProfile({
               )}
             />
           </div>
+        </FieldRow>
 
-          {/* Founded year + Website */}
-          <div className="flex w-full flex-row gap-4">
-            <FormField
-              control={form.control}
-              name="foundedYear"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Founded Year</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., 2018" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="website"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Website</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://www.example.com" {...field} />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                  {form.formState.errors.website ? (
-                    <p className="text-red-500 font-semibold text-xs mt-1">
-                      {form.formState.errors.website.message}
-                    </p>
-                  ) : (
-                    <p className="text-xs">
-                      Must be a valid URL starting with http:// or https://
-                    </p>
-                  )}
-                </FormItem>
-              )}
-            />
+        <FieldRow>
+          <div className="flex flex-col gap-1">
+            <FieldLabel label="Company Logo" />
+            <UploadThing
+              onSelect={(file) => {
+                setSelectedFile(file);
+                uploadLogo({ logo: file! });
+              }}
+            >
+              <LogoPreview selectedFile={selectedFile} />
+            </UploadThing>
           </div>
+        </FieldRow>
 
-          {/* Contact */}
+        <FieldRow>
           <FormField
             control={form.control}
-            name="phone"
+            name="website"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Contact Phone</FormLabel>
+                <FieldLabel label="Website" />
                 <FormControl>
-                  <Input placeholder="e.g., +234 801 234 5678" {...field} />
+                  <Input placeholder="https://www.example.com" {...field} />
+                </FormControl>
+                {form.formState.errors.website ? (
+                  <p className="text-red-500 text-xs mt-1">
+                    {form.formState.errors.website.message}
+                  </p>
+                ) : (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Must start with http:// or https://
+                  </p>
+                )}
+              </FormItem>
+            )}
+          />
+        </FieldRow>
+
+        <FieldRow>
+          <FormField
+            control={form.control}
+            name="registrationNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FieldLabel label="RC / Business Registration Number" />
+                <FormControl>
+                  <Input placeholder="e.g., RC 1234567" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+        </FieldRow>
 
-          {/* Address */}
-          <FormField
-            control={form.control}
-            name="address"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Full Address</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Street, area, landmark"
-                    {...field}
-                    className="resize-none"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* City + State */}
-          <div className="flex w-full flex-row gap-4">
+        <FieldRow last>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="city"
+              name="cacDocument"
               render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>City</FormLabel>
+                <FormItem>
+                  <FieldLabel label="CAC Document" />
                   <FormControl>
-                    <Input placeholder="e.g., Lagos" {...field} />
+                    <FileUploadThing
+                      title="Upload CAC document"
+                      value={field.value}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
-              name="state"
+              name="proofOfAddress"
               render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>State</FormLabel>
+                <FormItem>
+                  <FieldLabel label="Proof of Address" />
                   <FormControl>
-                    <Input placeholder="e.g., Lagos State" {...field} />
+                    <FileUploadThing
+                      title="Upload proof of address"
+                      value={field.value}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      description="Max 10MB. PDF/JPG/PNG/WEBP."
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-
-          {/* Bio */}
-          <FormField
-            control={form.control}
-            name="bio"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Company Bio</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Tell students what your company does..."
-                    {...field}
-                    typeof="text"
-                    className="h-28 resize-none"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </form>
-      </Form>
-
-      <UploadThing
-        onSelect={(file) => {
-          console.log(file);
-          setSelectedFile(file);
-          logo({ logo: file! });
-        }}
-      >
-        <LogoChange selectedFile={selectedFile} />
-      </UploadThing>
-    </>
+        </FieldRow>
+      </form>
+    </Form>
   );
 }
 
-const LogoChange = ({ selectedFile }: { selectedFile: File | null }) => {
+function SectionHeader({
+  title,
+  className,
+}: {
+  title: string;
+  className?: string;
+}) {
   return (
-    <div className="flex flex-col gap-1 mt-6">
-      <h1 className="font-semibold capitalize">Company Logo</h1>
-      <div className="flex flex-row gap-2 justify-start items-center">
-        <div className="border-2 border-dashed rounded-xl w-24 h-20 flex items-center justify-center cursor-pointer">
-          {selectedFile ? (
-            <Image
-              src={URL.createObjectURL(selectedFile)}
-              alt=""
-              width={80}
-              height={80}
-              className="w-20 h-20 object-cover rounded-xl"
-            />
-          ) : (
-            <CameraIcon className="text-gray-400 m-auto mt-6" />
-          )}
-        </div>
-        <div>
-          <h1 className="text-primary font-semibold text-sm">Upload Logo</h1>
-          <p className="text-xs text-gray-500">
-            PNG, JPG, GIF up to 5MB(400*400 recommended)
-          </p>
-        </div>
+    <div className={cn("pt-2 pb-1", className)}>
+      <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide">
+        {title}
+      </h2>
+      <div className="mt-1 border-t" />
+    </div>
+  );
+}
+
+function FieldRow({
+  children,
+  last,
+}: {
+  children: React.ReactNode;
+  last?: boolean;
+}) {
+  return <div className={cn("py-4", !last && "border-b")}>{children}</div>;
+}
+
+function FieldLabel({
+  label,
+  required,
+}: {
+  label: string;
+  required?: boolean;
+}) {
+  return (
+    <FormLabel className="flex items-center gap-2 mb-1">
+      {label}
+      {required ? (
+        <span className="text-[10px] font-semibold bg-red-50 text-red-600 border border-red-200 rounded px-1.5 py-0.5 leading-none">
+          Required
+        </span>
+      ) : (
+        <span className="text-[10px] font-medium bg-muted text-muted-foreground rounded px-1.5 py-0.5 leading-none">
+          Optional
+        </span>
+      )}
+    </FormLabel>
+  );
+}
+
+function LogoPreview({ selectedFile }: { selectedFile: File | null }) {
+  return (
+    <div className="flex flex-row gap-3 items-center">
+      <div className="border-2 border-dashed rounded-xl w-20 h-20 flex items-center justify-center cursor-pointer shrink-0">
+        {selectedFile ? (
+          <Image
+            src={URL.createObjectURL(selectedFile)}
+            alt=""
+            width={80}
+            height={80}
+            className="w-20 h-20 object-cover rounded-xl"
+          />
+        ) : (
+          <CameraIcon className="text-gray-400" size={20} />
+        )}
+      </div>
+      <div>
+        <p className="text-primary font-semibold text-sm">Upload Logo</p>
+        <p className="text-xs text-muted-foreground">
+          PNG, JPG, GIF up to 5MB (400×400 recommended)
+        </p>
       </div>
     </div>
   );
-};
+}

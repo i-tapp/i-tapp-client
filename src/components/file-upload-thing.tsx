@@ -21,10 +21,8 @@ export const FileUploadThing = ({
     <>
       <label
         className={cn(
-          "border-2 border-dashed rounded-xl h-[140px] flex flex-col items-center justify-center px-4 py-3 cursor-pointer hover:border-primary/60 focus-within:ring-2 focus-within:ring-primary/30",
-          // width ? "" : "w-full",
+          "w-full border-2 border-dashed rounded-xl h-[140px] flex flex-col items-center justify-center px-4 py-3 cursor-pointer hover:border-primary/60 focus-within:ring-2 focus-within:ring-primary/30",
         )}
-        // style={{ width }}
       >
         <input
           type="file"

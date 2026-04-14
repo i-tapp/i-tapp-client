@@ -136,7 +136,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${opensans.variable} ${montserrat.variable} antialiased`}
+        className={`${opensans.variable} ${montserrat.variable} antialiased`} suppressHydrationWarning={true}
       >
         <ReactQueryProvider>
           <AppProvider>

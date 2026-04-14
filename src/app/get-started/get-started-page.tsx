@@ -28,13 +28,13 @@ const RoleSelection = () => {
   const [isHovered, setIsHovered] = useState("");
   const router = useRouter();
 
+  const isDisabled = !selectedRole
+
   const handleContinue = () => {
     if (selectedRole === "student") {
-      console.log("Navigate to /student/signup");
-      router.push("/signup");
+      router.push("/welcome");
     } else if (selectedRole === "company") {
-      console.log("Navigate to /company/signup");
-      router.push("/company/signup");
+      router.push("/company-onboarding");
     }
   };
 
@@ -236,14 +236,26 @@ const RoleSelection = () => {
               </button>
 
               <p className="text-gray-600 text-lg">
-                Already have an account?{" "}
+                Already verified?{" "}
                 <a
+                  
                   href={
-                    selectedRole === "student" ? "/signin" : "/company/signin"
+                    !isDisabled
+                      ? selectedRole === "student"
+                        ? "/signup"
+                        : "/company/signup"
+                      : undefined
                   }
-                  className="text-blue-600 hover:text-blue-700 font-semibold underline-offset-4 hover:underline transition-all"
+                  onClick={(e) => {
+                    if (isDisabled) e.preventDefault();
+                  }}
+                  className={`font-semibold underline-offset-4 transition-all ${
+                    isDisabled
+                      ? "text-gray-400 cursor-not-allowed pointer-events-none"
+                      : "text-blue-600 hover:text-blue-700 hover:underline"
+                  }`}
                 >
-                  Sign In
+                  Sign Up
                 </a>
               </p>
             </div>

@@ -89,7 +89,7 @@ export default function OpportunityTable({ data }: { data: any[] }) {
         <TableFooter>
           <TableRow>
             <TableCell colSpan={4} className="px-4 py-3">
-              <p>pagination </p>
+              {/* <p>pagination </p> */}
             </TableCell>
           </TableRow>
         </TableFooter>

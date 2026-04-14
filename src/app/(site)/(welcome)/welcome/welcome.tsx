@@ -30,7 +30,7 @@ export default function Welcome() {
       lastName: "",
       school: "",
       matriculationNumber: "",
-      preferredLocation: "",
+      preferredLocation: undefined,
     },
   });
 
@@ -183,7 +183,22 @@ export default function Welcome() {
                 <FormItem>
                   <FormLabel>Preferred IT Location</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="e.g., Lagos" />
+                    <select
+                      {...field}
+                      value={field.value ?? ""}
+                      className="w-full border rounded-md px-3 py-2 text-sm h-10 bg-background"
+                    >
+                      <option value="">Select a state</option>
+                      {[
+                        "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue",
+                        "Borno", "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu",
+                        "FCT - Abuja", "Gombe", "Imo", "Jigawa", "Kaduna", "Kano", "Katsina",
+                        "Kebbi", "Kogi", "Kwara", "Lagos", "Nasarawa", "Niger", "Ogun", "Ondo",
+                        "Osun", "Oyo", "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara",
+                      ].map((state) => (
+                        <option key={state} value={state}>{state}</option>
+                      ))}
+                    </select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import ProfileForm from "./profile-form";
-import { useCompanyStore } from "@/lib/store/company";
 import {
   Building2,
   Mail,
@@ -11,6 +10,8 @@ import {
   MapPin,
   Users,
   Briefcase,
+  Hash,
+  Calendar,
 } from "lucide-react";
 import InfoCard from "@/components/info-card";
 import ProfileHeaderBanner from "@/components/profile-header-banner";
@@ -20,7 +21,6 @@ import { useLogout } from "@/hooks/use-logout";
 
 export default function CompanyProfilePage() {
   const [editing, setEditing] = useState(false);
-  const company = useCompanyStore((s) => s.company);
 
   const { data: companyProfile, isLoading } = useFetchCompanyProfile();
 
@@ -124,7 +124,7 @@ export default function CompanyProfilePage() {
               <InfoCard
                 icon={<Mail className="w-5 h-5" />}
                 label="Email Address"
-                value={companyProfile?.user?.email}
+                value={companyProfile?.user?.email ?? companyProfile?.email}
                 href={
                   companyProfile?.user?.email
                     ? `mailto:${companyProfile.user.email}`
@@ -133,13 +133,28 @@ export default function CompanyProfilePage() {
               />
               <InfoCard
                 icon={<Phone className="w-5 h-5" />}
-                label="Phone Number"
+                label="Contact Phone Number"
                 value={companyProfile?.phone}
                 href={
                   companyProfile?.phone
                     ? `tel:${companyProfile.phone}`
                     : undefined
                 }
+              />
+              <InfoCard
+                icon={<Briefcase className="w-5 h-5" />}
+                label="Industry"
+                value={companyProfile?.industry}
+              />
+              <InfoCard
+                icon={<Users className="w-5 h-5" />}
+                label="Company Size"
+                value={companyProfile?.companySize}
+              />
+              <InfoCard
+                icon={<Calendar className="w-5 h-5" />}
+                label="Founded Year"
+                value={companyProfile?.foundedYear}
               />
               <InfoCard
                 icon={<Globe className="w-5 h-5" />}
@@ -149,13 +164,23 @@ export default function CompanyProfilePage() {
                 external
               />
               <InfoCard
-                icon={<Users className="w-5 h-5" />}
-                label="Student Capacity"
-                value={companyProfile.studentCapacity?.toString()}
+                icon={<Hash className="w-5 h-5" />}
+                label="RC / Registration Number"
+                value={companyProfile?.registrationNumber}
               />
               <InfoCard
                 icon={<MapPin className="w-5 h-5" />}
-                label="Address"
+                label="City"
+                value={companyProfile?.city}
+              />
+              <InfoCard
+                icon={<MapPin className="w-5 h-5" />}
+                label="State"
+                value={companyProfile?.state}
+              />
+              <InfoCard
+                icon={<MapPin className="w-5 h-5" />}
+                label="Full Address"
                 value={companyProfile?.address}
                 fullWidth
               />

@@ -60,7 +60,13 @@ export const forStudentsSchema = z.object({
   school: z.string().min(2, "School is required"),
   courseOfStudy: z.string().min(2, "Course of study is required"),
   matriculationNumber: z.string().min(2, "Matriculation number is required"),
-  preferredLocation: z.string().min(2, "Preferred location is required"),
+  preferredLocation: z.enum([
+    "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue",
+    "Borno", "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu",
+    "FCT - Abuja", "Gombe", "Imo", "Jigawa", "Kaduna", "Kano", "Katsina",
+    "Kebbi", "Kogi", "Kwara", "Lagos", "Nasarawa", "Niger", "Ogun", "Ondo",
+    "Osun", "Oyo", "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara",
+  ], { error: "Please select a preferred IT location" }),
 });
 
 export type OnboardingData = z.infer<typeof onboardingSchema>;

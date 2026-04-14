@@ -109,9 +109,7 @@ export default function OpportunityForm({
         <form
           onSubmit={form.handleSubmit(
             (values) => handleSubmit(values),
-            (e) => {
-              console.log("Validation errors:", form.formState.errors);
-            },
+            () => {},
           )}
           className="space-y-6"
         >
@@ -364,9 +362,9 @@ export default function OpportunityForm({
                     <FormControl>
                       <Input
                         type="number"
-                        disabled={!!initialData}
                         placeholder="e.g. 50"
                         {...field}
+                        value={field.value ?? ""}
                         onChange={(e) =>
                           field.onChange(parseInt(e.target.value) || 0)
                         }
@@ -387,7 +385,7 @@ export default function OpportunityForm({
                   <FormItem>
                     <FormLabel>Application Deadline</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} disabled={!!initialData} />
+                      <Input type="date" {...field} value={field.value ?? ""} />
                     </FormControl>
                     <p className="text-xs text-muted-foreground mt-1">
                       Applications will not be accepted after this date

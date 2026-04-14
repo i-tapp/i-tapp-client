@@ -66,6 +66,42 @@ export const updateCompanyProfile = actionClient
       formData.append("description", parsedInput.description);
     }
 
+    if (parsedInput.phone) {
+      formData.append("phone", parsedInput.phone);
+    }
+
+    if (parsedInput.industry) {
+      formData.append("industry", parsedInput.industry);
+    }
+
+    if (parsedInput.city) {
+      formData.append("city", parsedInput.city);
+    }
+
+    if (parsedInput.state) {
+      formData.append("state", parsedInput.state);
+    }
+
+    if (parsedInput.foundedYear) {
+      formData.append("foundedYear", parsedInput.foundedYear);
+    }
+
+    if (parsedInput.companySize) {
+      formData.append("companySize", parsedInput.companySize);
+    }
+
+    if (parsedInput.registrationNumber) {
+      formData.append("registrationNumber", parsedInput.registrationNumber);
+    }
+
+    if (parsedInput.cacDocument) {
+      formData.append("cacDocument", parsedInput.cacDocument);
+    }
+
+    if (parsedInput.proofOfAddress) {
+      formData.append("proofOfAddress", parsedInput.proofOfAddress);
+    }
+
     try {
       const response = await mutate("/c/profile/update", formData, "PATCH");
       return response;

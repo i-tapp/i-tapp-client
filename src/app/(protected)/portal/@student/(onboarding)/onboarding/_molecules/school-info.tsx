@@ -30,10 +30,9 @@ export default function SchoolInfoStep({
       gpa: "",
       degreeType: "OND",
       graduationYear: "",
+      phone: "",
     },
   });
-
-  console.log("School Info Step - default values:", data);
   return (
     <>
       <Form {...form}>
@@ -148,6 +147,24 @@ export default function SchoolInfoStep({
               )}
             />
           </GroupItem>
+
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone Number</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., +234 801 234 5678" {...field} />
+                </FormControl>
+                <FormMessage />
+                <p className="text-xs text-muted-foreground mt-1">
+                  📞 Note: Submit a number that is easily reachable or available
+                  by call.
+                </p>
+              </FormItem>
+            )}
+          />
         </form>
       </Form>
     </>
