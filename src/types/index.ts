@@ -68,6 +68,7 @@ export interface Student {
   softSkills?: string[];
   techSkills?: string[];
   preferredIndustry?: string;
+  preferredLocation?: string;
   goals?: string;
   bio?: string;
   user: {
