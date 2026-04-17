@@ -13,8 +13,9 @@ export default function PlacementList({ onSelect, selectedId }: any) {
   }
 
   const filtered = data.filter((item: any) => {
-    const student = item.application.student || "";
-    const name = student.firstName + " " + student.lastName;
+    const student = item.application?.student;
+    if (!student) return true;
+    const name = `${student.firstName ?? ""} ${student.lastName ?? ""}`;
     return name.toLowerCase().includes(search.toLowerCase());
   });
 
@@ -40,10 +41,11 @@ export default function PlacementList({ onSelect, selectedId }: any) {
             `}
           >
             <div className="font-medium">
-              {item.application.student.firstName}{" "}
-              {item.application.student.lastName}
+              {item.application?.student
+                ? `${item.application.student.firstName ?? ""} ${item.application.student.lastName ?? ""}`.trim()
+                : "Unknown Student"}
             </div>
-            <div className="text-sm text-gray-500">{item.company.name}</div>
+            <div className="text-sm text-gray-500">{item.company?.name ?? "—"}</div>
 
             {/* <span
               className={`text-xs px-2 py-1 rounded mt-1 inline-block
