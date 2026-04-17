@@ -3,6 +3,7 @@
 import { quickCreateCompany } from "@/actions";
 import Input from "@/components/input";
 import { Button } from "@/components/ui/button";
+import { CheckCircle2 } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -22,9 +23,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Building2, User, Users } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function CompanyOnboarding() {
+  const [submitted, setSubmitted] = useState(false);
+
   const form = useForm<OnboardingData>({
     resolver: zodResolver(onboardingSchema),
     defaultValues: {
@@ -53,15 +57,10 @@ export default function CompanyOnboarding() {
   const industry = form.watch("industry");
 
   const { execute, isExecuting } = useAction(quickCreateCompany, {
-    onSuccess(data) {
-      console.log("Company created successfully:", data);
-      toast.success(
-        "Form submitted successfully! Our team will reach out to you soon.",
-      );
-      form.reset();
+    onSuccess() {
+      setSubmitted(true);
     },
-    onError(error) {
-      console.error("Error creating company:", error);
+    onError() {
       toast.error("Failed to submit form. Please try again.");
     },
   });
@@ -72,6 +71,26 @@ export default function CompanyOnboarding() {
     [OpportunityMode.HYBRID]: "hybrid",
     [OpportunityMode.FLEXIBLE]: "flexible",
   } as const;
+
+  if (submitted) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-center gap-6 max-w-md mx-auto py-16">
+        <div className="flex items-center justify-center w-16 h-16 rounded-full bg-green-100">
+          <CheckCircle2 className="w-8 h-8 text-green-600" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold">Submission Received!</h2>
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            Thank you for registering with I-TAPP. Our team will review your
+            submission and reach out to you via the contact details provided.
+          </p>
+        </div>
+        <Button variant="outline" onClick={() => setSubmitted(false)}>
+          Submit another response
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col  ">

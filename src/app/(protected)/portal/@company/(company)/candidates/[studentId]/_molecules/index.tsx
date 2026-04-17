@@ -13,6 +13,7 @@ import {
   useFetchStudentDetails,
 } from "@/hooks/query";
 import { useParams, useSearchParams } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { Spinner } from "@/components/spinner";
 import OfferModal from "./send-offer";
 import Hr from "@/components/ui/hr";
@@ -31,6 +32,7 @@ export default function CandidateProfile() {
   const [offerFormOpen, setOfferFormOpen] = useState(false);
   const { studentId } = useParams();
   const opportunityId = useSearchParams().get("opportunityId");
+  const queryClient = useQueryClient();
 
   const { data: studentDetails, isLoading } = useFetchStudentDetails(
     studentId as string,
@@ -43,18 +45,20 @@ export default function CandidateProfile() {
 
   const name = studentDetails?.firstName + " " + studentDetails?.lastName;
 
-  // console.log("studentDetails", studentDetails);
+  const invalidate = () => {
+    queryClient.invalidateQueries({ queryKey: ["application-details", opportunityId] });
+  };
 
   const { execute: createAction, isExecuting: isCreating } = useAction(
     createOffer,
     {
       onSuccess: () => {
-        toast.success("Application accepted successfully!");
+        toast.success("Offer sent successfully!");
+        invalidate();
+        setOfferFormOpen(false);
       },
       onError: (error) => {
-        const { serverError } = error?.error;
-        const errorMessage = serverError || "An error occurred.";
-        toast.error(errorMessage);
+        toast.error(error?.error?.serverError || "An error occurred.");
       },
     },
   );
@@ -64,11 +68,10 @@ export default function CandidateProfile() {
     {
       onSuccess: () => {
         toast.success("Application accepted successfully!");
+        invalidate();
       },
       onError: (error) => {
-        const { serverError } = error?.error;
-        const errorMessage = serverError || "An error occurred.";
-        toast.error(errorMessage);
+        toast.error(error?.error?.serverError || "An error occurred.");
       },
     },
   );
@@ -78,11 +81,10 @@ export default function CandidateProfile() {
     {
       onSuccess: () => {
         toast.success("Application declined successfully!");
+        invalidate();
       },
       onError: (error) => {
-        const { serverError } = error?.error;
-        const errorMessage = serverError || "An error occurred.";
-        toast.error(errorMessage);
+        toast.error(error?.error?.serverError || "An error occurred.");
       },
     },
   );
@@ -92,11 +94,10 @@ export default function CandidateProfile() {
     {
       onSuccess: () => {
         toast.success("Offer withdrawn successfully!");
+        invalidate();
       },
       onError: (error) => {
-        const { serverError } = error?.error;
-        const errorMessage = serverError || "An error occurred.";
-        toast.error(errorMessage);
+        toast.error(error?.error?.serverError || "An error occurred.");
       },
     },
   );
@@ -110,8 +111,6 @@ export default function CandidateProfile() {
   if (isLoading) {
     return <Spinner placeholder="Loading student details..." />;
   }
-
-  // console.log("applicationDetails", applicationDetails);
 
   return (
     <div className="min-h-screen bg-gray-50/60 ">
