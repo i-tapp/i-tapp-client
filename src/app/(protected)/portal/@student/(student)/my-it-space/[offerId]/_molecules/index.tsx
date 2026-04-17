@@ -13,10 +13,12 @@ import {
 import somPng from "@/assets/images/company.png";
 import { useParams } from "next/navigation";
 import { useFetchOfferDetails } from "@/hooks/query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Spinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
 import DownloadOfferLetterSection from "./offer-letter";
 import { useAction } from "next-safe-action/hooks";
+import { toast } from "react-toastify";
 import Loading from "@/components/loading";
 import { acceptOffer, declineOffer } from "@/actions";
 
@@ -43,22 +45,26 @@ const companyDetails = {
 
 const CompanyDetailsPage = () => {
   const { offerId } = useParams();
-  // In real app, you would get 'company' via props or fetch based on URL ID
   const company = companyDetails;
+  const queryClient = useQueryClient();
 
   const { data: offerDetails, isLoading } = useFetchOfferDetails(
     offerId as string,
   );
 
+  const invalidate = () => {
+    queryClient.invalidateQueries({ queryKey: ["offer-details", offerId] });
+  };
+
   const { execute: acceptOfferExecute, isExecuting: isAccepting } = useAction(
     acceptOffer,
     {
-      onSuccess: (data) => {
-        console.log("Offer accepted successfully", data);
-        // Optionally, add logic to refresh data or redirect
+      onSuccess: () => {
+        toast.success("Offer accepted!");
+        invalidate();
       },
       onError: (error) => {
-        console.error("Error accepting offer:", error);
+        toast.error(error?.error?.serverError || "Failed to accept offer.");
       },
     },
   );
@@ -66,18 +72,15 @@ const CompanyDetailsPage = () => {
   const { execute: declineOfferExecute, isExecuting: isDeclining } = useAction(
     declineOffer,
     {
-      onSuccess: (data) => {
-        console.log("Offer accepted successfully", data);
-        // Optionally, add logic to refresh data or redirect
+      onSuccess: () => {
+        toast.success("Offer declined.");
+        invalidate();
       },
       onError: (error) => {
-        console.error("Error accepting offer:", error);
+        toast.error(error?.error?.serverError || "Failed to decline offer.");
       },
     },
   );
-
-  console.log("Viewing offer ID:", offerId);
-  console.log("Fetched offer details:", offerDetails);
 
   const companyDetail = offerDetails?.company || company;
   const applicationDetails = offerDetails?.application || null;

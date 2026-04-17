@@ -28,7 +28,7 @@ const RoleSelection = () => {
   const [isHovered, setIsHovered] = useState("");
   const router = useRouter();
 
-  const isDisabled = !selectedRole
+  const isDisabled = !selectedRole;
 
   const handleContinue = () => {
     if (selectedRole === "student") {
