@@ -220,7 +220,7 @@ const RoleSelection = () => {
               <button
                 onClick={handleContinue}
                 disabled={!selectedRole}
-                className={`px-12 py-5 rounded-2xl text-lg font-bold cursor-pointer transition-all duration-300 ${
+                className={`px-12 py-5 rounded-2xl text-lg font-bold cursor-pointer transition-all duration-300 capitalize ${
                   selectedRole
                     ? selectedRole === "student"
                       ? "bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1"
@@ -228,17 +228,25 @@ const RoleSelection = () => {
                     : "bg-gray-200 text-gray-400 cursor-not-allowed"
                 }`}
               >
-                {selectedRole
+                Fill onboarding form
+                {/* {selectedRole
                   ? `Create ${
                       selectedRole === "student" ? "Student" : "Company"
                     } Account →`
-                  : "Select a role to continue"}
+                  : "Select a role to continue"} */}
               </button>
 
-              <p className="text-gray-600 text-lg">
+              <p
+                className={`text-lg px-3 py-3 border bg-blue-600 rounded-xl text-white font-semibold ${
+                  selectedRole
+                    ? selectedRole === "student"
+                      ? "bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1"
+                      : "bg-linear-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                }`}
+              >
                 Already verified?{" "}
                 <a
-                  
                   href={
                     !isDisabled
                       ? selectedRole === "student"
@@ -252,7 +260,7 @@ const RoleSelection = () => {
                   className={`font-semibold underline-offset-4 transition-all ${
                     isDisabled
                       ? "text-gray-400 cursor-not-allowed pointer-events-none"
-                      : "text-blue-600 hover:text-blue-700 hover:underline"
+                      : "text-white hover:shadow hover:underline"
                   }`}
                 >
                   Sign Up
