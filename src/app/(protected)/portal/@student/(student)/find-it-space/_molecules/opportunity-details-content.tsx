@@ -1,4 +1,4 @@
-import { apply, save, withdraw } from "@/actions";
+import { apply, initializePayment, save, withdraw } from "@/actions";
 import { Spinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +16,13 @@ import { ApplicationStatus } from "@/types/enums";
 import { formatDate } from "@/utils/format-date";
 import { useQueryClient } from "@tanstack/react-query";
 import { Bank, Calendar, Heart } from "iconsax-reactjs";
-import { BadgeCheck, Banknote, ClockIcon, Globe, TriangleAlert } from "lucide-react";
+import {
+  BadgeCheck,
+  Banknote,
+  ClockIcon,
+  Globe,
+  TriangleAlert,
+} from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import Image from "next/image";
 import Link from "next/link";
@@ -65,6 +71,12 @@ export default function OpportunityDetailsContent({
 
   const student = useStudentStore((s) => s.student);
   const [locationWarningOpen, setLocationWarningOpen] = useState(false);
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [paymentData, setPaymentData] = useState<{
+    fee: number;
+    message: string;
+  } | null>(null);
+  const [isInitializingPayment, setIsInitializingPayment] = useState(false);
 
   const exists = myApplicationStatus?.exists ?? false;
   const status = myApplicationStatus?.status ?? null;
@@ -119,12 +131,15 @@ export default function OpportunityDetailsContent({
     });
   };
 
-  const {
-    execute: applyAction,
-    isExecuting: isApplying,
-  } = useAction(apply, {
+  const { execute: applyAction, isExecuting: isApplying } = useAction(apply, {
     onSuccess: (data) => {
-      toast.success(data?.data?.data?.message || "Applied successfully!");
+      const result = data?.data;
+      if (result?.requiresPayment) {
+        setPaymentData({ fee: result.fee, message: result.message });
+        setPaymentModalOpen(true);
+        return;
+      }
+      toast.success(result?.data?.message || "Applied successfully!");
       invalidateDetails();
     },
     onError: (err) => {
@@ -133,6 +148,26 @@ export default function OpportunityDetailsContent({
       );
     },
   });
+
+  const handleProceedToPayment = async () => {
+    if (!opportunityId) return;
+    setIsInitializingPayment(true);
+    try {
+      const result = await initializePayment({
+        opportunityId,
+      });
+      const url = (result as any)?.data?.authorizationUrl;
+      if (url) {
+        window.location.href = url;
+      } else {
+        toast.error("Could not initialize payment. Please try again.");
+      }
+    } catch {
+      toast.error("Could not initialize payment. Please try again.");
+    } finally {
+      setIsInitializingPayment(false);
+    }
+  };
 
   const { execute: saveAction } = useAction(save, {
     onSuccess() {
@@ -389,14 +424,18 @@ export default function OpportunityDetailsContent({
 
           <div className="rounded-lg border border-amber-100 bg-amber-50 px-4 py-3 text-sm space-y-2">
             <div className="flex items-start justify-between gap-2">
-              <span className="text-muted-foreground shrink-0">Your preferred location</span>
+              <span className="text-muted-foreground shrink-0">
+                Your preferred location
+              </span>
               <span className="font-medium text-right capitalize">
                 {student?.preferredLocation ?? "—"}
               </span>
             </div>
             <div className="border-t border-amber-100" />
             <div className="flex items-start justify-between gap-2">
-              <span className="text-muted-foreground shrink-0">Opportunity location</span>
+              <span className="text-muted-foreground shrink-0">
+                Opportunity location
+              </span>
               <span className="font-medium text-right capitalize">
                 {opportunityLocationLabel()}
               </span>
@@ -425,6 +464,58 @@ export default function OpportunityDetailsContent({
               }}
             >
               {isApplying ? "Applying..." : "Apply Anyway"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Payment Required Modal */}
+      <Dialog open={paymentModalOpen} onOpenChange={setPaymentModalOpen}>
+        <DialogContent className="w-[calc(100%-2rem)] max-w-md mx-auto rounded-xl">
+          <DialogHeader>
+            <div className="flex items-center gap-2">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+                <Banknote size={18} />
+              </span>
+              <DialogTitle className="text-base font-semibold">
+                Application Fee Required
+              </DialogTitle>
+            </div>
+            <DialogDescription className="mt-3 text-sm leading-relaxed">
+              {paymentData?.message ??
+                "A payment is required to submit this application."}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 text-sm space-y-1">
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground">Application fee</span>
+              <span className="font-semibold text-blue-700">
+                ₦{paymentData?.fee?.toLocaleString() ?? "2,500"}
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground pt-1">
+              Your application details will be saved and submitted automatically
+              once payment is confirmed.
+            </p>
+          </div>
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => setPaymentModalOpen(false)}
+              disabled={isInitializingPayment}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleProceedToPayment}
+              disabled={isInitializingPayment}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              {isInitializingPayment
+                ? "Redirecting..."
+                : `Proceed to Pay — ₦${paymentData?.fee?.toLocaleString() ?? "2,500"}`}
             </Button>
           </DialogFooter>
         </DialogContent>

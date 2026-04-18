@@ -45,11 +45,30 @@ export const apply = actionClient
   .action(async ({ parsedInput: { id } }) => {
     try {
       const response = await mutate(`/a/${id}/apply`);
-      const data = response?.data;
-      return { success: true, data };
-    } catch (error) {
-      throw error; // Ensure the error is propagated back to the frontend
+      return { success: true, data: response?.data };
+    } catch (error: any) {
+      if (error?.data?.requiresPayment) {
+        return {
+          requiresPayment: true as const,
+          fee: error.data.fee as number,
+          message: error.data.message as string,
+        };
+      }
+      throw error;
     }
+  });
+
+export const initializePayment = actionClient
+  .inputSchema(
+    z.object({
+      opportunityId: z.string(),
+      coverLetter: z.string().optional(),
+      resumeUrl: z.string().optional(),
+    }),
+  )
+  .action(async ({ parsedInput }) => {
+    const response = await mutate("/payments/initialize", parsedInput, "POST");
+    return response as { authorizationUrl: string; reference: string };
   });
 
 export const withdraw = actionClient
@@ -59,7 +78,7 @@ export const withdraw = actionClient
       const response = await mutate(`/a/${id}/withdraw`, undefined, "PATCH");
       return response?.data;
     } catch (error) {
-      throw error; // Ensure the error is propagated back to the frontend
+      throw error;
     }
   });
 
@@ -70,7 +89,7 @@ export const save = actionClient
       const response = await mutate(`/o/${id}/saved`, undefined);
       return response;
     } catch (error) {
-      throw error; // Ensure the error is propagated back to the frontend
+      throw error;
     }
   });
 
@@ -85,7 +104,6 @@ export const StudentProfileSchema = z.object({
   preferredIndustry: z.string().optional(),
 });
 
-// Create the action
 export const updateStudentProfile = actionClient
 
   .inputSchema(StudentProfileSchema)
@@ -122,9 +140,7 @@ export const updateStudentProfilePicture = actionClient
 export const verifyStudentIdentity = actionClient
   .inputSchema(verifyStudentIdentitySchema)
   .action(async ({ parsedInput: { matNo } }) => {
-    // return true;
     const response = await query(`/s/matric/${encodeURIComponent(matNo)}`, {
-      // matriculation: matNo,
     });
     return response;
   });
@@ -132,7 +148,6 @@ export const verifyStudentIdentity = actionClient
 function appendToFormData(fd: FormData, key: string, value: unknown) {
   if (value === undefined || value === null) return;
 
-  // File / Blob
   if (value instanceof File) {
     fd.append(key, value, value.name);
     return;
@@ -143,19 +158,15 @@ function appendToFormData(fd: FormData, key: string, value: unknown) {
     return;
   }
 
-  // Arrays (string[] or mixed)
   if (Array.isArray(value)) {
     fd.append(key, JSON.stringify(value));
     return;
   }
 
-  // Objects (if any): stringify
   if (typeof value === "object") {
     fd.append(key, JSON.stringify(value));
     return;
   }
-
-  // Primitive (string/number/boolean)
   fd.append(key, String(value));
 }
 

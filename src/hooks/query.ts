@@ -211,3 +211,21 @@ export const useFetchMyProfile = () => {
     },
   });
 };
+
+export const useFetchMyTransactions = () => {
+  return useQuery({
+    queryKey: ["my-transactions"],
+    queryFn: async () => {
+      const response = await query("/payments/my-transactions");
+      return response as Array<{
+        id: string;
+        reference: string;
+        amount: number;
+        status: "pending" | "success" | "failed";
+        purpose: string;
+        metadata: { opportunityId?: string; coverLetter?: string };
+        createdAt: string;
+      }>;
+    },
+  });
+};
