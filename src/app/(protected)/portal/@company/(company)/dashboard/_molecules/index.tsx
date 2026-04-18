@@ -98,7 +98,7 @@ export function Dashboard() {
               applicants={opportunity.totalApplications}
               status={opportunity.status}
               actionLabel="View Applicants"
-              onAction={() => console.log("Viewing opportunity")}
+              onAction={() => {}}
               variant="list"
             />
           ))}

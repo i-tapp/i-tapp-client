@@ -15,7 +15,6 @@ export default function ApplicationList({
 }: any) {
   const companyId = selectedCompany?.id;
   const [search, setSearch] = useState("");
-  console.log("Selected company in ApplicationList:", selectedCompany);
   const {
     data = [],
     isLoading,
@@ -27,10 +26,7 @@ export default function ApplicationList({
   }
 
   if (error) {
-    console.error("Error fetching applications:", error);
   }
-
-  console.log("Applications data:", data);
 
   const filtered = data.filter((a: any) => {
     const student = a.student.firstName || "";

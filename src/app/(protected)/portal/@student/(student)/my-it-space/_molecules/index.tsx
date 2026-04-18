@@ -63,8 +63,6 @@ const MyItSpace = () => {
 
   if (isLoading) return <Spinner />;
 
-  console.log("Fetched offers data:", data);
-
   const offers = data || [];
 
   const TransformData = (data: any) => {

@@ -20,10 +20,8 @@ export default function AddNewAdminPage() {
 
   const { execute, isExecuting } = useAction(createAdmin, {
     onSuccess: () => {
-      console.log("admin invitation sent");
     },
     onError: (e) => {
-      console.log(e);
     },
   });
 

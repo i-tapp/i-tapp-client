@@ -12,8 +12,6 @@ export default function CompanyList({ onSelect, selectedId }: any) {
     return <div>Loading companies...</div>;
   }
 
-  console.log("Companies data:", data);
-
   const filtered = data.filter(
     (item: any) => item.name.toLowerCase().includes(search.toLowerCase()),
     // item.opportunity.toLowerCase().includes(search.toLowerCase())

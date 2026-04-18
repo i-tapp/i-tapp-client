@@ -10,12 +10,10 @@ export const useDelete = () => {
     {
       onSuccess: () => {
         toast.success("Account deleted successfully");
-        console.log("Account deleted successfully");
         router.back();
       },
       onError: (err) => {
         toast.error("Error deleting account");
-        console.error("Error deleting account:", err);
       },
     },
   );
@@ -23,12 +21,10 @@ export const useDelete = () => {
   const { execute: executePurge, isExecuting: isPurging } = useAction(purge, {
     onSuccess: () => {
       toast.success("Account purged successfully");
-      console.log("Account purged successfully");
       router.back();
     },
     onError: (err) => {
       toast.error("Error purging account");
-      console.error("Error purging account:", err);
     },
   });
 

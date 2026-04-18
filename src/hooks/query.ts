@@ -48,7 +48,6 @@ export const useFetchOpportunities = (filter?: any, page = 1, limit = 10) => {
       queryObject.limit = limit;
 
       const qs = new URLSearchParams(queryObject).toString();
-      console.log("Querying with:", queryObject, "QS:", qs);
       const response = await query(`/o${qs ? `?${qs}` : ""}`);
       return response.data;
     },

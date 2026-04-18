@@ -14,20 +14,16 @@ export default function AdminList() {
   const [currentEdit, setCurrentEdit] = useState<number | null>(null); // index of the row being edited
   const { execute, isExecuting } = useAction(updateAdminRole, {
     onSuccess: () => {
-      console.log("admin role updated");
       setCurrentEdit(null);
       queryClient.invalidateQueries({ queryKey: ["admin-admins"] });
     },
     onError: (e) => {
-      console.log(e);
     },
   });
 
   if (isLoading) {
     return <div>Loading admins...</div>;
   }
-
-  console.log("Admins data:", data);
 
   const roles = ["superadmin", "admin", "support", "moderator"];
 
@@ -72,7 +68,6 @@ export default function AdminList() {
                   className="text-sm text-gray-500"
                   defaultValue={admin.role}
                   onChange={(e) => {
-                    console.log("Selected role:", e.target.value);
                     execute({
                       adminId: admin.id,
                       role: e.target.value as adminRole,

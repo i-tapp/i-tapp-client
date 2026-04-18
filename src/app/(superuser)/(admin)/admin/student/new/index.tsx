@@ -53,12 +53,10 @@ export default function AddStudent() {
     {
       onSuccess: (data) => {
         toast.success("Student account created successfully");
-        console.log("Student account created successfully");
         form.reset();
       },
       onError: (error) => {
         toast.error("Failed to create student account");
-        console.error("Error creating student account;", error);
       },
     },
   );

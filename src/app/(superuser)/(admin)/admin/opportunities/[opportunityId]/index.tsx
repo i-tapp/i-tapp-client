@@ -26,21 +26,17 @@ export default function OpportunityDetailPage() {
 
   const { execute, isExecuting } = useAction(updateOpportunityStatus, {
     onSuccess: () => {
-      console.log("Opportunity status updated successfully");
       queryClient.invalidateQueries({
         queryKey: ["opportunity-details", opportunityId],
       });
     },
     onError: (e) => {
-      console.log("Error updating opportunity status", e);
     },
   });
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
-
-  console.log("Opportunity details data:", data);
 
   const meta = [
     { label: "Opportunity Status", value: data.status },

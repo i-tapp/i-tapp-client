@@ -107,11 +107,9 @@ export default function CompanyOnboarding() {
           className="flex flex-col space-y-6 mt-8"
           onSubmit={form.handleSubmit(
             (values) => {
-              console.log("Form valid:", values);
               execute(values);
             },
             (errors) => {
-              console.log("Form errors:", errors);
             },
           )}
         >

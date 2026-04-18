@@ -31,8 +31,6 @@ export default function CompanyDetails() {
     companyId as string,
   );
 
-  console.log("Company Details:", companyDetails);
-
   if (isLoading) return <Spinner />;
 
   return (

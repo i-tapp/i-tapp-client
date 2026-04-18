@@ -34,9 +34,7 @@ export function ApplicantCard({ applicant }: { applicant: Applicant }) {
     },
     onError: (error) => {
       const { serverError } = error?.error;
-      console.log(error);
       const errorMessage = serverError || "An error occurred.";
-      console.log(errorMessage);
       toast.error(errorMessage);
     },
   });
@@ -52,7 +50,6 @@ export function ApplicantCard({ applicant }: { applicant: Applicant }) {
     onError: (error) => {
       const { serverError } = error?.error;
       const errorMessage = serverError || "An error occurred.";
-      console.log(serverError);
       toast.error(errorMessage);
     },
   });
@@ -68,13 +65,11 @@ export function ApplicantCard({ applicant }: { applicant: Applicant }) {
     onError: (error) => {
       const { serverError } = error?.error;
       const errorMessage = serverError || "An error occurred.";
-      console.log(serverError);
       toast.error(errorMessage);
     },
   });
 
   const handleViewProfile = () => {
-    console.log(applicant);
   };
 
   return (

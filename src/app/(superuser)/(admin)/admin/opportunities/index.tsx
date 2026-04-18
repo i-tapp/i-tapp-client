@@ -13,7 +13,6 @@ export default function OpportunitiesPage() {
   }
 
   if (error) {
-    console.log("Error fetching opportunities:", error);
     return <div>Error loading opportunities.</div>;
   }
 
