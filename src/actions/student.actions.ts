@@ -43,28 +43,8 @@ export const declineOffer = actionClient
 export const apply = actionClient
   .inputSchema(applyJ)
   .action(async ({ parsedInput: { id } }) => {
-    try {
-      const response = await mutate(`/a/${id}/apply`);
-      return { success: true, data: response?.data };
-    } catch (error: any) {
-      const is402 =
-        error?.status === 402 ||
-        error?.data?.statusCode === 402 ||
-        error?.data?.requiresPayment === true;
-      if (is402) {
-        // Parse fee from message as fallback (e.g. "A fee of ₦2,500 is required...")
-        const feeFromMessage = (() => {
-          const match = String(error?.data?.message ?? "").match(/[\d,]+/);
-          return match ? parseInt(match[0].replace(/,/g, ""), 10) : 2500;
-        })();
-        return {
-          requiresPayment: true as const,
-          fee: (error?.data?.fee ?? feeFromMessage) as number,
-          message: (error?.data?.message ?? "A fee is required to submit this application.") as string,
-        };
-      }
-      throw error;
-    }
+    const response = await mutate(`/a/${id}/apply`);
+    return response;
   });
 
 export const initializePayment = actionClient
