@@ -45,6 +45,7 @@ axiosInstance.interceptors.response.use(
 
     const err = new Error(message);
     (err as any).data = response;
+    (err as any).status = error.response?.status;
     return Promise.reject(err);
   },
 );
