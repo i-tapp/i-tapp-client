@@ -139,7 +139,7 @@ export default function OpportunityDetailsContent({
         setPaymentModalOpen(true);
         return;
       }
-      toast.success(result?.data?.message || "Applied successfully!");
+      toast.success(result?.message || "Applied successfully!");
       invalidateDetails();
     },
     onError: (err) => {
