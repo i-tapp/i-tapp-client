@@ -12,8 +12,6 @@ export default function AdminProfilePage() {
     return <div>Admin profile is loading </div>;
   }
 
-  console.log("profile fethed", data);
-
   return (
     <div className="flex flex-col gap-8 p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold text-gray-900">Admin Profile</h1>

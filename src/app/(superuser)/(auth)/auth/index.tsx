@@ -37,7 +37,6 @@ export default function AdminAuth() {
       router.replace("/admin");
     },
     onError: (error) => {
-      console.error("Error signing in admin:", error);
       toast.error("There was an error signing in.");
     },
   });

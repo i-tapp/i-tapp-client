@@ -53,8 +53,6 @@ const StudentProfilePage = ({ student = mockStudent, onEdit = () => {} }) => {
   const { data: studentDetails, isLoading, error } = useFetchProfile();
   const logout = useLogout();
 
-  console.log("studentDetails", studentDetails);
-
   if (isLoading) {
     return <Spinner />;
   }

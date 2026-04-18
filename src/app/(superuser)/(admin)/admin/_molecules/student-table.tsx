@@ -36,8 +36,6 @@ export default function StudentTable({
     );
   });
 
-  console.log("Filtered Students:", filteredStudents);
-
   return (
     <div className="border rounded-xl overflow-x-auto bg-white shadow">
       <div className="p-4 flex justify-between items-center">

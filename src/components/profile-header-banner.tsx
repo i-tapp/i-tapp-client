@@ -40,42 +40,33 @@ export default function ProfileHeaderBanner({
   // upload profile picture action (company/student)
   const { execute } = useAction(updateStudentProfilePicture, {
     onSuccess: (res) => {
-      console.log("Profile image updated successfully:", res);
       queryClient.invalidateQueries({ queryKey: ["student-profile"] });
     },
     onError: (error) => {
-      console.error("Error updating profile image:", error);
     },
   });
 
   const { execute: logo } = useAction(updateCompanyLogo, {
     onSuccess: (res) => {
-      console.log("Profile image updated successfully:", res);
       queryClient.invalidateQueries({ queryKey: ["student-profile"] });
     },
     onError: (error) => {
-      console.error("Error updating profile image:", error);
     },
   });
 
   // upload banner image action (company only )
   const { execute: banner } = useAction(updateCompanyBanner, {
     onSuccess: (res) => {
-      console.log("Profile image updated successfully:", res);
     },
     onError: (error) => {
-      console.error("Error updating profile image:", error);
     },
   });
-
-  console.log("profile", profile);
 
   return (
     <div className="relative">
       {/* Banner */}
       <UploadThing
         onSelect={(img) => {
-          console.log(img);
           banner({ banner: img! });
         }}
         disabled={profile.type !== "company"}
@@ -117,7 +108,6 @@ export default function ProfileHeaderBanner({
       {/* Profile Picture */}
       <UploadThing
         onSelect={(img) => {
-          console.log(img);
           execute({ profileImage: img! });
           profile.type === "company" && logo({ logo: img! });
         }}

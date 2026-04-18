@@ -20,7 +20,6 @@ export default function StudentDetailsPage() {
   const [activeTab, setActiveTab] = useState("Personal Information");
   const userId = data?.user?.id;
   const student = data;
-  console.log("Student Details:", data);
 
   const queryClient = useQueryClient();
 
@@ -32,7 +31,6 @@ export default function StudentDetailsPage() {
       });
     },
     onError: (err) => {
-      console.log("Error updating student status:", err.error.serverError);
       if (err.error.serverError) {
         toast.error(err.error.serverError, { data });
       }

@@ -43,7 +43,6 @@ export function CompanyInfo1() {
         }
       },
       onError(error) {
-        console.error(error);
       },
     },
   );

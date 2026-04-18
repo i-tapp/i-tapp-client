@@ -192,7 +192,6 @@ export default function CompanyTable() {
 
         <tbody>
           {filteredCompanies.map((c: any, index: number) => {
-            console.log("Rendering company row:", c);
             return (
               <tr key={c.id} className="border-b hover:bg-gray-50 transition">
                 <td className="p-3">{index + 1}</td>

@@ -26,8 +26,6 @@ export default function SavedApplication({
 
   const { data: saved, isLoading } = useFetchSavedOpportunities();
 
-  console.log("saved opportunities", saved);
-
   const { setCurrentPage, postPerPage, currentPage, paginate } = usePaginator(
     6,
     saved?.length || 0,

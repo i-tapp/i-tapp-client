@@ -41,11 +41,9 @@ export default function CompanyDetailPage() {
         queryKey: ["company-details", companyId],
       });
       toast.success("Company status updated successfully");
-      console.log("Company status updated successfully");
     },
     onError: (err) => {
       toast.error("Error updating company status");
-      console.error("Error updating company status:", err);
     },
   });
 
@@ -54,7 +52,6 @@ export default function CompanyDetailPage() {
     isExecuting: isReviewExecuting,
   } = useAction(reviewCompanyDocuments, {
     onSuccess: () => {
-      console.log("Company documents reviewed successfully");
       queryClient.invalidateQueries({
         queryKey: ["company-details", companyId],
       });
@@ -62,7 +59,6 @@ export default function CompanyDetailPage() {
     },
     onError: (err) => {
       toast.error("Error submitting document review");
-      console.error("Error reviewing company documents:", err);
     },
   });
 

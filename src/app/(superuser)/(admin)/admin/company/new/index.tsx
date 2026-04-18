@@ -223,7 +223,6 @@ export default function AddCompany() {
     onSuccess: (data) => {
       toast.success("Company invite sent successfully");
       form.reset();
-      console.log("Company invite sent successfully");
 
       // OPTIONAL: Navigate back to companies list after success
       // Uncomment if you want to redirect after creating:
@@ -233,7 +232,6 @@ export default function AddCompany() {
     },
     onError: (error) => {
       toast.error("Failed to send company invite");
-      console.error("Error sending company invite:", error);
     },
   });
 

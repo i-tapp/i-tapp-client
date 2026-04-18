@@ -65,7 +65,6 @@ export default function ProfileForm({
         onClose();
       },
       onError(err) {
-        console.error("Failed to update profile", err);
         toast.error("Profile update failed");
       },
     },

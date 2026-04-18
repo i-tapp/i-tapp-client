@@ -31,11 +31,9 @@ export default function OpportunityTable({
 
   const { execute } = useAction(shortlistApplicant, {
     onSuccess(data) {
-      console.log("Shortlisted successfully", data);
       toast.success("Applicant shortlisted successfully");
     },
     onError(error) {
-      console.error("Error shortlisting applicant:", error);
     },
   });
 
@@ -147,7 +145,6 @@ export default function OpportunityTable({
             {filteredData?.length > 0 ? (
               filteredData.map((applicant) => {
                 const student = applicant?.student;
-                console.log("Rendering applicant:", applicant);
 
                 return (
                   <TableRow key={applicant.id} className="hover:bg-gray-50">
