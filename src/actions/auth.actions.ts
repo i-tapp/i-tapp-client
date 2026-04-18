@@ -22,8 +22,9 @@ export const signinStudent = actionClient
     });
     const { user, token, profile } = response.data;
     await setAuthCookies(token, user.role);
-    const me = await query("/auth/me");
-    return { user, token, profile: { ...profile, ...me } };
+    const me = (await query("/auth/me")) as any;
+    const meStudent = me?.student ?? {};
+    return { user, token, profile: { ...profile, ...meStudent } };
   });
 
 export const signinCompany = actionClient
