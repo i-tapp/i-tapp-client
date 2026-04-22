@@ -37,6 +37,7 @@ export default function CandidateProfile() {
   const { data: studentDetails, isLoading } = useFetchStudentDetails(
     studentId as string,
   );
+  console.log("Student Details:", studentDetails);
 
   const { data: applicationDetails, isLoading: applicationLoading } =
     useFetchApplicationDetails(opportunityId as string);
@@ -180,13 +181,13 @@ export default function CandidateProfile() {
               <InfoCard
                 icon={Call}
                 label="Phone"
-                value={studentDetails?.user?.phoneNumber || "Not provided"}
+                value={studentDetails?.phone || "Not provided"}
               />
 
               <InfoCard
                 icon={Location}
                 label="Address"
-                value={studentDetails?.user?.address || "Not provided"}
+                value={studentDetails?.address || "Not provided"}
               />
             </div>
 
