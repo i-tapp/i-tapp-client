@@ -37,7 +37,6 @@ export default function CandidateProfile() {
   const { data: studentDetails, isLoading } = useFetchStudentDetails(
     studentId as string,
   );
-  console.log("Student Details:", studentDetails);
 
   const { data: applicationDetails, isLoading: applicationLoading } =
     useFetchApplicationDetails(opportunityId as string);
