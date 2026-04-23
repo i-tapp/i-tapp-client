@@ -10,6 +10,7 @@ import moment from "moment";
 import { GraduationCap } from "lucide-react";
 import {
   useFetchApplicationDetails,
+  useFetchOpportunityDetails,
   useFetchStudentDetails,
 } from "@/hooks/query";
 import { useParams, useSearchParams } from "next/navigation";
@@ -40,6 +41,18 @@ export default function CandidateProfile() {
 
   const { data: applicationDetails, isLoading: applicationLoading } =
     useFetchApplicationDetails(opportunityId as string);
+
+  const { data: opportunityDetails } = useFetchOpportunityDetails(
+    opportunityId ?? undefined,
+  );
+
+  const studentLocation = studentDetails?.preferredLocation?.trim().toLowerCase();
+  const opportunityLocation = opportunityDetails?.location?.trim().toLowerCase();
+  const isLocationMismatch =
+    !!studentLocation &&
+    !!opportunityLocation &&
+    !opportunityLocation.includes(studentLocation) &&
+    !studentLocation.includes(opportunityLocation);
 
   const offerId = applicationDetails?.offer?.id;
 
@@ -113,11 +126,11 @@ export default function CandidateProfile() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/60 ">
+    <div className="min-h-screen bg-gray-50/60 px-4 py-6 sm:px-6">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
-        <div className="flex gap-6 items-center mb-8">
-          <div className="rounded-full border-2 border-white h-20 w-20 overflow-hidden">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-center mb-6">
+          <div className="rounded-full border-2 border-white h-20 w-20 shrink-0 overflow-hidden">
             <Image
               src={studentDetails?.profileImageUrl || "/applicant.png"}
               alt={name}
@@ -126,42 +139,58 @@ export default function CandidateProfile() {
               className="object-cover w-full h-full"
             />
           </div>
-          <div className="grid grid-cols-1">
-            <h1 className="font-semibold text-2xl text-foreground">{name}</h1>
-            <p className="text-base text-muted-foreground">
+          <div className="flex flex-col gap-0.5">
+            <h1 className="font-semibold text-xl sm:text-2xl text-foreground">{name}</h1>
+            <p className="text-sm text-muted-foreground">
               {studentDetails?.courseOfStudy || "Not specified"}
             </p>
-            <p className="text-base text-semibold text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               {studentDetails?.school || "Not specified"}
             </p>
           </div>
         </div>
 
-        {/* Main Content Grid */}
+        {/* Location mismatch warning */}
+        {isLocationMismatch && (
+          <div className="mb-4 flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3">
+            <span className="mt-0.5 text-amber-500 shrink-0">⚠️</span>
+            <div>
+              <p className="text-sm font-bold text-amber-800">
+                Location mismatch — student is outside the opportunity&apos;s location
+              </p>
+              <p className="text-xs text-amber-700 mt-0.5">
+                Student&apos;s preferred IT location is{" "}
+                <span className="font-semibold capitalize">{studentDetails?.preferredLocation}</span>,
+                but this opportunity is based in{" "}
+                <span className="font-semibold capitalize">{opportunityDetails?.location}</span>.
+                Consider this before making an offer.
+              </p>
+            </div>
+          </div>
+        )}
 
-        <div className="flex flex-row justify-between gap-4">
-          <SectionWrapper className="flex flex-col rounded-lg border bg-white px-6 py-6 gap-4 w-full ">
-            <div className=" flex flex-col gap-2">
+        {/* Main Content Grid */}
+        <div className="flex flex-col lg:flex-row gap-4">
+          {/* Left — Candidate profile */}
+          <SectionWrapper className="flex flex-col rounded-lg border bg-white px-5 py-5 gap-4 w-full lg:max-w-md">
+            <div className="flex flex-col gap-2">
               <h1 className="font-semibold">Candidate Profile</h1>
-              <div className="mt-4">
-                <h1 className="uppercase text-muted-foreground text-sm font-semibold">
-                  about
-                </h1>
-                <p className="text-sm text-muted-foreground">
+              <div className="mt-2">
+                <p className="uppercase text-muted-foreground text-xs font-semibold mb-1">About</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   {studentDetails?.bio || "No bio available."}
                 </p>
               </div>
             </div>
 
             <Hr />
-            <div className=" flex flex-col gap-2">
+            <div className="flex flex-col gap-3">
               <HeaderLabel title="Education" />
               <InfoCard
                 icon={GraduationCap}
                 label="School"
                 value={studentDetails?.school || "Not provided"}
               />
-
               <InfoCard
                 icon={Note1}
                 label="Course of Study"
@@ -170,7 +199,7 @@ export default function CandidateProfile() {
             </div>
 
             <Hr />
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-3">
               <HeaderLabel title="Contact Information" />
               <InfoCard
                 icon={Sms}
@@ -182,7 +211,6 @@ export default function CandidateProfile() {
                 label="Phone"
                 value={studentDetails?.user?.phoneNumber || "Not provided"}
               />
-
               <InfoCard
                 icon={Location}
                 label="Address"
@@ -191,9 +219,8 @@ export default function CandidateProfile() {
             </div>
 
             <Hr />
-            <div className="flex flex-col gap-2">
-              {/* <HeaderLabel title="IT" /> */}
-
+            <div className="flex flex-col gap-3">
+              <HeaderLabel title="Placement Preference" />
               <InfoCard
                 icon={Location}
                 label="Preferred IT Location"
@@ -201,11 +228,13 @@ export default function CandidateProfile() {
               />
             </div>
           </SectionWrapper>
-          <div className="flex flex-col gap-6 w-full">
-            <SectionWrapper className="flex flex-col gap-2">
+
+          {/* Right — Application info + Documents */}
+          <div className="flex flex-col gap-4 w-full">
+            <SectionWrapper className="flex flex-col gap-3">
               <HeaderLabel title="Application Info" />
-              <div className="flex flex-row justify-between">
-                <p className="text-xs">Current status:</p>{" "}
+              <div className="flex flex-row justify-between items-center">
+                <p className="text-xs text-muted-foreground">Current status</p>
                 <p className="italic text-xs font-semibold">
                   {applicationDetails?.status
                     ? applicationDetails.status.charAt(0).toUpperCase() +
@@ -213,8 +242,8 @@ export default function CandidateProfile() {
                     : "N/A"}
                 </p>
               </div>
-              <div className="flex text-sm flex-row justify-between">
-                <p className="text-xs">Applied date:</p>{" "}
+              <div className="flex flex-row justify-between items-center">
+                <p className="text-xs text-muted-foreground">Applied date</p>
                 <p className="italic text-xs font-semibold">
                   {applicationDetails?.appliedAt
                     ? moment(applicationDetails.appliedAt).format("ll")
@@ -222,7 +251,7 @@ export default function CandidateProfile() {
                 </p>
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-2 mt-1">
                 {renderApplicationActions({
                   application: applicationDetails,
                   offer: applicationDetails?.offer,
@@ -235,17 +264,11 @@ export default function CandidateProfile() {
               </div>
             </SectionWrapper>
 
-            {/* <SectionWrapper className="">
-              <HeaderLabel title="Student Info" />
-
-             
-            </SectionWrapper> */}
-
-            <SectionWrapper className="h-30">
+            <SectionWrapper>
               <HeaderLabel title="Documents" />
 
               {studentDetails?.itLetter || studentDetails?.cv ? (
-                <div className="grid grid-cols-1 gap-2">
+                <div className="flex flex-col gap-2 mt-3">
                   {studentDetails?.itLetter && (
                     <Link
                       href={studentDetails?.itLetter}
@@ -266,7 +289,7 @@ export default function CandidateProfile() {
                   )}
                 </div>
               ) : (
-                <p className="text-xs mt-3"> No documents uploaded</p>
+                <p className="text-xs mt-3">No documents uploaded</p>
               )}
             </SectionWrapper>
           </div>
@@ -344,14 +367,14 @@ function renderApplicationActions({
       <>
         <Button
           onClick={() => setOfferFormOpen(true)}
-          className="flex-1 bg-green-600 text-white"
+          className="flex-1 w-full sm:w-auto bg-green-600 text-white"
         >
           Send Offer
         </Button>
         <Button
           disabled={isDeclining}
           onClick={() => declineAction({ id: application.opportunityId })}
-          className="flex-1 bg-red-600 text-white"
+          className="flex-1 w-full sm:w-auto bg-red-600 text-white"
         >
           Decline
         </Button>
