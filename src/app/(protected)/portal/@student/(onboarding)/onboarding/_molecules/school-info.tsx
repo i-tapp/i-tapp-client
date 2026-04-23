@@ -95,9 +95,7 @@ export default function SchoolInfoStep({
               name="gpa"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel className="line-clamp-2">
-                    Current GPA (Optional)
-                  </FormLabel>
+                  <FormLabel>Current CGPA</FormLabel>
                   <FormControl>
                     <Input placeholder="e.g 3.5" {...field} />
                   </FormControl>

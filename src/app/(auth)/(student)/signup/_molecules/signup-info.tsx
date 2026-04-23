@@ -40,6 +40,7 @@ export function SignupInfo({
       email: "",
       password: "",
       confirmPassword: "",
+      phone: studentData?.data?.data?.phone ?? studentData?.data?.phone ?? "",
     },
   });
 
@@ -81,6 +82,19 @@ export function SignupInfo({
           }}
         >
           <div className="flex flex-col gap-3">
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="e.g., +234 801 234 5678" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="email"
