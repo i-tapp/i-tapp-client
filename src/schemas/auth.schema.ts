@@ -69,6 +69,7 @@ export const verifyStudentIdentitySchema = z.object({
 export const studentSignupSchema = z
   .object({
     email: z.email(),
+    phone: z.string().min(10, "Phone number is too short"),
     password: z.string().min(4, "Provide password"),
     confirmPassword: z.string().min(1),
   })

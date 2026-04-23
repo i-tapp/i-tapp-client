@@ -47,7 +47,6 @@ export default function StudentOnboardingPage() {
   );
 
   const [onboardingData, setOnboardingData] = useState({});
-  const [isSkipping, setIsSkipping] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
   const formIdByStep = [
@@ -154,30 +153,11 @@ export default function StudentOnboardingPage() {
           </main>
 
           {/* Footer nav */}
-          <div className="flex items-center justify-between gap-3 border-t px-4 sm:px-6 py-4">
-            <Button
-              disabled={isExecuting || isSkipping}
-              onClick={async () => {
-                try {
-                  setIsSkipping(true);
-                  await fetch("/api/student/onboarding/skip", {
-                    method: "POST",
-                  });
-                  router.push("/portal");
-                } finally {
-                  setIsSkipping(false);
-                }
-              }}
-              variant="ghost"
-              className="text-sm text-muted-foreground hover:text-foreground"
-            >
-              {isSkipping ? "Skipping..." : "Skip for now"}
-            </Button>
-
+          <div className="flex items-center justify-end gap-3 border-t px-4 sm:px-6 py-4">
             <Button
               form={activeFormId}
               type="submit"
-              disabled={isExecuting || isSkipping}
+              disabled={isExecuting}
               className="rounded-xl px-6"
             >
               {isExecuting
