@@ -32,7 +32,7 @@ export default function WelcomeLayout({
     <div className="min-h-screen bg-[#faf8ff99]">
       <div
         className={cn(
-          "flex p-3 md:px-28 gap-6 flex-col lg:flex-row",
+          "flex px-4 py-6 sm:px-8 md:px-16 lg:px-28 gap-6 flex-col lg:flex-row",
           isStudent && "max-w-3xl mx-auto bg-[#faf8ff99]",
         )}
       >

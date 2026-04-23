@@ -189,7 +189,7 @@ const StudentProfilePage = ({ student = mockStudent, onEdit = () => {} }) => {
                 label="Phone Number"
                 value={studentDetails.phone}
               />
-              {student.address && (
+              {studentDetails.address && (
                 <InfoCard
                   icon={<MapPin size={18} />}
                   label="Address"
@@ -197,7 +197,14 @@ const StudentProfilePage = ({ student = mockStudent, onEdit = () => {} }) => {
                   fullWidth
                 />
               )}
-              {student.dob && (
+              {studentDetails.preferredLocation && (
+                <InfoCard
+                  icon={<MapPin size={18} />}
+                  label="Preferred IT Location"
+                  value={studentDetails.preferredLocation}
+                />
+              )}
+              {studentDetails?.dob && (
                 <InfoCard
                   icon={<Calendar size={18} />}
                   label="Date of Birth"

@@ -26,6 +26,7 @@ export default function Welcome() {
     defaultValues: {
       courseOfStudy: "",
       email: "",
+      phone: "",
       firstName: "",
       lastName: "",
       school: "",
@@ -52,10 +53,10 @@ export default function Welcome() {
   const isDirty = form.formState.isDirty;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 px-1 sm:px-0">
       <div className="max-w-3xl">
-        <h1 className="text-3xl font-bold">Welcome to I-TAPP</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-2xl sm:text-3xl font-bold">Welcome to I-TAPP</h1>
+        <p className="text-sm text-muted-foreground mt-1">
           Connect your organization with high-potential students. Complete the
           Onboarding form and start engaging with next generation of Talent.
         </p>
@@ -97,6 +98,20 @@ export default function Welcome() {
                       type="email"
                       placeholder="samueladebayo@email.com"
                     />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="tel" placeholder="e.g., +234 801 234 5678" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -209,8 +224,9 @@ export default function Welcome() {
               type="submit"
               disabled={isExecuting}
               form="create-student-form"
+              className="w-full"
             >
-              {isExecuting ? "Submitting..." : " Submit"}
+              {isExecuting ? "Submitting..." : "Submit"}
             </Button>
           </form>
         </Form>

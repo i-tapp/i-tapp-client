@@ -21,12 +21,11 @@ export const createStudentSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   email: z.email("Invalid email address"),
+  phone: z.string().min(10, "Phone number is too short"),
   school: z.string().min(1, "School is required"),
   courseOfStudy: z.string().min(1, "Course of study is required"),
-  matriculationNumber: z
-    .string()
-    .min(1, "Matriculation number is required")
-    .optional(),
+  matriculationNumber: z.string().min(1, "Matriculation number is required"),
+  preferredLocation: z.string().min(1, "Preferred IT location is required"),
 });
 
 type CreateStudentInput = z.infer<typeof createStudentSchema>;
