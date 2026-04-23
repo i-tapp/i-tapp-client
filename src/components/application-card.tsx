@@ -95,9 +95,9 @@ export default function ApplicationCard({
               </div>
 
               {/* Action Button */}
-              <button className="w-full mt-4 px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium text-sm">
+              {/* <button className="w-full mt-4 px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium text-sm">
                 View Details
-              </button>
+              </button> */}
             </div>
           );
         })
