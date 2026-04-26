@@ -190,37 +190,45 @@ export default function CompanyProfilePage() {
           </div>
 
           {/* Documents */}
-          {(companyProfile?.cacDocument || companyProfile?.proofOfAddress) && (
-            <div className="px-8 py-6 border-t border-gray-200">
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
-                Documents
-              </h2>
-              <div className="flex flex-wrap gap-4">
-                {companyProfile?.cacDocument && (
+          <div className="px-8 py-6 border-t border-gray-200">
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+              Documents
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p className="text-xs text-gray-500 mb-1">CAC Document</p>
+                {companyProfile?.cacDocument ? (
                   <Link
                     href={companyProfile.cacDocument}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition text-sm text-primary font-medium"
+                    className="flex items-center gap-2 text-sm text-primary font-medium hover:underline"
                   >
                     <FileText className="w-4 h-4" />
-                    CAC Document
+                    View Document
                   </Link>
+                ) : (
+                  <p className="text-sm text-gray-400">—</p>
                 )}
-                {companyProfile?.proofOfAddress && (
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 mb-1">Proof of Address</p>
+                {companyProfile?.proofOfAddress ? (
                   <Link
                     href={companyProfile.proofOfAddress}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition text-sm text-primary font-medium"
+                    className="flex items-center gap-2 text-sm text-primary font-medium hover:underline"
                   >
                     <FileText className="w-4 h-4" />
-                    Proof of Address
+                    View Document
                   </Link>
+                ) : (
+                  <p className="text-sm text-gray-400">—</p>
                 )}
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

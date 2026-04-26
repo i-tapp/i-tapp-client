@@ -178,6 +178,26 @@ export const purge = actionClient
     return { success: true, data: response };
   });
 
+export const restoreRecord = actionClient
+  .inputSchema(z.object({
+    id: z.string().min(1),
+    category: z.enum(["students", "companies", "opportunities", "applications"]),
+  }))
+  .action(async ({ parsedInput: { id, category } }) => {
+    const response = await mutate(`/admin/deleted/${category}/${id}/restore`, {}, "PATCH");
+    return { success: true, data: response };
+  });
+
+export const purgeRecord = actionClient
+  .inputSchema(z.object({
+    id: z.string().min(1),
+    category: z.enum(["students", "companies", "opportunities", "applications"]),
+  }))
+  .action(async ({ parsedInput: { id, category } }) => {
+    const response = await mutate(`/admin/deleted/${category}/${id}`, {}, "DELETE");
+    return { success: true, data: response };
+  });
+
 export const sendSystemEmail = actionClient
   .inputSchema(
     z.object({

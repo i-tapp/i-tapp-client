@@ -9,7 +9,7 @@ export default function ApplicationDetail({ data }: any) {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-4 mb-4 gap-4">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold text-gray-900">
-            {data.student.firstName} {data.student.lastName}
+            {data.student?.firstName ?? "—"} {data.student?.lastName ?? ""}
           </h1>
           <p className="text-sm text-gray-500">Application details</p>
         </div>
@@ -25,9 +25,9 @@ export default function ApplicationDetail({ data }: any) {
         <h2 className="font-medium text-gray-800">Student Information</h2>
         <div className="bg-gray-50 p-4 rounded-lg flex flex-col gap-2 shadow-sm">
           <p className="text-gray-700">
-            Name: {data.student.firstName} {data.student.lastName}
+            Name: {data.student?.firstName ?? "—"} {data.student?.lastName ?? ""}
           </p>
-          <p className="text-gray-700">Program: {data.student.courseOfStudy}</p>
+          <p className="text-gray-700">Program: {data.student?.courseOfStudy ?? "—"}</p>
         </div>
       </div>
 
@@ -35,7 +35,7 @@ export default function ApplicationDetail({ data }: any) {
       <div className="flex flex-col gap-2">
         <h2 className="font-medium text-gray-800">Opportunity</h2>
         <div className="bg-gray-50 p-4 rounded-lg flex flex-col gap-2 shadow-sm">
-          <p className="text-gray-700">{data.opportunity.title}</p>
+          <p className="text-gray-700">{data.opportunity?.title ?? "—"}</p>
           {/* <p className="text-gray-700">Company: {data.company.name}</p> */}
         </div>
       </div>
