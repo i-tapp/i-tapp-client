@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { query } from "@/lib/api";
-import { Search, Trash2, User, Building, Briefcase, FileText } from "lucide-react";
+import { Search, Trash2, User, Building, Briefcase, FileText, RotateCcw } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import { restoreRecord, purgeRecord } from "@/actions";
+import { toast } from "react-toastify";
 
 type DeletedCategory = "students" | "companies" | "opportunities" | "applications";
 
@@ -57,7 +60,21 @@ function getLabel(item: any, category: DeletedCategory): { primary: string; seco
 export default function DeletedData() {
   const [category, setCategory] = useState<DeletedCategory>("students");
   const [search, setSearch] = useState("");
+  const [confirmPurge, setConfirmPurge] = useState<string | null>(null);
+  const queryClient = useQueryClient();
   const { data = [], isLoading } = useDeletedData(category);
+
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin-deleted", category] });
+
+  const { execute: restore, isExecuting: isRestoring } = useAction(restoreRecord, {
+    onSuccess: () => { toast.success("Record restored successfully."); invalidate(); },
+    onError: (e) => toast.error(e?.error?.serverError || "Failed to restore."),
+  });
+
+  const { execute: purge, isExecuting: isPurging } = useAction(purgeRecord, {
+    onSuccess: () => { toast.success("Record permanently deleted."); setConfirmPurge(null); invalidate(); },
+    onError: (e) => toast.error(e?.error?.serverError || "Failed to delete."),
+  });
 
   const filtered = data.filter((item: any) => {
     const { primary, secondary, tertiary } = getLabel(item, category);
@@ -71,8 +88,8 @@ export default function DeletedData() {
 
   return (
     <div className="p-6 space-y-5">
-      <div className="flex items-center gap-2 text-red-600">
-        <Trash2 size={18} />
+      <div className="flex items-center gap-2">
+        <Trash2 size={18} className="text-red-500" />
         <h2 className="font-semibold text-gray-800">Soft-Deleted Records</h2>
       </div>
 
@@ -81,7 +98,7 @@ export default function DeletedData() {
         {CATEGORIES.map((cat) => (
           <button
             key={cat.key}
-            onClick={() => { setCategory(cat.key); setSearch(""); }}
+            onClick={() => { setCategory(cat.key); setSearch(""); setConfirmPurge(null); }}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium border transition ${
               category === cat.key
                 ? "bg-red-50 border-red-300 text-red-700"
@@ -110,7 +127,7 @@ export default function DeletedData() {
         <div className="text-sm text-gray-500">Loading...</div>
       ) : filtered.length === 0 ? (
         <div className="text-sm text-gray-400 py-8 text-center">
-          No deleted {category} found{search ? " matching your search" : ""}.
+          No deleted {category} found{search ? ` matching "${search}"` : ""}.
         </div>
       ) : (
         <div className="border border-gray-200 rounded-xl overflow-hidden bg-white">
@@ -128,11 +145,13 @@ export default function DeletedData() {
                   {category === "students" ? "Course" : category === "companies" ? "Industry" : category === "opportunities" ? "Location" : "Status"}
                 </th>
                 <th className="px-4 py-3">Deleted At</th>
+                <th className="px-4 py-3">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {filtered.map((item: any, i: number) => {
                 const { primary, secondary, tertiary } = getLabel(item, category);
+                const isConfirming = confirmPurge === item.id;
                 return (
                   <tr key={item.id ?? i} className="hover:bg-red-50/40 transition">
                     <td className="px-4 py-3 text-gray-400">{i + 1}</td>
@@ -141,6 +160,42 @@ export default function DeletedData() {
                     <td className="px-4 py-3 text-gray-500">{tertiary || "—"}</td>
                     <td className="px-4 py-3 text-gray-400 text-xs">
                       {item.deletedAt ? new Date(item.deletedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "—"}
+                    </td>
+                    <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
+                      {isConfirming ? (
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-red-600 font-medium">Sure?</span>
+                          <button
+                            disabled={isPurging}
+                            onClick={() => purge({ id: item.id, category })}
+                            className="px-2 py-1 text-xs rounded bg-red-600 text-white hover:bg-red-700 disabled:opacity-50"
+                          >
+                            {isPurging ? "Deleting..." : "Yes, delete"}
+                          </button>
+                          <button
+                            onClick={() => setConfirmPurge(null)}
+                            className="px-2 py-1 text-xs rounded bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <button
+                            disabled={isRestoring}
+                            onClick={() => restore({ id: item.id, category })}
+                            className="flex items-center gap-1 px-2 py-1 text-xs rounded bg-green-100 text-green-700 hover:bg-green-200 disabled:opacity-50"
+                          >
+                            <RotateCcw size={11} /> Restore
+                          </button>
+                          <button
+                            onClick={() => setConfirmPurge(item.id)}
+                            className="px-2 py-1 text-xs rounded bg-red-100 text-red-700 hover:bg-red-200"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 );
