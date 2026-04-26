@@ -12,7 +12,9 @@ import {
   Briefcase,
   Hash,
   Calendar,
+  FileText,
 } from "lucide-react";
+import Link from "next/link";
 import InfoCard from "@/components/info-card";
 import ProfileHeaderBanner from "@/components/profile-header-banner";
 import { useFetchCompanyProfile } from "@/hooks/query";
@@ -186,6 +188,39 @@ export default function CompanyProfilePage() {
               />
             </div>
           </div>
+
+          {/* Documents */}
+          {(companyProfile?.cacDocument || companyProfile?.proofOfAddress) && (
+            <div className="px-8 py-6 border-t border-gray-200">
+              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+                Documents
+              </h2>
+              <div className="flex flex-wrap gap-4">
+                {companyProfile?.cacDocument && (
+                  <Link
+                    href={companyProfile.cacDocument}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition text-sm text-primary font-medium"
+                  >
+                    <FileText className="w-4 h-4" />
+                    CAC Document
+                  </Link>
+                )}
+                {companyProfile?.proofOfAddress && (
+                  <Link
+                    href={companyProfile.proofOfAddress}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition text-sm text-primary font-medium"
+                  >
+                    <FileText className="w-4 h-4" />
+                    Proof of Address
+                  </Link>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
