@@ -64,6 +64,20 @@ export const inviteCompany = actionClient
     return { success: true, data: response };
   });
 
+export const approveStudent = actionClient
+  .inputSchema(z.object({ studentId: z.string().min(1) }))
+  .action(async ({ parsedInput: { studentId } }) => {
+    const response = await mutate(`/admin/students/${studentId}/approve`, {}, "PATCH");
+    return { success: true, data: response };
+  });
+
+export const rejectStudent = actionClient
+  .inputSchema(z.object({ studentId: z.string().min(1), reason: z.string().optional() }))
+  .action(async ({ parsedInput: { studentId, reason } }) => {
+    const response = await mutate(`/admin/students/${studentId}/reject`, reason ? { reason } : {}, "PATCH");
+    return { success: true, data: response };
+  });
+
 export const updateStudentStatus = actionClient
   .inputSchema(
     z.object({
@@ -161,6 +175,25 @@ export const purge = actionClient
   .inputSchema(z.object({ id: z.string().min(1, "UserID is required") }))
   .action(async ({ parsedInput: { id } }) => {
     const response = await mutate(`/admin/${id}/purge`, {}, "DELETE");
+    return { success: true, data: response };
+  });
+
+export const sendSystemEmail = actionClient
+  .inputSchema(
+    z.object({
+      subject: z.string().min(1, "Subject is required"),
+      body: z.string().min(1, "Body is required"),
+      recipients: z.array(
+        z.object({
+          email: z.string().email(),
+          firstName: z.string().optional(),
+          lastName: z.string().optional(),
+        }),
+      ).min(1, "At least one recipient required"),
+    }),
+  )
+  .action(async ({ parsedInput }) => {
+    const response = await mutate(`/admin/email/send`, parsedInput);
     return { success: true, data: response };
   });
 

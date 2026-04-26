@@ -84,9 +84,20 @@ const useFetchCompanyDocuments = (companyId: string) => {
   });
 };
 
+const useFetchStudentStats = () => {
+  return useQuery({
+    queryKey: ["admin-student-stats"],
+    queryFn: async () => {
+      const response = await query("/admin/students/stats");
+      return response;
+    },
+  });
+};
+
 export {
   useFetchCompanies,
   useFetchAllStudents,
+  useFetchStudentStats,
   useFetchAdminProfile,
   useFetchAllApplications,
   useFetchCompanyApplications,
