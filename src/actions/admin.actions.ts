@@ -64,6 +64,20 @@ export const inviteCompany = actionClient
     return { success: true, data: response };
   });
 
+export const approveStudent = actionClient
+  .inputSchema(z.object({ studentId: z.string().min(1) }))
+  .action(async ({ parsedInput: { studentId } }) => {
+    const response = await mutate(`/admin/students/${studentId}/approve`, {}, "PATCH");
+    return { success: true, data: response };
+  });
+
+export const rejectStudent = actionClient
+  .inputSchema(z.object({ studentId: z.string().min(1), reason: z.string().optional() }))
+  .action(async ({ parsedInput: { studentId, reason } }) => {
+    const response = await mutate(`/admin/students/${studentId}/reject`, reason ? { reason } : {}, "PATCH");
+    return { success: true, data: response };
+  });
+
 export const updateStudentStatus = actionClient
   .inputSchema(
     z.object({

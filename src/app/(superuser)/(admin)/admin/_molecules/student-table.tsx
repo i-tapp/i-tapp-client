@@ -1,23 +1,37 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { students as studentData } from "./student-detail";
 import { useState } from "react";
 import { studentStatusStyle } from "@/utils/admin-status-style";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
+import { useAction } from "next-safe-action/hooks";
+import { approveStudent, rejectStudent } from "@/actions";
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function StudentTable({
-  // onView,
   data,
   isLoading,
 }: {
-  // onView: (student: (typeof studentData)[0]) => void;
   isLoading: boolean;
   data: any;
 }) {
   const router = useRouter();
   const [search, setSearch] = useState("");
+  const queryClient = useQueryClient();
+
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin-all-students"] });
+
+  const { execute: approve, isExecuting: isApproving } = useAction(approveStudent, {
+    onSuccess: () => { toast.success("Student approved!"); invalidate(); },
+    onError: (e) => toast.error(e?.error?.serverError || "Failed to approve."),
+  });
+
+  const { execute: reject, isExecuting: isRejecting } = useAction(rejectStudent, {
+    onSuccess: () => { toast.success("Student removed."); invalidate(); },
+    onError: (e) => toast.error(e?.error?.serverError || "Failed to remove."),
+  });
 
   if (isLoading) {
     return <div className="p-4">Loading students...</div>;
@@ -72,7 +86,7 @@ export default function StudentTable({
           {filteredStudents.map((s: any, index: number) => (
             <tr
               key={s.id}
-              className="border-b hover:bg-gray-50 transition"
+              className="border-b hover:bg-gray-100 transition cursor-pointer"
               onClick={() => router.push(`student/${s.id}`)}
             >
               <td className="p-3">{index + 1}</td>
@@ -110,13 +124,23 @@ export default function StudentTable({
                 </span>
               </td>
               {/* <td className="p-3">{s.applications}</td> */}
-              <td className="p-3">
-                <button
-                  // onClick={() => onView(s)}
-                  className="text-indigo-600 hover:underline"
-                >
-                  View
-                </button>
+              <td className="p-3" onClick={(e) => e.stopPropagation()}>
+                <div className="flex gap-2">
+                  <button
+                    disabled={isApproving || isRejecting}
+                    onClick={() => approve({ studentId: s.id })}
+                    className="px-3 py-1 cursor-pointer text-xs rounded bg-green-100 text-green-700 hover:bg-green-200 disabled:opacity-50"
+                  >
+                    Approve
+                  </button>
+                  <button
+                    disabled={isApproving || isRejecting}
+                    onClick={() => reject({ studentId: s.id })}
+                    className="px-3 py-1 cursor-pointer text-xs rounded bg-red-100 text-red-700 hover:bg-red-200 disabled:opacity-50"
+                  >
+                    Remove
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
