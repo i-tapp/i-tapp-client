@@ -218,13 +218,13 @@ export default function CompanyTable() {
                 </td> */}
 
                 <td className="p-3 text-center flex justify-center gap-4">
-                  {/* Account Active Status */}
-                  {c.user.password ? (
-                    <span className="text-green-500" title="Account Active">
+                  {/* Dot 1: has logged in / accessed account */}
+                  {c.user?.lastLoginAt ? (
+                    <span className="text-green-500" title="Has accessed account">
                       ●
                     </span>
                   ) : (
-                    <span className="text-red-500" title="Account Inactive">
+                    <span className="text-red-500" title="Never logged in">
                       ●
                     </span>
                   )}
@@ -249,7 +249,7 @@ export default function CompanyTable() {
                     View
                   </Link>
 
-                  {!c.isOnboarded && !c.user.password && (
+                  {!c.isOnboarded && !c.user?.lastLoginAt && (
                     <Button
                       className="cursor-pointer"
                       variant={"link"}
