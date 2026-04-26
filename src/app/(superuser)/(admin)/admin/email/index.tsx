@@ -1,14 +1,52 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "react-toastify";
 import { sendSystemEmail } from "@/actions";
 import { useFetchAllStudents, useFetchCompanies } from "@/queries/admin";
-import { Mail, Search, X, Users, Building, Eye, EyeOff, Send } from "lucide-react";
+import { Mail, Search, X, Users, Building, Eye, EyeOff, Send, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-type Recipient = { id: string; name: string; email: string; type: "student" | "company" };
+type Recipient = { id: string; firstName: string; lastName: string; name: string; email: string; type: "student" | "company" };
+
+const VARIABLES = [
+  { label: "{firstName}", desc: "Recipient's first name" },
+  { label: "{lastName}", desc: "Recipient's last name" },
+  { label: "{name}", desc: "Full name" },
+  { label: "{email}", desc: "Email address" },
+];
+
+const TEMPLATES = [
+  {
+    name: "Welcome",
+    subject: "Welcome to I-TAPP!",
+    body: `Dear {firstName},\n\nWelcome to the I-TAPP platform! We're excited to have you on board.\n\nYou can now browse available IT placement opportunities and submit your applications.\n\nIf you have any questions, feel free to reach out to our support team.\n\nBest regards,\nThe I-TAPP Team`,
+  },
+  {
+    name: "Action Required",
+    subject: "Action Required — Complete Your Profile",
+    body: `Dear {firstName},\n\nThis is a reminder that your profile on I-TAPP is incomplete. Please log in and complete all required fields to be eligible for placement opportunities.\n\nThank you,\nThe I-TAPP Team`,
+  },
+  {
+    name: "Platform Update",
+    subject: "Important Platform Update",
+    body: `Dear {firstName},\n\nWe wanted to inform you of some recent updates to the I-TAPP platform.\n\n[Insert update details here]\n\nThank you for being part of our community.\n\nBest regards,\nThe I-TAPP Team`,
+  },
+  {
+    name: "Deadline Reminder",
+    subject: "Reminder: Application Deadline Approaching",
+    body: `Dear {firstName},\n\nThis is a reminder that the deadline for submitting your IT placement application is approaching.\n\nPlease log in to your dashboard and ensure your application is complete before the deadline.\n\nBest regards,\nThe I-TAPP Team`,
+  },
+];
+
+function substitute(text: string, data: { firstName: string; lastName: string; email: string }) {
+  return text
+    .replace(/\{firstName\}/g, data.firstName || "{firstName}")
+    .replace(/\{lastName\}/g, data.lastName || "{lastName}")
+    .replace(/\{name\}/g, `${data.firstName} ${data.lastName}`.trim() || "{name}")
+    .replace(/\{email\}/g, data.email || "{email}");
+}
 
 export default function AdminEmailPage() {
   const [subject, setSubject] = useState("");
@@ -17,6 +55,8 @@ export default function AdminEmailPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRecipients, setSelectedRecipients] = useState<Recipient[]>([]);
   const [showPreview, setShowPreview] = useState(false);
+  const [templateOpen, setTemplateOpen] = useState(false);
+  const bodyRef = useRef<HTMLTextAreaElement>(null);
 
   const { data: students = [] } = useFetchAllStudents();
   const { data: companies = [] } = useFetchCompanies();
@@ -32,16 +72,19 @@ export default function AdminEmailPage() {
     onError: (e) => toast.error(e?.error?.serverError || "Failed to send email."),
   });
 
-  // Build unified recipient pool for custom search
   const allPeople: Recipient[] = useMemo(() => {
     const s: Recipient[] = (students as any[]).map((s: any) => ({
       id: s.id,
+      firstName: s.firstName ?? "",
+      lastName: s.lastName ?? "",
       name: `${s.firstName ?? ""} ${s.lastName ?? ""}`.trim() || "Unknown",
       email: s.user?.email ?? "",
       type: "student" as const,
     }));
     const c: Recipient[] = (companies as any[]).map((c: any) => ({
       id: c.id,
+      firstName: c.name ?? "",
+      lastName: "",
       name: c.name ?? "Unknown",
       email: c.user?.email ?? c.email ?? "",
       type: "company" as const,
@@ -65,25 +108,55 @@ export default function AdminEmailPage() {
     );
   };
 
-  const removeRecipient = (id: string) => {
-    setSelectedRecipients((prev) => prev.filter((p) => p.id !== id));
+  const resolvedRecipients = (): Recipient[] => {
+    if (audienceMode === "all-students")
+      return (students as any[]).map((s: any) => ({
+        id: s.id, firstName: s.firstName ?? "", lastName: s.lastName ?? "",
+        name: `${s.firstName ?? ""} ${s.lastName ?? ""}`.trim(),
+        email: s.user?.email ?? "", type: "student" as const,
+      })).filter((r: Recipient) => r.email);
+    if (audienceMode === "all-companies")
+      return (companies as any[]).map((c: any) => ({
+        id: c.id, firstName: c.name ?? "", lastName: "",
+        name: c.name ?? "", email: c.user?.email ?? c.email ?? "", type: "company" as const,
+      })).filter((r: Recipient) => r.email);
+    if (audienceMode === "all") return allPeople.filter((p) => p.email);
+    return selectedRecipients.filter((r) => r.email);
   };
 
-  const resolvedEmails = (): string[] => {
-    if (audienceMode === "all-students") return (students as any[]).map((s: any) => s.user?.email).filter(Boolean);
-    if (audienceMode === "all-companies") return (companies as any[]).map((c: any) => c.user?.email ?? c.email).filter(Boolean);
-    if (audienceMode === "all") return allPeople.map((p) => p.email).filter(Boolean);
-    return selectedRecipients.map((r) => r.email).filter(Boolean);
+  const recipients = resolvedRecipients();
+  const recipientCount = recipients.length;
+
+  // Sample preview substitution using first recipient or placeholder
+  const previewSample = recipients[0] ?? { firstName: "John", lastName: "Doe", email: "john@example.com" };
+  const previewSubject = substitute(subject, previewSample);
+  const previewBody = substitute(body, previewSample);
+
+  const insertVariable = (variable: string) => {
+    const el = bodyRef.current;
+    if (!el) { setBody((b) => b + variable); return; }
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    const next = body.slice(0, start) + variable + body.slice(end);
+    setBody(next);
+    setTimeout(() => { el.focus(); el.setSelectionRange(start + variable.length, start + variable.length); }, 0);
   };
 
-  const recipientCount = resolvedEmails().length;
+  const applyTemplate = (tpl: (typeof TEMPLATES)[0]) => {
+    setSubject(tpl.subject);
+    setBody(tpl.body);
+    setTemplateOpen(false);
+  };
 
   const handleSend = () => {
-    const emails = resolvedEmails();
     if (!subject.trim()) return toast.error("Subject is required.");
     if (!body.trim()) return toast.error("Email body is required.");
-    if (emails.length === 0) return toast.error("No recipients selected.");
-    execute({ subject, body, emails });
+    if (recipientCount === 0) return toast.error("No recipients selected.");
+    execute({
+      subject,
+      body,
+      recipients: recipients.map((r) => ({ email: r.email, firstName: r.firstName, lastName: r.lastName })),
+    });
   };
 
   return (
@@ -102,6 +175,32 @@ export default function AdminEmailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left: Compose */}
         <div className="lg:col-span-2 space-y-5">
+          {/* Template picker */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setTemplateOpen((v) => !v)}
+              className="flex items-center gap-2 text-sm border border-gray-300 rounded-lg px-3 py-2 bg-white hover:bg-gray-50 text-gray-700"
+            >
+              Use a template <ChevronDown size={14} />
+            </button>
+            {templateOpen && (
+              <div className="absolute z-10 top-full left-0 mt-1 w-72 bg-white border border-gray-200 rounded-xl shadow-lg divide-y">
+                {TEMPLATES.map((tpl) => (
+                  <button
+                    key={tpl.name}
+                    type="button"
+                    onClick={() => applyTemplate(tpl)}
+                    className="w-full text-left px-4 py-3 hover:bg-gray-50 text-sm"
+                  >
+                    <p className="font-medium text-gray-800">{tpl.name}</p>
+                    <p className="text-xs text-gray-400 truncate mt-0.5">{tpl.subject}</p>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
           {/* Subject */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
@@ -128,21 +227,49 @@ export default function AdminEmailPage() {
               </button>
             </div>
 
+            {/* Variable insertion buttons */}
+            {!showPreview && (
+              <div className="flex flex-wrap gap-1.5 mb-2">
+                {VARIABLES.map((v) => (
+                  <button
+                    key={v.label}
+                    type="button"
+                    title={v.desc}
+                    onClick={() => insertVariable(v.label)}
+                    className="text-xs px-2 py-1 rounded-md bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700 font-mono border border-gray-200"
+                  >
+                    {v.label}
+                  </button>
+                ))}
+                <span className="text-xs text-gray-400 self-center ml-1">Click to insert at cursor</span>
+              </div>
+            )}
+
             {showPreview ? (
-              <div
-                className="min-h-64 w-full border border-gray-300 rounded-lg p-4 text-sm text-gray-800 bg-white whitespace-pre-wrap"
-                dangerouslySetInnerHTML={{ __html: body.replace(/\n/g, "<br/>") }}
-              />
+              <div className="min-h-64 w-full border border-gray-200 rounded-lg bg-gray-50 p-5 space-y-3">
+                <div className="text-xs text-gray-400 uppercase font-semibold tracking-wide">
+                  Preview — substituted with {previewSample.firstName || "sample"} data
+                </div>
+                <p className="text-sm font-semibold text-gray-700">Subject: {previewSubject || <span className="text-gray-400 italic">No subject</span>}</p>
+                <hr className="border-gray-200" />
+                <div
+                  className="text-sm text-gray-800 whitespace-pre-wrap"
+                  dangerouslySetInnerHTML={{ __html: previewBody.replace(/\n/g, "<br/>") || "<span class='text-gray-400 italic'>No body</span>" }}
+                />
+              </div>
             ) : (
               <textarea
+                ref={bodyRef}
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
                 placeholder="Write your email message here..."
                 rows={12}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y font-mono"
               />
             )}
-            <p className="text-xs text-gray-400 mt-1">Plain text. Line breaks are preserved.</p>
+            <p className="text-xs text-gray-400 mt-1">
+              Variables like <code className="bg-gray-100 px-1 rounded">{"{firstName}"}</code> are substituted per recipient at send time.
+            </p>
           </div>
         </div>
 
@@ -151,7 +278,6 @@ export default function AdminEmailPage() {
           <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-4">
             <h2 className="text-sm font-semibold text-gray-700">Recipients</h2>
 
-            {/* Audience mode */}
             <div className="space-y-2">
               {(
                 [
@@ -161,10 +287,7 @@ export default function AdminEmailPage() {
                   { value: "custom", label: "Custom", icon: <Search size={14} /> },
                 ] as const
               ).map((opt) => (
-                <label
-                  key={opt.value}
-                  className="flex items-center gap-2 text-sm cursor-pointer"
-                >
+                <label key={opt.value} className="flex items-center gap-2 text-sm cursor-pointer">
                   <input
                     type="radio"
                     name="audience"
@@ -173,14 +296,11 @@ export default function AdminEmailPage() {
                     onChange={() => setAudienceMode(opt.value)}
                     className="accent-blue-600"
                   />
-                  <span className="flex items-center gap-1.5 text-gray-700">
-                    {opt.icon} {opt.label}
-                  </span>
+                  <span className="flex items-center gap-1.5 text-gray-700">{opt.icon} {opt.label}</span>
                 </label>
               ))}
             </div>
 
-            {/* Custom search */}
             {audienceMode === "custom" && (
               <div className="space-y-3">
                 <div className="relative">
@@ -194,7 +314,6 @@ export default function AdminEmailPage() {
                   />
                 </div>
 
-                {/* Search results */}
                 {searchResults.length > 0 && (
                   <div className="border border-gray-200 rounded-lg divide-y max-h-48 overflow-y-auto">
                     {searchResults.map((person) => {
@@ -219,16 +338,12 @@ export default function AdminEmailPage() {
                   </div>
                 )}
 
-                {/* Selected chips */}
                 {selectedRecipients.length > 0 && (
                   <div className="flex flex-wrap gap-1.5">
                     {selectedRecipients.map((r) => (
-                      <span
-                        key={r.id}
-                        className="flex items-center gap-1 bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full"
-                      >
+                      <span key={r.id} className="flex items-center gap-1 bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
                         {r.name}
-                        <button onClick={() => removeRecipient(r.id)} className="hover:text-blue-600">
+                        <button onClick={() => setSelectedRecipients((p) => p.filter((x) => x.id !== r.id))} className="hover:text-blue-600">
                           <X size={10} />
                         </button>
                       </span>
@@ -238,13 +353,11 @@ export default function AdminEmailPage() {
               </div>
             )}
 
-            {/* Count */}
             <p className="text-xs text-gray-500 pt-1 border-t border-gray-100">
               <span className="font-semibold text-gray-800">{recipientCount}</span> recipient{recipientCount !== 1 ? "s" : ""} will receive this email
             </p>
           </div>
 
-          {/* Send button */}
           <Button
             onClick={handleSend}
             disabled={isExecuting || !subject.trim() || !body.trim() || recipientCount === 0}

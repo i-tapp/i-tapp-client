@@ -183,7 +183,13 @@ export const sendSystemEmail = actionClient
     z.object({
       subject: z.string().min(1, "Subject is required"),
       body: z.string().min(1, "Body is required"),
-      emails: z.array(z.string().email()).min(1, "At least one recipient required"),
+      recipients: z.array(
+        z.object({
+          email: z.string().email(),
+          firstName: z.string().optional(),
+          lastName: z.string().optional(),
+        }),
+      ).min(1, "At least one recipient required"),
     }),
   )
   .action(async ({ parsedInput }) => {
