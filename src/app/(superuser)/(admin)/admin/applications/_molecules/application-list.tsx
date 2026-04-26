@@ -29,8 +29,8 @@ export default function ApplicationList({
   }
 
   const filtered = data.filter((a: any) => {
-    const student = a.student.firstName || "";
-    const opportunity = a.opportunity.title || "";
+    const student = a.student?.firstName || "";
+    const opportunity = a.opportunity?.title || "";
 
     return (
       student.toLowerCase().includes(search.toLowerCase()) ||
@@ -68,10 +68,10 @@ export default function ApplicationList({
               }`}
             >
               <div className="font-medium">
-                {item.student.firstName} {item.student.lastName}
+                {item.student?.firstName ?? "—"} {item.student?.lastName ?? ""}
               </div>
               <div className="text-sm text-gray-500">
-                {item.opportunity.title}
+                {item.opportunity?.title ?? "—"}
                 {/* {item.opportunity.company.name} */}
               </div>
 
