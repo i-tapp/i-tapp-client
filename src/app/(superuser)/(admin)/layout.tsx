@@ -11,6 +11,7 @@ import {
   UserCheck,
   ClipboardList,
   Building,
+  Mail,
 } from "lucide-react";
 import Link from "next/link";
 import { useLogout } from "@/hooks/use-logout";
@@ -39,6 +40,7 @@ const menuItems = [
     href: "/admin/placements",
     icon: <UserCheck size={20} />, // assigned students
   },
+  { name: "Email", href: "/admin/email", icon: <Mail size={20} /> },
   { name: "Settings", href: "/admin/settings", icon: <Settings size={20} /> },
   { name: "Log out", href: "#", icon: <LogOut size={20} /> },
 ];

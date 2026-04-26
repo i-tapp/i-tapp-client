@@ -178,6 +178,19 @@ export const purge = actionClient
     return { success: true, data: response };
   });
 
+export const sendSystemEmail = actionClient
+  .inputSchema(
+    z.object({
+      subject: z.string().min(1, "Subject is required"),
+      body: z.string().min(1, "Body is required"),
+      emails: z.array(z.string().email()).min(1, "At least one recipient required"),
+    }),
+  )
+  .action(async ({ parsedInput }) => {
+    const response = await mutate(`/admin/email/send`, parsedInput);
+    return { success: true, data: response };
+  });
+
 // export const logout = actionClient.schema(logoutSchema).action(async ({}) => {
 //   (await cookies()).set("token", "", {
 //     httpOnly: true,

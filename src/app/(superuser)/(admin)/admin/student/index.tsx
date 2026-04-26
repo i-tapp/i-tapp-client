@@ -1,23 +1,18 @@
 "use client";
 
-import { useState } from "react";
 import SummaryCard from "../_molecules/summary-card";
 import StudentTable from "../_molecules/student-table";
-import { useFetchAllStudents } from "@/queries/admin";
+import { useFetchAllStudents, useFetchStudentStats } from "@/queries/admin";
 
 export default function AdminStudentPage() {
-  const { data, isLoading, error } = useFetchAllStudents();
-
-  const [selectedStudent, setSelectedStudent] = useState(null);
+  const { data, isLoading } = useFetchAllStudents();
+  const { data: stats } = useFetchStudentStats();
 
   const summaryItems = [
-    {
-      title: "Total Students",
-      number: data?.length || 0,
-      component: "+20 this week",
-    },
-    { title: "Active Students", number: 1800, component: "+15 this week" },
-    { title: "Pending Approval", number: 150, component: "+5 this week" },
+    { title: "Total Students", number: stats?.total ?? 0, component: "" },
+    { title: "Active Students", number: stats?.active ?? 0, component: "" },
+    { title: "Pending Approval", number: stats?.pending ?? 0, component: "" },
+    { title: "Removed", number: stats?.removed ?? 0, component: "" },
   ];
 
   return (
