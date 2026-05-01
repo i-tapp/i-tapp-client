@@ -20,7 +20,7 @@ export default function OnboardingPage() {
         toast.success(
           "Onboarding submitted! Your account will be reviewed shortly.",
         );
-        router.replace("/portal");
+        router.replace("/portal/dashboard");
       },
       onError: ({ error }) => {
         toast.error(error.serverError ?? "Onboarding failed. Please try again.");
