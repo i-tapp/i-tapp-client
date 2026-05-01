@@ -181,16 +181,16 @@ export default function OpportunityTable({
                           <ArchiveAdd size={18} />
                         </Button>
 
-                        {/* <Link href={`mailto:${student?.user?.email}`}> */}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0"
-                          title="Send Email"
-                        >
-                          <SmsEdit size={18} />
-                        </Button>
-                        {/* </Link> */}
+                        <Link href={`mailto:${student?.user?.email}`}>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            title="Send Email"
+                          >
+                            <SmsEdit size={18} />
+                          </Button>
+                        </Link>
 
                         <Link
                           href={`/portal/candidates/${student?.id}?opportunityId=${applicant?.id}`}

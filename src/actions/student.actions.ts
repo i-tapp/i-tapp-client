@@ -171,3 +171,17 @@ export const onBoardStudent = actionClient
     const response = await mutate("/s/onboarding", formData, "POST");
     return response;
   });
+
+export const markNotificationRead = actionClient
+  .inputSchema(z.object({ id: z.string().min(1) }))
+  .action(async ({ parsedInput: { id } }) => {
+    const response = await mutate(`/notifications/${id}/read`, {}, "PATCH");
+    return response;
+  });
+
+export const markAllNotificationsRead = actionClient
+  .inputSchema(z.object({}))
+  .action(async () => {
+    const response = await mutate("/notifications/read-all", {}, "PATCH");
+    return response;
+  });

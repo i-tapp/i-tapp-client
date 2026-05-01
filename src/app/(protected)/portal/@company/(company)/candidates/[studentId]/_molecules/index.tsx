@@ -251,17 +251,6 @@ export default function CandidateProfile() {
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-2 mt-1">
-                {renderApplicationActions({
-                  application: applicationDetails,
-                  offer: applicationDetails?.offer,
-                  setOfferFormOpen,
-                  declineAction,
-                  withdrawOffer,
-                  isDeclining,
-                  isWithdrawing,
-                })}
-              </div>
             </SectionWrapper>
 
             <SectionWrapper>
@@ -291,6 +280,18 @@ export default function CandidateProfile() {
               ) : (
                 <p className="text-xs mt-3">No documents uploaded</p>
               )}
+
+              <div className="flex flex-col sm:flex-row gap-2 mt-4">
+                {renderApplicationActions({
+                  application: applicationDetails,
+                  offer: applicationDetails?.offer,
+                  setOfferFormOpen,
+                  declineAction,
+                  withdrawOffer,
+                  isDeclining,
+                  isWithdrawing,
+                })}
+              </div>
             </SectionWrapper>
           </div>
         </div>
