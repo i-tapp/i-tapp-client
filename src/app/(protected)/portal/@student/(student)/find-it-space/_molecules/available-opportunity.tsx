@@ -101,7 +101,7 @@ export default function AvailableOpportunity({
               )}
             </div>
 
-            <div className="flex items-center gap-0.5 text-gray-400">
+            <div className="flex items-center gap-0.5 text-red-500">
               <Location size="14" />
               <p className="text-sm capitalize">{location}</p>
             </div>

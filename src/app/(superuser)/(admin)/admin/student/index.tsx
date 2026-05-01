@@ -30,10 +30,7 @@ export default function AdminStudentPage() {
         ))}
       </div>
 
-      <StudentTable
-        data={data}
-        isLoading={isLoading}
-      />
+      <StudentTable data={data} isLoading={isLoading} />
     </div>
   );
 }

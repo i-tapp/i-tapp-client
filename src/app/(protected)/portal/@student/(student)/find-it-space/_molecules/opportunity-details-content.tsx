@@ -301,7 +301,7 @@ export default function OpportunityDetailsContent({
 
             <span className="text-gray-300">•</span>
 
-            <p className="text-gray-500">
+            <p className="text-red-500">
               {address ? formatAddress(address) : "Location not available"},
             </p>
           </div>
