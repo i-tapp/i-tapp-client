@@ -1,7 +1,6 @@
 "use client";
 
 import { updateCompanyLogo } from "@/actions";
-import { FileUploadThing } from "@/components/file-upload-thing";
 import Input from "@/components/input";
 import {
   Form,
@@ -40,13 +39,8 @@ export default function OnboardingForm({
       city: "",
       state: "",
       description: "",
-      companySize: undefined,
-      foundedYear: "",
       website: "",
       registrationNumber: "",
-      cacDocument: undefined,
-      proofOfAddress: undefined,
-      repId: undefined,
     },
   });
 
@@ -174,48 +168,6 @@ export default function OnboardingForm({
         <SectionHeader title="Optional Information" className="mt-4" />
 
         <FieldRow>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="foundedYear"
-              render={({ field }) => (
-                <FormItem>
-                  <FieldLabel label="Founded Year" />
-                  <FormControl>
-                    <Input placeholder="e.g., 2018" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="companySize"
-              render={({ field }) => (
-                <FormItem>
-                  <FieldLabel label="Company Size" />
-                  <FormControl>
-                    <select
-                      {...field}
-                      className="w-full border rounded-md px-3 py-2 text-sm h-10 bg-background"
-                    >
-                      <option value="">Select size</option>
-                      <option value="1-10">1–10</option>
-                      <option value="11-50">11–50</option>
-                      <option value="51-200">51–200</option>
-                      <option value="201-500">201–500</option>
-                      <option value="501-1000">501–1000</option>
-                      <option value="1000+">1000+</option>
-                    </select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </FieldRow>
-
-        <FieldRow>
           <div className="flex flex-col gap-1">
             <FieldLabel label="Company Logo" />
             <UploadThing
@@ -253,7 +205,7 @@ export default function OnboardingForm({
           />
         </FieldRow>
 
-        <FieldRow>
+        <FieldRow last>
           <FormField
             control={form.control}
             name="registrationNumber"
@@ -269,47 +221,6 @@ export default function OnboardingForm({
           />
         </FieldRow>
 
-        <FieldRow last>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="cacDocument"
-              render={({ field }) => (
-                <FormItem>
-                  <FieldLabel label="CAC Document" />
-                  <FormControl>
-                    <FileUploadThing
-                      title="Upload CAC document"
-                      value={field.value}
-                      onChange={field.onChange}
-                      onBlur={field.onBlur}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="proofOfAddress"
-              render={({ field }) => (
-                <FormItem>
-                  <FieldLabel label="Proof of Address" />
-                  <FormControl>
-                    <FileUploadThing
-                      title="Upload proof of address"
-                      value={field.value}
-                      onChange={field.onChange}
-                      onBlur={field.onBlur}
-                      description="Max 10MB. PDF/JPG/PNG/WEBP."
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </FieldRow>
       </form>
     </Form>
   );
