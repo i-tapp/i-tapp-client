@@ -73,6 +73,13 @@ export interface Student {
   bio?: string;
   user: {
     id: string;
+    email?: string;
+    role?: string;
+    isVerified?: boolean;
+    isActive?: boolean;
+    phone?: string | null;
+    lastLoginAt?: string;
+    avatarUrl?: string;
   };
 }
 
