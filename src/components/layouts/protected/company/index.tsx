@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { OnboardingTour } from "@/components/onboarding-tour";
 import { usePathname } from "next/navigation";
 import { Briefcase, Element } from "iconsax-reactjs";
 import Link from "next/link";
@@ -88,6 +89,7 @@ export function CompanyLayout({ children }: { children: React.ReactNode }) {
           {children}
         </main>
       </div>
+      <OnboardingTour role="company" />
     </div>
   );
 }
