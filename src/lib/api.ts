@@ -1,5 +1,6 @@
 "use server";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { isAbsoluteUrl } from "next/dist/shared/lib/utils";
 import axios, { AxiosInstance } from "axios";
 import { env } from "@/utils";
@@ -36,16 +37,19 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     const response = error.response?.data;
+    const status = error.response?.status;
     const message =
       response?.message || error?.message || "An unexpected error occurred.";
 
-    console.error("API Error:", {
-      ...response,
-    });
+    console.error("API Error:", { ...response });
+
+    if (status === 401) {
+      redirect("/signin");
+    }
 
     const err = new Error(message);
     (err as any).data = response;
-    (err as any).status = error.response?.status;
+    (err as any).status = status;
     return Promise.reject(err);
   },
 );
