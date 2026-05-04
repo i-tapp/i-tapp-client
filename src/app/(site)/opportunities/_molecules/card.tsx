@@ -35,8 +35,12 @@ export default function OpportunityCard({
     : 0;
   const spotsLeft = maxApplicants - totalApplications;
   const isAlmostFull = fillPct >= 75;
+  const deadlineMoment = moment(applicationDeadline);
+  const hasValidDeadline = deadlineMoment.isValid();
   const deadlineIsNear =
-    moment(applicationDeadline).diff(moment(), "days") <= 7 && isOpen;
+    hasValidDeadline &&
+    deadlineMoment.diff(moment(), "days") <= 7 &&
+    isOpen;
 
   return (
     <article
@@ -166,20 +170,24 @@ export default function OpportunityCard({
 
         {/* ── Footer ── */}
         <div className="flex items-center justify-between">
-          <div className="flex flex-col gap-0.5">
-            <span className="text-[10px] uppercase tracking-wide text-gray-400 font-medium">
-              Deadline
-            </span>
-            <span
-              className={`text-xs font-semibold flex items-center gap-1 ${
-                deadlineIsNear ? "text-red-500" : "text-gray-700"
-              }`}
-            >
-              {deadlineIsNear && <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />}
-              <CalendarDays className="w-3 h-3" />
-              {moment(applicationDeadline).format("MMM D, YYYY")}
-            </span>
-          </div>
+          {hasValidDeadline ? (
+            <div className="flex flex-col gap-0.5">
+              <span className="text-[10px] uppercase tracking-wide text-gray-400 font-medium">
+                Deadline
+              </span>
+              <span
+                className={`text-xs font-semibold flex items-center gap-1 ${
+                  deadlineIsNear ? "text-red-500" : "text-gray-700"
+                }`}
+              >
+                {deadlineIsNear && <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />}
+                <CalendarDays className="w-3 h-3" />
+                {deadlineMoment.format("MMM D, YYYY")}
+              </span>
+            </div>
+          ) : (
+            <span />
+          )}
 
           <span className="text-[11px] text-gray-400">
             {moment(createdAt).fromNow()}
