@@ -21,6 +21,11 @@ export const app = {
       href: "/contact-us",
       text: "Contact Us",
     },
+    {
+      title: "Opportunities - Browse available IT placement opportunities.",
+      href: "/opportunities",
+      text: "Opportunities",
+    },
   ],
   links: {
     signin: "/signin",
