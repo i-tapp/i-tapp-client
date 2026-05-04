@@ -68,9 +68,10 @@ export default function OpportunitiesBrowse() {
     },
   });
 
-  const opportunities = (data?.data ?? []).filter(
-    (o) => o.maxApplicants === 0 || o.maxApplicants - o.totalApplications > 0,
-  );
+  const opportunities = (data?.data ?? []).filter((o) => {
+    if (!o.maxApplicants) return true; // null/undefined/0 = no limit
+    return o.maxApplicants - (o.totalApplications ?? 0) > 0;
+  });
   const pagination = data?.pagination;
 
   return (

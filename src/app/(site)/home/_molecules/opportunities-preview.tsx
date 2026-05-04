@@ -25,7 +25,10 @@ async function fetchPreview(): Promise<PreviewOpportunity[]> {
     if (!res.ok) return [];
     const json = await res.json();
     const all: PreviewOpportunity[] = json?.data ?? [];
-    return all.filter((o) => o.maxApplicants === 0 || o.maxApplicants - o.totalApplications > 0).slice(0, 6);
+    return all.filter((o) => {
+      if (!o.maxApplicants) return true;
+      return o.maxApplicants - (o.totalApplications ?? 0) > 0;
+    }).slice(0, 6);
   } catch {
     return [];
   }
