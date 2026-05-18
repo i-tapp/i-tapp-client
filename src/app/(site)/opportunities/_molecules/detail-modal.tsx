@@ -23,6 +23,7 @@ import {
   Building2,
   GraduationCap,
   Timer,
+  X,
 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { apply } from "@/actions";
@@ -98,13 +99,22 @@ export default function OpportunityDetailModal({
 
   return (
     <Dialog open={!!opportunity} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-3xl p-0 gap-0 overflow-hidden rounded-2xl border-0 shadow-2xl max-h-[92vh]">
+      <DialogContent className="max-w-3xl p-0 gap-0 overflow-hidden rounded-2xl border-0 shadow-2xl max-h-[80vh] [&>button:last-child]:hidden">
         <VisuallyHidden>
           <DialogTitle>{title}</DialogTitle>
         </VisuallyHidden>
-        <div className="flex flex-col md:flex-row h-full max-h-[92vh]">
-          {/* ── Left panel (branded) ── */}
-          <div className="relative md:w-72 shrink-0 bg-gradient-to-b from-primary to-primary/80 flex flex-col overflow-hidden">
+        {/* X button — always top-right, above everything */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-50 p-1.5 rounded-lg bg-white/80 backdrop-blur-sm text-gray-500 hover:text-gray-900 hover:bg-white shadow-sm transition-colors"
+          aria-label="Close"
+        >
+          <X className="w-4 h-4" />
+        </button>
+
+        <div className="flex flex-col md:flex-row h-full overflow-hidden">
+          {/* ── Left panel — hidden on mobile ── */}
+          <div className="hidden md:flex relative md:w-72 shrink-0 bg-gradient-to-b from-primary to-primary/80 flex-col overflow-hidden">
             {/* Decorative circles */}
             <div className="absolute -top-16 -left-16 w-48 h-48 rounded-full bg-white/5 pointer-events-none" />
             <div className="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-white/5 pointer-events-none" />
@@ -168,7 +178,7 @@ export default function OpportunityDetailModal({
                 <StatTile
                   icon={<Banknote className="w-3.5 h-3.5" />}
                   label="Stipend"
-                  value={stipend === "paid" ? "Paid" : "Unpaid"}
+                  value={stipend === "stipend provided" ? "Paid" : stipend === "depends" ? "Depends" : "Unpaid"}
                 />
                 <StatTile
                   icon={<Building2 className="w-3.5 h-3.5" />}
@@ -259,38 +269,56 @@ export default function OpportunityDetailModal({
           </div>
 
           {/* ── Right panel (scrollable) ── */}
-          <div className="flex-1 overflow-y-auto flex flex-col">
-            {/* Header */}
-            <div className="px-6 pt-6 pb-4 border-b border-gray-100 sticky top-0 bg-white z-10">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900 leading-tight capitalize">
-                    {title}
-                  </h2>
-                  <div className="flex flex-wrap items-center gap-3 mt-2">
-                    <span className="flex items-center gap-1 text-red-500 text-xs font-medium">
-                      <MapPin className="w-3.5 h-3.5" />
-                      {location}
-                    </span>
-                    <span className="text-gray-200">·</span>
-                    <span className="flex items-center gap-1 text-gray-400 text-xs">
-                      <Clock className="w-3 h-3" />
-                      Posted {moment(opportunity.createdAt).fromNow()}
-                    </span>
-                  </div>
+          <div className="flex-1 min-h-0 overflow-y-auto flex flex-col">
+            {/* Mobile branded header */}
+            <div className="md:hidden relative bg-gradient-to-br from-primary to-primary/80 px-5 pt-5 pb-5 overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-36 h-36 rounded-full bg-white/5 pointer-events-none" />
+              <div className="absolute -bottom-6 -left-6 w-28 h-28 rounded-full bg-white/5 pointer-events-none" />
+              <div className="relative z-10 flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 overflow-hidden flex items-center justify-center shrink-0">
+                  <Image src={company.logo || dp} alt={company.name} width={48} height={48} className="w-full h-full object-contain" />
+                </div>
+                <div className="min-w-0 flex-1 pr-8">
+                  <h2 className="text-white font-bold text-base leading-tight capitalize truncate">{title}</h2>
+                  <p className="text-white/60 text-xs mt-0.5 truncate">{company.name} · {company.industry}</p>
                 </div>
               </div>
+              <div className="relative z-10 flex items-center gap-2 flex-wrap">
+                <span className={`inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1 rounded-full border ${isOpen ? "bg-emerald-400/20 text-emerald-200 border-emerald-400/30" : "bg-white/10 text-white/50 border-white/20"}`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${isOpen ? "bg-emerald-400 animate-pulse" : "bg-white/40"}`} />
+                  {isOpen ? "Open" : "Closed"}
+                </span>
+                {[
+                  { icon: <Timer className="w-3 h-3" />, label: `${duration}mo` },
+                  { icon: <Wifi className="w-3 h-3" />, label: mode },
+                  { icon: <Banknote className="w-3 h-3" />, label: stipend === "stipend provided" ? "Paid" : stipend === "depends" ? "Depends" : "Unpaid" },
+                  { icon: <MapPin className="w-3 h-3" />, label: location },
+                ].map((s) => (
+                  <span key={s.label} className="inline-flex items-center gap-1 text-[11px] font-medium bg-white/10 border border-white/15 px-2.5 py-1 rounded-full text-white/80 capitalize">
+                    {s.icon}{s.label}
+                  </span>
+                ))}
+              </div>
+            </div>
 
-              {/* Department tags */}
+            {/* Desktop header */}
+            <div className="hidden md:block px-6 pt-6 pb-4 border-b border-gray-100 sticky top-0 bg-white z-10">
+              <div className="pr-8">
+                <h2 className="text-xl font-bold text-gray-900 leading-tight capitalize">{title}</h2>
+                <div className="flex flex-wrap items-center gap-3 mt-2">
+                  <span className="flex items-center gap-1 text-red-500 text-xs font-medium">
+                    <MapPin className="w-3.5 h-3.5" />{location}
+                  </span>
+                  <span className="text-gray-200">·</span>
+                  <span className="flex items-center gap-1 text-gray-400 text-xs">
+                    <Clock className="w-3 h-3" />Posted {moment(opportunity.createdAt).fromNow()}
+                  </span>
+                </div>
+              </div>
               {department?.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mt-3">
                   {department.map((d) => (
-                    <span
-                      key={d}
-                      className="text-[11px] font-medium px-2.5 py-0.5 bg-primary/8 text-primary rounded-full border border-primary/15"
-                    >
-                      {d}
-                    </span>
+                    <span key={d} className="text-[11px] font-medium px-2.5 py-0.5 bg-primary/8 text-primary rounded-full border border-primary/15">{d}</span>
                   ))}
                 </div>
               )}
@@ -298,6 +326,14 @@ export default function OpportunityDetailModal({
 
             {/* Body content */}
             <div className="px-6 py-5 flex flex-col gap-6 flex-1">
+              {/* Department tags (mobile only — desktop shows in sticky header) */}
+              {department?.length > 0 && (
+                <div className="md:hidden flex flex-wrap gap-1.5">
+                  {department.map((d) => (
+                    <span key={d} className="text-[11px] font-medium px-2.5 py-0.5 bg-primary/8 text-primary rounded-full border border-primary/15">{d}</span>
+                  ))}
+                </div>
+              )}
               {/* Description */}
               {description && (
                 <Section title="About This Role">

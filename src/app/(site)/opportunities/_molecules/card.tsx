@@ -5,6 +5,7 @@ import moment from "moment";
 import dp from "@/assets/images/dp.png";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Users, Wifi, Banknote, ArrowUpRight, CalendarDays } from "lucide-react";
+import { cn } from "@/utils/tailwind";
 import type { PublicOpportunity } from "./browse";
 
 export default function OpportunityCard({
@@ -45,12 +46,11 @@ export default function OpportunityCard({
   return (
     <article
       onClick={onView}
-      className="group relative bg-white rounded-2xl border border-gray-100 overflow-hidden cursor-pointer
-        shadow-[0_2px_8px_rgba(0,0,0,0.04)]
-        hover:shadow-[0_12px_40px_rgba(0,0,0,0.10)]
-        hover:-translate-y-1
-        transition-all duration-300 ease-out
-        flex flex-col"
+      className={cn(
+        "group relative bg-white rounded-2xl border border-gray-100 overflow-hidden cursor-pointer flex flex-col",
+        "shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.10)]",
+        "hover:-translate-y-1 transition-all duration-300 ease-out"
+      )}
     >
       {/* Gradient accent bar */}
       <div
@@ -127,7 +127,7 @@ export default function OpportunityCard({
           </Tag>
           <Tag>
             <Banknote className="w-3 h-3" />
-            {stipend === "paid" ? "Paid" : "Unpaid"}
+            {stipend === "stipend provided" ? "Paid" : stipend === "depends" ? "Depends" : "Unpaid"}
           </Tag>
           {department?.[0] && (
             <Tag className="hidden sm:inline-flex">{department[0]}</Tag>
@@ -189,7 +189,7 @@ export default function OpportunityCard({
             <span />
           )}
 
-          <span className="text-[11px] text-gray-400">
+          <span className="text-[11px] text-gray-400" suppressHydrationWarning>
             {moment(createdAt).fromNow()}
           </span>
         </div>
