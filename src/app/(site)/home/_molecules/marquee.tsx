@@ -19,7 +19,7 @@ const features = [
   { icon: ShieldCheck, text: "CAC-verified companies only" },
   { icon: MapPin, text: "State-code matched PPAs" },
   { icon: GraduationCap, text: "SIWES placements" },
-  { icon: Zap, text: "BulkApply™ cold outreach" },
+  { icon: Zap, text: "Instant application alerts" },
   { icon: LayoutDashboard, text: "Real-time application tracking" },
   { icon: MessageCircle, text: "WhatsApp bot integration" },
   { icon: Send, text: "One profile, many companies" },

@@ -60,7 +60,7 @@ const slides = [
       "State-matched PPA opportunities from verified companies. Apply before camp closes — start your service year strong.",
     cta1: { label: "Find My PPA Now", href: "/signup?role=corps" },
     cta2: { label: "Browse PPAs", href: "/opportunities?type=ppa" },
-    trust: ["State-code matched", "3-week camp mode", "BulkApply™ available"],
+    trust: ["State-code matched", "3-week camp mode", "BulkApply available"],
     accent: "#059669",
     accentRgb: "5,150,105",
     bg: "#f0fdf8",
@@ -293,21 +293,9 @@ function CorpsVisual({ accent }: { accent: string }) {
           </span>
         </div>
         {[
-          {
-            name: "TechCorp Nigeria",
-            role: "Software Developer",
-            stipend: "₦150k/mo",
-          },
-          {
-            name: "Flutterwave",
-            role: "Backend Engineer Intern",
-            stipend: "₦200k/mo",
-          },
-          {
-            name: "Access Bank",
-            role: "IT Support Intern",
-            stipend: "₦80k/mo",
-          },
+          { name: "Interswitch Group", role: "IT / Software PPA" },
+          { name: "Sterling Bank", role: "Data & Analytics PPA" },
+          { name: "Printivo", role: "Frontend Dev PPA" },
         ].map((c, i) => (
           <div
             key={i}
@@ -327,9 +315,6 @@ function CorpsVisual({ accent }: { accent: string }) {
               </p>
               <p className="text-[11px] text-gray-400 truncate">{c.role}</p>
             </div>
-            <span className="text-[10px] font-bold text-emerald-600 shrink-0">
-              {c.stipend}
-            </span>
           </div>
         ))}
       </div>
@@ -340,7 +325,9 @@ function CorpsVisual({ accent }: { accent: string }) {
           <Timer className="w-3.5 h-3.5 text-amber-500" />
         </div>
         <div>
-          <p className="text-[11px] font-bold text-gray-900">PPA spots filling</p>
+          <p className="text-[11px] font-bold text-gray-900">
+            PPA spots filling
+          </p>
           <p className="text-[10px] text-amber-500 font-bold">
             Secure yours before camp ends
           </p>
@@ -564,7 +551,9 @@ export function Hero() {
       {/* ── Floating side arrows (hidden on mobile — pill selectors handle navigation) ── */}
       <button
         aria-label="Previous slide"
-        onClick={() => go((activeIdx - 1 + slides.length) % slides.length, "left")}
+        onClick={() =>
+          go((activeIdx - 1 + slides.length) % slides.length, "left")
+        }
         className="hidden sm:flex absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white border border-gray-200 text-gray-600 shadow-md items-center justify-center hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200"
       >
         <ChevronLeft className="w-5 h-5" aria-hidden="true" />
@@ -743,15 +732,20 @@ export function Hero() {
               </button>
             )}
           </div>
-          <div className="flex items-center gap-1.5" role="tablist" aria-label="Slide indicators">
+          <div
+            className="flex items-center gap-1.5"
+            role="tablist"
+            aria-label="Slide indicators"
+          >
             {slides.map((s, i) => (
               <button
                 key={i}
                 aria-label={`Slide ${i + 1}: ${s.label}`}
-                aria-selected={i === activeIdx ? "true" : "false"}
+                aria-selected={i === activeIdx}
                 role="tab"
                 onClick={() => go(i, i > activeIdx ? "right" : "left")}
-                className="relative h-[3px] rounded-full overflow-hidden bg-gray-300/60 transition-all duration-300"
+                className="relative h-[3px] rounded-full overflow-hidden bg-gra
+                -300/60 transition-all duration-300"
                 style={{ width: i === activeIdx ? "32px" : "12px" }}
               >
                 {i === activeIdx && (

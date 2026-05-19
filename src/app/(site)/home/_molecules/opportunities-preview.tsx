@@ -60,7 +60,7 @@ export function OpportunitiesPreview() {
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
           <div>
             <span className="text-[11px] font-bold uppercase tracking-widest text-primary">{h.eyebrow}</span>
-            <h2 className="mt-3 text-3xl sm:text-4xl font-bold text-gray-950 leading-tight tracking-tight">{h.title}</h2>
+            <h2 className="mt-3 text-3xl sm:text-4xl font-black text-gray-950 leading-tight tracking-tight">{h.title}</h2>
             <p className="mt-2 text-gray-500 text-sm sm:text-base max-w-md">{h.desc}</p>
           </div>
           <Link

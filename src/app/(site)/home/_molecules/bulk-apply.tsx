@@ -15,7 +15,7 @@ const steps = [
 
 export function BulkApply() {
   const { persona } = usePersona();
-  if (persona === "student" || persona === "company") return null;
+  if (persona !== "corps") return null;
 
   return (
     <section className="bg-white border-t border-gray-100">
@@ -35,13 +35,13 @@ export function BulkApply() {
                   Pro Feature
                 </span>
                 <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest bg-amber-400/10 text-amber-400 border border-amber-400/20 px-3 py-1.5 rounded-full">
-                  Corps Members + Students
+                  Corps Members Only
                 </span>
               </div>
 
               <div>
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight">
-                  BulkApply™ —{" "}
+                  BulkApply —{" "}
                   <span className="text-primary">We reach out</span>{" "}
                   for you
                 </h2>
@@ -59,7 +59,7 @@ export function BulkApply() {
                   )}
                 >
                   <Zap className="w-4 h-4" />
-                  Activate BulkApply™
+                  Activate BulkApply
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>

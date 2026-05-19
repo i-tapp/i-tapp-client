@@ -6,10 +6,12 @@ import { Services } from "./_molecules/services";
 import { HowItWorks } from "./_molecules/how-it-works";
 import { BulkApply } from "./_molecules/bulk-apply";
 import { ForCompanies } from "./_molecules/for-companies";
-import { WhatsAppBot } from "./_molecules/whatsapp-bot";
+import { Testimonials } from "./_molecules/testimonials";
 import { CtaBanner } from "./_molecules/cta-banner";
 import { Faqs } from "./_molecules/faqs";
 import { Reveal } from "./_molecules/reveal";
+import { WhoIsItFor } from "./_molecules/who-is-it-for";
+import { MobileCtaBar } from "./_molecules/mobile-cta-bar";
 
 export default function Home() {
   return (
@@ -17,6 +19,9 @@ export default function Home() {
       <Hero />
       <Marquee />
       <Stats />
+      <Reveal>
+        <WhoIsItFor />
+      </Reveal>
       <Reveal>
         <OpportunitiesPreview />
       </Reveal>
@@ -33,7 +38,7 @@ export default function Home() {
         <ForCompanies />
       </Reveal>
       <Reveal>
-        <WhatsAppBot />
+        <Testimonials />
       </Reveal>
       <Reveal>
         <CtaBanner />
@@ -41,6 +46,7 @@ export default function Home() {
       <Reveal>
         <Faqs />
       </Reveal>
+      <MobileCtaBar />
     </>
   );
 }

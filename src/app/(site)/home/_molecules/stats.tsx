@@ -10,26 +10,26 @@ const data: Record<string, StatItem[]> = {
   default: [
     { num: 3200, suffix: "+", label: "Registered Users" },
     { num: 50,   suffix: "+", label: "Verified Companies" },
-    { num: 36,   suffix: "+", label: "States Covered" },
-    { num: 85,   suffix: "%", label: "Placement Success Rate" },
+    { num: 36,   suffix: "",  label: "States & FCT" },
+    { num: 48,   suffix: "h", label: "Avg. Verification Time" },
   ],
   student: [
     { num: 2000, suffix: "+", label: "Students Registered" },
     { num: 50,   suffix: "+", label: "Verified Companies" },
-    { num: 12,   suffix: "+", label: "States Active" },
-    { num: 85,   suffix: "%", label: "Placement Rate" },
+    { num: 36,   suffix: "",  label: "States & FCT" },
+    { num: 48,   suffix: "h", label: "Avg. Verification Time" },
   ],
   corps: [
     { num: 1200, suffix: "+", label: "Corps Members" },
     { num: 50,   suffix: "+", label: "PPA Slots Listed" },
-    { num: 36,   suffix: "+ FCT", label: "States Covered" },
-    { num: 3,    suffix: " Weeks", label: "Camp Window" },
+    { num: 36,   suffix: "",  label: "States & FCT" },
+    { num: 3,    suffix: "",  label: "Week Camp Window" },
   ],
   company: [
     { num: 3200, suffix: "+", label: "Talent Pool" },
     { num: 50,   suffix: "+", label: "Active Listings" },
-    { num: 36,   suffix: "+", label: "States Covered" },
-    { num: 90,   suffix: "%", label: "Fill Rate" },
+    { num: 36,   suffix: "",  label: "States & FCT" },
+    { num: 48,   suffix: "h", label: "Avg. Time to First Applicant" },
   ],
 };
 
