@@ -1,7 +1,6 @@
 "use server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { isAbsoluteUrl } from "next/dist/shared/lib/utils";
 import axios, { AxiosInstance } from "axios";
 import { env } from "@/utils";
 
@@ -58,7 +57,7 @@ export async function api<T = any>(
   { method = "GET", data, headers, ...options }: any = {},
 ): Promise<T> {
   try {
-    const requestUrl = isAbsoluteUrl(url) ? url : `${API_BASE_URL}${url}`;
+    const requestUrl = url.startsWith("http") ? url : `${API_BASE_URL}${url}`;
     const response = await axiosInstance.request<T>({
       url: requestUrl,
       method,
