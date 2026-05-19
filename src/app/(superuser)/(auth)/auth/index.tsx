@@ -88,8 +88,8 @@ export default function AdminAuth() {
                 id="remember"
                 name="remember"
                 checked={f.getValues("remember")}
-                onChange={(e) =>
-                  f.setValue("remember", (e.target as HTMLInputElement).checked)
+                onCheckedChange={(checked) =>
+                  f.setValue("remember", checked === true)
                 }
               />
               <label htmlFor="remember">Remember me</label>
