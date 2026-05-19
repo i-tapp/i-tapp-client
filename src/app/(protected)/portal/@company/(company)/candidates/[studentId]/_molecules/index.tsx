@@ -209,12 +209,12 @@ export default function CandidateProfile() {
               <InfoCard
                 icon={Call}
                 label="Phone"
-                value={studentDetails?.user?.phoneNumber || "Not provided"}
+                value={studentDetails?.phone || "Not provided"}
               />
               <InfoCard
                 icon={Location}
                 label="Address"
-                value={studentDetails?.user?.address || "Not provided"}
+                value={studentDetails?.address || "Not provided"}
               />
             </div>
 
