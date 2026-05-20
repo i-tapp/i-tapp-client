@@ -15,6 +15,9 @@ import {
   Building2,
   MapPin,
   TrendingUp,
+  GraduationCap,
+  BadgeCheck,
+  LayoutGrid,
 } from "lucide-react";
 
 export type PublicOpportunity = {
@@ -23,6 +26,7 @@ export type PublicOpportunity = {
   description: string;
   location: string;
   type: string;
+  programType?: "siwes" | "ppa";
   mode: string;
   stipend: string;
   duration: number;
@@ -55,15 +59,26 @@ type PaginationMeta = {
   itemsPerPage: number;
 };
 
+type OpportunityType = "all" | "siwes" | "ppa";
+
+const TYPE_FILTERS: { value: OpportunityType; label: string; icon: React.ReactNode; description: string }[] = [
+  { value: "all", label: "All", icon: <LayoutGrid className="w-4 h-4" />, description: "All opportunities" },
+  { value: "siwes", label: "SIWES", icon: <GraduationCap className="w-4 h-4" />, description: "Student industrial training" },
+  { value: "ppa", label: "PPA", icon: <BadgeCheck className="w-4 h-4" />, description: "NYSC place of primary assignment" },
+];
+
 export default function OpportunitiesBrowse() {
   const [page, setPage] = useState(1);
+  const [typeFilter, setTypeFilter] = useState<OpportunityType>("all");
   const [selectedOpportunity, setSelectedOpportunity] =
     useState<PublicOpportunity | null>(null);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["public-opportunities", page],
+    queryKey: ["public-opportunities", page, typeFilter],
     queryFn: async () => {
-      const res = await query(`/o/browse?page=${page}&limit=10`);
+      const params = new URLSearchParams({ page: String(page), limit: "10" });
+      if (typeFilter !== "all") params.set("program", typeFilter);
+      const res = await query(`/o/browse?${params.toString()}`);
       return res as { data: PublicOpportunity[]; pagination: PaginationMeta };
     },
   });
@@ -166,6 +181,36 @@ export default function OpportunitiesBrowse() {
         </Wrapper>
       </div>
 
+      {/* ── Type filter bar ── */}
+      <div className="bg-white border-b border-gray-100 sticky top-0 z-20 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
+        <Wrapper className="py-0">
+          <div className="flex items-center gap-1 overflow-x-auto hide-scrollbar py-3">
+            {TYPE_FILTERS.map((f) => {
+              const active = typeFilter === f.value;
+              return (
+                <button
+                  key={f.value}
+                  onClick={() => { setTypeFilter(f.value); setPage(1); }}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-200 border ${
+                    active
+                      ? "bg-primary text-white border-primary shadow-sm shadow-primary/25"
+                      : "bg-transparent text-gray-500 border-transparent hover:bg-gray-50 hover:text-gray-800"
+                  }`}
+                >
+                  {f.icon}
+                  {f.label}
+                  {active && f.value !== "all" && (
+                    <span className="ml-1 text-[10px] font-bold uppercase tracking-wider opacity-80 bg-white/20 px-1.5 py-0.5 rounded-md">
+                      {f.description}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </Wrapper>
+      </div>
+
       {/* ── Listings ── */}
       <Wrapper className="py-12">
         {/* Result meta */}
@@ -180,7 +225,12 @@ export default function OpportunitiesBrowse() {
               <span className="font-semibold text-gray-800">
                 {pagination.totalItems}
               </span>{" "}
-              opportunities
+              {typeFilter !== "all" ? (
+                <span className="inline-flex items-center gap-1">
+                  <span className="font-semibold text-primary uppercase">{typeFilter}</span>
+                  {" "}opportunities
+                </span>
+              ) : "opportunities"}
             </p>
             <span className="text-xs text-gray-400 bg-white border border-gray-100 px-3 py-1 rounded-full shadow-sm">
               Page {pagination.currentPage} / {pagination.totalPages}

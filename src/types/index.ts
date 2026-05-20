@@ -48,6 +48,36 @@ export interface Company {
   // user?: User;
 }
 
+export interface Corps {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+  profileImageUrl?: string;
+  isVerified: boolean;
+  role: string;
+  stateOfDeployment?: string;
+  callUpNumber?: string;
+  batchYear?: string;
+  courseOfStudy?: string;
+  bio?: string;
+  preferredIndustry?: string;
+  preferredLocation?: string;
+  cvUrl?: string;
+  callUpLetterUrl?: string;
+  user: {
+    id: string;
+    email?: string;
+    role?: string;
+    isVerified?: boolean;
+    isActive?: boolean;
+    phone?: string | null;
+    lastLoginAt?: string;
+    avatarUrl?: string;
+  };
+}
+
 export interface Student {
   id: string;
   firstName: string;
@@ -93,6 +123,7 @@ export interface Opportunity {
   location: string;
 
   type: string;
+  programType?: "siwes" | "ppa";
   mode: string;
   status: OpportunityStatus;
 

@@ -103,6 +103,22 @@ export const companyProfileSchema = z.object({
   proofOfAddress: z.instanceof(File).optional(),
 });
 
+export const corpsSignupSchema = z
+  .object({
+    email: z.email("Please enter a valid email address"),
+    phone: z.string().min(10, "Phone number is too short"),
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().min(1, "Last name is required"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
+  })
+  .refine((d) => d.password === d.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export type CorpsSignupInput = z.infer<typeof corpsSignupSchema>;
+
 export const opportunityFormSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters"),
   department: z.array(z.string()).min(1, "Department is required"),
@@ -116,6 +132,7 @@ export const opportunityFormSchema = z.object({
   applicationDeadline: z.string().optional(),
   autoCloseOnDeadline: z.boolean().optional(),
   preferredFieldsOfStudy: z.array(z.string()).optional(),
+  programType: z.enum(["siwes", "ppa"]).optional(),
   // skills: z.string().optional(),
 });
 

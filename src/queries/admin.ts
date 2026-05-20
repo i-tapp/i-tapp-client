@@ -94,6 +94,16 @@ const useFetchStudentStats = () => {
   });
 };
 
+const useFetchAllCorps = () => {
+  return useQuery({
+    queryKey: ["admin-all-corps"],
+    queryFn: async () => {
+      const response = await query("/admin/corps");
+      return response;
+    },
+  });
+};
+
 export {
   useFetchCompanies,
   useFetchAllStudents,
@@ -104,4 +114,5 @@ export {
   useFetchOffers,
   useFetchAdmins,
   useFetchCompanyDocuments,
+  useFetchAllCorps,
 };

@@ -61,6 +61,7 @@ export default function OpportunityForm({
       applicationDeadline: undefined,
       autoCloseOnDeadline: false,
       preferredFieldsOfStudy: [],
+      programType: undefined,
       // skills: "",
     },
 
@@ -263,6 +264,32 @@ export default function OpportunityForm({
                               </SelectItem>
                             ),
                           )}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Program Type */}
+              <FormField
+                control={form.control}
+                name="programType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Program Type</FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value ?? ""}
+                        onValueChange={(v) => field.onChange(v || undefined)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select program (optional)" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="siwes">SIWES — Student Industrial Training</SelectItem>
+                          <SelectItem value="ppa">PPA — NYSC Place of Primary Assignment</SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>

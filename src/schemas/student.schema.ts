@@ -7,6 +7,35 @@ export const documentStepSchema = z.object({
   cv: fileSchema.optional(),
 });
 
+export const corpsDocumentStepSchema = z.object({
+  callUpLetter: fileSchema,
+  cv: fileSchema.optional(),
+});
+
+export const corpsInfoSchema = z.object({
+  stateOfDeployment: z.string().min(1, "State of deployment is required"),
+  callUpNumber: z.string().min(1, "Call-up number is required"),
+  batchYear: z.string().min(4, "Batch year is required"),
+  courseOfStudy: z.string().min(1, "Course of study is required"),
+  phone: z.string().min(10, "Phone number is too short"),
+});
+
+export const corpsPreferencesSchema = z.object({
+  preferredWorkMode: z.enum(["remote", "onsite", "hybrid"]),
+  preferredIndustry: z.array(z.string()).min(1, "Select at least one industry"),
+  availableStartDate: z.string().refine((d) => !isNaN(Date.parse(d)), {
+    message: "Invalid date format",
+  }),
+});
+
+export const corpsOnboardingSchema = corpsInfoSchema
+  .extend(corpsPreferencesSchema.shape)
+  .extend(corpsDocumentStepSchema.shape);
+
+export type CorpsDocumentSchema = z.infer<typeof corpsDocumentStepSchema>;
+export type CorpsInfoSchema = z.infer<typeof corpsInfoSchema>;
+export type CorpsOnboardingSchema = z.infer<typeof corpsOnboardingSchema>;
+
 export const schoolInfoSchema = z.object({
   school: z.string().min(1, "School name is required"),
   courseOfStudy: z.string().min(1, "Field of study is required"),

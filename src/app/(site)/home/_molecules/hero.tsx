@@ -19,7 +19,6 @@ import {
   Users,
   CheckCircle2,
   Bell,
-  MessageCircle,
   Star,
   Timer,
 } from "lucide-react";
@@ -78,7 +77,7 @@ const slides = [
     cta2: { label: "See How It Works", href: "#how-it-works" },
     trust: [
       "SIWES + PPA talent pool",
-      "WhatsApp bot integration",
+      "Verified applicants only",
       "Admin-assisted listing",
     ],
     accent: "#7c3aed",
@@ -420,17 +419,6 @@ function CompanyVisual({ accent }: { accent: string }) {
           <span className="text-[10px] font-bold text-emerald-600">
             +8 today
           </span>
-        </div>
-      </div>
-
-      {/* WhatsApp bot notification */}
-      <div className="absolute -top-2 -right-2 bg-white border border-green-100 rounded-2xl px-3 py-2.5 shadow-lg flex items-center gap-2">
-        <div className="w-7 h-7 rounded-xl bg-[#25D366]/10 flex items-center justify-center shrink-0">
-          <MessageCircle className="w-3.5 h-3.5 text-[#25D366]" />
-        </div>
-        <div>
-          <p className="text-[11px] font-bold text-gray-900">WhatsApp Bot</p>
-          <p className="text-[10px] text-gray-400">8 new applicants today</p>
         </div>
       </div>
 

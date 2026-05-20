@@ -1,6 +1,7 @@
 import { mutate, query } from "@/lib/api";
 import { actionClient } from "@/lib/safe-action";
 import {
+  corpsOnboardingSchema,
   studentOnboardingSchema,
   verifyStudentIdentitySchema,
 } from "@/schemas";
@@ -169,6 +170,28 @@ export const onBoardStudent = actionClient
     }
 
     const response = await mutate("/s/onboarding", formData, "POST");
+    return response;
+  });
+
+export const onBoardCorps = actionClient
+  .inputSchema(corpsOnboardingSchema)
+  .action(async ({ parsedInput }) => {
+    const formData = new FormData();
+    for (const [key, value] of Object.entries(parsedInput)) {
+      appendToFormData(formData, key, value);
+    }
+    const response = await mutate("/corps/onboarding", formData, "POST");
+    return response;
+  });
+
+export const updateCorpsProfile = actionClient
+  .inputSchema(StudentProfileSchema.extend({
+    stateOfDeployment: z.string().optional(),
+    callUpNumber: z.string().optional(),
+    batchYear: z.string().optional(),
+  }))
+  .action(async ({ parsedInput }) => {
+    const response = await mutate("/corps/profile", parsedInput, "PATCH");
     return response;
   });
 
