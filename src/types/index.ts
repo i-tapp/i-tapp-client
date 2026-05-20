@@ -54,16 +54,24 @@ export interface Corps {
   lastName: string;
   phone: string;
   email: string;
+  gender?: string;
   profileImageUrl?: string;
   isVerified: boolean;
   role: string;
+  status?: string;
   stateOfDeployment?: string;
-  callUpNumber?: string;
+  stateCode?: string;
+  nyscRegNumber?: string;
   batchYear?: string;
+  stream?: "A" | "B";
   courseOfStudy?: string;
+  degreeType?: string;
+  school?: string;
+  graduationYear?: string;
+  gpa?: string;
+  techSkills?: string[];
+  softSkills?: string[];
   bio?: string;
-  preferredIndustry?: string;
-  preferredLocation?: string;
   cvUrl?: string;
   callUpLetterUrl?: string;
   user: {

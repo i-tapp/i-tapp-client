@@ -104,6 +104,67 @@ const useFetchAllCorps = () => {
   });
 };
 
+const useFetchAdminStats = () => {
+  return useQuery({
+    queryKey: ["admin-stats"],
+    queryFn: async () => {
+      const response = await query("/admin/stats");
+      return response;
+    },
+  });
+};
+
+const useFetchPendingApprovals = () => {
+  return useQuery({
+    queryKey: ["admin-pending-approvals"],
+    queryFn: async () => {
+      const response = await query("/admin/pending");
+      return response as { students: any[]; corps: any[] };
+    },
+  });
+};
+
+const useFetchAdminSearch = (q: string) => {
+  return useQuery({
+    queryKey: ["admin-search", q],
+    queryFn: async () => {
+      const response = await query(`/admin/search?q=${encodeURIComponent(q)}`);
+      return response as { students: any[]; corps: any[]; companies: any[]; opportunities: any[] };
+    },
+    enabled: q.trim().length >= 2,
+  });
+};
+
+const useFetchAdminAnalytics = () => {
+  return useQuery({
+    queryKey: ["admin-analytics"],
+    queryFn: async () => {
+      const response = await query("/admin/analytics");
+      return response;
+    },
+  });
+};
+
+const useFetchAuditLog = (page = 1) => {
+  return useQuery({
+    queryKey: ["admin-audit-log", page],
+    queryFn: async () => {
+      const response = await query(`/admin/audit-log?page=${page}&limit=20`);
+      return response;
+    },
+  });
+};
+
+const useFetchFlaggedOpportunities = () => {
+  return useQuery({
+    queryKey: ["admin-flagged-opportunities"],
+    queryFn: async () => {
+      const response = await query("/admin/opportunities/flagged");
+      return response;
+    },
+  });
+};
+
 export {
   useFetchCompanies,
   useFetchAllStudents,
@@ -115,4 +176,10 @@ export {
   useFetchAdmins,
   useFetchCompanyDocuments,
   useFetchAllCorps,
+  useFetchAdminStats,
+  useFetchPendingApprovals,
+  useFetchAdminSearch,
+  useFetchAdminAnalytics,
+  useFetchAuditLog,
+  useFetchFlaggedOpportunities,
 };

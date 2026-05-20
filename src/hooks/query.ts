@@ -190,6 +190,17 @@ export const useFetchStudentDetails = (id?: string) => {
   });
 };
 
+export const useFetchCorpsDetails = (id?: string) => {
+  return useQuery({
+    queryKey: ["corps-details", id],
+    queryFn: async () => {
+      const response = await query(`/admin/corps/${id}`);
+      return response;
+    },
+    enabled: !!id,
+  });
+};
+
 export const useFetchApplicationDetails = (id?: string) => {
   return useQuery({
     queryKey: ["application-details", id],

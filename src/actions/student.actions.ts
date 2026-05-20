@@ -187,8 +187,15 @@ export const onBoardCorps = actionClient
 export const updateCorpsProfile = actionClient
   .inputSchema(StudentProfileSchema.extend({
     stateOfDeployment: z.string().optional(),
-    callUpNumber: z.string().optional(),
+    stateCode: z.string().optional(),
+    nyscRegNumber: z.string().optional(),
     batchYear: z.string().optional(),
+    stream: z.enum(["A", "B"]).optional(),
+    degreeType: z.string().optional(),
+    school: z.string().optional(),
+    graduationYear: z.string().optional(),
+    gpa: z.string().optional(),
+    gender: z.string().optional(),
   }))
   .action(async ({ parsedInput }) => {
     const response = await mutate("/corps/profile", parsedInput, "PATCH");
