@@ -59,7 +59,7 @@
     "react-day-picker": "^9.14.0",
     "react-dom": "19.2.4",
     "react-hook-form": "^7.76.0",
-    "react-resizable-panels": "^3.0.6",
+    "react-resizable-panels": "^4.11.1",
     "react-select": "^5.10.2",
     "react-sparklines": "^1.7.0",
     "react-toastify": "^11.1.0",
