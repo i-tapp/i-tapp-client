@@ -198,6 +198,41 @@ export const purgeRecord = actionClient
     return { success: true, data: response };
   });
 
+export const bulkApprove = actionClient
+  .inputSchema(z.object({
+    type: z.enum(["student", "corps"]),
+    ids: z.array(z.string().min(1)).min(1),
+  }))
+  .action(async ({ parsedInput: { type, ids } }) => {
+    const response = await mutate("/admin/bulk/approve", { type, ids }, "POST");
+    return { success: true, data: response };
+  });
+
+export const bulkReject = actionClient
+  .inputSchema(z.object({
+    type: z.enum(["student", "corps"]),
+    ids: z.array(z.string().min(1)).min(1),
+    reason: z.string().optional(),
+  }))
+  .action(async ({ parsedInput }) => {
+    const response = await mutate("/admin/bulk/reject", parsedInput, "POST");
+    return { success: true, data: response };
+  });
+
+export const approveCorps = actionClient
+  .inputSchema(z.object({ corpsId: z.string().min(1) }))
+  .action(async ({ parsedInput: { corpsId } }) => {
+    const response = await mutate(`/admin/corps/${corpsId}/approve`, {}, "PATCH");
+    return { success: true, data: response };
+  });
+
+export const rejectCorps = actionClient
+  .inputSchema(z.object({ corpsId: z.string().min(1), reason: z.string().optional() }))
+  .action(async ({ parsedInput: { corpsId, reason } }) => {
+    const response = await mutate(`/admin/corps/${corpsId}/reject`, reason ? { reason } : {}, "PATCH");
+    return { success: true, data: response };
+  });
+
 export const sendSystemEmail = actionClient
   .inputSchema(
     z.object({

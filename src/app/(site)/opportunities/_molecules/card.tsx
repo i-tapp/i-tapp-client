@@ -21,6 +21,7 @@ export default function OpportunityCard({
     mode,
     duration,
     stipend,
+    programType,
     totalApplications,
     maxApplicants,
     applicationDeadline,
@@ -103,6 +104,19 @@ export default function OpportunityCard({
             {isOpen ? "Open" : "Closed"}
           </span>
         </div>
+
+        {/* ── Type badge ── */}
+        {programType && (
+          <div className="flex">
+            <span className={`inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg border ${
+              programType === "ppa"
+                ? "bg-violet-50 text-violet-700 border-violet-100"
+                : "bg-sky-50 text-sky-700 border-sky-100"
+            }`}>
+              {programType.toUpperCase()}
+            </span>
+          </div>
+        )}
 
         {/* ── Location + industry ── */}
         <div className="flex items-center justify-between text-xs text-gray-400">

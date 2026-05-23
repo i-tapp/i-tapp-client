@@ -11,7 +11,7 @@ const faqData = {
     { question: "Who can use I-TAPP?", answer: "Students looking for SIWES / IT placements, NYSC corps members seeking PPA opportunities, and companies wanting to list placement slots for either or both groups." },
     { question: "Is I-TAPP free to use?", answer: "I-TAPP uses a freemium model. Basic applications are free. BulkApply and cold-email outreach are available as premium add-ons." },
     { question: "Are companies on I-TAPP verified?", answer: "Yes. Every company is verified with CAC registration before they can post opportunities. Verified companies display a badge on their profile and listings." },
-    { question: "How can I contact I-TAPP support?", answer: "Reach our support team at support@i-tapp.com or via WhatsApp at +2348081047072. We're available to help with account issues, placement questions, and more." },
+    { question: "How can I contact I-TAPP support?", answer: "Reach our support team at support@i-tapp.com. We respond to every message personally and aim to get back to you within 24 hours." },
   ],
   student: [
     { question: "What is SIWES and how does I-TAPP help?", answer: "SIWES (Student Industrial Work Experience Scheme) requires students in technical courses to undergo industrial training. I-TAPP helps you find, apply for, and track SIWES placements at verified companies — without cold emails or walk-ins." },

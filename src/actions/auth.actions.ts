@@ -4,6 +4,7 @@ import { mutate, query } from "@/lib/api";
 import { actionClient } from "@/lib/safe-action";
 import {
   companySignupSchema,
+  corpsSignupSchema,
   resetPasswordSchema,
   signinSchema,
   signupSchema,
@@ -139,5 +140,32 @@ export const companySignup = actionClient
   .inputSchema(companySignupSchema)
   .action(async ({ parsedInput }) => {
     const response = await mutate("/auth/signup/company", parsedInput);
+    return response;
+  });
+
+export const signinCorps = actionClient
+  .inputSchema(signinSchema)
+  .action(async ({ parsedInput: { email, password } }) => {
+    const response = await mutate("/auth/signin", {
+      email,
+      password,
+      role: "corps",
+    });
+    const { user, token, profile } = response.data;
+    await setAuthCookies(token, user.role);
+    await query("/auth/me");
+    return { user, token, profile };
+  });
+
+export const corpsSignup = actionClient
+  .inputSchema(corpsSignupSchema)
+  .action(async ({ parsedInput: { email, password, firstName, lastName, phone } }) => {
+    const response = await mutate("/auth/signup/corps", {
+      email,
+      password,
+      firstName,
+      lastName,
+      phone,
+    });
     return response;
   });

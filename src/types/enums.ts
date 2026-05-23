@@ -47,6 +47,11 @@ export enum OpportunityType {
   FREELANCE = "freelance",
 }
 
+export enum ProgramType {
+  SIWES = "siwes",
+  PPA = "ppa",
+}
+
 export enum OpportunityLevel {
   ENTRY = "entry",
   MID = "mid",
