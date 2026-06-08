@@ -1,5 +1,5 @@
 import Image from "next/image";
-import sam from "@/assets/images/sam.jpg";
+import sam from "@/assets/images/samuel.jpeg";
 import dee from "@/assets/images/dee.jpg";
 import egbe from "@/assets/images/egbe.png";
 import jutin from "@/assets/images/jutin.png";
