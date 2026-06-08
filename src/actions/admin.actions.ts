@@ -219,6 +219,16 @@ export const bulkReject = actionClient
     return { success: true, data: response };
   });
 
+export const updatePPAStatus = actionClient
+  .inputSchema(z.object({
+    ppaId: z.string().min(1),
+    status: z.enum(["active", "inactive", "closed"]),
+  }))
+  .action(async ({ parsedInput: { ppaId, status } }) => {
+    const response = await mutate(`/admin/ppa/${ppaId}/status`, { status }, "PATCH");
+    return { success: true, data: response };
+  });
+
 export const approveCorps = actionClient
   .inputSchema(z.object({ corpsId: z.string().min(1) }))
   .action(async ({ parsedInput: { corpsId } }) => {

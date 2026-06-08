@@ -23,7 +23,7 @@ export default function CorpsPersonalInfoStep({
   const form = useForm<CorpsPersonalInfoSchema>({
     resolver: zodResolver(corpsPersonalInfoSchema),
     mode: "onSubmit",
-    defaultValues: { firstName: "", lastName: "", phone: "", gender: undefined },
+    defaultValues: { firstName: "", lastName: "", phone: "", gender: undefined, location: "" },
   });
 
   return (
@@ -66,6 +66,14 @@ export default function CorpsPersonalInfoStep({
                 <option value="other">Other</option>
               </select>
             </FormControl>
+            <FormMessage />
+          </FormItem>
+        )} />
+
+        <FormField control={form.control} name="location" render={({ field }) => (
+          <FormItem>
+            <FormLabel>Location</FormLabel>
+            <FormControl><Input placeholder="e.g. Lagos, Nigeria" {...field} /></FormControl>
             <FormMessage />
           </FormItem>
         )} />

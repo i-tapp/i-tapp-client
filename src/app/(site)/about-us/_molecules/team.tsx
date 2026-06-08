@@ -47,15 +47,17 @@ export default function Team() {
   return (
     <section className="bg-[#f7f8fc] border-t border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 py-16 sm:py-24">
-
         {/* Header */}
         <div className="text-center mb-12 sm:mb-16">
-          <span className="text-[11px] font-bold uppercase tracking-widest text-primary">The people</span>
+          <span className="text-[11px] font-bold uppercase tracking-widest text-primary">
+            The people
+          </span>
           <h2 className="mt-3 text-3xl sm:text-4xl font-black text-gray-950 leading-tight tracking-tight">
             Meet the team
           </h2>
           <p className="mt-4 text-gray-500 text-base max-w-xl mx-auto leading-relaxed">
-            A small, focused team on a big mission — transforming how Nigeria&apos;s students and corps members find placements.
+            A small, focused team on a big mission — transforming how
+            Nigeria&apos;s students and corps members find placements.
           </p>
         </div>
 
@@ -82,10 +84,16 @@ export default function Team() {
               {/* Info */}
               <div className="p-4 sm:p-6 flex flex-col gap-1.5 sm:gap-2">
                 <div>
-                  <h3 className="text-xs sm:text-base font-black text-gray-900 leading-snug">{member.name}</h3>
-                  <p className="text-[10px] sm:text-xs font-bold text-primary mt-0.5">{member.role}</p>
+                  <h3 className="text-xs sm:text-base font-black text-gray-900 leading-snug">
+                    {member.name}
+                  </h3>
+                  <p className="text-[10px] sm:text-xs font-bold text-primary mt-0.5">
+                    {member.role}
+                  </p>
                 </div>
-                <p className="text-xs sm:text-sm text-gray-500 leading-relaxed hidden sm:block">{member.bio}</p>
+                <p className="text-xs sm:text-sm text-gray-500 leading-relaxed hidden sm:block">
+                  {member.bio}
+                </p>
               </div>
             </div>
           ))}

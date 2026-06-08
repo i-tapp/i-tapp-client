@@ -10,6 +10,7 @@ export const documentStepSchema = z.object({
 export const corpsDocumentStepSchema = z.object({
   callUpLetter: fileSchema,
   cv: fileSchema.optional(),
+  relocationLetter: fileSchema.optional(),
 });
 
 export const corpsPersonalInfoSchema = z.object({
@@ -17,6 +18,7 @@ export const corpsPersonalInfoSchema = z.object({
   lastName: z.string().min(1, "Last name is required"),
   phone: z.string().min(10, "Phone number is too short"),
   gender: z.enum(["male", "female", "other"], { message: "Select a gender" }),
+  location: z.string().min(1, "Location is required"),
 });
 
 export const corpsInfoSchema = z.object({
@@ -37,6 +39,7 @@ export const corpsSkillsSchema = z.object({
   softSkills: z.array(z.string()).optional(),
   bio: z.string().optional(),
   preferredIndustry: z.array(z.string()).min(1, "Select at least one industry"),
+  internshipDuration: z.string().min(1, "Duration is required"),
   availableStartDate: z.string().refine((d) => !isNaN(Date.parse(d)), {
     message: "Invalid date format",
   }),
