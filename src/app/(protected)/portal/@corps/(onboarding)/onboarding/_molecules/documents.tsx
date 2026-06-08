@@ -16,7 +16,7 @@ export default function CorpsDocumentStep({
   const form = useForm<CorpsDocumentSchema>({
     resolver: zodResolver(corpsDocumentStepSchema),
     mode: "onChange",
-    defaultValues: { callUpLetter: undefined, cv: undefined },
+    defaultValues: { callUpLetter: undefined, cv: undefined, relocationLetter: undefined },
   });
 
   return (
@@ -40,6 +40,16 @@ export default function CorpsDocumentStep({
             <FormLabel className="font-semibold">CV / Resume <span className="text-muted-foreground">(optional)</span></FormLabel>
             <FormControl>
               <FileUploadThing title="Upload CV" value={field.value} onChange={field.onChange} onBlur={field.onBlur} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )} />
+
+        <FormField control={form.control} name="relocationLetter" render={({ field }) => (
+          <FormItem>
+            <FormLabel className="font-semibold">Relocation Letter <span className="text-muted-foreground">(optional)</span></FormLabel>
+            <FormControl>
+              <FileUploadThing title="Upload Relocation Letter" value={field.value} onChange={field.onChange} onBlur={field.onBlur} />
             </FormControl>
             <FormMessage />
           </FormItem>

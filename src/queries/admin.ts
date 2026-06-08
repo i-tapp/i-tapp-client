@@ -165,6 +165,35 @@ const useFetchFlaggedOpportunities = () => {
   });
 };
 
+const useFetchAdminPPA = (params?: { state?: string; status?: string; page?: number; limit?: number }) => {
+  return useQuery({
+    queryKey: ["admin-ppa", params],
+    queryFn: async () => {
+      const search = new URLSearchParams();
+      if (params?.state) search.set("state", params.state);
+      if (params?.status) search.set("status", params.status);
+      if (params?.page) search.set("page", String(params.page));
+      if (params?.limit) search.set("limit", String(params.limit));
+      const response = await query(`/admin/ppa?${search.toString()}`);
+      return response;
+    },
+  });
+};
+
+const useFetchAdminCorpsApplications = (params?: { status?: string; page?: number; limit?: number }) => {
+  return useQuery({
+    queryKey: ["admin-corps-applications", params],
+    queryFn: async () => {
+      const search = new URLSearchParams();
+      if (params?.status) search.set("status", params.status);
+      if (params?.page) search.set("page", String(params.page));
+      if (params?.limit) search.set("limit", String(params.limit));
+      const response = await query(`/admin/corps/applications?${search.toString()}`);
+      return response;
+    },
+  });
+};
+
 export {
   useFetchCompanies,
   useFetchAllStudents,
@@ -182,4 +211,6 @@ export {
   useFetchAdminAnalytics,
   useFetchAuditLog,
   useFetchFlaggedOpportunities,
+  useFetchAdminPPA,
+  useFetchAdminCorpsApplications,
 };

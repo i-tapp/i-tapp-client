@@ -7,6 +7,7 @@ import { env } from "./utils";
 const roleRedirects: Record<string, string> = {
   student: "/portal/find-it-space",
   company: "/portal/dashboard",
+  corps: "/portal/find-ppa",
   admin: "/admin",
 };
 
@@ -48,6 +49,7 @@ export async function proxy(req: NextRequest) {
 
   const isCompanyRole = role === "company";
   const isStudentRole = role === "student";
+  const isCorpsRole = role === "corps";
 
   const isCompanyOnboardingRoute = pathname.startsWith("/portal/onboarding");
   const isStudentOnboardingRoute = pathname.startsWith("/portal/onboarding");
@@ -60,6 +62,7 @@ export async function proxy(req: NextRequest) {
     "/signup",
     "/company/signin",
     "/company/signup",
+    "/corps/signup",
     "/auth",
   ].includes(pathname);
 
@@ -117,6 +120,7 @@ export async function proxy(req: NextRequest) {
     // const student = profile?.student;
     const companyOnboarded = profile?.company?.isOnboarded === true; // boolean
     const studentOnboarded = profile?.student?.isOnboarded === true; // boolean
+    const corpsOnboarded = profile?.corps?.isOnboarded === true; // boolean
 
     if (role === "admin") {
       return NextResponse.redirect(new URL("/admin", req.url));
@@ -144,6 +148,16 @@ export async function proxy(req: NextRequest) {
       }
 
       if (!canSkip && !isStudentOnboardingRoute) {
+        return NextResponse.redirect(new URL("/portal/onboarding/", req.url));
+      }
+    }
+
+    if (isCorpsRole) {
+      const isCorpsOnboardingRoute = pathname.startsWith("/portal/onboarding");
+      if (corpsOnboarded && isCorpsOnboardingRoute) {
+        return NextResponse.redirect(new URL("/portal/dashboard", req.url));
+      }
+      if (!corpsOnboarded && !isCorpsOnboardingRoute) {
         return NextResponse.redirect(new URL("/portal/onboarding/", req.url));
       }
     }

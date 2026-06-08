@@ -13,48 +13,21 @@ import {
 import { setAuthCookies } from "@/utils/cookies";
 import * as z from "zod";
 
-export const signinStudent = actionClient
+export const signin = actionClient
   .inputSchema(signinSchema)
   .action(async ({ parsedInput: { email, password } }) => {
-    const response = await mutate("/auth/signin", {
-      email,
-      password,
-      role: "student",
-    });
+    const response = await mutate("/auth/signin", { email, password });
     const { user, token, profile } = response.data;
     await setAuthCookies(token, user.role);
-    const me = (await query("/auth/me")) as any;
-    const meStudent = me?.student ?? {};
-    return { user, token, profile: { ...profile, ...meStudent } };
+    return { user, token, profile };
   });
 
-export const signinCompany = actionClient
-  .inputSchema(signinSchema)
-  .action(async ({ parsedInput: { email, password } }) => {
-    const response = await mutate("/auth/signin", {
-      email,
-      password,
-      role: "company",
-    });
-    const { token, user, role, profile } = response.data;
-    await setAuthCookies(token, user.role);
-    await query("/auth/me");
-    return { token, role, user, profile };
-  });
+// kept for backwards compat — delegates to universal signin
+export const signinStudent = signin;
 
-export const signinAdmin = actionClient
-  .inputSchema(signinSchema)
-  .action(async ({ parsedInput: { email, password } }) => {
-    const response = await mutate("/auth/signin", {
-      email,
-      password,
-      role: "admin",
-    });
-    const { token, user, role, profile } = response.data;
-    await setAuthCookies(token, user.role);
-    await query("/auth/me");
-    return { token, role, user, profile };
-  });
+export const signinCompany = signin;
+
+export const signinAdmin = signin;
 
 export const studentSignup = actionClient
   .inputSchema(signupSchema)
@@ -143,19 +116,7 @@ export const companySignup = actionClient
     return response;
   });
 
-export const signinCorps = actionClient
-  .inputSchema(signinSchema)
-  .action(async ({ parsedInput: { email, password } }) => {
-    const response = await mutate("/auth/signin", {
-      email,
-      password,
-      role: "corps",
-    });
-    const { user, token, profile } = response.data;
-    await setAuthCookies(token, user.role);
-    await query("/auth/me");
-    return { user, token, profile };
-  });
+export const signinCorps = signin;
 
 export const corpsSignup = actionClient
   .inputSchema(corpsSignupSchema)

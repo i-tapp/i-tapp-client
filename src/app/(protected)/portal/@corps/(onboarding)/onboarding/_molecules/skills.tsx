@@ -33,7 +33,7 @@ export default function CorpsSkillsStep({
     mode: "onSubmit",
     defaultValues: {
       techSkills: [], softSkills: [], bio: "",
-      preferredIndustry: [], availableStartDate: "",
+      preferredIndustry: [], internshipDuration: "", availableStartDate: "",
     },
   });
 
@@ -85,6 +85,22 @@ export default function CorpsSkillsStep({
               <TagInput value={field.value ?? []} onChange={field.onChange} placeholder="e.g. Technology, Finance, Healthcare" />
             </FormControl>
             <p className="text-xs text-muted-foreground mt-1">Industries you'd like your PPA to be in.</p>
+            <FormMessage />
+          </FormItem>
+        )} />
+
+        <FormField control={form.control} name="internshipDuration" render={({ field }) => (
+          <FormItem>
+            <FormLabel>Duration</FormLabel>
+            <FormControl>
+              <select className="w-full rounded-md border border-border bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary" {...field} value={field.value ?? ""}>
+                <option value="" disabled>Select duration</option>
+                <option value="1-3 months">1–3 months</option>
+                <option value="3-6 months">3–6 months</option>
+                <option value="6+ months">6+ months</option>
+                <option value="1 year">1 year</option>
+              </select>
+            </FormControl>
             <FormMessage />
           </FormItem>
         )} />

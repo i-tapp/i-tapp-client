@@ -94,6 +94,33 @@ export const companyNavLinks = [
   },
 ];
 
+export const corpsNavLinks = [
+  {
+    text: "Find PPA",
+    href: "/portal/find-ppa",
+  },
+  {
+    text: "My PPA Space",
+    href: "/portal/my-ppa-space",
+  },
+  {
+    text: "My Applications",
+    href: "/portal/my-applications",
+  },
+  {
+    text: "Saved",
+    href: "/portal/saved-ppa",
+  },
+  {
+    text: "Profile",
+    href: "/portal/profile",
+  },
+  {
+    text: "Notifications",
+    href: "/portal/notifications",
+  },
+];
+
 export const studentNavLinks = [
   {
     text: "Find IT space",

@@ -21,8 +21,15 @@ import { toast } from "react-toastify";
 
 import { useStudentStore } from "@/lib/store/student";
 import Input from "@/components/input";
-import { signinStudent } from "@/actions";
+import { signin } from "@/actions";
 import { signinSchema } from "@/schemas";
+
+const ROLE_REDIRECTS: Record<string, string> = {
+  student: "/portal/find-it-space",
+  company: "/portal/dashboard",
+  corps: "/portal/find-ppa",
+  admin: "/admin",
+};
 
 export function StudentSignIn() {
   const router = useRouter();
@@ -31,24 +38,24 @@ export function StudentSignIn() {
   const form = useForm<z.infer<typeof signinSchema>>({
     resolver: zodResolver(signinSchema),
     defaultValues: { email: "", password: "" },
-    mode: "onChange", // better UX: validates while typing
+    mode: "onChange",
   });
 
-  const { execute, isExecuting, hasErrored, result } = useAction(
-    signinStudent,
-    {
-      onSuccess(data) {
-        const user = data?.data?.user;
-        const profile = data?.data?.profile;
-        setStudent({ ...user, ...profile });
-        toast.success("Welcome back!");
-        router.replace("/portal/");
-      },
-      onError(error) {
-        toast.error(error?.error?.serverError ?? "Login failed. Try again.");
-      },
+  const { execute, isExecuting, hasErrored, result } = useAction(signin, {
+    onSuccess(data) {
+      const user = data?.data?.user;
+      const profile = data?.data?.profile;
+      if (user?.role === "student") setStudent({ ...user, ...profile });
+      toast.success("Welcome back!");
+      const dest = ROLE_REDIRECTS[user?.role] ?? "/portal";
+      router.replace(
+        profile?.isOnboarded === false ? "/portal/onboarding" : dest,
+      );
     },
-  );
+    onError(error) {
+      toast.error(error?.error?.serverError ?? "Login failed. Try again.");
+    },
+  });
 
   return (
     <div className="w-full max-w-[350px] m-auto flex flex-col">
@@ -100,7 +107,7 @@ export function StudentSignIn() {
 
           <div className="flex flex-row justify-between text-sm">
             <div className="flex flex-row justify-center gap-1">
-              <input type="checkbox" />
+              <input type="checkbox" title="checkbox" />
               Remember me
             </div>
 

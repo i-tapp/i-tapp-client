@@ -33,7 +33,7 @@ export default function CorpsOnboardingPage() {
   ], []);
 
   const { execute, isExecuting, hasErrored, result } = useAction(onBoardCorps, {
-    onSuccess: () => { router.refresh(); router.push("/portal"); },
+    onSuccess: () => { router.refresh(); router.push("/portal/find-ppa"); },
     onError: () => {},
   });
 
