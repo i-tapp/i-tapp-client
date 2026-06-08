@@ -1,277 +1,145 @@
 "use client";
 
-import React, { useState } from "react";
-import { Building2, User, Check } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { GraduationCap, Building2, Shield, ArrowRight } from "lucide-react";
+import { Logo } from "@/components/logo";
 
-const Logo = () => (
-  <div className="flex items-center gap-3">
-    <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg">
-      <Image
-        src="/logo.png"
-        alt="InternHub Logo"
-        width={32}
-        height={32}
-        className="object-contain"
-      />
-    </div>
-    <span className="text-3xl font-bold bg-linear-to-r from-primary to-blue-400 bg-clip-text text-transparent">
-      I-Tapp
-    </span>
-  </div>
-);
+const roles = [
+  {
+    key: "student",
+    title: "I'm a Student",
+    subtitle: "Find your SIWES / IT placement",
+    description: "Browse verified companies accepting students for industrial training. Apply, track, and get placed — all in one place.",
+    features: ["Browse curated SIWES listings", "Apply instantly", "Track your applications", "Get your IT letter accepted"],
+    href: "/welcome",
+    cta: "Sign up as Student",
+    icon: GraduationCap,
+    accent: "blue",
+    ring: "ring-blue-500",
+    iconBg: "from-blue-500 to-blue-600",
+    dot: "bg-blue-500",
+    btn: "bg-blue-600 hover:bg-blue-700",
+  },
+  {
+    key: "corps",
+    title: "I'm a Corps Member",
+    subtitle: "Find your PPA placement",
+    description: "Get matched to a Place of Primary Attachment in your deployment state. No cold emails, no walk-ins.",
+    features: ["Matched to your state", "Verified PPA listings", "Apply with your call-up letter", "Track PPA status"],
+    href: "/corps/signup",
+    cta: "Sign up as Corps Member",
+    icon: Shield,
+    accent: "emerald",
+    ring: "ring-emerald-500",
+    iconBg: "from-emerald-500 to-emerald-600",
+    dot: "bg-emerald-500",
+    btn: "bg-emerald-600 hover:bg-emerald-700",
+  },
+  {
+    key: "company",
+    title: "I'm a Company",
+    subtitle: "List placement opportunities",
+    description: "Post SIWES or PPA positions and connect with verified, qualified candidates from across Nigeria.",
+    features: ["Post SIWES & PPA slots", "Access verified talent", "Manage applications easily", "CAC-verified listing badge"],
+    href: "/company/signup",
+    cta: "Sign up as Company",
+    icon: Building2,
+    accent: "purple",
+    ring: "ring-purple-500",
+    iconBg: "from-purple-500 to-purple-600",
+    dot: "bg-purple-500",
+    btn: "bg-purple-600 hover:bg-purple-700",
+  },
+];
 
-const RoleSelection = () => {
-  const [selectedRole, setSelectedRole] = useState("");
-  const [isHovered, setIsHovered] = useState("");
-  const router = useRouter();
-
-  const isDisabled = !selectedRole;
-
-  const handleContinue = () => {
-    if (selectedRole === "student") {
-      router.push("/welcome");
-    } else if (selectedRole === "company") {
-      router.push("/company-onboarding");
-    }
-  };
-
+export default function GetStartedPage() {
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-slate-100 relative overflow-hidden">
-      {/* Decorative background elements */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 relative overflow-hidden">
+      {/* Background blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl" />
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-400/10 rounded-full blur-3xl" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10">
+      <div className="relative z-10 flex flex-col min-h-screen">
         {/* Header */}
-        <div className="px-8 py-8">
-          <Link href="/" className="inline-block">
+        <header className="px-4 sm:px-8 py-5 flex items-center justify-between">
+          <Link href="/">
             <Logo />
           </Link>
-        </div>
+          <Link href="/signin" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+            Already have an account? <span className="text-primary font-semibold">Sign in</span>
+          </Link>
+        </header>
 
-        {/* Main Section */}
-        <div className="flex flex-col items-center justify-center px-6 py-16">
-          <div className="max-w-5xl w-full space-y-12">
-            {/* Hero Text */}
-            <div className="text-center space-y-4">
-              <div className="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">
-                ✨ Get Started
-              </div>
-              <h1 className="text-5xl md:text-6xl font-extrabold text-primary tracking-tight">
-                Choose Your Path
+        {/* Main */}
+        <main className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 py-10 sm:py-16">
+          <div className="w-full max-w-6xl space-y-10">
+            {/* Hero text */}
+            <div className="text-center space-y-3">
+              <span className="inline-block px-4 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
+                ✨ Get Started — It&apos;s Free
+              </span>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight">
+                Choose your path
               </h1>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Whether you&apos;re seeking opportunities or offering them,
-                we&apos;ve got you covered
+              <p className="text-lg sm:text-xl text-gray-500 max-w-xl mx-auto">
+                Pick your role to create your account and get started in minutes.
               </p>
             </div>
 
-            {/* Role Cards */}
-            <div className="grid md:grid-cols-2 gap-8 mt-16">
-              {/* Student Card */}
-              <div
-                onClick={() => setSelectedRole("student")}
-                onMouseEnter={() => setIsHovered("student")}
-                onMouseLeave={() => setIsHovered("")}
-                className={`relative p-10 rounded-3xl cursor-pointer transition-all duration-500 ${
-                  selectedRole === "student"
-                    ? "bg-white shadow-2xl ring-4 ring-blue-500 ring-offset-4 scale-105"
-                    : "bg-white/80 backdrop-blur shadow-xl hover:shadow-2xl hover:scale-102"
-                }`}
-              >
-                {/* Selection Badge */}
-                {selectedRole === "student" && (
-                  <div className="absolute -top-3 -right-3 w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center shadow-lg animate-in zoom-in duration-300">
-                    <Check className="w-7 h-7 text-white stroke-3" />
-                  </div>
-                )}
-
-                <div className="space-y-6">
-                  {/* Icon */}
-                  <div
-                    className={`inline-flex p-5 rounded-2xl transition-all duration-300 ${
-                      selectedRole === "student" || isHovered === "student"
-                        ? "bg-linear-to-br from-blue-500 to-blue-600 shadow-lg"
-                        : "bg-linear-to-br from-gray-100 to-gray-200"
-                    }`}
+            {/* Role cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+              {roles.map((role) => {
+                const Icon = role.icon;
+                return (
+                  <Link
+                    key={role.key}
+                    href={role.href}
+                    className={`group relative flex flex-col gap-5 p-6 sm:p-8 rounded-2xl bg-white/90 backdrop-blur shadow-lg border border-white hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 hover:${role.ring} hover:ring-2`}
                   >
-                    <User
-                      className={`w-10 h-10 ${
-                        selectedRole === "student" || isHovered === "student"
-                          ? "text-white"
-                          : "text-gray-600"
-                      }`}
-                    />
-                  </div>
+                    {/* Icon */}
+                    <div className={`inline-flex p-4 rounded-xl bg-gradient-to-br ${role.iconBg} shadow-md w-fit`}>
+                      <Icon className="w-7 h-7 text-white" />
+                    </div>
 
-                  {/* Content */}
-                  <div className="space-y-3">
-                    <h2 className="text-3xl font-bold text-gray-900">
-                      I&apos;m a Student
-                    </h2>
-                    <p className="text-gray-600 text-lg leading-relaxed">
-                      Discover amazing internship opportunities and launch your
-                      tech career
-                    </p>
-                  </div>
+                    {/* Text */}
+                    <div className="space-y-1.5">
+                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{role.subtitle}</p>
+                      <h2 className="text-2xl font-bold text-gray-900">{role.title}</h2>
+                      <p className="text-sm text-gray-500 leading-relaxed">{role.description}</p>
+                    </div>
 
-                  {/* Features */}
-                  <div className="pt-4 space-y-3">
-                    {[
-                      "Browse curated IT internships",
-                      "Apply instantly to companies",
-                      "Track your applications",
-                      "Get hired faster",
-                    ].map((feature, idx) => (
-                      <div key={idx} className="flex items-center gap-3">
-                        <div
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            selectedRole === "student"
-                              ? "bg-blue-500"
-                              : "bg-gray-400"
-                          }`}
-                        />
-                        <span className="text-gray-700">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+                    {/* Features */}
+                    <ul className="space-y-2">
+                      {role.features.map((f) => (
+                        <li key={f} className="flex items-center gap-2.5 text-sm text-gray-600">
+                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${role.dot}`} />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
 
-              {/* Company Card */}
-              <div
-                onClick={() => setSelectedRole("company")}
-                onMouseEnter={() => setIsHovered("company")}
-                onMouseLeave={() => setIsHovered("")}
-                className={`relative p-10 rounded-3xl cursor-pointer transition-all duration-500 ${
-                  selectedRole === "company"
-                    ? "bg-white shadow-2xl ring-4 ring-purple-500 ring-offset-4 scale-105"
-                    : "bg-white/80 backdrop-blur shadow-xl hover:shadow-2xl hover:scale-102"
-                }`}
-              >
-                {/* Selection Badge */}
-                {selectedRole === "company" && (
-                  <div className="absolute -top-3 -right-3 w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center shadow-lg animate-in zoom-in duration-300">
-                    <Check className="w-7 h-7 text-white stroke-3" />
-                  </div>
-                )}
-
-                <div className="space-y-6">
-                  {/* Icon */}
-                  <div
-                    className={`inline-flex p-5 rounded-2xl transition-all duration-300 ${
-                      selectedRole === "company" || isHovered === "company"
-                        ? "bg-linear-to-br from-purple-500 to-purple-600 shadow-lg"
-                        : "bg-linear-to-br from-gray-100 to-gray-200"
-                    }`}
-                  >
-                    <Building2
-                      className={`w-10 h-10 ${
-                        selectedRole === "company" || isHovered === "company"
-                          ? "text-white"
-                          : "text-gray-600"
-                      }`}
-                    />
-                  </div>
-
-                  {/* Content */}
-                  <div className="space-y-3">
-                    <h2 className="text-3xl font-bold text-gray-900">
-                      I&apos;m a Company
-                    </h2>
-                    <p className="text-gray-600 text-lg leading-relaxed">
-                      Find talented interns and build your dream team
-                      effortlessly
-                    </p>
-                  </div>
-
-                  {/* Features */}
-                  <div className="pt-4 space-y-3">
-                    {[
-                      "Post unlimited positions",
-                      "Access qualified candidates",
-                      "Manage applications easily",
-                      "Hire top talent quickly",
-                    ].map((feature, idx) => (
-                      <div key={idx} className="flex items-center gap-3">
-                        <div
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            selectedRole === "company"
-                              ? "bg-purple-500"
-                              : "bg-gray-400"
-                          }`}
-                        />
-                        <span className="text-gray-700">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+                    {/* CTA */}
+                    <div className={`mt-auto flex items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold text-white ${role.btn} transition-colors`}>
+                      {role.cta}
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
 
-            {/* CTA Button */}
-            <div className="flex flex-col items-center gap-6 pt-8">
-              <button
-                onClick={handleContinue}
-                disabled={!selectedRole}
-                className={`px-12 py-5 rounded-2xl text-lg font-bold cursor-pointer transition-all duration-300 capitalize ${
-                  selectedRole
-                    ? selectedRole === "student"
-                      ? "bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1"
-                      : "bg-linear-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1"
-                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                }`}
-              >
-                Fill onboarding form
-                {/* {selectedRole
-                  ? `Create ${
-                      selectedRole === "student" ? "Student" : "Company"
-                    } Account →`
-                  : "Select a role to continue"} */}
-              </button>
-
-              <p
-                className={`text-lg px-3 py-3 border bg-blue-600 rounded-xl text-white font-semibold ${
-                  selectedRole
-                    ? selectedRole === "student"
-                      ? "bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1"
-                      : "bg-linear-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white shadow-xl hover:shadow-2xl hover:-translate-y-1"
-                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                }`}
-              >
-                Already verified?{" "}
-                <a
-                  href={
-                    !isDisabled
-                      ? selectedRole === "student"
-                        ? "/signup"
-                        : "/company/signup"
-                      : undefined
-                  }
-                  onClick={(e) => {
-                    if (isDisabled) e.preventDefault();
-                  }}
-                  className={`font-semibold underline-offset-4 transition-all ${
-                    isDisabled
-                      ? "text-gray-400 cursor-not-allowed pointer-events-none"
-                      : "text-white hover:shadow hover:underline"
-                  }`}
-                >
-                  Sign Up
-                </a>
-              </p>
-            </div>
+            <p className="text-center text-sm text-gray-400">
+              By signing up, you agree to our{" "}
+              <Link href="/terms-of-service" className="underline hover:text-gray-600">Terms</Link>
+              {" "}and{" "}
+              <Link href="/privacy" className="underline hover:text-gray-600">Privacy Policy</Link>.
+            </p>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );
-};
-
-export default RoleSelection;
+}

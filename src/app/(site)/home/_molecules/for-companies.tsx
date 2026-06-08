@@ -60,7 +60,7 @@ export function ForCompanies() {
             </p>
           </div>
           <Link
-            href="/signup?role=company"
+            href="/company/signup"
             className={cn(
               buttonVariants({ size: "lg" }),
               "self-start shrink-0 gap-2 font-bold rounded-xl shadow-sm shadow-primary/20"
@@ -192,7 +192,7 @@ export function ForCompanies() {
                 <p className="text-primary-foreground/70 text-sm mt-1">Free to list. Verification required. Goes live in 48h.</p>
               </div>
               <Link
-                href="/signup?role=company"
+                href="/company/signup"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-primary text-sm font-bold hover:bg-gray-50 transition-colors shrink-0"
               >
                 Get started

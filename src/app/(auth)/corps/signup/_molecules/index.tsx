@@ -172,7 +172,7 @@ export default function CorpsSignup() {
       </p>
       <p className="mt-2 text-center text-sm text-gray-500">
         Looking for SIWES?{" "}
-        <Link href="/signup" className="text-primary font-semibold hover:underline">
+        <Link href="/welcome" className="text-primary font-semibold hover:underline">
           Student sign up
         </Link>
       </p>

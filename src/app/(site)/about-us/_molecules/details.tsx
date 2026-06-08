@@ -12,7 +12,7 @@ const values = [
   {
     icon: <ShieldCheck className="w-5 h-5" />,
     title: "Trust first",
-    description: "CAC-verified companies, verified student profiles. We vet both sides so every connection on I-TAPP is worth your time.",
+    description: "CAC-verified companies, verified student profiles. We vet both sides so every connection on PlaceIT is worth your time.",
     accent: "bg-emerald-50 text-emerald-600 border-emerald-100",
   },
   {
@@ -36,7 +36,7 @@ export function Details() {
               <div className="relative rounded-3xl overflow-hidden aspect-[4/3] shadow-[0_8px_40px_rgba(0,0,0,0.10)]">
                 <Image
                   src={AboutImg}
-                  alt="I-TAPP team at work"
+                  alt="PlaceIT team at work"
                   fill
                   className="object-cover"
                   quality={90}
@@ -69,7 +69,7 @@ export function Details() {
                   The usual approach — printing CVs, cold-emailing HR departments, walking into reception desks, scrolling through outdated WhatsApp groups — was inefficient, humiliating, and often simply didn&apos;t work.
                 </p>
                 <p>
-                  I-TAPP was created to fix this. We digitize the entire placement process: discovery, application, tracking, and acceptance — all from one platform built specifically for Nigeria&apos;s SIWES and NYSC systems.
+                  PlaceIT was created to fix this. We digitize the entire placement process: discovery, application, tracking, and acceptance — all from one platform built specifically for Nigeria&apos;s SIWES and NYSC systems.
                 </p>
                 <p>
                   We verify every company before they list. We match students to opportunities by field and location. For corps members, we match by state code. And for companies, we bring verified, placement-ready talent directly to their dashboard.

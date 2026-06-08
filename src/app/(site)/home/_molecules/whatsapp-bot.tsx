@@ -16,10 +16,10 @@ const studentFeatures = [
 ];
 
 const mockMessages = [
-  { from: "I-TAPP Bot", text: "📬 New applicant for Frontend Engineer Intern — Chukwuemeka A.", time: "9:41 AM", bot: true },
+  { from: "PlaceIT Bot", text: "📬 New applicant for Frontend Engineer Intern — Chukwuemeka A.", time: "9:41 AM", bot: true },
   { from: "You", text: "How many spots left?", time: "9:42 AM", bot: false },
-  { from: "I-TAPP Bot", text: "You have 4 spots remaining out of 10. 6 applications under review.", time: "9:42 AM", bot: true },
-  { from: "I-TAPP Bot", text: "✅ Slot filled! Your SIWES listing is now at full capacity.", time: "2:15 PM", bot: true },
+  { from: "PlaceIT Bot", text: "You have 4 spots remaining out of 10. 6 applications under review.", time: "9:42 AM", bot: true },
+  { from: "PlaceIT Bot", text: "✅ Slot filled! Your SIWES listing is now at full capacity.", time: "2:15 PM", bot: true },
 ];
 
 export function WhatsAppBot() {
@@ -84,7 +84,7 @@ export function WhatsAppBot() {
             </div>
 
             <Link
-              href="/signup"
+              href="/welcome"
               className={cn(
                 buttonVariants({ size: "lg" }),
                 "gap-2 font-bold rounded-xl w-full sm:w-auto justify-center bg-[#25D366] hover:bg-[#22c55e] text-white shadow-lg shadow-[#25D366]/20 border-0"
@@ -105,7 +105,7 @@ export function WhatsAppBot() {
                   <MessageCircle className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <p className="text-white font-bold text-sm">I-TAPP Bot</p>
+                  <p className="text-white font-bold text-sm">PlaceIT Bot</p>
                   <p className="text-white/70 text-[11px]">Online · Placement updates</p>
                 </div>
                 <div className="ml-auto w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
@@ -133,7 +133,7 @@ export function WhatsAppBot() {
               {/* Input bar */}
               <div className="bg-[#f0f2f5] px-4 py-3 flex items-center gap-3 border-t border-gray-200/60">
                 <div className="flex-1 bg-white rounded-full px-4 py-2.5 text-sm text-gray-400">
-                  Message I-TAPP Bot…
+                  Message PlaceIT Bot…
                 </div>
                 <div className="w-10 h-10 rounded-full bg-[#25D366] flex items-center justify-center shrink-0">
                   <ArrowRight className="w-4 h-4 text-white" />

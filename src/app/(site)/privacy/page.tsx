@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "Read the I-TAPP privacy policy to understand how we collect, use, and protect your information.",
+    "Read the PlaceIT privacy policy to understand how we collect, use, and protect your information.",
 };
 
 export default function Privacy() {

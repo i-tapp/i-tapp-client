@@ -37,7 +37,7 @@ const studentCards: Card[] = [
     icon: "🏢",
     title: "Verified Companies Only",
     description:
-      "Every company on I-TAPP is reviewed before listing. Look out for the blue verification badge — it means the placement is legitimate and professionally managed.",
+      "Every company on PlaceIT is reviewed before listing. Look out for the blue verification badge — it means the placement is legitimate and professionally managed.",
     accent: "from-amber-50 to-yellow-50 border-amber-100",
   },
   {

@@ -1,8 +1,8 @@
 export const app = {
-  name: "I-TAPP",
-  title: "I-Tapp - Bringing opportunities closer",
+  name: "PlaceIT",
+  title: "PlaceIT - Bringing opportunities closer",
   description:
-    "I-TAPP (ITAPP) helps Nigerian students find and secure SIWES/industrial training placements across verified companies.",
+    "PlaceIT helps Nigerian students find and secure SIWES/industrial training placements across verified companies.",
   logo_url: "/logo.png",
   favicon_url: "/favicon.ico",
   nav_links: [

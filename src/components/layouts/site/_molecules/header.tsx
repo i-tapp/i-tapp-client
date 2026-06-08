@@ -60,15 +60,24 @@ function PersonaDropdown({ className }: { className?: string }) {
             aria-expanded={open}
             aria-haspopup="listbox"
             onClick={() => setOpen((o) => !o)}
-            className={cn("inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 transition-all duration-200 border-0", active.color)}
+            className={cn(
+              "inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 transition-all duration-200 border-0",
+              active.color,
+            )}
           >
             <span aria-hidden="true">{active.icon}</span>
             {active.label}
           </button>
           <button
             aria-label="Clear persona selection"
-            onClick={() => { setPersona(null); setOpen(false); }}
-            className={cn("flex items-center justify-center px-2 py-2 border-l transition-colors hover:opacity-80 border-0", active.color)}
+            onClick={() => {
+              setPersona(null);
+              setOpen(false);
+            }}
+            className={cn(
+              "flex items-center justify-center px-2 py-2 border-l transition-colors hover:opacity-80 border-0",
+              active.color,
+            )}
           >
             <X className="w-3.5 h-3.5 opacity-60" aria-hidden="true" />
           </button>
@@ -76,31 +85,48 @@ function PersonaDropdown({ className }: { className?: string }) {
       ) : (
         <button
           aria-label="Select who you are"
-          aria-expanded={open}
+          aria-expanded={open ? "true" : "false"}
           aria-haspopup="listbox"
           onClick={() => setOpen((o) => !o)}
           className="inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-xl border transition-all duration-200 text-gray-600 bg-gray-50 border-gray-200 hover:border-primary/30 hover:text-primary hover:bg-primary/5"
         >
           I am a...
-          <ChevronDown className={cn("w-3.5 h-3.5 transition-transform duration-200", open && "rotate-180")} aria-hidden="true" />
+          <ChevronDown
+            className={cn(
+              "w-3.5 h-3.5 transition-transform duration-200",
+              open && "rotate-180",
+            )}
+            aria-hidden="true"
+          />
         </button>
       )}
 
       {open && (
         <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-2xl border border-gray-100 shadow-xl shadow-gray-200/60 z-50 overflow-hidden">
           <div className="px-3 py-2.5 border-b border-gray-50">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Who are you?</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
+              Who are you?
+            </p>
           </div>
           {personas.map((p) => (
             <button
               key={p.value}
-              onClick={() => { setPersona(p.value); setOpen(false); }}
+              onClick={() => {
+                setPersona(p.value);
+                setOpen(false);
+              }}
               className={cn(
                 "w-full flex items-center gap-3 px-3 py-3 text-left transition-colors hover:bg-gray-50",
-                persona === p.value && "bg-gray-50"
+                persona === p.value && "bg-gray-50",
               )}
             >
-              <span className={cn("w-8 h-8 rounded-xl border flex items-center justify-center shrink-0", p.color)} aria-hidden="true">
+              <span
+                className={cn(
+                  "w-8 h-8 rounded-xl border flex items-center justify-center shrink-0",
+                  p.color,
+                )}
+                aria-hidden="true"
+              >
                 {p.icon}
               </span>
               <div>
@@ -143,7 +169,7 @@ export function Header() {
           scrolled ? "h-14" : "h-16"
         )}
       >
-        <Logo />
+        <Logo className="mix-blend-multiply" />
 
         <nav className="items-center gap-8 hidden md:flex">
           {app.nav_links.map((link) => (

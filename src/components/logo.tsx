@@ -1,7 +1,14 @@
 import Image from "next/image";
 
-import itappLogo from "@/assets/images/logo.png";
-
-export function Logo() {
-  return <Image src={itappLogo} height={35} width={35} alt="Logo" />;
+export function Logo({ className }: { className?: string }) {
+  return (
+    <Image
+      src="/logo.png"
+      height={340}
+      width={340}
+      priority={true}
+      alt="PlaceIT"
+      className={className}
+    />
+  );
 }

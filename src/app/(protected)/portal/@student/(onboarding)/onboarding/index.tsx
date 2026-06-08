@@ -114,7 +114,7 @@ export default function StudentOnboardingPage() {
           <main className="p-4 sm:p-6">
             <div className="space-y-1 mb-6">
               <h1 className="text-xl sm:text-2xl font-semibold tracking-tight">
-                Welcome to I-Tapp! 🎉
+                Welcome to PlaceIT! 🎉
               </h1>
               <p className="text-sm text-muted-foreground">
                 Let's set up your profile so we can match you with internship

@@ -24,14 +24,14 @@ const features = {
     featured: {
       icon: <Sparkles className="w-6 h-6" />,
       title: "SIWES Placement Matching",
-      description: "Stop cold-emailing companies. I-TAPP matches you to verified SIWES placements based on your field of study, location, and skills — in seconds.",
+      description: "Stop cold-emailing companies. PlaceIT matches you to verified SIWES placements based on your field of study, location, and skills — in seconds.",
       accent: "bg-primary/10 text-primary border-primary/20",
       accentHex: "#477dc0",
     },
     rest: [
       { icon: <LayoutDashboard className="w-5 h-5" />, title: "Real-time Application Tracking", description: "Full visibility on every application — from sent to offer received.", accent: "bg-blue-50 text-blue-600 border-blue-100" },
       { icon: <Send className="w-5 h-5" />, title: "One Profile, Many Companies", description: "Build your profile once. Apply everywhere without re-uploading documents.", accent: "bg-emerald-50 text-emerald-600 border-emerald-100" },
-      { icon: <ShieldCheck className="w-5 h-5" />, title: "CAC-Verified Companies", description: "Every company on I-TAPP is verified. No sketchy listings, no ghost companies.", accent: "bg-amber-50 text-amber-600 border-amber-100" },
+      { icon: <ShieldCheck className="w-5 h-5" />, title: "CAC-Verified Companies", description: "Every company on PlaceIT is verified. No sketchy listings, no ghost companies.", accent: "bg-amber-50 text-amber-600 border-amber-100" },
     ],
   },
   corps: {
@@ -65,17 +65,17 @@ const features = {
 };
 
 const headings = {
-  default: { eyebrow: "What We Offer", title: "Everything you need,\nbuilt into one platform", desc: "From discovery to offer letter — I-TAPP handles it all." },
+  default: { eyebrow: "What We Offer", title: "Everything you need,\nbuilt into one platform", desc: "From discovery to offer letter — PlaceIT handles it all." },
   student: { eyebrow: "For Students", title: "Your SIWES journey,\nsimplified", desc: "Find placements, apply instantly, track everything live." },
   corps: { eyebrow: "For Corps Members", title: "PPA placement,\non your terms", desc: "State-matched, fast, and built for the 3-week camp window." },
-  company: { eyebrow: "For Companies", title: "Hire smarter\nwith I-TAPP", desc: "List opportunities, reach verified talent, close faster." },
+  company: { eyebrow: "For Companies", title: "Hire smarter\nwith PlaceIT", desc: "List opportunities, reach verified talent, close faster." },
 };
 
 const ctaLinks = {
-  default: { href: "/signup", label: "Get started free" },
-  student: { href: "/signup", label: "Find my placement" },
-  corps: { href: "/signup?role=corps", label: "Find my PPA" },
-  company: { href: "/signup?role=company", label: "List opportunities" },
+  default: { href: "/welcome", label: "Get started free" },
+  student: { href: "/welcome", label: "Find my placement" },
+  corps: { href: "/corps/signup", label: "Find my PPA" },
+  company: { href: "/company/signup", label: "List opportunities" },
 };
 
 export function Services() {
@@ -94,11 +94,11 @@ export function Services() {
           <div className="max-w-xl">
             <span className="text-[11px] font-bold uppercase tracking-widest text-primary">{h.eyebrow}</span>
             <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-black text-gray-950 leading-tight tracking-tight whitespace-pre-line">
-              {h.title.includes("I-TAPP") ? (
+              {h.title.includes("PlaceIT") ? (
                 <>
-                  {h.title.split("I-TAPP")[0]}
-                  <span className="text-primary">I-TAPP</span>
-                  {h.title.split("I-TAPP")[1]}
+                  {h.title.split("PlaceIT")[0]}
+                  <span className="text-primary">PlaceIT</span>
+                  {h.title.split("PlaceIT")[1]}
                 </>
               ) : h.title}
             </h2>

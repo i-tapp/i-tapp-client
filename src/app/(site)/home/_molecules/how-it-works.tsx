@@ -76,9 +76,9 @@ const steps = {
 };
 
 const ctaLinks = {
-  student: { href: "/signup", label: "Start for free" },
-  corps: { href: "/signup?role=corps", label: "Find my PPA" },
-  company: { href: "/signup?role=company", label: "List opportunities" },
+  student: { href: "/welcome", label: "Start for free" },
+  corps: { href: "/corps/signup", label: "Find my PPA" },
+  company: { href: "/company/signup", label: "List opportunities" },
 };
 
 export function HowItWorks() {

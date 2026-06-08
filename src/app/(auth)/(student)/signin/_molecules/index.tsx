@@ -122,7 +122,7 @@ export function StudentSignIn() {
 
       <p className="text-sm text-center mt-6">
         Don’t have an account yet?{" "}
-        <Link href="/signup" className="text-primary font-medium">
+        <Link href="/welcome" className="text-primary font-medium">
           Sign up
         </Link>
       </p>

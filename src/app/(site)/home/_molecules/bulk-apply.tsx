@@ -52,7 +52,7 @@ export function BulkApply() {
 
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
-                  href="/signup"
+                  href="/welcome"
                   className={cn(
                     buttonVariants({ size: "lg" }),
                     "gap-2 font-bold rounded-xl shadow-lg shadow-primary/30"

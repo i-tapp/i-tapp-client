@@ -9,14 +9,14 @@ const team = [
   {
     name: "Samuel Foluwasho Oluwafemi",
     role: "Founder & CEO",
-    bio: "Visionary behind I-TAPP. Identified the placement gap in Nigeria's education system and built the platform to close it.",
+    bio: "Visionary behind PlaceIT. Identified the placement gap in Nigeria's education system and built the platform to close it.",
     image: sam,
     position: "center 15%",
   },
   {
     name: "Egbe Oghenemarho Andrew",
     role: "Co-Founder",
-    bio: "Shapes the strategic direction of I-TAPP and ensures the platform stays true to its mission across every iteration.",
+    bio: "Shapes the strategic direction of PlaceIT and ensures the platform stays true to its mission across every iteration.",
     image: egbe,
     position: "center center",
   },
@@ -30,14 +30,14 @@ const team = [
   {
     name: "Jeremiah Argin",
     role: "Product Manager",
-    bio: "Owns the product roadmap. Translates user pain points into features that make I-TAPP faster and easier to use.",
+    bio: "Owns the product roadmap. Translates user pain points into features that make PlaceIT faster and easier to use.",
     image: jerry,
     position: "center center",
   },
   {
     name: "Jutin Dikonu",
     role: "Chief Technology Officer",
-    bio: "Architects and leads the engineering behind I-TAPP — from backend infrastructure to the interfaces students and companies use daily.",
+    bio: "Architects and leads the engineering behind PlaceIT — from backend infrastructure to the interfaces students and companies use daily.",
     image: jutin,
     position: "center center",
   },

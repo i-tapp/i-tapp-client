@@ -81,7 +81,7 @@ export default function CompanyOnboarding() {
         <div className="space-y-2">
           <h2 className="text-2xl font-bold">Submission Received!</h2>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            Thank you for registering with I-TAPP. Our team will review your
+            Thank you for registering with PlaceIT. Our team will review your
             submission and reach out to you via the contact details provided.
           </p>
         </div>
@@ -95,7 +95,7 @@ export default function CompanyOnboarding() {
   return (
     <div className="flex flex-col  ">
       <div className="max-w-3xl">
-        <h1 className="text-3xl font-bold">Join I-Tapp</h1>
+        <h1 className="text-3xl font-bold">Join PlaceIT</h1>
         <p className="text-sm text-muted-foreground">
           Connect your organization with high-potential students. Complete the
           Onboarding form and start engaging with next generation of Talent.
@@ -128,7 +128,7 @@ export default function CompanyOnboarding() {
                       Company Name
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="e.g I-Tapp" />
+                      <Input {...field} placeholder="e.g PlaceIT" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

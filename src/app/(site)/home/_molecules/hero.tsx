@@ -37,7 +37,7 @@ const slides = [
     accentLine: 1,
     description:
       "Browse verified SIWES opportunities at top companies. Apply in minutes, track your applications — all from one place.",
-    cta1: { label: "Get Started Free", href: "/signup" },
+    cta1: { label: "Get Started Free", href: "/welcome" },
     cta2: { label: "Browse Opportunities", href: "/opportunities" },
     trust: [
       "Free to get started",
@@ -57,7 +57,7 @@ const slides = [
     accentLine: 0,
     description:
       "State-matched PPA opportunities from verified companies. Apply before camp closes — start your service year strong.",
-    cta1: { label: "Find My PPA Now", href: "/signup?role=corps" },
+    cta1: { label: "Find My PPA Now", href: "/corps/signup" },
     cta2: { label: "Browse PPAs", href: "/opportunities?type=ppa" },
     trust: ["State-code matched", "3-week camp mode", "BulkApply available"],
     accent: "#059669",
@@ -73,7 +73,7 @@ const slides = [
     accentLine: 2,
     description:
       "List SIWES and NYSC PPA opportunities. Reach thousands of verified students and corps members from one dashboard.",
-    cta1: { label: "List Opportunities", href: "/signup?role=company" },
+    cta1: { label: "List Opportunities", href: "/company/signup" },
     cta2: { label: "See How It Works", href: "#how-it-works" },
     trust: [
       "SIWES + PPA talent pool",

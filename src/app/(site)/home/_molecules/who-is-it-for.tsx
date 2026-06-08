@@ -23,7 +23,7 @@ const personas = [
       "Track every application in real time",
       "Free to get started — no hidden fees",
     ],
-    cta: { label: "Find my placement", href: "/signup" },
+    cta: { label: "Find my placement", href: "/welcome" },
   },
   {
     value: "corps" as Persona,
@@ -42,7 +42,7 @@ const personas = [
       "BulkApply: we cold-email companies for you",
       "PPA switch support if you need a fresh start",
     ],
-    cta: { label: "Find my PPA", href: "/signup?role=corps" },
+    cta: { label: "Find my PPA", href: "/corps/signup" },
   },
   {
     value: "company" as Persona,
@@ -61,7 +61,7 @@ const personas = [
       "Admin-assisted listing if you'd rather not DIY",
       "Free to list — no setup fee, live within 48h",
     ],
-    cta: { label: "List opportunities", href: "/signup?role=company" },
+    cta: { label: "List opportunities", href: "/company/signup" },
   },
 ];
 
@@ -74,7 +74,7 @@ export function WhoIsItFor() {
 
         {/* Header */}
         <div className="text-center mb-10 sm:mb-14">
-          <span className="text-[11px] font-bold uppercase tracking-widest text-primary">Who is I-TAPP for?</span>
+          <span className="text-[11px] font-bold uppercase tracking-widest text-primary">Who is PlaceIT for?</span>
           <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-black text-gray-950 leading-tight tracking-tight">
             Built for <span className="text-primary">everyone</span> in the placement chain
           </h2>
