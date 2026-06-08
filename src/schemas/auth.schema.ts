@@ -37,7 +37,7 @@ export const reviewDocumentSchema = z.object({
 
 export const signupSchema = z.object({
   email: z.email(),
-  password: z.string().min(1),
+  password: z.string().min(6, "Password must be at least 6 characters"),
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   school: z.string().min(1),
@@ -46,8 +46,8 @@ export const signupSchema = z.object({
 
 export const resetPasswordSchema = z
   .object({
-    npassword: z.string().min(8, "Password must be at least 8 characters long"),
-    cpassword: z.string().min(8, "Password must be at least 8 characters long"),
+    npassword: z.string().min(6, "Password must be at least 6 characters"),
+    cpassword: z.string().min(6, "Password must be at least 6 characters"),
     token: z.string().optional(),
   })
   .refine((data) => data.npassword === data.cpassword, {
@@ -70,7 +70,7 @@ export const studentSignupSchema = z
   .object({
     email: z.email(),
     phone: z.string().min(10, "Phone number is too short"),
-    password: z.string().min(4, "Provide password"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string().min(1),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -83,7 +83,8 @@ export const companySignupSchema = z.object({
   email: z
     .email("Please enter a valid email address")
     .min(1, "Email address is required"),
-  password: z.string().min(8, "Password must be at least 8 characters long"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  cacNumber: z.string().optional(),
 });
 
 export const companyProfileSchema = z.object({
@@ -109,7 +110,7 @@ export const corpsSignupSchema = z
     phone: z.string().min(10, "Phone number is too short"),
     firstName: z.string().min(1, "First name is required"),
     lastName: z.string().min(1, "Last name is required"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string().min(1, "Please confirm your password"),
   })
   .refine((d) => d.password === d.confirmPassword, {

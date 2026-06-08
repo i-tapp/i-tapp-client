@@ -24,7 +24,7 @@ const headings = {
   default: { eyebrow: "Live Opportunities", title: "Placements open right now", desc: "A snapshot of SIWES and PPA opportunities. Hundreds more waiting on the opportunities page." },
   student: { eyebrow: "SIWES Placements", title: "IT placements open now", desc: "Verified companies looking for students like you. Apply before spots run out." },
   corps: { eyebrow: "PPA Opportunities", title: "PPAs open for corps members", desc: "State-matched PPA listings from verified companies. Apply now — camp window is short." },
-  company: { eyebrow: "What You Can List", title: "Opportunities on I-TAPP", desc: "See what students and corps members are browsing. Your listing could be here." },
+  company: { eyebrow: "What You Can List", title: "Opportunities on PlaceIT", desc: "See what students and corps members are browsing. Your listing could be here." },
 };
 
 export function OpportunitiesPreview() {

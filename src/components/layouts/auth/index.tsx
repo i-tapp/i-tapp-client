@@ -23,9 +23,9 @@ export default function AuthLayoutUi({
             <Image
               src={LoginImg}
               alt="Company Banner"
-              objectFit="contain" // Ensures the image covers the entire div
-              quality={100} // Adjusts image quality (optional)
-              priority // Optional: loads the image with priority
+              className="object-contain"
+              fill
+              priority
             />
           </div>
         </div>

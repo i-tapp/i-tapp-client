@@ -29,14 +29,14 @@ export function AboutUs() {
             Free to get started
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight max-w-2xl mx-auto">
-            Be part of the solution.<br />Join I-TAPP today.
+            Be part of the solution.<br />Join PlaceIT today.
           </h2>
           <p className="mt-5 text-white/60 text-base sm:text-lg leading-relaxed max-w-xl mx-auto">
             Whether you&apos;re a student looking for placement, a corps member needing a PPA, or a company wanting verified talent — your spot is ready.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
             <Link
-              href="/signup"
+              href="/welcome"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-white text-primary text-base font-black hover:bg-gray-50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-lg shadow-black/20"
             >
               Get started free

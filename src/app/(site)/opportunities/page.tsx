@@ -4,7 +4,7 @@ import { query } from "@/lib/api";
 import OpportunitiesBrowse from "./_molecules/browse";
 
 export const metadata: Metadata = {
-  title: "Opportunities | I-TAPP",
+  title: "Opportunities | PlaceIT",
   description:
     "Browse available industrial training placement opportunities for students across Nigeria.",
 };

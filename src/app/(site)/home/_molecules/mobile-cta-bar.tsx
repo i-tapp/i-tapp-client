@@ -6,10 +6,10 @@ import { usePersona } from "@/app/(site)/_context/persona";
 import { useEffect, useState } from "react";
 
 const ctas = {
-  default: { label: "Get started free", href: "/signup", icon: <ArrowRight className="w-4 h-4" /> },
-  student: { label: "Find my placement", href: "/signup", icon: <GraduationCap className="w-4 h-4" /> },
-  corps: { label: "Find my PPA", href: "/signup?role=corps", icon: <Shield className="w-4 h-4" /> },
-  company: { label: "List opportunities", href: "/signup?role=company", icon: <Building2 className="w-4 h-4" /> },
+  default: { label: "Get started free", href: "/welcome", icon: <ArrowRight className="w-4 h-4" /> },
+  student: { label: "Find my placement", href: "/welcome", icon: <GraduationCap className="w-4 h-4" /> },
+  corps: { label: "Find my PPA", href: "/corps/signup", icon: <Shield className="w-4 h-4" /> },
+  company: { label: "List opportunities", href: "/company/signup", icon: <Building2 className="w-4 h-4" /> },
 };
 
 export function MobileCtaBar() {

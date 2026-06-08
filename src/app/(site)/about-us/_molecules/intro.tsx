@@ -39,13 +39,13 @@ export function Intro() {
         </h1>
 
         <p className="mt-6 text-gray-500 text-base sm:text-lg leading-relaxed text-center max-w-2xl mx-auto">
-          I-TAPP was born from frustration — cold emails ignored, walk-ins turned away, WhatsApp groups with outdated links. We decided Nigeria&apos;s students and corps members deserved better.
+          PlaceIT was born from frustration — cold emails ignored, walk-ins turned away, WhatsApp groups with outdated links. We decided Nigeria&apos;s students and corps members deserved better.
         </p>
 
         {/* CTAs */}
         <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
           <Link
-            href="/signup"
+            href="/welcome"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-primary text-white text-sm font-bold hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-sm shadow-primary/30"
           >
             <GraduationCap className="w-4 h-4" />
@@ -53,14 +53,14 @@ export function Intro() {
             <ArrowRight className="w-4 h-4" />
           </Link>
           <Link
-            href="/signup?role=corps"
+            href="/corps/signup"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-gray-200 text-gray-700 text-sm font-semibold hover:border-primary/30 hover:text-primary bg-white transition-colors duration-200"
           >
             <Shield className="w-4 h-4" />
             Join as Corps Member
           </Link>
           <Link
-            href="/signup?role=company"
+            href="/company/signup"
             className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-gray-200 text-gray-700 text-sm font-semibold hover:border-primary/30 hover:text-primary bg-white transition-colors duration-200"
           >
             <Building2 className="w-4 h-4" />

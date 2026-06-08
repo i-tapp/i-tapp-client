@@ -30,6 +30,7 @@ export function CompanyInfo1() {
       name: "",
       email: "",
       password: "",
+      cacNumber: "",
     },
   });
 
@@ -112,6 +113,20 @@ export function CompanyInfo1() {
             )}
           /> */}
 
+          <FormField
+            control={form.control}
+            name="cacNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>CAC Number <span className="text-muted-foreground font-normal">(optional)</span></FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="e.g. RC-1234567" />
+                </FormControl>
+                <p className="text-xs text-muted-foreground mt-1">Providing your CAC number speeds up verification.</p>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="password"

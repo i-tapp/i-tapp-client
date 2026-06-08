@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description:
-    "Review the terms of service governing the use of the I-TAPP platform and services.",
+    "Review the terms of service governing the use of the PlaceIT platform and services.",
 };
 
 export default function page() {

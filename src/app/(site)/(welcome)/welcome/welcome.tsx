@@ -55,7 +55,7 @@ export default function Welcome() {
   return (
     <div className="flex flex-col gap-6 px-1 sm:px-0">
       <div className="max-w-3xl">
-        <h1 className="text-2xl sm:text-3xl font-bold">Welcome to I-TAPP</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">Welcome to PlaceIT</h1>
         <p className="text-sm text-muted-foreground mt-1">
           Connect your organization with high-potential students. Complete the
           Onboarding form and start engaging with next generation of Talent.

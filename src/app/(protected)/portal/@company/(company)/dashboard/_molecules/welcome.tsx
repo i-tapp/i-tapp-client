@@ -1,6 +1,6 @@
 import Modal from "@/components/modal";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import { Logo } from "@/components/logo";
 
 export default function Welcome({
   open,
@@ -15,13 +15,7 @@ export default function Welcome({
     <Modal open={open} onClose={onClose}>
       <div className="w-full max-w-md rounded-lg bg-accent p-6">
         <div className="flex flex-col items-center gap-3 text-center">
-          <Image
-            src="/logo.png"
-            alt="Company logo"
-            width={52}
-            height={52}
-            className="object-contain"
-          />
+          <Logo />
 
           <div className="inline-flex items-center rounded-full bg-background/70 px-3 py-1 text-xs font-medium text-primary">
             {status}

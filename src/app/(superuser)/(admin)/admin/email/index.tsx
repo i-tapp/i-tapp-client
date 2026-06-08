@@ -20,23 +20,23 @@ const VARIABLES = [
 const TEMPLATES = [
   {
     name: "Welcome",
-    subject: "Welcome to I-TAPP!",
-    body: `Dear {firstName},\n\nWelcome to the I-TAPP platform! We're excited to have you on board.\n\nYou can now browse available IT placement opportunities and submit your applications.\n\nIf you have any questions, feel free to reach out to our support team.\n\nBest regards,\nThe I-TAPP Team`,
+    subject: "Welcome to PlaceIT!",
+    body: `Dear {firstName},\n\nWelcome to the PlaceIT platform! We're excited to have you on board.\n\nYou can now browse available IT placement opportunities and submit your applications.\n\nIf you have any questions, feel free to reach out to our support team.\n\nBest regards,\nThe PlaceIT Team`,
   },
   {
     name: "Action Required",
     subject: "Action Required — Complete Your Profile",
-    body: `Dear {firstName},\n\nThis is a reminder that your profile on I-TAPP is incomplete. Please log in and complete all required fields to be eligible for placement opportunities.\n\nThank you,\nThe I-TAPP Team`,
+    body: `Dear {firstName},\n\nThis is a reminder that your profile on PlaceIT is incomplete. Please log in and complete all required fields to be eligible for placement opportunities.\n\nThank you,\nThe PlaceIT Team`,
   },
   {
     name: "Platform Update",
     subject: "Important Platform Update",
-    body: `Dear {firstName},\n\nWe wanted to inform you of some recent updates to the I-TAPP platform.\n\n[Insert update details here]\n\nThank you for being part of our community.\n\nBest regards,\nThe I-TAPP Team`,
+    body: `Dear {firstName},\n\nWe wanted to inform you of some recent updates to the PlaceIT platform.\n\n[Insert update details here]\n\nThank you for being part of our community.\n\nBest regards,\nThe PlaceIT Team`,
   },
   {
     name: "Deadline Reminder",
     subject: "Reminder: Application Deadline Approaching",
-    body: `Dear {firstName},\n\nThis is a reminder that the deadline for submitting your IT placement application is approaching.\n\nPlease log in to your dashboard and ensure your application is complete before the deadline.\n\nBest regards,\nThe I-TAPP Team`,
+    body: `Dear {firstName},\n\nThis is a reminder that the deadline for submitting your IT placement application is approaching.\n\nPlease log in to your dashboard and ensure your application is complete before the deadline.\n\nBest regards,\nThe PlaceIT Team`,
   },
 ];
 

@@ -39,12 +39,12 @@ export const metadata: Metadata = {
     canonical: "/",
   },
 
-  authors: [{ name: "I-TAPP" }],
+  authors: [{ name: "PlaceIT" }],
 
   keywords: [
     "i-tapp",
     "itapp",
-    "I-TAPP",
+    "PlaceIT",
     "ITAPP",
     "SIWES placement",
     "industrial training placement",
@@ -123,8 +123,8 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              name: "i-Tapp",
-              alternateName: ["ITAPP", "i-tapp", "itapp", "I-Tapp"],
+              name: "PlaceIT",
+              alternateName: ["PlaceIT", "PlacementHub", "i-tapp", "itapp"],
               url: siteUrl,
               potentialAction: {
                 "@type": "SearchAction",

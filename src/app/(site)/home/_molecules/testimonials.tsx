@@ -6,7 +6,7 @@ import { Quote } from "lucide-react";
 const testimonials = {
   default: [
     {
-      quote: "I spent two weeks cold-emailing companies with zero response. Signed up on I-TAPP, got matched to three SIWES listings by the next morning. Accepted one that same week.",
+      quote: "I spent two weeks cold-emailing companies with zero response. Signed up on PlaceIT, got matched to three SIWES listings by the next morning. Accepted one that same week.",
       name: "Adaeze Okonkwo",
       role: "Computer Science · UniLag",
       tag: "SIWES placed",
@@ -15,7 +15,7 @@ const testimonials = {
       avatarBg: "bg-primary/10 text-primary",
     },
     {
-      quote: "Camp was in its second week and I had nothing. BulkApply sent my CV to 18 companies overnight. I had two responses by morning and confirmed my PPA before camp ended.",
+      quote: "Camp was in its second week and I had nothing. I used PlaceIT to send my CV to multiple companies overnight. I had two responses by morning and confirmed my PPA before camp ended.",
       name: "Chukwuemeka Adeyemi",
       role: "Mechanical Eng. · FUTO",
       tag: "PPA secured in camp",
@@ -24,7 +24,7 @@ const testimonials = {
       avatarBg: "bg-emerald-50 text-emerald-700",
     },
     {
-      quote: "I thought finding IT placement meant printing CVs and walking into offices. I-TAPP changed that entirely — one profile, applied to five companies in twenty minutes.",
+      quote: "I thought finding IT placement meant printing CVs and walking into offices. PlaceIT changed that entirely — one profile, applied to five companies in twenty minutes.",
       name: "Tobiloba Fashola",
       role: "Electrical Eng. · OAU",
       tag: "Placed at Interswitch",
@@ -35,7 +35,7 @@ const testimonials = {
   ],
   student: [
     {
-      quote: "I spent two weeks cold-emailing companies with zero response. Signed up on I-TAPP, got matched to three SIWES listings by the next morning. Accepted one that same week.",
+      quote: "I spent two weeks cold-emailing companies with zero response. Signed up on PlaceIT, got matched to three SIWES listings by the next morning. Accepted one that same week.",
       name: "Adaeze Okonkwo",
       role: "Computer Science · UniLag",
       tag: "SIWES placed",
@@ -44,7 +44,7 @@ const testimonials = {
       avatarBg: "bg-primary/10 text-primary",
     },
     {
-      quote: "I thought finding IT placement meant printing CVs and walking into offices. I-TAPP changed that entirely — one profile, applied to five companies in twenty minutes.",
+      quote: "I thought finding IT placement meant printing CVs and walking into offices. PlaceIT changed that entirely — one profile, applied to five companies in twenty minutes.",
       name: "Tobiloba Fashola",
       role: "Electrical Eng. · OAU",
       tag: "Placed at Interswitch",
@@ -82,7 +82,7 @@ const testimonials = {
       avatarBg: "bg-emerald-50 text-emerald-700",
     },
     {
-      quote: "I was already redeployed once and didn't want it again. Found a PPA through I-TAPP in my new state within days. The platform literally saved my service year.",
+      quote: "I was already redeployed once and didn't want it again. Found a PPA through PlaceIT in my new state within days. The platform literally saved my service year.",
       name: "Miracle Onyekachi",
       role: "Computer Sci. · UNICAL",
       tag: "PPA switch successful",
