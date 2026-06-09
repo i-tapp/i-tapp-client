@@ -22,7 +22,7 @@ export default function OpportunitiesPage() {
     <div className="p-6">
       <h1 className="text-2xl font-semibold mb-6">Opportunities</h1>
       <OpportunityTable
-        data={data}
+        data={data?.items}
         isLoading={isLoading}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
