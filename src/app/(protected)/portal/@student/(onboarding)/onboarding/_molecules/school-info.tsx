@@ -11,6 +11,9 @@ import { useFetchMyProfile } from "@/hooks/query";
 import { schoolInfoSchema, SchoolInfoSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { Lock } from "lucide-react";
+
+const label = "text-[11px] font-semibold uppercase tracking-wide text-gray-400";
 
 export default function SchoolInfoStep({
   onBack,
@@ -22,7 +25,7 @@ export default function SchoolInfoStep({
   const { data } = useFetchMyProfile();
   const form = useForm<SchoolInfoSchema>({
     resolver: zodResolver(schoolInfoSchema),
-    mode: "onSubmit",
+    mode: "onChange",
     values: {
       school: data?.student?.school ?? "",
       courseOfStudy: data?.student?.courseOfStudy ?? "",
@@ -33,57 +36,89 @@ export default function SchoolInfoStep({
       phone: "",
     },
   });
+
   return (
-    <>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onNext)}
-          className="flex flex-col gap-4"
-          id="school-info-step-form"
-        >
-          <FormField
-            control={form.control}
-            name="school"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>School Name</FormLabel>
-                <FormControl>
-                  <Input
-                    // disabled
-                    readOnly
-                    placeholder="e.g University of Benin"
-                    {...field}
-                    className="bg-muted/40 cursor-not-allowed"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onNext)}
+        className="space-y-8"
+        id="school-info-step-form"
+      >
+        {/* Academic */}
+        <div className="space-y-4">
+          <p className={label}>Academic</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="school"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={label}>Institution</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        readOnly
+                        placeholder="e.g. University of Benin"
+                        {...field}
+                        className="bg-gray-50 text-gray-500 cursor-not-allowed pr-9 rounded-none"
+                      />
+                      <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
+                    </div>
+                  </FormControl>
+                  <p className="text-xs text-gray-400 mt-1">Set during registration.</p>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="courseOfStudy"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Course of Study</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g Computer Science" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="courseOfStudy"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={label}>Course of Study</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. Computer Science" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-          <GroupItem>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <FormField
+              control={form.control}
+              name="degreeType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={label}>Degree</FormLabel>
+                  <FormControl>
+                    <select
+                      className="cursor-pointer w-full h-10 rounded-none border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                      {...field}
+                      value={field.value ?? ""}
+                    >
+                      <option value="" disabled>Select</option>
+                      <option value="OND">OND</option>
+                      <option value="HND">HND</option>
+                      <option value="BSC">B.Sc</option>
+                      <option value="MSC">M.Sc</option>
+                    </select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="level"
               render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Current Level</FormLabel>
+                <FormItem>
+                  <FormLabel className={label}>Level</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g 200" {...field} />
+                    <Input placeholder="e.g. 300" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -94,37 +129,10 @@ export default function SchoolInfoStep({
               control={form.control}
               name="gpa"
               render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Current CGPA</FormLabel>
+                <FormItem>
+                  <FormLabel className={label}>CGPA</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g 3.5" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </GroupItem>
-
-          <GroupItem>
-            <FormField
-              control={form.control}
-              name="degreeType"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Degree Type</FormLabel>
-                  <FormControl>
-                    <select
-                      className="w-full rounded-md border border-border bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                      {...field}
-                      value={field.value ?? ""}
-                    >
-                      <option value="" disabled>
-                        Select degree type
-                      </option>
-                      <option value="OND">OND</option>
-                      <option value="BSC">BSC</option>
-                      <option value="MSC">MSC</option>
-                    </select>
+                    <Input placeholder="e.g. 3.50" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -135,40 +143,48 @@ export default function SchoolInfoStep({
               control={form.control}
               name="graduationYear"
               render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Graduation Year</FormLabel>
+                <FormItem>
+                  <FormLabel className={label}>Grad. Year</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g 2024" {...field} />
+                    <select
+                      className="cursor-pointer w-full h-10 rounded-none border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                      {...field}
+                      value={field.value ?? ""}
+                    >
+                      <option value="" disabled>Year</option>
+                      {Array.from({ length: 11 }, (_, i) => 2022 + i).map((yr) => (
+                        <option key={yr} value={String(yr)}>{yr}</option>
+                      ))}
+                    </select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </GroupItem>
+          </div>
+        </div>
 
+        {/* Contact */}
+        <div className="space-y-4 pt-2 border-t">
+          <p className={label}>Contact</p>
           <FormField
             control={form.control}
             name="phone"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone Number</FormLabel>
+              <FormItem className="max-w-sm">
+                <FormLabel className={label}>Phone Number</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g., +234 801 234 5678" {...field} />
+                  <Input type="tel" placeholder="+234 801 234 5678" {...field} />
                 </FormControl>
-                <FormMessage />
-                <p className="text-xs text-muted-foreground mt-1">
-                  📞 Note: Submit a number that is easily reachable or available
-                  by call.
+                <p className="text-xs text-gray-400 mt-1">
+                  A number companies can reach you on directly.
                 </p>
+                <FormMessage />
               </FormItem>
             )}
           />
-        </form>
-      </Form>
-    </>
+        </div>
+      </form>
+    </Form>
   );
 }
-
-const GroupItem = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex w-full flex-row gap-4">{children}</div>;
-};

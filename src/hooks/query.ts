@@ -44,12 +44,19 @@ export const useFetchOpportunities = (filter?: any, page = 1, limit = 10) => {
         queryObject.location = filter.location.trim();
       }
 
+      if (filter?.sortBy === "oldest") {
+        queryObject.sort = "oldest";
+      }
+
       queryObject.page = page;
       queryObject.limit = limit;
 
       const qs = new URLSearchParams(queryObject).toString();
       const response = await query(`/o${qs ? `?${qs}` : ""}`);
-      return response.data;
+      const body = response.data;
+      const items = Array.isArray(body) ? body : (body?.data ?? body ?? []);
+      const total = Array.isArray(body) ? body.length : (body?.total ?? body?.count ?? items.length);
+      return { items, total };
     },
   });
 };
