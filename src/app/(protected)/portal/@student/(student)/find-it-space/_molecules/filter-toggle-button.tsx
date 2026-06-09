@@ -1,19 +1,23 @@
-import { Filter } from "iconsax-reactjs";
+import { SlidersHorizontal } from "lucide-react";
 
 type FilterToggleButtonProps = {
   onToggle: () => void;
+  activeCount?: number;
 };
 
-export function FilterToggleButton({ onToggle }: FilterToggleButtonProps) {
+export function FilterToggleButton({ onToggle, activeCount }: FilterToggleButtonProps) {
   return (
-    <div className="md:hidden w-full flex justify-center my-4">
-      <button
-        onClick={onToggle}
-        className="bg-white inline-flex items-center p-1.5 px-3 rounded border border-gray-300 cursor-pointer"
-      >
-        <Filter className="mr-2 w-4 h-4" />
-        <span className="text-sm font-medium">Filters</span>
-      </button>
-    </div>
+    <button
+      onClick={onToggle}
+      className="cursor-pointer inline-flex items-center gap-2 px-3 py-2 border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+    >
+      <SlidersHorizontal className="w-4 h-4" />
+      Filters
+      {activeCount ? (
+        <span className="inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold bg-primary text-white">
+          {activeCount}
+        </span>
+      ) : null}
+    </button>
   );
 }

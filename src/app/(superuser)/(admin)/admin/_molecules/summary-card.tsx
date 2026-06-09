@@ -27,7 +27,7 @@ export default function SummaryCard({
       {/* Trend sparkline */}
       {data && data.length > 0 && (
         <div className="mt-3">
-          <Sparklines data={data} width={100} height={20}>
+          <Sparklines data={data} width={100} height={20} min={Math.min(...data) - 1}>
             <SparklinesLine
               color="#6366F1"
               style={{ strokeWidth: 3, fill: "transparent" }}

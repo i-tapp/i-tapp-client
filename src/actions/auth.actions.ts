@@ -17,7 +17,8 @@ export const signin = actionClient
   .inputSchema(signinSchema)
   .action(async ({ parsedInput: { email, password } }) => {
     const response = await mutate("/auth/signin", { email, password });
-    const { user, token, profile } = response.data;
+    const payload = response?.data ?? response;
+    const { user, token, profile } = payload;
     await setAuthCookies(token, user.role);
     return { user, token, profile };
   });

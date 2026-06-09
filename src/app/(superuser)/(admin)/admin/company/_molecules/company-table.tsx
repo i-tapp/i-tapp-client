@@ -122,7 +122,7 @@ import { companyStatusStyle } from "@/utils/admin-status-style";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { useAction } from "next-safe-action/hooks";
-import { resendCompanyInvite } from "@/actions";
+import { resendActivation } from "@/actions";
 import { toast } from "react-toastify";
 
 export default function CompanyTable() {
@@ -131,7 +131,7 @@ export default function CompanyTable() {
   const [search, setSearch] = useState("");
   const router = useRouter();
 
-  const { execute, isExecuting } = useAction(resendCompanyInvite, {
+  const { execute, isExecuting } = useAction(resendActivation, {
     onSuccess: () => {
       toast.success("Invitation resent successfully");
     },

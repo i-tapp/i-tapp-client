@@ -151,6 +151,13 @@ export const updateAdminRole = actionClient
     return { success: true, data: response };
   });
 
+export const resendActivation = actionClient
+  .inputSchema(z.object({ email: z.email("Invalid email") }))
+  .action(async ({ parsedInput: { email } }) => {
+    const response = await mutate("/admin/activation/resend", { email });
+    return { success: true, data: response };
+  });
+
 export const resendCompanyInvite = actionClient
   .inputSchema(
     z.object({

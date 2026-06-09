@@ -24,6 +24,13 @@ import Input from "@/components/input";
 import { signinCompany } from "@/actions";
 import { signinSchema } from "@/schemas";
 
+const ROLE_REDIRECTS: Record<string, string> = {
+  student: "/portal/find-it-space",
+  company: "/portal/dashboard",
+  corps: "/portal/find-ppa",
+  admin: "/admin",
+};
+
 export function CompanySignIn() {
   const router = useRouter();
   const setCompany = useCompanyStore((s) => s.setCompany);
@@ -40,10 +47,12 @@ export function CompanySignIn() {
       onSuccess(data) {
         const user = data?.data?.user;
         const profile = data?.data?.profile;
-        setCompany({ ...user, ...profile });
-
+        if (user?.role === "company") setCompany({ ...user, ...profile });
         toast.success("Welcome back!");
-        router.replace("/portal/");
+        const dest = ROLE_REDIRECTS[user?.role] ?? "/portal";
+        router.replace(
+          profile?.isOnboarded === false ? "/portal/onboarding" : dest,
+        );
       },
       onError(error) {
         toast.error(error?.error?.serverError ?? "Login failed. Try again.");
@@ -99,7 +108,7 @@ export function CompanySignIn() {
 
           <div className="flex flex-row justify-between text-sm">
             <div className="flex flex-row justify-center gap-1">
-              <input type="checkbox" />
+              <input type="checkbox" title="check" />
               Remember me
             </div>
 
