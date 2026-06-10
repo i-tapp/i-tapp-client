@@ -5,17 +5,16 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Notification } from "iconsax-reactjs";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Logo } from "@/components/logo";
 import { MobileNav } from "./mobile-nav";
 import { cn } from "@/utils/tailwind";
 import { useCompanyStore } from "@/lib/store/company";
 import { useStudentStore } from "@/lib/store";
-import { useFetchNotifications } from "@/queries";
+import { useFetchNotifications, useFetchUnreadCount } from "@/queries";
 import moment from "moment";
 
 export function Header({ link }: { link: { text: string; href: string }[] }) {
@@ -24,7 +23,7 @@ export function Header({ link }: { link: { text: string; href: string }[] }) {
   const student = useStudentStore((c) => c.student);
   const parentRoute = pathname.split("/")[2];
   const { data: notifications = [] } = useFetchNotifications();
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
+  const { data: unreadCount = 0 } = useFetchUnreadCount();
   const recent = notifications.slice(0, 3);
 
   return (
@@ -50,9 +49,9 @@ export function Header({ link }: { link: { text: string; href: string }[] }) {
           ))}
         </nav>
         <div className="hidden md:flex gap-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger className="relative">
+          <Popover>
+            <PopoverTrigger asChild>
+              <button type="button" className="relative cursor-pointer">
                 <Notification
                   size={35}
                   className="border border-[#C9C9DA] rounded-full p-2"
@@ -62,27 +61,32 @@ export function Header({ link }: { link: { text: string; href: string }[] }) {
                     {unreadCount > 9 ? "9+" : unreadCount}
                   </span>
                 )}
-              </TooltipTrigger>
-              <TooltipContent className="px-0 w-72">
-                {recent.length === 0 ? (
-                  <p className="px-6 py-4 text-sm text-gray-400">No notifications</p>
-                ) : (
-                  recent.map((n) => (
-                    <div key={n.id} className={cn("px-4 py-3 border-b flex items-start gap-2", !n.isRead && "bg-primary/5")}>
-                      <Notification size={18} className="shrink-0 mt-0.5 text-primary" />
-                      <div className="min-w-0">
-                        <p className="text-xs font-medium truncate">{n.title}</p>
-                        <p className="text-[11px] text-gray-400">{moment(n.createdAt).fromNow()}</p>
-                      </div>
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="p-0 w-72" align="end">
+              <div className="px-4 py-3 border-b">
+                <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Notifications</p>
+              </div>
+              {recent.length === 0 ? (
+                <p className="px-6 py-4 text-sm text-gray-400">No notifications yet.</p>
+              ) : (
+                recent.map((n) => (
+                  <div key={n.id} className={cn("px-4 py-3 border-b flex items-start gap-2", !n.isRead && "bg-primary/5")}>
+                    <Notification size={18} className="shrink-0 mt-0.5 text-primary" />
+                    <div className="min-w-0">
+                      <p className="text-xs font-medium truncate">{n.title}</p>
+                      <p className="text-[11px] text-gray-400 mt-0.5">{n.body}</p>
+                      <p className="text-[11px] text-gray-300 mt-0.5">{moment(n.createdAt).fromNow()}</p>
                     </div>
-                  ))
-                )}
-                <Link href="/portal/notifications">
-                  <p className="px-10 py-2 text-sm text-center hover:underline">See all notifications</p>
-                </Link>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+                    {!n.isRead && <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1" />}
+                  </div>
+                ))
+              )}
+              <Link href="/portal/notifications" className="block px-4 py-2.5 text-xs text-center text-primary hover:underline border-t">
+                See all notifications
+              </Link>
+            </PopoverContent>
+          </Popover>
 
           <Link href="/portal/profile">
             <div className="rounded-full h-10 w-10">

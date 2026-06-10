@@ -44,6 +44,10 @@ export const useFetchOpportunities = (filter?: any, page = 1, limit = 10) => {
         queryObject.location = filter.location.trim();
       }
 
+      if (filter?.search?.trim()) {
+        queryObject.search = filter.search.trim();
+      }
+
       if (filter?.sortBy === "oldest") {
         queryObject.sort = "oldest";
       }

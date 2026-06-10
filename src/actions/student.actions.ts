@@ -215,3 +215,10 @@ export const markAllNotificationsRead = actionClient
     const response = await mutate("/notifications/read-all", {}, "PATCH");
     return response;
   });
+
+export const deleteNotification = actionClient
+  .inputSchema(z.object({ id: z.string().min(1) }))
+  .action(async ({ parsedInput: { id } }) => {
+    const response = await mutate(`/notifications/${id}`, {}, "DELETE");
+    return response;
+  });
