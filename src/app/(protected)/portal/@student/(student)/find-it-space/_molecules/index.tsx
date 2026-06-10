@@ -75,14 +75,16 @@ export default function FindITSpace() {
             setFilter={setFilter}
             filter={filter}
           />
-          <div className="shrink-0 border-t border-gray-200 bg-white px-4 py-2">
-            <SitePagination
-              totalPosts={totalOpportunities || (opportunities.length < 10 ? currentPage * 10 - (10 - opportunities.length) : currentPage * 10 + 10)}
-              postsPerPage={10}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-            />
-          </div>
+          {totalOpportunities > 10 && (
+            <div className="shrink-0 border-t border-gray-200 bg-white px-4 py-2">
+              <SitePagination
+                totalPosts={totalOpportunities}
+                postsPerPage={10}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+              />
+            </div>
+          )}
         </div>
 
         {/* Details panel — desktop */}

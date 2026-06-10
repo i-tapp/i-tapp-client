@@ -109,10 +109,10 @@ export default function AdminAuth() {
         </form>
       </Form>
 
-      <p className="mt-6 text-center text-xs text-gray-400">
-        For authorized personnel only. <br /> &copy; 2025 i-Tapp. All rights
-        reserved.
-      </p>
+      <div className="mt-6 text-center text-xs text-gray-400 space-y-1">
+        <p>For authorized personnel only.</p>
+        <p>&copy; 2025 i-Tapp. All rights reserved.</p>
+      </div>
     </div>
   );
 }

@@ -42,7 +42,8 @@ axiosInstance.interceptors.response.use(
 
     console.error("API Error:", { ...response });
 
-    if (status === 401) {
+    const isAuthEndpoint = error.config?.url?.includes("/auth/");
+    if (status === 401 && !isAuthEndpoint) {
       redirect("/signin");
     }
 

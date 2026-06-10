@@ -61,7 +61,7 @@ export function SchoolInfo({
         }, 1000);
       },
       onError(error) {
-        toast.error("Student data not found");
+        toast.error(error?.error?.serverError ?? "Student data not found. Check your school and matric number.");
       },
     },
   );

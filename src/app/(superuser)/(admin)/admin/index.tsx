@@ -54,13 +54,14 @@ export default function Admin() {
   ];
 
   return (
-    <div className="flex flex-col gap-8 p-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Dashboard Overview</h1>
+    <div className="flex flex-col gap-6 p-4 sm:p-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
+        <h1 className="text-2xl sm:text-3xl font-bold">Dashboard Overview</h1>
         {pendingCount > 0 && (
           <Link
             href="/admin/pending"
-            className="flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-700 text-sm font-semibold px-4 py-2 rounded-xl hover:bg-amber-100 transition"
+            className="self-start sm:self-auto flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-700 text-sm font-semibold px-4 py-2 rounded-xl hover:bg-amber-100 transition"
           >
             <AlertTriangle className="w-4 h-4" />
             {pendingCount} pending approval{pendingCount !== 1 ? "s" : ""}
@@ -68,14 +69,15 @@ export default function Admin() {
         )}
       </div>
 
+      {/* Summary cards */}
       {isLoading ? (
-        <div className="flex flex-wrap gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex-1 min-w-[220px] h-[140px] bg-gray-100 rounded-xl animate-pulse" />
+            <div key={i} className="h-[120px] bg-gray-100 rounded-xl animate-pulse" />
           ))}
         </div>
       ) : (
-        <div className="flex flex-wrap gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {summaryItems.map((item) => (
             <SummaryCard
               key={item.title}
@@ -88,7 +90,8 @@ export default function Admin() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Bottom panels */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <Activity />
         <RecentOpportunities />
         <TopCompanies />

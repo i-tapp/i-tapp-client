@@ -15,19 +15,19 @@ export default function SummaryCard({
   data?: number[];
 }) {
   return (
-    <div className="flex-1 flex-col justify-between border rounded-xl p-6 bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 min-w-[250px]  min-h-[180px]">
+    <div className="flex flex-col justify-between border rounded-xl p-4 bg-white shadow-sm hover:shadow-md transition-shadow duration-300">
       {/* Top: Title */}
       <h6 className="text-gray-500 text-sm font-semibold">{title}</h6>
 
       {/* Number */}
-      <h2 className="text-4xl font-extrabold mt-2">
+      <h2 className="text-2xl sm:text-3xl font-extrabold mt-1.5">
         {number.toLocaleString()}
       </h2>
 
-      {/* Trend sparkline */}
-      {data && data.length > 0 && (
+      {/* Trend sparkline — only render when there's a meaningful range */}
+      {data && data.length > 1 && Math.min(...data) !== Math.max(...data) && (
         <div className="mt-3">
-          <Sparklines data={data} width={100} height={20} min={Math.min(...data) - 1}>
+          <Sparklines data={data} width={100} height={20} min={Math.min(...data) - 1} max={Math.max(...data) + 1}>
             <SparklinesLine
               color="#6366F1"
               style={{ strokeWidth: 3, fill: "transparent" }}

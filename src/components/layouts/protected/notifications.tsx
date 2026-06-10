@@ -182,12 +182,12 @@ function NotificationRow({
 
   return (
     <div
-      role={unread ? "button" : undefined}
+      // role={unread ? "button" : undefined}
       tabIndex={unread ? 0 : undefined}
       className={cn(
         "group relative flex items-start gap-4 px-5 py-4 bg-white transition-colors",
         unread
-          ? "border-l-[3px] border-l-primary cursor-pointer hover:bg-primary/[0.015]"
+          ? "border-l-[3px] border-l-primary cursor-pointer hover:bg-primary/1.5"
           : "border-l-[3px] border-l-transparent",
       )}
       onClick={() => { if (unread) onRead(); }}

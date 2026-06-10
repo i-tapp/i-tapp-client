@@ -44,6 +44,7 @@ export function CompanyInfo1() {
         }
       },
       onError(error) {
+        toast.error(error?.error?.serverError ?? "Sign up failed. Please try again.");
       },
     },
   );

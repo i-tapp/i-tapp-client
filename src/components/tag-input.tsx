@@ -58,7 +58,7 @@ export function TagInput({
   return (
     <div
       className={cn(
-        "rounded-lg border bg-white p-2",
+        "rounded border border-gray-200 bg-white p-2 focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/10 transition-all",
         disabled && "opacity-60 pointer-events-none",
         className,
       )}
@@ -107,7 +107,7 @@ export function TagInput({
             addFromInput();
           }
         }}
-        className="mt-2 w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/30 placeholder:text-sm "
+        className="mt-2 w-full px-1 py-1 text-sm outline-none placeholder:text-sm placeholder:text-gray-400 bg-transparent"
       />
 
       {/* optional helper */}

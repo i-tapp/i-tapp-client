@@ -75,7 +75,7 @@ export default function CorpsNyscInfoStep({
 
         <FormField control={form.control} name="nyscRegNumber" render={({ field }) => (
           <FormItem>
-            <Label required>NYSC Registration Number</Label>
+            <Label required>NYSC Callup Number</Label>
             <FormControl><Input placeholder="e.g. LG/24A/1234567" {...field} /></FormControl>
             <FormMessage />
           </FormItem>
@@ -100,8 +100,8 @@ export default function CorpsNyscInfoStep({
               <FormControl>
                 <select className={selectClass} {...field} value={field.value ?? ""}>
                   <option value="" disabled>Select stream</option>
-                  <option value="A">Stream A</option>
-                  <option value="B">Stream B</option>
+                  <option value="stream_i">Stream I</option>
+                  <option value="stream_ii">Stream II</option>
                 </select>
               </FormControl>
               <FormMessage />

@@ -57,7 +57,7 @@ export function SignupInfo({
       router.replace("/signin/");
     },
     onError(error) {
-      toast.error(" Error signing up");
+      toast.error(error?.error?.serverError ?? "Error signing up. Please try again.");
     },
   });
 
@@ -69,17 +69,13 @@ export function SignupInfo({
 
   return (
     <div className="w-full flex flex-col gap-6">
-      {hasErrored && (
-        <span className="text-danger font-semi-bold">{result.serverError}</span>
+      {hasErrored && result?.serverError && (
+        <span className="text-red-500 text-sm font-medium">{result.serverError}</span>
       )}
       <Form {...form}>
         <form
           className="my-4 flex flex-col gap-2"
-          onSubmit={(e) => {
-            e.preventDefault();
-
-            handleSignup(form.getValues());
-          }}
+          onSubmit={form.handleSubmit(handleSignup)}
         >
           <div className="flex flex-col gap-3">
             <FormField
