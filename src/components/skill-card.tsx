@@ -26,7 +26,16 @@ export default function SkillCard({
   const skills = Array.isArray(value)
     ? value
     : value
-    ? value.split(",").map((s: string) => s.trim())
+    ? (() => {
+        const trimmed = value.trim();
+        if (trimmed.startsWith("[")) {
+          try {
+            const parsed = JSON.parse(trimmed);
+            if (Array.isArray(parsed)) return parsed.map((s: string) => String(s).trim());
+          } catch {}
+        }
+        return trimmed.split(",").map((s: string) => s.trim()).filter(Boolean);
+      })()
     : [];
 
   return (

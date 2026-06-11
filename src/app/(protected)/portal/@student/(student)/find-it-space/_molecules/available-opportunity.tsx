@@ -130,7 +130,7 @@ export default function AvailableOpportunity({
           {/* Company + verified */}
           {companyName && (
             <div className="flex items-center gap-1 mt-0.5">
-              <p className="text-[12px] text-gray-500 truncate">{companyName}</p>
+              <p className="text-[12px] text-gray-500 truncate capitalize font-semibold">{companyName}</p>
               {isVerified && (
                 <div className="relative group/badge inline-block shrink-0">
                   <BadgeCheck className="w-3 h-3 text-blue-500" />
@@ -145,8 +145,8 @@ export default function AvailableOpportunity({
           {/* Location */}
           {location && (
             <div className="flex items-center gap-1 mt-1">
-              <MapPin className="w-3 h-3 text-gray-300 shrink-0" />
-              <p className="text-[11px] text-gray-400 capitalize truncate">{location}</p>
+              <MapPin className="w-3 h-3 text-red-600 shrink-0" />
+              <p className="text-[12px] font-semibold text-red-600 capitalize truncate">{location}</p>
             </div>
           )}
 

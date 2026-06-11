@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import LoginImg from "@/assets/images/login-image.webp";
+import LoginImg from "@/assets/images/login-image.jpg";
 import Image from "next/image";
 
 export default function AuthLayoutUi({
@@ -11,9 +11,9 @@ export default function AuthLayoutUi({
   return (
     <main className="w-full min-h-screen flex items-center justify-center bg-background">
       <div className="container flex flex-col lg:flex-row items-center justify-between gap-12 py-16">
-        <div className="w-full lg:w-2/3 flex flex-col items-center  gap-6">
+        <div className="w-full lg:w-2/3 flex flex-col items-center gap-6">
           <Link href="/">
-            <Logo />
+            <Logo className=""/>
           </Link>
           {children}
         </div>

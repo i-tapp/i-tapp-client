@@ -180,6 +180,16 @@ const useFetchAdminPPA = (params?: { state?: string; status?: string; page?: num
   });
 };
 
+const useFetchAdminPPAStats = () => {
+  return useQuery({
+    queryKey: ["admin-ppa-stats"],
+    queryFn: async () => {
+      const response = await query("/admin/ppa/stats");
+      return response as { total: number; active: number; closed: number; paused: number };
+    },
+  });
+};
+
 const useFetchAdminCorpsApplications = (params?: { status?: string; page?: number; limit?: number }) => {
   return useQuery({
     queryKey: ["admin-corps-applications", params],
@@ -212,5 +222,6 @@ export {
   useFetchAuditLog,
   useFetchFlaggedOpportunities,
   useFetchAdminPPA,
+  useFetchAdminPPAStats,
   useFetchAdminCorpsApplications,
 };

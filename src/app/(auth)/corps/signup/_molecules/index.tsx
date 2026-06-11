@@ -18,7 +18,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Input from "@/components/input";
-import { BadgeCheck } from "lucide-react";
 
 export default function CorpsSignup() {
   const router = useRouter();
@@ -40,18 +39,15 @@ export default function CorpsSignup() {
       toast.success("Account created! Please check your email to verify.");
       router.replace("/signin");
     },
-    onError: () => {
-      toast.error("Sign up failed. Please try again.");
+    onError: (error) => {
+      toast.error(error?.error?.serverError ?? "Sign up failed. Please try again.");
     },
   });
 
   return (
-    <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-md border border-gray-100">
+    <div className="w-full max-w-xl bg-white p-8 border-gray-100">
       {/* Header */}
       <div className="flex flex-col items-center gap-3 mb-8">
-        <div className="w-12 h-12 rounded-xl bg-violet-50 border border-violet-100 flex items-center justify-center">
-          <BadgeCheck className="w-6 h-6 text-violet-600" />
-        </div>
         <div className="text-center">
           <h1 className="text-2xl font-black text-gray-900">Corps Member Sign Up</h1>
           <p className="text-sm text-gray-500 mt-1">
@@ -129,7 +125,7 @@ export default function CorpsSignup() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input {...field} type="password" placeholder="Min. 8 characters" />
+                  <Input {...field} type="password" placeholder="Min. 6 characters" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -157,7 +153,7 @@ export default function CorpsSignup() {
           <Button
             type="submit"
             disabled={!form.formState.isValid || isExecuting}
-            className="w-full mt-2"
+            className="w-full mt-2 cursor-pointer"
           >
             {isExecuting ? "Creating account…" : "Create account"}
           </Button>

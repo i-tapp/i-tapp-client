@@ -91,7 +91,7 @@ export default function ProfileForm({ onClose }: { onClose: () => void }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form id="company-profile-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Industry & Phone */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField

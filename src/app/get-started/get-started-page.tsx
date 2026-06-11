@@ -1,145 +1,275 @@
 "use client";
 
 import Link from "next/link";
-import { GraduationCap, Building2, Shield, ArrowRight } from "lucide-react";
+import { GraduationCap, Building2, Shield, ArrowUpRight } from "lucide-react";
 import { Logo } from "@/components/logo";
 
 const roles = [
   {
+    num: "01",
     key: "student",
-    title: "I'm a Student",
-    subtitle: "Find your SIWES / IT placement",
+    title: "Student",
+    label: "SIWES / IT Placement",
     description: "Browse verified companies accepting students for industrial training. Apply, track, and get placed — all in one place.",
     features: ["Browse curated SIWES listings", "Apply instantly", "Track your applications", "Get your IT letter accepted"],
     href: "/welcome",
-    cta: "Sign up as Student",
+    cta: "Continue as Student",
     icon: GraduationCap,
-    accent: "blue",
-    ring: "ring-blue-500",
-    iconBg: "from-blue-500 to-blue-600",
-    dot: "bg-blue-500",
-    btn: "bg-blue-600 hover:bg-blue-700",
+    color: "#2563EB",
+    colorLight: "#EFF6FF",
+    colorBorder: "#BFDBFE",
+    colorMuted: "rgba(37,99,235,0.08)",
   },
   {
+    num: "02",
     key: "corps",
-    title: "I'm a Corps Member",
-    subtitle: "Find your PPA placement",
+    title: "Corps Member",
+    label: "NYSC / PPA Placement",
     description: "Get matched to a Place of Primary Attachment in your deployment state. No cold emails, no walk-ins.",
     features: ["Matched to your state", "Verified PPA listings", "Apply with your call-up letter", "Track PPA status"],
     href: "/corps/signup",
-    cta: "Sign up as Corps Member",
+    cta: "Continue as Corps Member",
     icon: Shield,
-    accent: "emerald",
-    ring: "ring-emerald-500",
-    iconBg: "from-emerald-500 to-emerald-600",
-    dot: "bg-emerald-500",
-    btn: "bg-emerald-600 hover:bg-emerald-700",
+    color: "#059669",
+    colorLight: "#ECFDF5",
+    colorBorder: "#A7F3D0",
+    colorMuted: "rgba(5,150,105,0.08)",
   },
   {
+    num: "03",
     key: "company",
-    title: "I'm a Company",
-    subtitle: "List placement opportunities",
+    title: "Company",
+    label: "Post Placement Opportunities",
     description: "Post SIWES or PPA positions and connect with verified, qualified candidates from across Nigeria.",
     features: ["Post SIWES & PPA slots", "Access verified talent", "Manage applications easily", "CAC-verified listing badge"],
     href: "/company/signup",
-    cta: "Sign up as Company",
+    cta: "Continue as Company",
     icon: Building2,
-    accent: "purple",
-    ring: "ring-purple-500",
-    iconBg: "from-purple-500 to-purple-600",
-    dot: "bg-purple-500",
-    btn: "bg-purple-600 hover:bg-purple-700",
+    color: "#7C3AED",
+    colorLight: "#F5F3FF",
+    colorBorder: "#DDD6FE",
+    colorMuted: "rgba(124,58,237,0.08)",
   },
 ];
 
 export default function GetStartedPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 relative overflow-hidden">
-      {/* Background blobs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-400/10 rounded-full blur-3xl" />
-      </div>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
 
-      <div className="relative z-10 flex flex-col min-h-screen">
+        .gs-root { font-family: 'DM Sans', sans-serif; background: #F8F9FC; }
+        .gs-serif { font-family: 'Instrument Serif', Georgia, serif; }
+
+        @keyframes gs-fade-up {
+          from { opacity: 0; transform: translateY(20px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .gs-hero  { animation: gs-fade-up 0.5s cubic-bezier(0.22,1,0.36,1) 0.05s both; }
+        .gs-card1 { animation: gs-fade-up 0.5s cubic-bezier(0.22,1,0.36,1) 0.12s both; }
+        .gs-card2 { animation: gs-fade-up 0.5s cubic-bezier(0.22,1,0.36,1) 0.20s both; }
+        .gs-card3 { animation: gs-fade-up 0.5s cubic-bezier(0.22,1,0.36,1) 0.28s both; }
+
+        .gs-card {
+          position: relative;
+          background: #fff;
+          border: 1.5px solid #E5E8EF;
+          border-radius: 20px;
+          transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+          overflow: hidden;
+        }
+        .gs-card:hover {
+          transform: translateY(-3px);
+          border-color: var(--card-border);
+          box-shadow: 0 8px 40px -8px var(--card-shadow), 0 2px 8px -2px rgba(0,0,0,0.06);
+        }
+        .gs-card::after {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0;
+          height: 3px;
+          background: var(--card-color);
+          opacity: 0;
+          transition: opacity 0.2s;
+        }
+        .gs-card:hover::after { opacity: 1; }
+
+        .gs-num {
+          position: absolute;
+          right: -0.05em;
+          bottom: -0.2em;
+          font-family: 'Instrument Serif', serif;
+          font-size: clamp(6rem, 16vw, 8rem);
+          font-weight: 400;
+          line-height: 1;
+          color: transparent;
+          -webkit-text-stroke: 1.5px rgba(0,0,0,0.04);
+          pointer-events: none;
+          user-select: none;
+        }
+
+        @media (max-width: 639px) {
+          .gs-card { padding: 20px 18px; }
+          .gs-card-grid { display: flex; flex-direction: column; gap: 10px; }
+        }
+        @media (min-width: 640px) {
+          .gs-card { padding: 28px; }
+          .gs-card-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+        }
+
+        .gs-icon-wrap {
+          width: 44px; height: 44px;
+          border-radius: 12px;
+          display: flex; align-items: center; justify-content: center;
+          background: var(--card-light);
+          border: 1px solid var(--card-border);
+          shrink: 0;
+        }
+
+        .gs-cta {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-radius: 10px;
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--card-color);
+          transition: background 0.15s;
+        }
+        @media (max-width: 639px) {
+          .gs-cta { padding: 0; background: none; border: none; }
+          .gs-cta-arrow { display: none; }
+        }
+        @media (min-width: 640px) {
+          .gs-cta {
+            padding: 11px 15px;
+            background: var(--card-light);
+            border: 1px solid var(--card-border);
+          }
+          .gs-card:hover .gs-cta { background: var(--card-color); color: #fff; border-color: transparent; }
+          .gs-cta-arrow { transition: transform 0.2s; }
+          .gs-card:hover .gs-cta-arrow { transform: translate(2px, -2px); }
+        }
+
+        .gs-pill {
+          display: inline-flex; align-items: center; gap: 5px;
+          padding: 4px 12px; border-radius: 99px;
+          background: #EFF6FF; border: 1px solid #BFDBFE;
+          font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+          text-transform: uppercase; color: #2563EB;
+        }
+
+        .gs-divider {
+          width: 100%; height: 1px;
+          background: linear-gradient(90deg, transparent, #E5E8EF 20%, #E5E8EF 80%, transparent);
+          margin: 8px 0;
+        }
+      `}</style>
+
+      <div className="gs-root min-h-screen flex flex-col">
         {/* Header */}
-        <header className="px-4 sm:px-8 py-5 flex items-center justify-between">
+        <header className="px-5 sm:px-10 pt-5 pb-3 flex items-center justify-between border-b border-gray-100 bg-white/80 backdrop-blur-sm">
           <Link href="/">
-            <Logo />
+            <Logo className="h-9 w-auto" />
           </Link>
-          <Link href="/signin" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
-            Already have an account? <span className="text-primary font-semibold">Sign in</span>
+          <Link href="/signin" className="text-sm text-gray-400 hover:text-gray-700 transition-colors">
+            <span className="hidden sm:inline">Have an account? </span>
+            <span className="text-gray-700 font-semibold">Sign in →</span>
           </Link>
         </header>
 
         {/* Main */}
-        <main className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 py-10 sm:py-16">
-          <div className="w-full max-w-6xl space-y-10">
-            {/* Hero text */}
-            <div className="text-center space-y-3">
-              <span className="inline-block px-4 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
-                ✨ Get Started — It&apos;s Free
-              </span>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight">
-                Choose your path
+        <main className="flex-1 flex flex-col justify-center px-4 sm:px-8 py-10 sm:py-14">
+          <div className="w-full max-w-5xl mx-auto space-y-8 sm:space-y-10">
+
+            {/* Hero */}
+            <div className="gs-hero space-y-3">
+              <div className="gs-pill">✦ Free to get started</div>
+              <h1 className="gs-serif text-[2.8rem] sm:text-6xl lg:text-[4.5rem] font-normal text-gray-900 leading-[1.1] tracking-tight">
+                Who are <em style={{ color: "#2563EB" }}>you</em><span className="text-gray-300">?</span>
               </h1>
-              <p className="text-lg sm:text-xl text-gray-500 max-w-xl mx-auto">
-                Pick your role to create your account and get started in minutes.
+              <p className="text-gray-400 text-sm sm:text-base max-w-sm leading-relaxed">
+                Pick your role and we&apos;ll get you set up in minutes.
               </p>
             </div>
 
-            {/* Role cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
-              {roles.map((role) => {
+            {/* Cards */}
+            <div className="gs-card-grid">
+              {roles.map((role, i) => {
                 const Icon = role.icon;
+                const animClass = ["gs-card1", "gs-card2", "gs-card3"][i];
                 return (
                   <Link
                     key={role.key}
                     href={role.href}
-                    className={`group relative flex flex-col gap-5 p-6 sm:p-8 rounded-2xl bg-white/90 backdrop-blur shadow-lg border border-white hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 hover:${role.ring} hover:ring-2`}
+                    className={`gs-card ${animClass} block`}
+                    style={{
+                      "--card-color": role.color,
+                      "--card-shadow": role.color + "30",
+                      "--card-border": role.colorBorder,
+                      "--card-light": role.colorLight,
+                      "--card-muted": role.colorMuted,
+                    } as React.CSSProperties}
                   >
-                    {/* Icon */}
-                    <div className={`inline-flex p-4 rounded-xl bg-gradient-to-br ${role.iconBg} shadow-md w-fit`}>
-                      <Icon className="w-7 h-7 text-white" />
-                    </div>
+                    <span className="gs-num" aria-hidden="true">{role.num}</span>
 
-                    {/* Text */}
-                    <div className="space-y-1.5">
-                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{role.subtitle}</p>
-                      <h2 className="text-2xl font-bold text-gray-900">{role.title}</h2>
-                      <p className="text-sm text-gray-500 leading-relaxed">{role.description}</p>
-                    </div>
+                    <div className="relative z-10 flex flex-col gap-4 h-full">
+                      {/* Top row */}
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="gs-icon-wrap shrink-0">
+                          <Icon style={{ color: role.color }} className="w-5 h-5" />
+                        </div>
+                        <ArrowUpRight className="sm:hidden w-4 h-4 text-gray-300 mt-1 shrink-0" />
+                      </div>
 
-                    {/* Features */}
-                    <ul className="space-y-2">
-                      {role.features.map((f) => (
-                        <li key={f} className="flex items-center gap-2.5 text-sm text-gray-600">
-                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${role.dot}`} />
-                          {f}
-                        </li>
-                      ))}
-                    </ul>
+                      {/* Label + Title */}
+                      <div>
+                        <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.1em] mb-1" style={{ color: role.color }}>
+                          {role.label}
+                        </p>
+                        <h2 className="gs-serif text-2xl sm:text-[1.75rem] font-normal text-gray-900 leading-tight">
+                          {role.title}
+                        </h2>
+                      </div>
 
-                    {/* CTA */}
-                    <div className={`mt-auto flex items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold text-white ${role.btn} transition-colors`}>
-                      {role.cta}
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      {/* Description */}
+                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
+                        {role.description}
+                      </p>
+
+                      {/* Features — desktop only */}
+                      <ul className="hidden sm:flex flex-col gap-2">
+                        {role.features.map((f) => (
+                          <li key={f} className="flex items-center gap-2.5 text-xs text-gray-400">
+                            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: role.colorBorder }} />
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* CTA */}
+                      <div className="mt-auto pt-2 sm:pt-0">
+                        <div className="gs-cta">
+                          {role.cta}
+                          <ArrowUpRight className="gs-cta-arrow w-4 h-4" />
+                        </div>
+                      </div>
                     </div>
                   </Link>
                 );
               })}
             </div>
 
-            <p className="text-center text-sm text-gray-400">
+            {/* Footer note */}
+            <p className="text-center text-xs text-gray-300">
               By signing up, you agree to our{" "}
-              <Link href="/terms-of-service" className="underline hover:text-gray-600">Terms</Link>
+              <Link href="/terms-of-service" className="underline hover:text-gray-500 transition-colors">Terms</Link>
               {" "}and{" "}
-              <Link href="/privacy" className="underline hover:text-gray-600">Privacy Policy</Link>.
+              <Link href="/privacy" className="underline hover:text-gray-500 transition-colors">Privacy Policy</Link>.
             </p>
           </div>
         </main>
       </div>
-    </div>
+    </>
   );
 }

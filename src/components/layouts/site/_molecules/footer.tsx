@@ -52,16 +52,16 @@ export function Footer() {
       />
 
       {/* Top accent line */}
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+      <div className="h-px w-full bg-linear-to-r from-transparent via-primary/60 to-transparent" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
         <div className="py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
           <div className="sm:col-span-2 lg:col-span-2 flex flex-col gap-6">
             <div className="w-fit">
-              <Logo className="h-60 w-auto object-contain brightness-" />
+              <Logo className="" />
             </div>
 
-            <p className="text-sm text-white/45 leading-relaxed max-w-[260px]">
+            <p className="text-sm text-white/45 leading-relaxed max-w-65">
               Nigeria&apos;s placement marketplace connecting SIWES students and
               NYSC corps members with verified companies.
             </p>

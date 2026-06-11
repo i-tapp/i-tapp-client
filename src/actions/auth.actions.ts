@@ -23,7 +23,6 @@ export const signin = actionClient
     return { user, token, profile };
   });
 
-// kept for backwards compat — delegates to universal signin
 export const signinStudent = signin;
 
 export const signinCompany = signin;
@@ -121,13 +120,17 @@ export const signinCorps = signin;
 
 export const corpsSignup = actionClient
   .inputSchema(corpsSignupSchema)
-  .action(async ({ parsedInput: { email, password, firstName, lastName, phone } }) => {
-    const response = await mutate("/auth/signup/corps", {
-      email,
-      password,
-      firstName,
-      lastName,
-      phone,
-    });
-    return response;
-  });
+  .action(
+    async ({
+      parsedInput: { email, password, firstName, lastName, phone },
+    }) => {
+      const response = await mutate("/auth/signup/corps", {
+        email,
+        password,
+        firstName,
+        lastName,
+        phone,
+      });
+      return response;
+    },
+  );
