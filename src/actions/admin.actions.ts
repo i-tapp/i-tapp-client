@@ -236,6 +236,31 @@ export const updatePPAStatus = actionClient
     return { success: true, data: response };
   });
 
+export const createPPAListing = actionClient
+  .inputSchema(z.object({
+    title: z.string().min(2, "Title is required"),
+    organisationName: z.string().min(1, "Organisation name is required"),
+    sector: z.string().min(1, "Sector is required"),
+    state: z.string().min(1, "State is required"),
+    location: z.string().min(1, "Location is required"),
+    description: z.string().min(10, "Description is required"),
+    duration: z.number().int().positive("Duration must be positive"),
+    maxApplicants: z.number().optional(),
+    applicationDeadline: z.string().optional(),
+    contactEmail: z.string().email("Invalid email").optional().or(z.literal("")),
+    phone: z.string().optional(),
+  }))
+  .action(async ({ parsedInput }) => {
+    const response = await mutate("/admin/ppa", {
+      ...parsedInput,
+      programType: "ppa",
+      applicationDeadline: parsedInput.applicationDeadline
+        ? new Date(parsedInput.applicationDeadline).toISOString()
+        : undefined,
+    });
+    return { success: true, data: response };
+  });
+
 export const approveCorps = actionClient
   .inputSchema(z.object({ corpsId: z.string().min(1) }))
   .action(async ({ parsedInput: { corpsId } }) => {

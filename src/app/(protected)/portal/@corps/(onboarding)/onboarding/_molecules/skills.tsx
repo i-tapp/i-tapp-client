@@ -129,7 +129,6 @@ export default function CorpsSkillsStep({
                       <option value="1-3 months">1–3 months</option>
                       <option value="3-6 months">3–6 months</option>
                       <option value="6+ months">6+ months</option>
-                      <option value="1 year">1 year</option>
                     </select>
                   </FormControl>
                   <FormMessage />

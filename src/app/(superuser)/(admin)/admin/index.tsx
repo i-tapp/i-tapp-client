@@ -6,7 +6,7 @@ import RecentOpportunities from "./_molecules/recent-opportunities";
 import TopCompanies from "./_molecules/top-companies";
 import { useFetchAdminStats, useFetchPendingApprovals } from "@/queries/admin";
 import Link from "next/link";
-import { AlertTriangle, Users, BadgeCheck, Building2, Briefcase, ClipboardList } from "lucide-react";
+import { AlertTriangle, Users, BadgeCheck, Building2, Briefcase, ClipboardList, MapPin, Plus } from "lucide-react";
 
 export default function Admin() {
   const { data: stats, isLoading } = useFetchAdminStats();
@@ -89,6 +89,61 @@ export default function Admin() {
           ))}
         </div>
       )}
+
+      {/* Quick actions */}
+      <div>
+        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Quick Actions</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <Link
+            href="/admin/ppa"
+            className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-xl hover:border-primary/40 hover:shadow-sm transition group"
+          >
+            <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0 group-hover:bg-emerald-100 transition">
+              <MapPin className="w-4 h-4 text-emerald-600" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-gray-800 truncate">PPA Listings</p>
+              <p className="text-xs text-gray-400 truncate">Manage corps placements</p>
+            </div>
+          </Link>
+          <Link
+            href="/admin/ppa?create=1"
+            className="flex items-center gap-3 p-4 bg-emerald-600 border border-emerald-600 rounded-xl hover:bg-emerald-700 transition group"
+          >
+            <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+              <Plus className="w-4 h-4 text-white" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-white truncate">Post PPA Listing</p>
+              <p className="text-xs text-emerald-100 truncate">Add new corps placement</p>
+            </div>
+          </Link>
+          <Link
+            href="/admin/opportunities"
+            className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-xl hover:border-primary/40 hover:shadow-sm transition group"
+          >
+            <div className="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center shrink-0 group-hover:bg-amber-100 transition">
+              <Briefcase className="w-4 h-4 text-amber-600" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-gray-800 truncate">Opportunities</p>
+              <p className="text-xs text-gray-400 truncate">SIWES listings</p>
+            </div>
+          </Link>
+          <Link
+            href="/admin/pending"
+            className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-xl hover:border-primary/40 hover:shadow-sm transition group"
+          >
+            <div className="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center shrink-0 group-hover:bg-amber-100 transition">
+              <AlertTriangle className="w-4 h-4 text-amber-600" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-gray-800 truncate">Pending Approvals</p>
+              <p className="text-xs text-gray-400 truncate">Review new signups</p>
+            </div>
+          </Link>
+        </div>
+      </div>
 
       {/* Bottom panels */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

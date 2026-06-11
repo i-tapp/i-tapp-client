@@ -1,5 +1,10 @@
+import { Suspense } from "react";
 import AdminPPAPage from "./index";
 
 export default function Page() {
-  return <AdminPPAPage />;
+  return (
+    <Suspense>
+      <AdminPPAPage />
+    </Suspense>
+  );
 }

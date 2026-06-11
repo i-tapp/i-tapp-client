@@ -18,6 +18,7 @@ import {
   BarChart2,
   ScrollText,
   Search,
+  MapPin,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -37,6 +38,7 @@ const menuItems = [
   { name: "Corps Members", href: "/admin/corps", icon: <BadgeCheck size={20} /> },
   { name: "Companies", href: "/admin/company", icon: <Building size={20} /> },
   { name: "Opportunities", href: "/admin/opportunities", icon: <Briefcase size={20} /> },
+  { name: "PPA Listings", href: "/admin/ppa", icon: <MapPin size={20} /> },
   { name: "Applications", href: "/admin/applications", icon: <ClipboardList size={20} /> },
   { name: "Placements", href: "/admin/placements", icon: <UserCheck size={20} /> },
   { name: "Analytics", href: "/admin/analytics", icon: <BarChart2 size={20} /> },
@@ -80,7 +82,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         <header className="h-16 bg-white border-b border-gray-200 flex items-center px-6 gap-4">
           {isMobile && (
-            <button onClick={() => setCollapsed(!collapsed)} className="p-2 -ml-2 text-gray-600">
+            <button title="close" onClick={() => setCollapsed(!collapsed)} className="p-2 -ml-2 text-gray-600">
               <Menu size={24} />
             </button>
           )}
