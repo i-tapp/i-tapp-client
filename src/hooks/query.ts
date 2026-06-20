@@ -8,59 +8,62 @@ import { useQuery } from "@tanstack/react-query";
 //   location?: string;
 // };
 
+function buildOpportunityParams(filter: any, page: number, limit: number) {
+  const queryObject: Record<string, any> = { page, limit };
+
+  const selectedDuration = filter?.duration?.find(
+    (d: { checked: boolean; time: string }) => d.checked,
+  )?.time;
+  if (selectedDuration) queryObject.duration = Number(selectedDuration);
+
+  const selectedIndustry =
+    filter?.industry
+      ?.filter((i: { checked: boolean; industry: string }) => i.checked)
+      .map((i: { checked: boolean; industry: string }) => i.industry) ?? [];
+  if (selectedIndustry.length) queryObject.industry = selectedIndustry.join(",");
+
+  const selectedStatus =
+    filter?.status
+      ?.filter((s: { checked: boolean; status: string }) => s.checked)
+      .map((s: { checked: boolean; status: string }) => s.status) ?? [];
+  if (selectedStatus.length) queryObject.status = selectedStatus.join(",");
+
+  if (filter?.location?.trim()) queryObject.location = filter.location.trim();
+  if (filter?.search?.trim()) queryObject.search = filter.search.trim();
+  if (filter?.sortBy === "oldest") queryObject.sort = "oldest";
+
+  return new URLSearchParams(queryObject).toString();
+}
+
+function parseOpportunityResponse(response: any) {
+  const body = response.data;
+  const items = Array.isArray(body) ? body : (body?.data ?? body ?? []);
+  const total = Array.isArray(body) ? body.length : (body?.total ?? body?.count ?? items.length);
+  return { items, total };
+}
+
+// Public / admin — all open opportunities
 export const useFetchOpportunities = (filter?: any, page = 1, limit = 10) => {
   return useQuery({
     queryKey: ["opportunities", filter ?? {}, page, limit],
+    staleTime: 0,
     queryFn: async () => {
-      const queryObject: Record<string, any> = {};
-
-      const selectedDuration = filter?.duration?.find(
-        (d: { checked: boolean; time: string }) => d.checked,
-      )?.time;
-
-      if (selectedDuration) {
-        queryObject.duration = Number(selectedDuration);
-      }
-
-      const selectedIndustry =
-        filter?.industry
-          ?.filter((i: { checked: boolean; industry: string }) => i.checked)
-          .map((i: { checked: boolean; industry: string }) => i.industry) ?? [];
-
-      if (selectedIndustry.length) {
-        queryObject.industry = selectedIndustry.join(",");
-      }
-
-      const selectedStatus =
-        filter?.status
-          ?.filter((s: { checked: boolean; status: string }) => s.checked)
-          .map((s: { checked: boolean; status: string }) => s.status) ?? [];
-
-      if (selectedStatus.length) {
-        queryObject.status = selectedStatus.join(",");
-      }
-
-      if (filter?.location?.trim()) {
-        queryObject.location = filter.location.trim();
-      }
-
-      if (filter?.search?.trim()) {
-        queryObject.search = filter.search.trim();
-      }
-
-      if (filter?.sortBy === "oldest") {
-        queryObject.sort = "oldest";
-      }
-
-      queryObject.page = page;
-      queryObject.limit = limit;
-
-      const qs = new URLSearchParams(queryObject).toString();
+      const qs = buildOpportunityParams(filter, page, limit);
       const response = await query(`/o${qs ? `?${qs}` : ""}`);
-      const body = response.data;
-      const items = Array.isArray(body) ? body : (body?.data ?? body ?? []);
-      const total = Array.isArray(body) ? body.length : (body?.total ?? body?.count ?? items.length);
-      return { items, total };
+      return parseOpportunityResponse(response);
+    },
+  });
+};
+
+// Student portal — SIWES only
+export const useFetchStudentOpportunities = (filter?: any, page = 1, limit = 10) => {
+  return useQuery({
+    queryKey: ["student-opportunities", filter ?? {}, page, limit],
+    staleTime: 0,
+    queryFn: async () => {
+      const qs = buildOpportunityParams(filter, page, limit);
+      const response = await query(`/o/browse${qs ? `?${qs}` : ""}`);
+      return parseOpportunityResponse(response);
     },
   });
 };

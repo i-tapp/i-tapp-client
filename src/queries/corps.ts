@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 export const useFetchCorpsPPA = (filter?: any, page = 1, limit = 10) => {
   return useQuery({
     queryKey: ["corps-ppa", filter ?? {}, page, limit],
+    staleTime: 0,
     queryFn: async () => {
       const params: Record<string, any> = { page, limit };
       if (filter?.state) params.state = filter.state;
