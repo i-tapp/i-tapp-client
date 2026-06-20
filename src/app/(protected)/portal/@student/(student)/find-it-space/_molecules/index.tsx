@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { filters } from "@/config/student";
 import { Opportunity } from "@/types";
-import { useFetchOpportunities } from "@/hooks/query";
+import { useFetchStudentOpportunities } from "@/hooks/query";
 import Results from "./results";
 import { OpportunityDetailsPanel } from "./opportunity-details-panel";
 import { FilterToggleButton } from "./filter-toggle-button";
@@ -26,7 +26,7 @@ export default function FindITSpace() {
   };
 
   const { data: { items: opportunities = [], total: totalOpportunities = 0 } = {}, isLoading, error } =
-    useFetchOpportunities(filter, currentPage, 10);
+    useFetchStudentOpportunities(filter, currentPage, 10);
 
   if (error) return (
     <div className="flex items-center justify-center h-full text-sm text-gray-500">

@@ -61,10 +61,30 @@ type PaginationMeta = {
 
 type OpportunityType = "all" | "siwes" | "ppa";
 
-const TYPE_FILTERS: { value: OpportunityType; label: string; icon: React.ReactNode; description: string }[] = [
-  { value: "all", label: "All", icon: <LayoutGrid className="w-4 h-4" />, description: "All opportunities" },
-  { value: "siwes", label: "SIWES", icon: <GraduationCap className="w-4 h-4" />, description: "Student industrial training" },
-  { value: "ppa", label: "PPA", icon: <BadgeCheck className="w-4 h-4" />, description: "NYSC place of primary assignment" },
+const TYPE_FILTERS: {
+  value: OpportunityType;
+  label: string;
+  icon: React.ReactNode;
+  description: string;
+}[] = [
+  {
+    value: "all",
+    label: "All",
+    icon: <LayoutGrid className="w-4 h-4" />,
+    description: "All opportunities",
+  },
+  {
+    value: "siwes",
+    label: "SIWES",
+    icon: <GraduationCap className="w-4 h-4" />,
+    description: "Student industrial training",
+  },
+  {
+    value: "ppa",
+    label: "PPA",
+    icon: <BadgeCheck className="w-4 h-4" />,
+    description: "NYSC place of primary assignment",
+  },
 ];
 
 export default function OpportunitiesBrowse() {
@@ -75,10 +95,11 @@ export default function OpportunitiesBrowse() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["public-opportunities", page, typeFilter],
+    staleTime: 0,
     queryFn: async () => {
       const params = new URLSearchParams({ page: String(page), limit: "10" });
       if (typeFilter !== "all") params.set("program", typeFilter);
-      const res = await query(`/o/browse?${params.toString()}`);
+      const res = await query(`/o?${params.toString()}`);
       return res as { data: PublicOpportunity[]; pagination: PaginationMeta };
     },
   });
@@ -190,7 +211,10 @@ export default function OpportunitiesBrowse() {
               return (
                 <button
                   key={f.value}
-                  onClick={() => { setTypeFilter(f.value); setPage(1); }}
+                  onClick={() => {
+                    setTypeFilter(f.value);
+                    setPage(1);
+                  }}
                   className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-200 border ${
                     active
                       ? "bg-primary text-white border-primary shadow-sm shadow-primary/25"
@@ -227,10 +251,14 @@ export default function OpportunitiesBrowse() {
               </span>{" "}
               {typeFilter !== "all" ? (
                 <span className="inline-flex items-center gap-1">
-                  <span className="font-semibold text-primary uppercase">{typeFilter}</span>
-                  {" "}opportunities
+                  <span className="font-semibold text-primary uppercase">
+                    {typeFilter}
+                  </span>{" "}
+                  opportunities
                 </span>
-              ) : "opportunities"}
+              ) : (
+                "opportunities"
+              )}
             </p>
             <span className="text-xs text-gray-400 bg-white border border-gray-100 px-3 py-1 rounded-full shadow-sm">
               Page {pagination.currentPage} / {pagination.totalPages}
@@ -287,7 +315,10 @@ export default function OpportunitiesBrowse() {
                 </Button>
 
                 <div className="flex items-center gap-1">
-                  {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
+                  {Array.from(
+                    { length: pagination.totalPages },
+                    (_, i) => i + 1,
+                  )
                     .filter(
                       (p) =>
                         p === 1 ||
