@@ -125,8 +125,8 @@ export default function OpportunityDetailModal({
               <div className="flex items-center gap-3">
                 <div className="w-14 h-14 rounded-xl bg-white/10 border border-white/20 overflow-hidden flex items-center justify-center shrink-0 backdrop-blur-sm">
                   <Image
-                    src={company.logo || dp}
-                    alt={company.name}
+                    src={company?.logo || dp}
+                    alt={company?.name ?? ""}
                     width={56}
                     height={56}
                     className="w-full h-full object-contain"
@@ -137,10 +137,10 @@ export default function OpportunityDetailModal({
                     Company
                   </p>
                   <p className="text-white font-semibold text-sm leading-tight truncate">
-                    {company.name}
+                    {company?.name}
                   </p>
                   <p className="text-white/50 text-[11px] truncate">
-                    {company.industry}
+                    {company?.industry}
                   </p>
                 </div>
               </div>
@@ -246,7 +246,7 @@ export default function OpportunityDetailModal({
               </div>
 
               {/* Location */}
-              {company.location && (
+              {company?.location && (
                 <div className="flex items-start gap-2 text-white/60 text-[12px]">
                   <MapPin className="w-3.5 h-3.5 mt-0.5 shrink-0" />
                   <span className="capitalize">{company.location}</span>
@@ -254,15 +254,15 @@ export default function OpportunityDetailModal({
               )}
 
               {/* Company website */}
-              {company.website && (
+              {company?.website && (
                 <a
-                  href={company.website}
+                  href={company?.website}
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center gap-1.5 text-white/50 hover:text-white text-[12px] transition-colors truncate mt-auto"
                 >
                   <Globe className="w-3.5 h-3.5 shrink-0" />
-                  <span className="truncate">{company.website}</span>
+                  <span className="truncate">{company?.website}</span>
                 </a>
               )}
             </div>
@@ -276,11 +276,11 @@ export default function OpportunityDetailModal({
               <div className="absolute -bottom-6 -left-6 w-28 h-28 rounded-full bg-white/5 pointer-events-none" />
               <div className="relative z-10 flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 overflow-hidden flex items-center justify-center shrink-0">
-                  <Image src={company.logo || dp} alt={company.name} width={48} height={48} className="w-full h-full object-contain" />
+                  <Image src={company?.logo || dp} alt={company?.name ?? ""} width={48} height={48} className="w-full h-full object-contain" />
                 </div>
                 <div className="min-w-0 flex-1 pr-8">
                   <h2 className="text-white font-bold text-base leading-tight capitalize truncate">{title}</h2>
-                  <p className="text-white/60 text-xs mt-0.5 truncate">{company.name} · {company.industry}</p>
+                  <p className="text-white/60 text-xs mt-0.5 truncate">{company?.name} · {company?.industry}</p>
                 </div>
               </div>
               <div className="relative z-10 flex items-center gap-2 flex-wrap">

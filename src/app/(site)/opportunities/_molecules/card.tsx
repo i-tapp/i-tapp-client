@@ -69,8 +69,8 @@ export default function OpportunityCard({
           <div className="relative shrink-0">
             <div className="w-12 h-12 rounded-xl bg-gray-50 border border-gray-100 overflow-hidden flex items-center justify-center">
               <Image
-                src={company.logo || dp}
-                alt={company.name}
+                src={company?.logo || dp}
+                alt={company?.name ?? ""}
                 width={48}
                 height={48}
                 className="w-full h-full object-contain"
@@ -84,7 +84,7 @@ export default function OpportunityCard({
               {title}
             </h3>
             <p className="text-[12.5px] text-gray-500 mt-0.5 font-medium truncate">
-              {company.name}
+              {company?.name}
             </p>
           </div>
 
@@ -125,7 +125,7 @@ export default function OpportunityCard({
             <span className="capitalize">{location}</span>
           </span>
           <span className="text-[11px] bg-gray-50 border border-gray-100 px-2 py-0.5 rounded-full text-gray-500 font-medium truncate max-w-[120px]">
-            {company.industry}
+            {company?.industry}
           </span>
         </div>
 
