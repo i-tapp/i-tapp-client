@@ -9,7 +9,6 @@ export const useLogout = () => {
     useStudentStore.getState().setStudent(null);
     useCompanyStore.getState().setCompany(null);
 
-    // router.replace("/signin");
-    router.refresh();
+    router.replace("/signin");
   };
 };
