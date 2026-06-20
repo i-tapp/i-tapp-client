@@ -11,7 +11,8 @@ import { corpsOnboardingSchema } from "@/schemas";
 import { useAction } from "next-safe-action/hooks";
 import { onBoardCorps } from "@/actions";
 import { useRouter } from "next/navigation";
-import { Check, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Check, ArrowRight, CheckCircle2, LogOut } from "lucide-react";
+import { useLogout } from "@/hooks/use-logout";
 import { Logo } from "@/components/logo";
 import { useFetchMyProfile } from "@/hooks/query";
 
@@ -29,6 +30,7 @@ function getInitials(name?: string) {
 
 export default function CorpsOnboardingPage() {
   const router = useRouter();
+  const logout = useLogout();
   const [onboardingData, setOnboardingData] = useState<Record<string, any>>({});
   const [currentStep, setCurrentStep] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
@@ -115,6 +117,14 @@ export default function CorpsOnboardingPage() {
           <div className="w-7 h-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
             <span className="text-[10px] font-bold text-primary">{getInitials(userName)}</span>
           </div>
+          <button
+            onClick={logout}
+            title="Log out"
+            className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-red-500 transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="hidden sm:inline">Log out</span>
+          </button>
         </div>
       </header>
 
