@@ -25,7 +25,7 @@ import {
 import { usePersona, type Persona } from "@/app/(site)/_context/persona";
 import { useEffect, useState, useRef } from "react";
 
-const SLIDE_DURATION = 6000;
+const SLIDE_DURATION = 15000;
 
 const slides = [
   {

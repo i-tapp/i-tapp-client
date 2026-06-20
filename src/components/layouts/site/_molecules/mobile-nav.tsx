@@ -61,7 +61,7 @@ export function MobileNav() {
             onClick={() => setOpen(false)}
             className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
           >
-            <X className="w-4 h-4" aria-hidden="true" />
+            <X className="w-8 h-8" aria-hidden="true" />
           </button>
         </div>
 

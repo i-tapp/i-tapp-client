@@ -22,7 +22,7 @@ import { toast } from "react-toastify";
 export default function Welcome() {
   const form = useForm<ForStudentsData>({
     resolver: zodResolver(forStudentsSchema),
-    mode: "onChange",
+    mode: "onTouched",
     defaultValues: {
       courseOfStudy: "",
       email: "",
@@ -38,14 +38,12 @@ export default function Welcome() {
   const { execute, isExecuting, hasErrored, result } = useAction(
     createStudent,
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         toast.success("Form submitted successfully");
-        // console.log("Form submitted successfully", data);
         form.reset();
       },
       onError: (error) => {
-        toast.error("Failed to submit form");
-        // console.error("Error submitting form;", error);
+        toast.error(error?.error?.serverError ?? "Failed to submit form. Please try again.");
       },
     },
   );
@@ -76,13 +74,8 @@ export default function Welcome() {
           <form
             className="flex flex-col gap-4"
             onSubmit={form.handleSubmit(
-              (values) => {
-                execute(values);
-                // console.log(values);
-              },
-              (errors) => {
-                // console.error("Form errors:", errors);
-              },
+              (values) => execute(values),
+              () => toast.error("Please fill in all required fields."),
             )}
             id="create-student-form"
           >

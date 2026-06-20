@@ -165,11 +165,11 @@ export function Header() {
     >
       <Wrapper
         className={cn(
-          "flex items-center justify-between !py-0 transition-all duration-300",
+          "flex items-center justify-between py-0! transition-all duration-300",
           scrolled ? "h-14" : "h-16"
         )}
       >
-        <Logo className="mix-blend-multiply" />
+        <Logo className="mix-blend-multiply w-55 lg:w-70" />
 
         <nav className="items-center gap-8 hidden md:flex">
           {app.nav_links.map((link) => (
@@ -214,7 +214,6 @@ export function Header() {
               "hover:shadow-md hover:shadow-primary/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
             )}
           >
-            {/* Shimmer sweep */}
             <span
               className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-500 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none"
               aria-hidden="true"
