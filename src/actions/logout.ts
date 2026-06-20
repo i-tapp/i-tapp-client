@@ -12,8 +12,13 @@ const options = {
 export async function logout() {
   const store = await cookies();
 
-  for (const name of ["session-token", "role", "skip-student-onboarding", "skip-company-onboarding"]) {
-    store.delete(name);
-    store.set(name, "", { ...options, maxAge: 0 });
-  }
+  store.delete("session-token");
+  store.delete("role");
+  store.delete("skip-student-onboarding");
+  store.delete("skip-company-onboarding");
+
+  store.set("session-token", "", { ...options, maxAge: 0 });
+  store.set("role", "", { ...options, maxAge: 0 });
+  store.set("skip-student-onboarding", "", { ...options, maxAge: 0 });
+  store.set("skip-company-onboarding", "", { ...options, maxAge: 0 });
 }
