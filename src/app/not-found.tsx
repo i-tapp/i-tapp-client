@@ -14,7 +14,7 @@ export default function NotFound() {
         The page you’re looking for doesn’t exist.
       </p>
 
-      <Link href="/" className="rounded-md bg-primary px-4 py-2 text-white">
+      <Link href="/" className="rounded bg-primary px-4 py-2 text-white">
         Go home
       </Link>
     </div>
