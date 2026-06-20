@@ -6,10 +6,26 @@ import { usePersona } from "@/app/(site)/_context/persona";
 import { useEffect, useState } from "react";
 
 const ctas = {
-  default: { label: "Get started free", href: "/welcome", icon: <ArrowRight className="w-4 h-4" /> },
-  student: { label: "Find my placement", href: "/welcome", icon: <GraduationCap className="w-4 h-4" /> },
-  corps: { label: "Find my PPA", href: "/corps/signup", icon: <Shield className="w-4 h-4" /> },
-  company: { label: "List opportunities", href: "/company/signup", icon: <Building2 className="w-4 h-4" /> },
+  default: {
+    label: "Get started free",
+    href: "/welcome",
+    icon: <ArrowRight className="w-4 h-4" />,
+  },
+  student: {
+    label: "Find my placement",
+    href: "/welcome",
+    icon: <GraduationCap className="w-4 h-4" />,
+  },
+  corps: {
+    label: "Find my PPA",
+    href: "/corps/signup",
+    icon: <Shield className="w-4 h-4" />,
+  },
+  company: {
+    label: "List opportunities",
+    href: "/company/signup",
+    icon: <Building2 className="w-4 h-4" />,
+  },
 };
 
 export function MobileCtaBar() {
@@ -32,13 +48,13 @@ export function MobileCtaBar() {
       }`}
     >
       {/* Fade above bar */}
-      <div className="h-8 bg-gradient-to-t from-white/80 to-transparent pointer-events-none" />
+      <div className="h-8 pointer-events-none" />
       <div className="bg-white/95 backdrop-blur-md border-t border-gray-100 px-4 py-3 pb-safe">
         <Link
           href={cta.href}
-          className="flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl bg-primary text-white text-sm font-black shadow-lg shadow-primary/30 hover:opacity-90 active:scale-[0.98] transition-all duration-200"
+          className="flex items-center justify-center gap-2 w-full py-3.5 rounded bg-primary text-white text-sm font-black shadow-lg shadow-primary/30 hover:opacity-90 active:scale-[0.98] transition-all duration-200"
         >
-          {cta.icon}
+          {/* {cta.icon} */}
           {cta.label}
           <ArrowRight className="w-4 h-4" />
         </Link>
