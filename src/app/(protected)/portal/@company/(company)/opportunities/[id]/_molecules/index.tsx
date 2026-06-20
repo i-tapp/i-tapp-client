@@ -92,6 +92,7 @@ export default function OpportunityDetailsPage() {
       schoolLetterRequired: opportunity.schoolLetterRequired,
       preferredFieldsOfStudy:
         opportunity.preferredFields?.map((f) => f.field) ?? [],
+      programType: (opportunity.programType as "siwes" | "ppa") ?? "siwes",
     };
   };
 
