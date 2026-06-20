@@ -133,7 +133,7 @@ export const opportunityFormSchema = z.object({
   applicationDeadline: z.string().optional(),
   autoCloseOnDeadline: z.boolean().optional(),
   preferredFieldsOfStudy: z.array(z.string()).optional(),
-  programType: z.enum(["siwes", "ppa"]).optional(),
+  programType: z.enum(["siwes", "ppa"], { error: "Please select a program type" }),
   // skills: z.string().optional(),
 });
 
