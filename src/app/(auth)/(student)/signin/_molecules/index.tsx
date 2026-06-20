@@ -49,7 +49,7 @@ export function StudentSignIn() {
       toast.success("Welcome back!");
       const dest = ROLE_REDIRECTS[user?.role] ?? "/portal";
       router.replace(
-        profile?.isOnboarded === false ? "/portal/onboarding" : dest,
+        user?.role === "student" && !profile?.isOnboarded ? "/portal/onboarding" : dest,
       );
     },
     onError(error) {
