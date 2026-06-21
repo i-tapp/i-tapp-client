@@ -36,11 +36,8 @@ function buildOpportunityParams(filter: any, page: number, limit: number) {
 }
 
 function parseOpportunityResponse(response: any) {
-  const body = response.data;
-  const items = Array.isArray(body) ? body : (body?.data ?? body ?? []);
-  const total = Array.isArray(body)
-    ? body.length
-    : (body?.pagination?.totalItems ?? body?.total ?? body?.count ?? items.length);
+  const items = Array.isArray(response?.data) ? response.data : (response?.data?.data ?? response?.data ?? []);
+  const total = response?.pagination?.totalItems ?? response?.data?.pagination?.totalItems ?? response?.total ?? items.length;
   return { items, total };
 }
 
