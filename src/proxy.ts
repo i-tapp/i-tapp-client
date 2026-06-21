@@ -155,7 +155,7 @@ export async function proxy(req: NextRequest) {
     if (isCorpsRole) {
       const isCorpsOnboardingRoute = pathname.startsWith("/portal/onboarding");
       if (corpsOnboarded && isCorpsOnboardingRoute) {
-        return NextResponse.redirect(new URL("/portal/dashboard", req.url));
+        return NextResponse.redirect(new URL("/portal/find-ppa", req.url));
       }
       if (!corpsOnboarded && !isCorpsOnboardingRoute) {
         return NextResponse.redirect(new URL("/portal/onboarding/", req.url));

@@ -17,13 +17,12 @@ export default function AuthLayoutUi({
           </Link>
           {children}
         </div>
-        <div className="hidden lg:flex w-full lg:w-1/2 justify-center">
-          <div className="relative w-full max-w-md aspect-4/4 rounded-md overflow-hidden shadow-sm">
-            {" "}
+        <div className="hidden lg:flex w-full lg:w-1/2 justify-center items-center">
+          <div className="relative w-full max-w-sm aspect-[3/4] overflow-hidden shadow-md">
             <Image
               src={LoginImg}
               alt="Company Banner"
-              className="object-contain"
+              className="object-cover"
               fill
               priority
             />

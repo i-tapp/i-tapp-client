@@ -4,6 +4,7 @@ import dee from "@/assets/images/dee.jpg";
 import egbe from "@/assets/images/egbe.png";
 import jutin from "@/assets/images/jutin.png";
 import jerry from "@/assets/images/jerry.png";
+import joy from "@/assets/images/joy.jpeg";
 
 const team = [
   {
@@ -39,6 +40,13 @@ const team = [
     role: "Chief Technology Officer",
     bio: "Architects and leads the engineering behind PlaceIT — from backend infrastructure to the interfaces students and companies use daily.",
     image: jutin,
+    position: "center center",
+  },
+  {
+    name: "Joy Efurhieme",
+    role: "Social Media Manager",
+    bio: "Building the PlaceIT community, designs and executes strategies across platforms to elevate brand presence, drive engagement, and communal growth.",
+    image: joy,
     position: "center center",
   },
 ];

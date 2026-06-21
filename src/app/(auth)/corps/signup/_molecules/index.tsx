@@ -30,7 +30,6 @@ export default function CorpsSignup() {
       firstName: "",
       lastName: "",
       password: "",
-      confirmPassword: "",
     },
   });
 
@@ -40,7 +39,9 @@ export default function CorpsSignup() {
       router.replace("/signin");
     },
     onError: (error) => {
-      toast.error(error?.error?.serverError ?? "Sign up failed. Please try again.");
+      toast.error(
+        error?.error?.serverError ?? "Sign up failed. Please try again.",
+      );
     },
   });
 
@@ -49,7 +50,9 @@ export default function CorpsSignup() {
       {/* Header */}
       <div className="flex flex-col items-center gap-3 mb-8">
         <div className="text-center">
-          <h1 className="text-2xl font-black text-gray-900">Corps Member Sign Up</h1>
+          <h1 className="text-2xl font-black text-gray-900">
+            Corps Member Sign Up
+          </h1>
           <p className="text-sm text-gray-500 mt-1">
             Find your NYSC Place of Primary Assignment
           </p>
@@ -125,21 +128,11 @@ export default function CorpsSignup() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input {...field} type="password" placeholder="Min. 6 characters" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="confirmPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm password</FormLabel>
-                <FormControl>
-                  <Input {...field} type="password" placeholder="Repeat password" />
+                  <Input
+                    {...field}
+                    type="password"
+                    placeholder="Min. 6 characters"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -162,13 +155,19 @@ export default function CorpsSignup() {
 
       <p className="mt-6 text-center text-sm text-gray-500">
         Already have an account?{" "}
-        <Link href="/signin" className="text-primary font-semibold hover:underline">
+        <Link
+          href="/signin"
+          className="text-primary font-semibold hover:underline"
+        >
           Sign in
         </Link>
       </p>
       <p className="mt-2 text-center text-sm text-gray-500">
         Looking for SIWES?{" "}
-        <Link href="/welcome" className="text-primary font-semibold hover:underline">
+        <Link
+          href="/welcome"
+          className="text-primary font-semibold hover:underline"
+        >
           Student sign up
         </Link>
       </p>

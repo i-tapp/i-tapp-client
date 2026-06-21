@@ -49,29 +49,25 @@ export default function ClaimAccountPage() {
 
   if (!token) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <div className="w-full max-w-sm flex flex-col gap-5">
-          <div className="text-center space-y-1">
-            <p className="font-semibold text-red-600">Missing token</p>
-            <p className="text-sm text-muted-foreground">
-              Please open the invite link from your email again.
-            </p>
-          </div>
-
-          <Link
-            href="/signin"
-            className="text-center text-xs underline underline-offset-4 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Back to sign in
-          </Link>
+      <div className="w-full max-w-[350px] m-auto flex flex-col gap-5">
+        <div className="text-center space-y-1">
+          <p className="font-semibold text-red-600">Missing token</p>
+          <p className="text-sm text-muted-foreground">
+            Please open the invite link from your email again.
+          </p>
         </div>
+        <Link
+          href="/signin"
+          className="text-center text-xs underline underline-offset-4 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          Back to sign in
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-sm flex flex-col gap-5">
+    <div className="w-full max-w-[350px] m-auto flex flex-col gap-5">
         {/* Header */}
         <div className="text-center space-y-1">
           <p className="font-semibold">Activate your account</p>
@@ -145,6 +141,5 @@ export default function ClaimAccountPage() {
           Back to sign in
         </Link>
       </div>
-    </div>
   );
 }
