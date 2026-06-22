@@ -20,15 +20,31 @@ import { ApplicantCard } from "@/components/applicant-card";
 import { useFetchApplicationsCount } from "@/queries/company";
 import { Spinner } from "@/components/spinner";
 import Welcome from "./welcome";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CompanyStatus } from "@/types/enums";
 import { useCommonStore, useCompanyStore } from "@/lib/store";
+import { useAction } from "next-safe-action/hooks";
+import { claimListings } from "@/actions";
+import { toast } from "react-toastify";
+import { useSearchParams } from "next/navigation";
 
 export function Dashboard() {
   const { data, isLoading } = useFetchAllCompanyApplications();
   const { data: applicationsCount } = useFetchApplicationsCount();
   const { data: opportunities } = useFetchCompanyOpportunities();
   const { data: companyProfile } = useFetchCompanyProfile();
+  const searchParams = useSearchParams();
+
+  const { execute: claim } = useAction(claimListings, {
+    onSuccess: () => toast.success("Listings claimed successfully!"),
+    onError: (err) =>
+      toast.warn(err?.error?.serverError ?? "Listing claim failed — contact support if applications aren't visible."),
+  });
+
+  useEffect(() => {
+    const token = searchParams.get("claim");
+    if (token) claim({ token });
+  }, []);
 
   const { dismissed, setDismissed } = useCompanyStore();
 
