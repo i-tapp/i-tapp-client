@@ -1,6 +1,8 @@
+"use client";
+
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -14,14 +16,26 @@ import Input from "@/components/input";
 import { ButtonWithLoader } from "@/components/button-with-loader";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
-import { companySignup } from "@/actions";
+import { useRouter, useSearchParams } from "next/navigation";
+import { companySignup, claimListings } from "@/actions";
 import { companySignupSchema } from "@/schemas";
 
 type CompanySignupSchema = z.infer<typeof companySignupSchema>;
 
 export function CompanyInfo1() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const claim = searchParams.get("claim");
+    if (claim) sessionStorage.setItem("listingClaimToken", claim);
+  }, [searchParams]);
+
+  const { execute: claim } = useAction(claimListings, {
+    onSuccess: () => toast.success("Listings claimed successfully!"),
+    onError: (err) =>
+      toast.warn(err?.error?.serverError ?? "Listing claim failed — contact support if applications aren't visible."),
+  });
 
   const form = useForm<CompanySignupSchema>({
     mode: "onChange",
@@ -37,11 +51,14 @@ export function CompanyInfo1() {
   const { execute, isExecuting, result, hasErrored } = useAction(
     companySignup,
     {
-      onSuccess(data) {
-        if (data) {
-          toast.success("Company signup successful!");
-          router.push("/company/signin");
+      onSuccess() {
+        toast.success("Company signup successful!");
+        const claimToken = sessionStorage.getItem("listingClaimToken");
+        if (claimToken) {
+          sessionStorage.removeItem("listingClaimToken");
+          claim({ token: claimToken });
         }
+        router.push("/company/signin");
       },
       onError(error) {
         toast.error(error?.error?.serverError ?? "Sign up failed. Please try again.");

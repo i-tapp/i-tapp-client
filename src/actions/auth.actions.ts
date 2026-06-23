@@ -118,6 +118,13 @@ export const companySignup = actionClient
 
 export const signinCorps = signin;
 
+export const claimListings = actionClient
+  .inputSchema(z.object({ token: z.string() }))
+  .action(async ({ parsedInput: { token } }) => {
+    const response = await mutate(`/auth/claim-listings?token=${token}`, {});
+    return response;
+  });
+
 export const corpsSignup = actionClient
   .inputSchema(corpsSignupSchema)
   .action(
