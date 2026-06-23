@@ -15,6 +15,17 @@ export const applyToPPA = actionClient
     return response;
   });
 
+export const initializeCorpsPayment = actionClient
+  .inputSchema(z.object({
+    opportunityId: z.string(),
+    coverLetter: z.string().optional(),
+    resumeUrl: z.string().optional(),
+  }))
+  .action(async ({ parsedInput }) => {
+    const response = await mutate("/payments/initialize/corps", parsedInput, "POST");
+    return response as { authorizationUrl: string; reference: string };
+  });
+
 export const withdrawPPAApplication = actionClient
   .inputSchema(z.object({ id: z.string().min(1) }))
   .action(async ({ parsedInput: { id } }) => {

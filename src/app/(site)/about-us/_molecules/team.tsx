@@ -4,7 +4,7 @@ import dee from "@/assets/images/dee.jpg";
 import egbe from "@/assets/images/egbe.png";
 import jutin from "@/assets/images/jutin.png";
 import jerry from "@/assets/images/jerry.png";
-import joy from "@/assets/images/joy.jpeg";
+import joy from "@/assets/images/jjoy.jpeg";
 
 const team = [
   {
@@ -44,7 +44,7 @@ const team = [
   },
   {
     name: "Joy Efurhieme",
-    role: "Social Media Manager",
+    role: "Social Media and Content Strategist",
     bio: "Building the PlaceIT community, designs and executes strategies across platforms to elevate brand presence, drive engagement, and communal growth.",
     image: joy,
     position: "center center",
