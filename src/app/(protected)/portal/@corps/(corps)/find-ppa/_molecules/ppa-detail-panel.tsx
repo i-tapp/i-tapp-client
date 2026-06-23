@@ -1,7 +1,7 @@
 "use client";
 
 import { useFetchCorpsPPADetail, useFetchCorpsPPAApplicationStatus } from "@/queries/corps";
-import { applyToPPA, withdrawPPAApplication, saveCorpsPPA } from "@/actions";
+import { applyToPPA, withdrawPPAApplication, saveCorpsPPA, initializeCorpsPayment } from "@/actions";
 import { Spinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
 import { useAction } from "next-safe-action/hooks";
@@ -23,21 +23,33 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
   const { data: appStatus } = useFetchCorpsPPAApplicationStatus(id);
   const [coverLetter, setCoverLetter] = useState("");
   const [showApplyModal, setShowApplyModal] = useState(false);
+  const [pendingCoverLetter, setPendingCoverLetter] = useState<string | undefined>();
+  const [paymentPrompt, setPaymentPrompt] = useState<{ fee: number } | null>(null);
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ["corps-ppa-status", id] });
     queryClient.invalidateQueries({ queryKey: ["corps-applications"] });
   };
 
+  const { execute: initPayment, isExecuting: isInitingPayment } = useAction(initializeCorpsPayment, {
+    onSuccess: (res) => {
+      if (res?.data?.authorizationUrl) {
+        window.location.href = res.data.authorizationUrl;
+      }
+    },
+    onError: () => toast.error("Failed to initialize payment. Please try again."),
+  });
+
   const { execute: apply, isExecuting: isApplying } = useAction(applyToPPA, {
     onSuccess: (res) => {
       if (res?.data?.requiresPayment) {
-        toast.info(`Payment of ₦${res.data.fee?.toLocaleString()} required to complete application.`);
+        setShowApplyModal(false);
+        setPaymentPrompt({ fee: res.data.fee ?? 1000 });
       } else {
         toast.success("Application submitted!");
         invalidate();
+        setShowApplyModal(false);
       }
-      setShowApplyModal(false);
     },
     onError: () => toast.error("Application failed. Please try again."),
   });
@@ -281,8 +293,16 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
               className="w-full rounded-lg border border-gray-200 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary resize-none"
             />
             <div className="flex gap-2">
-              <Button disabled={isApplying} onClick={() => apply({ id, coverLetter: coverLetter || undefined })} className="flex-1">
-                {isApplying ? "Submitting..." : "Submit Application"}
+              <Button
+                disabled={isApplying || isInitingPayment}
+                onClick={() => {
+                  const cl = coverLetter || undefined;
+                  setPendingCoverLetter(cl);
+                  apply({ id, coverLetter: cl });
+                }}
+                className="flex-1"
+              >
+                {isApplying || isInitingPayment ? "Submitting..." : "Submit Application"}
               </Button>
               <Button variant="outline" onClick={() => setShowApplyModal(false)}>Cancel</Button>
             </div>
@@ -293,6 +313,47 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
           </Button>
         )}
       </div>
+
+      {/* ── Payment confirmation modal ── */}
+      {paymentPrompt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 flex flex-col gap-4">
+            <div className="flex flex-col items-center text-center gap-2">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <Banknote className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-base font-bold text-gray-900">Payment Required</h3>
+              <p className="text-sm text-gray-500">
+                A one-time application fee is required to proceed. You won&apos;t be charged again for future applications.
+              </p>
+            </div>
+            <div className="bg-gray-50 rounded-xl px-4 py-3 flex items-center justify-between">
+              <span className="text-sm text-gray-500 font-medium">Amount</span>
+              <span className="text-lg font-black text-gray-900">₦{paymentPrompt.fee.toLocaleString()}</span>
+            </div>
+            <div className="flex gap-2 mt-1">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => setPaymentPrompt(null)}
+                disabled={isInitingPayment}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="flex-1"
+                disabled={isInitingPayment}
+                onClick={() => {
+                  initPayment({ opportunityId: id, coverLetter: pendingCoverLetter });
+                  setPaymentPrompt(null);
+                }}
+              >
+                {isInitingPayment ? "Redirecting..." : "Pay & Apply"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
