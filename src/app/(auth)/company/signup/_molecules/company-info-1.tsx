@@ -88,7 +88,7 @@ export function CompanyInfo1() {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Company Name</FormLabel>
+                <FormLabel>Company Name <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
                   <Input {...field} placeholder="Company name" />
                 </FormControl>
@@ -101,7 +101,7 @@ export function CompanyInfo1() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Email <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -136,11 +136,11 @@ export function CompanyInfo1() {
             name="cacNumber"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>CAC Number <span className="text-muted-foreground font-normal">(optional)</span></FormLabel>
+                <FormLabel>CAC Number <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="e.g. RC-1234567" />
+                  <Input {...field} placeholder="e.g. RC 1210548 or BN 373466" />
                 </FormControl>
-                <p className="text-xs text-muted-foreground mt-1">Providing your CAC number speeds up verification.</p>
+                <p className="text-xs text-muted-foreground mt-1">RC or BN number as registered with CAC.</p>
                 <FormMessage />
               </FormItem>
             )}
@@ -150,7 +150,7 @@ export function CompanyInfo1() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>Password <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
                   <Input
                     {...field}

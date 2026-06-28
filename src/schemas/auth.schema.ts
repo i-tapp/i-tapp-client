@@ -84,7 +84,10 @@ export const companySignupSchema = z.object({
     .email("Please enter a valid email address")
     .min(1, "Email address is required"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  cacNumber: z.string().optional(),
+  cacNumber: z
+    .string()
+    .min(1, "CAC number is required")
+    .regex(/^(RC|BN)\s?\d{4,}$/i, "Enter a valid CAC number (e.g. RC 1210548 or BN 373466)"),
 });
 
 export const companyProfileSchema = z.object({
