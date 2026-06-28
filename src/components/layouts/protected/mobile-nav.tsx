@@ -6,10 +6,11 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu } from "iconsax-reactjs";
 import { X } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useCompanyStore } from "@/lib/store/company";
 import { useStudentStore } from "@/lib/store";
+import { useFetchCorpsProfile } from "@/queries/corps";
 import { cn } from "@/utils/tailwind";
 import { useLogout } from "@/hooks/use-logout";
 
@@ -28,6 +29,8 @@ export function MobileNav({ links }: MobileNavProps) {
 
   const company = useCompanyStore((s) => s.company);
   const student = useStudentStore((s) => s.student);
+  const { data: corpsData } = useFetchCorpsProfile();
+  const corps = corpsData?.corps ?? corpsData ?? null;
   const logout = useLogout();
 
   const user = useMemo(() => {
@@ -49,13 +52,22 @@ export function MobileNav({ links }: MobileNavProps) {
       };
     }
 
+    if (corps) {
+      return {
+        name: `${corps.firstName ?? ""} ${corps.lastName ?? ""}`.trim() || "Corps Member",
+        avatar: corps.profileImageUrl ?? "/applicant.png",
+        profileHref: "/portal/profile",
+        meta: "Corps Member",
+      };
+    }
+
     return {
       name: "Guest User",
       avatar: "/applicant.png",
       profileHref: null as string | null,
       meta: null as string | null,
     };
-  }, [company, student]);
+  }, [company, student, corps]);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -72,6 +84,7 @@ export function MobileNav({ links }: MobileNavProps) {
       </SheetTrigger>
 
       <SheetContent className="w-full max-w-[320px] bg-white p-0 md:hidden">
+        <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-4 border-b">
           <p className="text-sm font-semibold">Menu</p>
@@ -106,6 +119,7 @@ export function MobileNav({ links }: MobileNavProps) {
                 <Link
                   href={user.profileHref}
                   className="text-xs text-primary hover:underline"
+                  onClick={() => setOpen(false)}
                 >
                   View profile
                 </Link>
