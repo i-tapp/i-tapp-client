@@ -11,7 +11,7 @@ const faqData = {
     { question: "Who can use PlaceIT?", answer: "Students looking for SIWES / IT placements, NYSC corps members seeking PPA opportunities, and companies wanting to list placement slots for either or both groups." },
     { question: "Is PlaceIT free to use?", answer: "PlaceIT uses a freemium model. Basic applications are free. BulkApply and cold-email outreach are available as premium add-ons." },
     { question: "Are companies on PlaceIT verified?", answer: "Yes. Every company is verified with CAC registration before they can post opportunities. Verified companies display a badge on their profile and listings." },
-    { question: "How can I contact PlaceIT support?", answer: "Reach our support team at support@i-tapp.com. We respond to every message personally and aim to get back to you within 24 hours." },
+    { question: "How can I contact PlaceIT support?", answer: "Reach our support team at support@getplaceit.com. We respond to every message personally and aim to get back to you within 24 hours." },
   ],
   student: [
     { question: "What is SIWES and how does PlaceIT help?", answer: "SIWES (Student Industrial Work Experience Scheme) requires students in technical courses to undergo industrial training. PlaceIT helps you find, apply for, and track SIWES placements at verified companies — without cold emails or walk-ins." },
@@ -61,7 +61,7 @@ export function Faqs() {
           </h2>
           <p className="mt-4 text-gray-500 text-base leading-relaxed">
             Everything you need to know before you sign up. Still not sure?{" "}
-            <a href="mailto:support@i-tapp.com" className="text-primary hover:underline font-semibold">
+            <a href="mailto:support@getplaceit.com" className="text-primary hover:underline font-semibold">
               Email us
             </a>
             {" "}— we reply fast.
@@ -113,7 +113,7 @@ export function Faqs() {
               <ArrowRight className="w-4 h-4" />
             </Link>
             <a
-              href="mailto:support@i-tapp.com"
+              href="mailto:support@getplaceit.com"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-gray-200 bg-white text-gray-700 text-sm font-semibold hover:border-primary/30 hover:text-primary transition-colors justify-center"
             >
               <MessageCircle className="w-4 h-4" />

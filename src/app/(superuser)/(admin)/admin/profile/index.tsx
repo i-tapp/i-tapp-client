@@ -61,7 +61,7 @@ export default function AdminProfilePage() {
             <label className="text-sm font-medium text-gray-700 mb-1">
               Email
             </label>
-            <Input placeholder={data?.user?.email ?? "admin@i-tapp.com"} />
+            <Input placeholder={data?.user?.email ?? "admin@getplaceit.com"} />
           </div>
 
           {/* Buttons */}

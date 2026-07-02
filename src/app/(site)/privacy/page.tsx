@@ -156,7 +156,7 @@ export default function Privacy() {
             Lodge a complaint with the Nigeria Data Protection Commission if you
             believe your privacy rights have been violated.
           </li>
-          <li>To exercise these rights, contact us at support@i-tapp.com </li>
+          <li>To exercise these rights, contact us at support@getplaceit.com </li>
         </ul>
       </div>
       <div>
@@ -194,7 +194,7 @@ export default function Privacy() {
           We do not knowingly collect data from minors without parental consent.
           We may update this policy from time to time. Contact Us For questions,
           complaints, or requests regarding your privacy, please reach out to:
-          Email: support@i-tapp.com Address: Center for entrepreneurship
+          Email: support@getplaceit.com Address: Center for entrepreneurship
           development in the Federal University of Petroleum Resources.
         </p>
       </div>
@@ -211,7 +211,7 @@ export default function Privacy() {
         <h2 className=" font-bold text-md"> Contact Us</h2>
         <p>
           For questions, complaints, or requests regarding your privacy, please
-          reach out to: Email: support@i-tapp.com
+          reach out to: Email: support@getplaceit.com
         </p>
         <p>
           Address: Center for entrepreneurship development in the Federal

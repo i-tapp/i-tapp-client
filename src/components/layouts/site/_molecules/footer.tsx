@@ -128,10 +128,10 @@ export function Footer() {
             <span>Built for Nigerian students</span>
             <span className="w-px h-3 bg-white/15" />
             <a
-              href="mailto:support@i-tapp.com"
+              href="mailto:support@getplaceit.com"
               className="hover:text-white/60 transition-colors"
             >
-              support@i-tapp.com
+              support@getplaceit.com
             </a>
           </div>
         </div>

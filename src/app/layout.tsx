@@ -24,7 +24,7 @@ export const opensans = Open_Sans({
   variable: "--font-opensans",
   display: "swap",
 });
-const siteUrl = "https://www.i-tapp.com";
+const siteUrl = "https://www.getplaceit.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -115,6 +115,18 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="google-adsense-account" content="ca-pub-2231106094660297" />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-1YSPPC5H7Z"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-1YSPPC5H7Z');
+          `}
+        </Script>
         <Script
           id="website-structured-data"
           type="application/ld+json"
