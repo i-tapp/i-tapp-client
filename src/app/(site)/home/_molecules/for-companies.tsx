@@ -84,7 +84,7 @@ export function ForCompanies() {
                   <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
                 </div>
-                <span className="ml-2 text-[11px] text-gray-400 font-mono">company.i-tapp.com/dashboard</span>
+                <span className="ml-2 text-[11px] text-gray-400 font-mono">company.getplaceit.com/dashboard</span>
               </div>
 
               {/* Dashboard body */}

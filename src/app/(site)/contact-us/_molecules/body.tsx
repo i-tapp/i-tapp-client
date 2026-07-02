@@ -10,8 +10,8 @@ const contactInfo = [
   {
     icon: <Mail className="w-5 h-5" />,
     label: "Email us",
-    value: "support@i-tapp.com",
-    href: "mailto:support@i-tapp.com",
+    value: "support@getplaceit.com",
+    href: "mailto:support@getplaceit.com",
     accent: "bg-primary/8 text-primary border-primary/15",
   },
   {

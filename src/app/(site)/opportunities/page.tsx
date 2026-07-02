@@ -4,9 +4,10 @@ import { query } from "@/lib/api";
 import OpportunitiesBrowse from "./_molecules/browse";
 
 export const metadata: Metadata = {
-  title: "Opportunities | PlaceIT",
+  title: "Opportunities",
   description:
-    "Browse available industrial training placement opportunities for students across Nigeria.",
+    "Browse available SIWES industrial training and NYSC PPA placement opportunities across verified companies in Nigeria.",
+  alternates: { canonical: "/opportunities" },
 };
 
 export default async function OpportunitiesPage() {

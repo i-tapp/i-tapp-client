@@ -44,7 +44,7 @@ export default function page() {
           accurate and complete information during registration. You must
           maintain the confidentiality of your account login credentials (e.g.,
           username and password). You agree to notify us immediately of any
-          unauthorized use of your account via support@i-tapp.com. <br />
+          unauthorized use of your account via support@getplaceit.com. <br />
           i-Tapp is not liable for losses resulting from unauthorized access due
           to your failure to secure your account.
         </li>
@@ -73,7 +73,7 @@ export default function page() {
           data with employers, SIWES coordinators, or institutions for the
           purpose of facilitating placements, with your consent where required.
           You have the right to request access, correction, or deletion of your
-          data by contacting support@i-tapp.com
+          data by contacting support@getplaceit.com
         </li>
         <li>
           Intellectual Property: All content on i-Tapp, including text, logos,
@@ -94,7 +94,7 @@ export default function page() {
           Termination of Access: We reserve the right to suspend or terminate
           your account at our discretion, including for violations of these
           Terms, fraudulent activity, or misuse of the platform. You may
-          terminate your account at any time by contacting support@i-tapp.com.
+          terminate your account at any time by contacting support@getplaceit.com.
         </li>
         <li>
           Limitation of Liability: i-Tapp provides the platform &quot;as
@@ -116,7 +116,7 @@ export default function page() {
         </li>
       </ol>
       Contact Information For questions, complaints, or support, please contact
-      us at support@i-tapp.com or +2348081047072
+      us at support@getplaceit.com or +2348081047072
     </Wrapper>
   );
 }
