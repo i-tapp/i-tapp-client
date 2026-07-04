@@ -34,6 +34,7 @@ interface AdminLayoutProps {
 const menuItems = [
   { name: "Home", href: "/admin", icon: <Home size={20} /> },
   { name: "Pending Approvals", href: "/admin/pending", icon: <AlertTriangle size={20} /> },
+  { name: "Users", href: "/admin/users", icon: <Users size={20} /> },
   { name: "Students", href: "/admin/student", icon: <Users size={20} /> },
   { name: "Corps Members", href: "/admin/corps", icon: <BadgeCheck size={20} /> },
   { name: "Companies", href: "/admin/company", icon: <Building size={20} /> },
