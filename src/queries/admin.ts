@@ -204,7 +204,18 @@ const useFetchAdminCorpsApplications = (params?: { status?: string; page?: numbe
   });
 };
 
+const useFetchAllUsers = (page = 1, limit = 30) => {
+  return useQuery({
+    queryKey: ["admin-all-users", page, limit],
+    queryFn: async () => {
+      const response = await query(`/admin/users?page=${page}&limit=${limit}`);
+      return response as { data: any[]; total: number; page: number; limit: number };
+    },
+  });
+};
+
 export {
+  useFetchAllUsers,
   useFetchCompanies,
   useFetchAllStudents,
   useFetchStudentStats,

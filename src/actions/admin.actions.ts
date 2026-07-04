@@ -294,6 +294,13 @@ export const sendSystemEmail = actionClient
     return { success: true, data: response };
   });
 
+export const toggleUserActive = actionClient
+  .inputSchema(z.object({ userId: z.string().min(1), isActive: z.boolean() }))
+  .action(async ({ parsedInput: { userId, isActive } }) => {
+    const response = await mutate(`/admin/users/${userId}/active`, { isActive }, "PATCH");
+    return { success: true, data: response };
+  });
+
 // export const logout = actionClient.schema(logoutSchema).action(async ({}) => {
 //   (await cookies()).set("token", "", {
 //     httpOnly: true,
