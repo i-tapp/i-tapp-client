@@ -15,6 +15,8 @@ import { cn } from "@/utils/tailwind";
 import { useCompanyStore } from "@/lib/store/company";
 import { useStudentStore } from "@/lib/store";
 import { useFetchNotifications, useFetchUnreadCount } from "@/queries";
+import { useLogout } from "@/hooks/use-logout";
+import { LogOut, User } from "lucide-react";
 import moment from "moment";
 
 export function Header({ link }: { link: { text: string; href: string }[] }) {
@@ -22,6 +24,7 @@ export function Header({ link }: { link: { text: string; href: string }[] }) {
   const company = useCompanyStore((c) => c.company);
   const student = useStudentStore((c) => c.student);
   const parentRoute = pathname.split("/")[2];
+  const logout = useLogout();
   const { data: notifications = [] } = useFetchNotifications();
   const { data: unreadCount = 0 } = useFetchUnreadCount();
   const recent = notifications.slice(0, 3);
@@ -88,21 +91,33 @@ export function Header({ link }: { link: { text: string; href: string }[] }) {
             </PopoverContent>
           </Popover>
 
-          <Link href="/portal/profile">
-            <div className="rounded-full h-10 w-10">
-              <Image
-                src={
-                  company?.avatarUrl ||
-                  student?.profileImage ||
-                  "/applicant.png"
-                }
-                alt=""
-                className="object-cover w-full h-full rounded-full"
-                width={35}
-                height={35}
-              />
-            </div>
-          </Link>
+          <Popover>
+            <PopoverTrigger asChild>
+              <button type="button" className="rounded-full h-10 w-10 cursor-pointer">
+                <Image
+                  src={company?.avatarUrl || student?.profileImage || "/applicant.png"}
+                  alt=""
+                  className="object-cover w-full h-full rounded-full"
+                  width={35}
+                  height={35}
+                />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="p-1.5 w-44" align="end">
+              <Link
+                href="/portal/profile"
+                className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-50 text-gray-700 transition-colors"
+              >
+                <User className="w-4 h-4 text-gray-400" /> Profile
+              </Link>
+              <button
+                onClick={logout}
+                className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-red-50 text-red-600 transition-colors"
+              >
+                <LogOut className="w-4 h-4" /> Log out
+              </button>
+            </PopoverContent>
+          </Popover>
         </div>
         <MobileNav links={link} />
       </div>
