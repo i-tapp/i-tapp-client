@@ -88,6 +88,7 @@ export const companySignupSchema = z.object({
     .string()
     .min(1, "CAC number is required")
     .regex(/^(RC|BN)\s?\d{4,}$/i, "Enter a valid CAC number (e.g. RC 1210548 or BN 373466)"),
+  claimToken: z.string().optional(),
 });
 
 export const companyProfileSchema = z.object({

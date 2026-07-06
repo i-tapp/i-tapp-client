@@ -17,7 +17,7 @@ import { ButtonWithLoader } from "@/components/button-with-loader";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "react-toastify";
 import { useRouter, useSearchParams } from "next/navigation";
-import { companySignup, claimListings } from "@/actions";
+import { companySignup } from "@/actions";
 import { companySignupSchema } from "@/schemas";
 
 type CompanySignupSchema = z.infer<typeof companySignupSchema>;
@@ -30,12 +30,6 @@ export function CompanyInfo1() {
     const claim = searchParams.get("claim");
     if (claim) sessionStorage.setItem("listingClaimToken", claim);
   }, [searchParams]);
-
-  const { execute: claim } = useAction(claimListings, {
-    onSuccess: () => toast.success("Listings claimed successfully!"),
-    onError: (err) =>
-      toast.warn(err?.error?.serverError ?? "Listing claim failed — contact support if applications aren't visible."),
-  });
 
   const form = useForm<CompanySignupSchema>({
     mode: "onChange",
@@ -52,12 +46,8 @@ export function CompanyInfo1() {
     companySignup,
     {
       onSuccess() {
+        sessionStorage.removeItem("listingClaimToken");
         toast.success("Company signup successful!");
-        const claimToken = sessionStorage.getItem("listingClaimToken");
-        if (claimToken) {
-          sessionStorage.removeItem("listingClaimToken");
-          claim({ token: claimToken });
-        }
         router.push("/company/signin");
       },
       onError(error) {
@@ -67,7 +57,8 @@ export function CompanyInfo1() {
   );
 
   const onSubmit = (data: CompanySignupSchema) => {
-    execute(data);
+    const claimToken = sessionStorage.getItem("listingClaimToken") ?? undefined;
+    execute({ ...data, claimToken });
   };
 
   return (
