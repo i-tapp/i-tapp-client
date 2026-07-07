@@ -25,6 +25,7 @@ async function me(token: string) {
     const res = await fetch(`${API_BASE_URL}/auth/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
+        "G-PlaceIT-build": process.env.NEXT_PUBLIC_BUILD_KEY ?? "",
       },
       cache: "no-store", // important in middleware
     });

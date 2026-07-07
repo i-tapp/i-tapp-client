@@ -23,6 +23,7 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    config.headers["G-PlaceIT-build"] = process.env.NEXT_PUBLIC_BUILD_KEY;
     return config;
   },
   (error) => {
