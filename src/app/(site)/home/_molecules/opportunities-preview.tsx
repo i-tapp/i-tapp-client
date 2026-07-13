@@ -36,7 +36,9 @@ export function OpportunitiesPreview() {
     queryKey: ["opportunities-preview"],
     queryFn: async () => {
       const baseUrl = process.env.NEXT_PUBLIC_APP_BACKEND_API_URL;
-      const res = await fetch(`${baseUrl}/o/browse?page=1&limit=20`);
+      const res = await fetch(`${baseUrl}/o/browse?page=1&limit=20`, {
+        headers: { "G-PlaceIT-build": process.env.NEXT_PUBLIC_BUILD_KEY ?? "" },
+      });
       if (!res.ok) return [];
       const json = await res.json();
       const all: PreviewOpportunity[] = json?.data ?? [];

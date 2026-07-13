@@ -1,8 +1,6 @@
-// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { env } from "./utils";
-// import { env } from "process";
 
 const roleRedirects: Record<string, string> = {
   student: "/portal/find-it-space",
@@ -27,7 +25,7 @@ async function me(token: string) {
         Authorization: `Bearer ${token}`,
         "G-PlaceIT-build": process.env.NEXT_PUBLIC_BUILD_KEY ?? "",
       },
-      cache: "no-store", // important in middleware
+      cache: "no-store",
     });
 
     if (!res.ok) return null;
