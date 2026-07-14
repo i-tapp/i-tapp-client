@@ -144,12 +144,12 @@ export default function OpportunityTable({
           <TableBody>
             {filteredData?.length > 0 ? (
               filteredData.map((applicant) => {
-                const student = applicant?.student;
+                const person = applicant?.student ?? applicant?.corpsMember;
 
                 return (
                   <TableRow key={applicant.id} className="hover:bg-gray-50">
                     <TableCell className="py-4">
-                      <ApplicantProfile student={student} />
+                      <ApplicantProfile person={person} />
                     </TableCell>
                     <TableCell className="py-4">
                       <StatusBadge
@@ -181,7 +181,7 @@ export default function OpportunityTable({
                           <ArchiveAdd size={18} />
                         </Button>
 
-                        <Link href={`mailto:${student?.user?.email}`}>
+                        <Link href={`mailto:${person?.email}`}>
                           <Button
                             variant="ghost"
                             size="sm"
@@ -193,7 +193,7 @@ export default function OpportunityTable({
                         </Link>
 
                         <Link
-                          href={`/portal/candidates/${student?.id}?opportunityId=${applicant?.id}`}
+                          href={`/portal/candidates/${person?.id}?opportunityId=${applicant?.id}${applicant?.corpsMember ? "&role=corps" : ""}`}
                           className={cn(
                             buttonVariants({
                               variant: "secondary",
@@ -234,13 +234,13 @@ export default function OpportunityTable({
       <div className="md:hidden space-y-4">
         {filteredData?.length > 0 ? (
           filteredData.map((applicant) => {
-            const student = applicant?.student;
+            const person = applicant?.student ?? applicant?.corpsMember;
 
             return (
               <ApplicantCard
                 key={applicant.id}
                 applicant={applicant}
-                student={student}
+                student={person}
               />
             );
           })
@@ -272,7 +272,7 @@ function ApplicantCard({
     <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
       {/* Top Section */}
       <div className="flex items-start justify-between mb-3">
-        <ApplicantProfile student={student} />
+        <ApplicantProfile person={student} />
         <StatusBadge status={applicant.status as ApplicationStatus} />
       </div>
 
@@ -300,7 +300,7 @@ function ApplicantCard({
           <ArchiveAdd size={16} className="mr-1" />
           Shortlist
         </Button>
-        <Link href={`mailto:${student?.user?.email}`} className="flex-1">
+        <Link href={`mailto:${student?.email}`} className="flex-1">
           <Button
             variant="outline"
             size="sm"
@@ -311,9 +311,8 @@ function ApplicantCard({
             Email
           </Button>
         </Link>
-        {/* /portal/candidates/${candidate.id} */}
         <Link
-          href={`/portal/candidates/${student?.id}`}
+          href={`/portal/candidates/${student?.id}${applicant?.corpsMember ? "?role=corps" : ""}`}
           className={cn(
             buttonVariants({ variant: "default", size: "sm" }),
             "flex-1 justify-center",
@@ -328,25 +327,25 @@ function ApplicantCard({
 }
 
 // Applicant Profile Component
-export function ApplicantProfile({ student }: { student: any }) {
+export function ApplicantProfile({ person }: { person: any }) {
   return (
     <div className="flex items-center gap-3">
       <Image
-        src={student?.user?.avatarUrl || "/applicant.png"}
-        alt={`${student?.firstName || "Unknown"} ${
-          student?.lastName || "User"
-        }`}
+        src={person?.profileImage || "/applicant.png"}
+        alt={`${person?.firstName || "Unknown"} ${person?.lastName || "User"}`}
         width={40}
         height={40}
         className="h-10 w-10 border-2 border-gray-200 rounded-full object-cover"
       />
       <div>
         <p className="font-semibold text-sm text-gray-900">
-          {student?.firstName && student?.lastName
-            ? `${student.firstName} ${student.lastName}`
+          {person?.firstName && person?.lastName
+            ? `${person.firstName} ${person.lastName}`
             : "Unknown Applicant"}
         </p>
-        <p className="text-xs text-gray-500">{student?.school || "N/A"}</p>
+        <p className="text-xs text-gray-500">
+          {person?.school ?? person?.nyscRegNumber ?? "N/A"}
+        </p>
       </div>
     </div>
   );

@@ -166,7 +166,8 @@ export interface Application {
   coverLetter?: string;
   resumeUrl?: string;
   opportunity: Opportunity;
-  student: Student;
+  student: Student | null;
+  corpsMember?: { id: string; firstName: string; lastName: string; email: string | null; nyscRegNumber: string | null; profileImage: string | null } | null;
 }
 
 export interface Offers {

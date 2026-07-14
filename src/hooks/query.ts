@@ -207,7 +207,7 @@ export const useFetchCorpsDetails = (id?: string) => {
   return useQuery({
     queryKey: ["corps-details", id],
     queryFn: async () => {
-      const response = await query(`/admin/corps/${id}`);
+      const response = await query(`/corps/${id}`);
       return response;
     },
     enabled: !!id,

@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "react-toastify";
 import moment from "moment";
-import { GraduationCap } from "lucide-react";
+import { Download, GraduationCap } from "lucide-react";
 import {
   useFetchApplicationDetails,
+  useFetchCorpsDetails,
   useFetchOpportunityDetails,
   useFetchStudentDetails,
 } from "@/hooks/query";
@@ -25,19 +26,25 @@ import {
   declineApplication,
   deleteOffer,
 } from "@/actions";
-import Link from "next/link";
 import { ApplicationStatus } from "@/types/enums";
 import { OfferFormData } from "@/schemas";
 
 export default function CandidateProfile() {
   const [offerFormOpen, setOfferFormOpen] = useState(false);
   const { studentId } = useParams();
-  const opportunityId = useSearchParams().get("opportunityId");
+  const searchParams = useSearchParams();
+  const opportunityId = searchParams.get("opportunityId");
+  const isCorps = searchParams.get("role") === "corps";
   const queryClient = useQueryClient();
 
-  const { data: studentDetails, isLoading } = useFetchStudentDetails(
-    studentId as string,
+  const { data: studentData, isLoading: studentLoading } = useFetchStudentDetails(
+    !isCorps ? (studentId as string) : undefined,
   );
+  const { data: corpsData, isLoading: corpsLoading } = useFetchCorpsDetails(
+    isCorps ? (studentId as string) : undefined,
+  );
+  const studentDetails = isCorps ? corpsData : studentData;
+  const isLoading = isCorps ? corpsLoading : studentLoading;
 
   const { data: applicationDetails, isLoading: applicationLoading } =
     useFetchApplicationDetails(opportunityId as string);
@@ -46,7 +53,7 @@ export default function CandidateProfile() {
     opportunityId ?? undefined,
   );
 
-  const studentLocation = studentDetails?.preferredLocation?.trim().toLowerCase();
+  const studentLocation = (isCorps ? studentDetails?.location : studentDetails?.preferredLocation)?.trim().toLowerCase();
   const opportunityLocation = opportunityDetails?.location?.trim().toLowerCase();
   const isLocationMismatch =
     !!studentLocation &&
@@ -122,31 +129,30 @@ export default function CandidateProfile() {
   };
 
   if (isLoading) {
-    return <Spinner placeholder="Loading student details..." />;
+    return <Spinner placeholder="Loading candidate details..." />;
   }
+
+  const corps = isCorps ? studentDetails : null;
+  const student = isCorps ? null : studentDetails;
+
+  const profileImage = corps?.profileImage ?? student?.profileImageUrl ?? "/applicant.png";
+  const email = corps?.user?.email ?? student?.user?.email ?? "Not provided";
+  const phone = corps?.phone ?? student?.phone ?? "Not provided";
 
   return (
     <div className="min-h-screen bg-gray-50/60 px-4 py-6 sm:px-6">
       <div className="max-w-6xl mx-auto">
-        {/* Header Section */}
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-center mb-6">
-          <div className="rounded-full border-2 border-white h-20 w-20 shrink-0 overflow-hidden">
-            <Image
-              src={studentDetails?.profileImageUrl || "/applicant.png"}
-              alt={name}
-              width={100}
-              height={100}
-              className="object-cover w-full h-full"
-            />
+        {/* Header */}
+        <div className="bg-white border rounded-xl px-6 py-5 mb-4 flex flex-col sm:flex-row gap-4 sm:gap-6 sm:items-center">
+          <div className="rounded-full border-2 border-gray-100 h-20 w-20 shrink-0 overflow-hidden bg-gray-50">
+            <Image src={profileImage} alt={name} width={100} height={100} className="object-cover w-full h-full" />
           </div>
-          <div className="flex flex-col gap-0.5">
-            <h1 className="font-semibold text-xl sm:text-2xl text-foreground">{name}</h1>
-            <p className="text-sm text-muted-foreground">
-              {studentDetails?.courseOfStudy || "Not specified"}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {studentDetails?.school || "Not specified"}
-            </p>
+          <div className="flex-1 min-w-0">
+            <h1 className="font-bold text-xl text-foreground">{name}</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">{studentDetails?.courseOfStudy} · {studentDetails?.school}</p>
+            {isCorps && corps?.nyscRegNumber && (
+              <span className="mt-1.5 inline-block text-xs font-mono bg-gray-100 text-gray-600 px-2 py-0.5 rounded">{corps.nyscRegNumber}</span>
+            )}
           </div>
         </div>
 
@@ -155,133 +161,129 @@ export default function CandidateProfile() {
           <div className="mb-4 flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3">
             <span className="mt-0.5 text-amber-500 shrink-0">⚠️</span>
             <div>
-              <p className="text-sm font-bold text-amber-800">
-                Location mismatch — student is outside the opportunity&apos;s location
-              </p>
+              <p className="text-sm font-bold text-amber-800">Location mismatch</p>
               <p className="text-xs text-amber-700 mt-0.5">
-                Student&apos;s preferred IT location is{" "}
-                <span className="font-semibold capitalize">{studentDetails?.preferredLocation}</span>,
-                but this opportunity is based in{" "}
+                Candidate&apos;s preferred location is{" "}
+                <span className="font-semibold capitalize">{corps?.location ?? student?.preferredLocation}</span>,
+                but this opportunity is in{" "}
                 <span className="font-semibold capitalize">{opportunityDetails?.location}</span>.
-                Consider this before making an offer.
               </p>
             </div>
           </div>
         )}
 
-        {/* Main Content Grid */}
-        <div className="flex flex-col lg:flex-row gap-4">
-          {/* Left — Candidate profile */}
-          <SectionWrapper className="flex flex-col rounded-lg border bg-white px-5 py-5 gap-4 w-full lg:max-w-md">
-            <div className="flex flex-col gap-2">
-              <h1 className="font-semibold">Candidate Profile</h1>
-              <div className="mt-2">
-                <p className="uppercase text-muted-foreground text-xs font-semibold mb-1">About</p>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {studentDetails?.bio || "No bio available."}
-                </p>
-              </div>
-            </div>
-
-            <Hr />
-            <div className="flex flex-col gap-3">
-              <HeaderLabel title="Education" />
-              <InfoCard
-                icon={GraduationCap}
-                label="School"
-                value={studentDetails?.school || "Not provided"}
-              />
-              <InfoCard
-                icon={Note1}
-                label="Course of Study"
-                value={studentDetails?.courseOfStudy || "Not provided"}
-              />
-            </div>
-
-            <Hr />
-            <div className="flex flex-col gap-3">
-              <HeaderLabel title="Contact Information" />
-              <InfoCard
-                icon={Sms}
-                label="Email"
-                value={studentDetails?.user?.email || "Not provided"}
-              />
-              <InfoCard
-                icon={Call}
-                label="Phone"
-                value={studentDetails?.phone || "Not provided"}
-              />
-              <InfoCard
-                icon={Location}
-                label="Address"
-                value={studentDetails?.address || "Not provided"}
-              />
-            </div>
-
-            <Hr />
-            <div className="flex flex-col gap-3">
-              <HeaderLabel title="Placement Preference" />
-              <InfoCard
-                icon={Location}
-                label="Preferred IT Location"
-                value={studentDetails?.preferredLocation || "Not provided"}
-              />
-            </div>
-          </SectionWrapper>
-
-          {/* Right — Application info + Documents */}
-          <div className="flex flex-col gap-4 w-full">
-            <SectionWrapper className="flex flex-col gap-3">
-              <HeaderLabel title="Application Info" />
-              <div className="flex flex-row justify-between items-center">
-                <p className="text-xs text-muted-foreground">Current status</p>
-                <p className="italic text-xs font-semibold">
-                  {applicationDetails?.status
-                    ? applicationDetails.status.charAt(0).toUpperCase() +
-                      applicationDetails.status.slice(1)
-                    : "N/A"}
-                </p>
-              </div>
-              <div className="flex flex-row justify-between items-center">
-                <p className="text-xs text-muted-foreground">Applied date</p>
-                <p className="italic text-xs font-semibold">
-                  {applicationDetails?.appliedAt
-                    ? moment(applicationDetails.appliedAt).format("ll")
-                    : "N/A"}
-                </p>
-              </div>
-
+        {/* Main Grid */}
+        <div className="flex flex-col lg:flex-row gap-4 items-start">
+          {/* Left — profile details */}
+          <div className="flex flex-col gap-4 w-full lg:w-[420px] shrink-0">
+            <SectionWrapper className="flex flex-col gap-4">
+              <HeaderLabel title="About" />
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {studentDetails?.bio || "No bio available."}
+              </p>
             </SectionWrapper>
 
-            <SectionWrapper>
-              <HeaderLabel title="Documents" />
-
-              {studentDetails?.itLetter || studentDetails?.cv ? (
-                <div className="flex flex-col gap-2 mt-3">
-                  {studentDetails?.itLetter && (
-                    <Link
-                      href={studentDetails?.itLetter}
-                      target="_blank"
-                      className="text-left text-sm text-primary underline"
-                    >
-                      View IT Letter
-                    </Link>
-                  )}
-                  {studentDetails?.cv && (
-                    <Link
-                      href={studentDetails?.cv}
-                      target="_blank"
-                      className="text-left text-sm text-primary underline"
-                    >
-                      View CV
-                    </Link>
-                  )}
-                </div>
-              ) : (
-                <p className="text-xs mt-3">No documents uploaded</p>
+            <SectionWrapper className="flex flex-col gap-3">
+              <HeaderLabel title="Education" />
+              <InfoCard icon={GraduationCap} label="School" value={studentDetails?.school || "Not provided"} />
+              <InfoCard icon={Note1} label="Course of Study" value={studentDetails?.courseOfStudy || "Not provided"} />
+              {isCorps && (
+                <>
+                  <InfoCard icon={Note1} label="Degree" value={corps?.degreeType || "Not provided"} />
+                  <InfoCard icon={Note1} label="Graduation Year" value={corps?.graduationYear?.toString() || "Not provided"} />
+                  {corps?.gpa && <InfoCard icon={Note1} label="GPA" value={corps.gpa} />}
+                </>
               )}
+            </SectionWrapper>
 
-              <div className="flex flex-col sm:flex-row gap-2 mt-4">
+            {isCorps && (
+              <SectionWrapper className="flex flex-col gap-3">
+                <HeaderLabel title="NYSC Info" />
+                <InfoCard icon={Note1} label="Reg Number" value={corps?.nyscRegNumber || "Not provided"} />
+                <InfoCard icon={Note1} label="State Code" value={corps?.stateCode || "Not provided"} />
+                <InfoCard icon={Note1} label="Batch Year" value={corps?.batchYear?.toString() || "Not provided"} />
+                <InfoCard icon={Note1} label="Stream" value={corps?.stream?.replace(/stream_?/i, "Stream ").toUpperCase() || "Not provided"} />
+                <InfoCard icon={Location} label="State of Deployment" value={corps?.stateOfDeployment || "Not provided"} />
+              </SectionWrapper>
+            )}
+
+            <SectionWrapper className="flex flex-col gap-3">
+              <HeaderLabel title="Contact" />
+              <InfoCard icon={Sms} label="Email" value={email} />
+              <InfoCard icon={Call} label="Phone" value={phone} />
+              <InfoCard icon={Location} label="Location" value={corps?.location ?? student?.address ?? "Not provided"} />
+            </SectionWrapper>
+
+            {!isCorps && (
+              <SectionWrapper className="flex flex-col gap-3">
+                <HeaderLabel title="Placement Preference" />
+                <InfoCard icon={Location} label="Preferred IT Location" value={student?.preferredLocation || "Not provided"} />
+              </SectionWrapper>
+            )}
+
+            {isCorps && corps?.preferredIndustry?.length > 0 && (
+              <SectionWrapper className="flex flex-col gap-3">
+                <HeaderLabel title="Preferences" />
+                <InfoCard icon={Note1} label="Preferred Industry" value={corps.preferredIndustry.join(", ")} />
+                {corps?.internshipDuration && <InfoCard icon={Note1} label="Available Duration" value={corps.internshipDuration} />}
+                {corps?.availableStartDate && <InfoCard icon={Note1} label="Available From" value={corps.availableStartDate} />}
+              </SectionWrapper>
+            )}
+          </div>
+
+          {/* Right — actions */}
+          <div className="flex flex-col gap-4 w-full">
+            <SectionWrapper className="flex flex-col gap-3">
+              <HeaderLabel title="Application" />
+              <div className="flex justify-between items-center">
+                <p className="text-xs text-muted-foreground">Status</p>
+                <p className="text-xs font-semibold capitalize">
+                  {applicationDetails?.status?.replace(/_/g, " ") ?? "N/A"}
+                </p>
+              </div>
+              <div className="flex justify-between items-center">
+                <p className="text-xs text-muted-foreground">Applied</p>
+                <p className="text-xs font-semibold">
+                  {applicationDetails?.appliedAt ? moment(applicationDetails.appliedAt).format("ll") : "N/A"}
+                </p>
+              </div>
+            </SectionWrapper>
+
+            <SectionWrapper className="flex flex-col gap-4">
+              <HeaderLabel title="Documents" />
+              {(() => {
+                const docs = isCorps
+                  ? [
+                      { label: "Call-Up Letter", url: corps?.callUpLetter },
+                      { label: "CV", url: corps?.cv },
+                      { label: "Relocation Letter", url: corps?.relocationLetter },
+                    ]
+                  : [
+                      { label: "IT Letter", url: student?.itLetter },
+                      { label: "CV", url: student?.cv },
+                    ];
+                const available = docs.filter((d) => !!d.url);
+                if (available.length === 0) return <p className="text-xs text-muted-foreground">No documents uploaded</p>;
+                return (
+                  <div className="flex flex-wrap gap-2">
+                    {available.map((doc) => (
+                      <a
+                        key={doc.label}
+                        href={doc.url!}
+                        download
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm font-medium text-primary border border-primary/30 rounded-lg px-3 py-2 hover:bg-primary/5 transition-colors"
+                      >
+                        <Download size={13} />
+                        {doc.label}
+                      </a>
+                    ))}
+                  </div>
+                );
+              })()}
+
+              <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
                 {renderApplicationActions({
                   application: applicationDetails,
                   offer: applicationDetails?.offer,
