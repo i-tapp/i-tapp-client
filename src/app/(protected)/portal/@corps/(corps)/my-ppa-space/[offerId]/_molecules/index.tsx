@@ -19,25 +19,27 @@ export default function CorpsOfferDetail() {
 
   const { data: offer, isLoading } = useFetchCorpsOfferDetail(offerId as string);
 
-  const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: ["corps-offer-detail", offerId] });
+  const updateStatus = (status: string) => {
+    queryClient.setQueryData(["corps-offer-detail", offerId], (old: any) =>
+      old ? { ...old, status } : old,
+    );
     queryClient.invalidateQueries({ queryKey: ["corps-offers"] });
   };
 
   const { execute: accept, isExecuting: isAccepting } = useAction(acceptCorpsOffer, {
-    onSuccess: () => { toast.success("Offer accepted!"); invalidate(); },
+    onSuccess: () => { toast.success("Offer accepted!"); updateStatus("ACCEPTED"); },
     onError: () => toast.error("Failed to accept offer."),
   });
 
   const { execute: decline, isExecuting: isDeclining } = useAction(declineCorpsOffer, {
-    onSuccess: () => { toast.success("Offer declined."); invalidate(); },
+    onSuccess: () => { toast.success("Offer declined."); updateStatus("DECLINED"); },
     onError: () => toast.error("Failed to decline offer."),
   });
 
   if (isLoading) return <div className="flex justify-center items-center min-h-screen"><Spinner /></div>;
   if (!offer) return <div className="flex justify-center items-center min-h-screen text-gray-400">Offer not found.</div>;
 
-  const status = offer.status;
+  const status = offer.status?.toLowerCase();
   const company = offer.company;
   const opp = offer.application?.opportunity;
 
@@ -67,7 +69,7 @@ export default function CorpsOfferDetail() {
 
           {/* Action buttons */}
           <div className="shrink-0">
-            {status === "offered" && (
+            {(status === "sent" || status === "offered") && (
               <div className="flex gap-3">
                 <Button
                   className="bg-emerald-600 hover:bg-emerald-700 text-white"
@@ -85,10 +87,10 @@ export default function CorpsOfferDetail() {
                 </Button>
               </div>
             )}
-            {status === "accepted" && (
+            {(status === "accepted") && (
               <span className="text-emerald-700 font-semibold bg-emerald-50 px-4 py-2 rounded-lg text-sm">You accepted this offer</span>
             )}
-            {status === "declined" && (
+            {(status === "declined") && (
               <span className="text-red-600 font-semibold bg-red-50 px-4 py-2 rounded-lg text-sm">You declined this offer</span>
             )}
           </div>

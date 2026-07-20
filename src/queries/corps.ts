@@ -81,6 +81,7 @@ export const useFetchCorpsOfferDetail = (id?: string) => {
       return response;
     },
     enabled: !!id,
+    staleTime: 0,
   });
 };
 

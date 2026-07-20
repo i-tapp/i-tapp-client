@@ -292,6 +292,7 @@ export default function CandidateProfile() {
                   withdrawOffer,
                   isDeclining,
                   isWithdrawing,
+                  isCorps,
                 })}
               </div>
             </SectionWrapper>
@@ -348,6 +349,7 @@ type ApplicationActionProps = {
   withdrawOffer: (data: { id: string }) => void;
   isDeclining: boolean;
   isWithdrawing: boolean;
+  isCorps: boolean;
 };
 
 function renderApplicationActions({
@@ -358,6 +360,7 @@ function renderApplicationActions({
   withdrawOffer,
   isDeclining,
   isWithdrawing,
+  isCorps,
 }: ApplicationActionProps) {
   const status = application?.status;
   const offerStatus = offer?.status;
@@ -390,7 +393,7 @@ function renderApplicationActions({
       return (
         <>
           <p className="flex-1 bg-yellow-100 text-yellow-700 text-center py-2 rounded">
-            Waiting for student response
+            Waiting for {isCorps ? "corps member" : "student"} response
           </p>
 
           <Button
