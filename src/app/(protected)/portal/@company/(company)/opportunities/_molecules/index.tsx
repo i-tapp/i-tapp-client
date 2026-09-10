@@ -164,7 +164,7 @@ export function CardView({
 
   return (
     <div
-      className={`flex items-center justify-between px-4 py-4 border-b border-[#F5F5F5] hover:bg-gray-50 transition`}
+      className={`flex items-center justify-between px-4 py-4 border-b border-border hover:bg-gray-50 transition`}
     >
       {/* Left: logo + details */}
       <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -243,7 +243,7 @@ function MobileCardView({
     <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-lg bg-[#f5f5f5] flex items-center justify-center text-xl">
+          <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center text-xl">
             🏢
           </div>
           <div>

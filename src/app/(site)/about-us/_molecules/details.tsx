@@ -27,7 +27,7 @@ export function Details() {
   return (
     <>
       {/* Story section */}
-      <section className="bg-[#f7f8fc] border-t border-gray-100">
+      <section className="bg-[var(--surface-blue)] border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 py-16 sm:py-24">
           <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
 
@@ -43,7 +43,10 @@ export function Details() {
                   priority
                 />
                 {/* Overlay badge */}
-                <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm rounded-2xl px-4 py-3 shadow-lg flex items-center gap-3">
+                {/* `bg-background`, not `bg-white/95`. The white utilities are pinned to
+                    real white, so this stayed a white card while the gray-900
+                    label on it inverted to near-white. */}
+                <div className="absolute bottom-4 left-4 bg-background/95 backdrop-blur-sm rounded-2xl px-4 py-3 shadow-lg flex items-center gap-3">
                   <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
                     <ShieldCheck className="w-4 h-4 text-primary" />
                   </div>

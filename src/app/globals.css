@@ -65,6 +65,41 @@
   --sidebar-border: #d9e0ea;
   --sidebar-ring: #c0d3f0;
 
+  /* --- Marketing site accents -------------------------------------------
+     The public pages drive their colour from a per-persona accent: blue for
+     students, green for corps members, violet for companies. These used to
+     be hardcoded hexes in each page, which is why those pages couldn't go
+     dark. They're variables now, with lifted counterparts under `.dark`.
+
+     The `-rgb` triples exist because the pages compose translucent washes
+     (`rgba(var(--accent-blue-rgb), 0.09)`); a plain hex variable can't be
+     given an alpha channel. Keep each pair in sync.
+
+     `--surface-*` are the opaque tinted section backgrounds that go with
+     each accent. */
+  --accent-blue: #445dcb;
+  --accent-blue-rgb: 68, 93, 203;
+  --accent-green: #059669;
+  --accent-green-rgb: 5, 150, 105;
+  --accent-violet: #7c3aed;
+  --accent-violet-rgb: 124, 58, 237;
+
+  /* An accent has two incompatible jobs. As a SOLID FILL under white text it
+     has to stay dark enough for that text to read. As TEXT on the page it has
+     to be light enough to read against the background. One value can't do
+     both once the page goes dark, so `-text` splits them. Identical in light
+     mode; lifted under `.dark`. */
+  --accent-blue-text: #445dcb;
+  --accent-green-text: #059669;
+  --accent-violet-text: #7c3aed;
+
+  --surface-blue: #f7f8fc;
+  --surface-blue-strong: #f0f3ff;
+  --surface-green: #f0fdf4;
+  --surface-green-strong: #f0fdf8;
+  --surface-violet: #faf5ff;
+  --surface-neutral: #f0f2f5;
+
   /* Border radius */
   --radius: 0.625rem;
 }
@@ -253,3 +288,472 @@ body {
     height: 0;
   }
 }
+
+/* ==========================================================================
+   DARK MODE
+   --------------------------------------------------------------------------
+   Tailwind v4 compiles every colour utility to `var(--color-*)`. That means
+   `bg-white`, `text-gray-700` and friends can be flipped by redefining those
+   variables under `.dark` - no need to add a `dark:` variant to each of the
+   ~1,700 colour utilities across 155 files.
+
+   The neutral ramp is INVERTED: gray-50 (lightest) becomes the darkest
+   surface, gray-900 becomes near-white text. So `bg-gray-50 text-gray-800`
+   keeps its contrast relationship instead of turning into dark-on-dark.
+
+   SCOPE: the `.dark` class is only ever set on portal routes - see
+   THEMEABLE_ROUTE_PREFIXES in src/lib/theme.ts. The marketing site, auth
+   screens and public pages are never dark, and that is deliberate.
+
+   The failure this prevents: a hardcoded light background (an arbitrary
+   `bg-[#f0f3ff]`, an inline `style={{ background: slide.bg }}`, a gradient
+   stop) does NOT flip, but the `text-gray-900` sitting on top of it DOES.
+   Light background, near-white text, nothing readable. The marketing pages
+   are built almost entirely that way, which is why they are out of scope
+   rather than remapped.
+
+   Before widening the scope to any new area, grep it for `-[#`, inline
+   style colours and gradient stops. If it has them, it needs a hand pass or
+   a `.theme-light` wrapper first.
+   ========================================================================== */
+
+@custom-variant dark (&:is(.dark *));
+
+.dark {
+  color-scheme: dark;
+
+  /* --- ShadCN semantic tokens ------------------------------------------- */
+  --background: #12161c;
+  --foreground: #e9edf2;
+
+  --card: #191f27;
+  --card-foreground: #e9edf2;
+
+  --popover: #1d242e;
+  --popover-foreground: #e9edf2;
+
+  /* Deepened rather than lifted. `bg-primary` is a solid fill under white
+     text in a lot of places (stats band, mobile CTA bar, primary buttons);
+     lifting it turned those into white-on-pastel. Slightly deeper than the
+     light value so a full-bleed band recedes on a dark page instead of
+     glowing. White text on this is ~4.9:1.
+
+     Where primary is the TYPE colour it gets lifted instead - see the
+     `text-primary` rebinding rule further down. */
+  --primary: #3d6ca8;
+  --primary-foreground: #ffffff;
+
+  --secondary: #23313f;
+  --secondary-foreground: #e9edf2;
+
+  --muted: #1d242e;
+  --muted-foreground: #9aa6b4;
+
+  --accent: #23313f;
+  --accent-foreground: #e9edf2;
+
+  --destructive: #f0655f;
+  --destructive-foreground: #1a0d0d;
+
+  --border: #2a323d;
+  --input: #2a323d;
+  --ring: #3d4a5a;
+
+  /* --- Semantic ---------------------------------------------------------- */
+  --info: #5b9df5;
+  --warning: #4ac47d;
+  --success: #f0cf5e;
+  --danger: #f0655f;
+
+  /* --- Project greyscale (used via bg-white, text-black, text-grey-*) ----
+     `--white` is the CARD surface, not the page background. Tailwind's
+     `bg-white` resolves to it, and there are ~600 `bg-white` cards in this
+     app; making it slightly lighter than --background gives them their
+     elevation back for free, instead of every card disappearing into the
+     page. */
+  --black: #e9edf2;
+  --white: #191f27;
+  --grey-1: #d4dae1;
+  --grey-2: #b6bfc9;
+  --grey-3: #8d97a3;
+  --grey-4: #5c6773;
+  --grey-5: #2a323d;
+
+  /* --- Tertiary ---------------------------------------------------------- */
+  --tertiary-1: #3f5f85;
+  --tertiary-2: #33465e;
+
+  /* --- Sidebar ----------------------------------------------------------- */
+  --sidebar: #161c24;
+  --sidebar-foreground: #e9edf2;
+  --sidebar-primary: #6fa2e0;
+  --sidebar-primary-foreground: #0b0f14;
+  --sidebar-accent: #23313f;
+  --sidebar-accent-foreground: #e9edf2;
+  --sidebar-border: #2a323d;
+  --sidebar-ring: #3d4a5a;
+
+  /* --- Tailwind's own palette, inverted ---------------------------------- */
+  --color-white: #191f27;
+  --color-black: #e9edf2;
+
+  --color-gray-50: #12161c;
+  --color-gray-100: #171d25;
+  --color-gray-200: #1e2630;
+  --color-gray-300: #2a323d;
+  --color-gray-400: #4a5563;
+  --color-gray-500: #7d8794;
+  --color-gray-600: #9aa6b4;
+  --color-gray-700: #bcc5d0;
+  --color-gray-800: #d5dce4;
+  --color-gray-900: #e9edf2;
+  --color-gray-950: #f5f7fa;
+
+  --color-slate-50: #12161c;
+  --color-slate-100: #171d25;
+  --color-slate-200: #1e2630;
+  --color-slate-300: #2a323d;
+  --color-slate-400: #4a5563;
+  --color-slate-500: #7d8794;
+  --color-slate-600: #9aa6b4;
+  --color-slate-700: #bcc5d0;
+  --color-slate-800: #d5dce4;
+  --color-slate-900: #e9edf2;
+
+  /* --- Accent tints ------------------------------------------------------
+     Status chips, badges and callouts are built from `bg-<hue>-50` with
+     `text-<hue>-600` on top. Left alone, the 50 tints are near-white and each
+     one becomes a floodlight on a dark screen.
+
+     50/100/200 become dark tinted surfaces; 600/700 are lifted so accent text
+     stays legible on them. 400/500 are deliberately untouched - those are
+     solid fills that already carry white text.
+
+     Every hue below is in use somewhere in the app. Adding a new one means
+     adding it here too. */
+
+  --color-red-50: #2a1518;    --color-red-100: #3a1c20;    --color-red-200: #4d262a;
+  --color-red-600: #f4746e;   --color-red-700: #f89b96;
+
+  --color-orange-50: #2b1c11; --color-orange-100: #3b2617; --color-orange-200: #4e321e;
+  --color-orange-600: #f5a15c;--color-orange-700: #f8bb8a;
+
+  --color-amber-50: #2a2413;  --color-amber-100: #3a3119;  --color-amber-200: #4c4022;
+  --color-amber-600: #f2c25c; --color-amber-700: #f6d489;
+
+  --color-yellow-50: #2a2812; --color-yellow-100: #3a3618; --color-yellow-200: #4c4720;
+  --color-yellow-600: #ecd04f;--color-yellow-700: #f3de85;
+
+  --color-lime-50: #21290f;   --color-lime-100: #2d3715;   --color-lime-200: #3b481c;
+  --color-lime-600: #b6dd5c;  --color-lime-700: #cbe78a;
+
+  --color-green-50: #13241a;  --color-green-100: #1a3223;  --color-green-200: #22422e;
+  --color-green-600: #5fcb8a; --color-green-700: #8ddbaa;
+
+  --color-emerald-50: #10241c;--color-emerald-100: #163226;--color-emerald-200: #1d4231;
+  --color-emerald-600: #4ecfa0;--color-emerald-700: #82dcbb;
+
+  --color-teal-50: #10241f;   --color-teal-100: #16322b;   --color-teal-200: #1d4237;
+  --color-teal-600: #45ceb8;  --color-teal-700: #7edccd;
+
+  --color-cyan-50: #102325;   --color-cyan-100: #163131;   --color-cyan-200: #1d4140;
+  --color-cyan-600: #4bcbd8;  --color-cyan-700: #83dae3;
+
+  --color-sky-50: #101f2b;    --color-sky-100: #162b3a;    --color-sky-200: #1d394c;
+  --color-sky-600: #56b6ea;   --color-sky-700: #8acdf1;
+
+  --color-blue-50: #141f2e;   --color-blue-100: #1a2a3e;   --color-blue-200: #223651;
+  --color-blue-600: #6aa5ee;  --color-blue-700: #97c1f3;
+
+  --color-indigo-50: #171b30; --color-indigo-100: #1e2441; --color-indigo-200: #262e55;
+  --color-indigo-600: #8b96f0;--color-indigo-700: #adb5f4;
+
+  --color-violet-50: #1c1832; --color-violet-100: #262044; --color-violet-200: #302a58;
+  --color-violet-600: #a68df2;--color-violet-700: #c0aef6;
+
+  --color-purple-50: #1f1832; --color-purple-100: #2a2044; --color-purple-200: #352958;
+  --color-purple-600: #b389f1;--color-purple-700: #c8abf5;
+
+  --color-fuchsia-50: #24162e;--color-fuchsia-100: #311e3f;--color-fuchsia-200: #3f2751;
+  --color-fuchsia-600: #d283ec;--color-fuchsia-700: #e0a8f1;
+
+  --color-pink-50: #291623;   --color-pink-100: #371e2f;   --color-pink-200: #47263d;
+  --color-pink-600: #ee7bb0;  --color-pink-700: #f3a3c8;
+
+  --color-rose-50: #2a151d;   --color-rose-100: #391d27;   --color-rose-200: #4a2532;
+  --color-rose-600: #f2758f;  --color-rose-700: #f69eb1;
+
+  /* --- Marketing site accents -------------------------------------------
+     The base accents deliberately KEEP their brand value here: they're used
+     as solid CTA fills under white text, and lifting them was what made
+     "Get Started Free" read as white-on-pastel.
+
+     Only the `-text` variants lift, for the places the accent is the type
+     colour. The `-rgb` triples stay at brand value too, since they only feed
+     low-alpha washes and glows where the hue is all that matters. */
+  --accent-blue-text: #9db0f5;
+  --accent-green-text: #4ecfa0;
+  --accent-violet-text: #c0a7f7;
+
+  --surface-blue: #161a26;
+  --surface-blue-strong: #191e2e;
+  --surface-green: #10241c;
+  --surface-green-strong: #122820;
+  --surface-violet: #1c1832;
+  --surface-neutral: #161c24;
+}
+
+/* Remapping `--white` fixes ~600 `bg-white` surfaces at zero cost, but it also
+   catches the 250-odd FOREGROUND uses - `text-white` on a coloured button,
+   `border-white/30`, `bg-white/10` glows on dark banners. Those all still want
+   real white.
+
+   Rebinding the variable on the element itself (rather than setting `color`
+   directly) preserves each utility's own alpha: `text-white/80` stays 80%,
+   `bg-white/10` stays a 10% glow. Attribute selectors so responsive and hover
+   variants (`hover:bg-white/10`) are covered too.
+
+   Verified safe: no element in the app combines solid `bg-white` with
+   `text-white`, so nothing gets a white-on-white surface out of this. */
+.dark [class*="text-white"],
+.dark [class*="border-white"],
+.dark [class*="bg-white/"],
+.dark [class*="ring-white"],
+.dark [class*="divide-white"] {
+  --white: #ffffff;
+  --color-white: #ffffff;
+}
+
+/* The other half of the primary split: when primary is the type or border
+   colour rather than a fill, rebind it to a lifted value on that element.
+   Same technique as the white utilities above, and it covers responsive and
+   hover variants for free.
+
+   `text-primary-foreground` is excluded - that's the colour that sits ON a
+   primary fill, and it must stay white. */
+.dark [class*="text-primary"]:not([class*="text-primary-foreground"]),
+.dark [class*="border-primary"],
+.dark [class*="ring-primary"],
+.dark [class*="decoration-primary"] {
+  --primary: #8fbaf0;
+}
+
+/* The same trap as `--white`, in the other direction. Remapping `--black` to
+   #e9edf2 makes `text-black` a light type colour, which is what you want. It
+   also catches every `bg-black/N` SCRIM - 17 of them: dialog, drawer, sheet
+   and alert-dialog overlays, the sidebar and filter-panel backdrops, the
+   avatar-crop overlays. A modal backdrop is a darkening pass by definition;
+   inverted, `bg-black/80` becomes a near-opaque WHITE sheet over the app.
+
+   Same technique and the same reasoning as the white rule above: rebind on
+   the element so each utility keeps its own alpha. `text-black` is left out
+   deliberately - that one SHOULD invert.
+
+   Verified: no element combines a black surface with `text-black`, and no
+   `text-black` element sits inside one of the three overlays that wrap
+   content rather than sitting empty. */
+.dark [class*="bg-black"],
+.dark [class*="from-black"],
+.dark [class*="via-black"],
+.dark [class*="to-black"],
+.dark [class*="shadow-black"],
+.dark [class*="ring-black"] {
+  --black: #000000;
+  --color-black: #000000;
+}
+
+/* Escape hatch. Two classes, one mechanism: both restore the light-mode
+   neutral ramp for a subtree, so colour utilities inside resolve to the
+   values they were authored against instead of the inverted ones.
+
+   `.theme-light` - a section that must keep its LIGHT design inside a dark
+   screen: a brand banner, an illustration with a baked background, an embed.
+
+   `.theme-static` - a section whose design is already DARK in light mode and
+   must stay that way: the BulkApply panel, the nysc spotlight band, a mock
+   browser chrome. Left alone these invert into near-white slabs while the
+   `text-white` on them stays white, which is unreadable and glares on a dark
+   page. Same restore, different intent - hence the separate name, so nobody
+   has to wonder why a near-black panel is tagged `theme-light`.
+
+   Pick by asking what the subtree's colours MEAN: semantic tokens follow the
+   theme, literal design values get pinned. */
+.dark .theme-light,
+.dark .theme-static {
+  --background: #ffffff;
+  --foreground: #0f0f0f;
+  --card: #ffffff;
+  --card-foreground: #0f0f0f;
+  --muted: #f3f3f3;
+  --muted-foreground: #4f4f4f;
+  --border: #e5e5e5;
+  --black: #282828;
+  --white: #ffffff;
+  --color-white: #ffffff;
+  --color-black: #282828;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-gray-950: #030712;
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+}
+
+/* `color-scheme` only flips for the light island. A pinned-dark panel is
+   still on a dark page, and its scrollbars and any native control inside it
+   should stay dark. */
+.dark .theme-light {
+  color-scheme: light;
+}
+
+/* Note: these revert the neutrals and core tokens, which is what determines
+   whether text is readable. They deliberately do not revert the 17 accent
+   tint families above - an accent chip reading slightly off inside a pinned
+   island is cosmetic, where dark-on-dark body text is not.
+
+   `--primary` is not reverted either: the rebinding rule above lifts it to
+   #8fbaf0 wherever it's the type colour, and that lifted value is the right
+   one on a dark panel. It would be too pale inside a `.theme-light` island,
+   but that rule binds the variable on the element itself, so an ancestor
+   can't win it back - a light island needing `text-primary` should carry its
+   own colour. No such island exists yet. */
+
+/* ==========================================================================
+   APP MODE vs BROWSER MODE
+   --------------------------------------------------------------------------
+   `html.is-app-mode`     - native Capacitor shell OR installed PWA
+   `html.is-native-app`   - the compiled store build only
+   `html.is-browser-mode` - a plain browser tab (getplaceit.com)
+
+   These classes are set by the boot script in app/layout.tsx before the
+   first paint, so there's no flash of the wrong chrome. Which behaviours
+   belong to which mode is documented in src/config/app-features.ts - if you
+   change a scope there, change the matching rule here.
+   ========================================================================== */
+
+/* --- Everywhere ---------------------------------------------------------- */
+
+html,
+body {
+  /* Stops iOS Safari inflating text in landscape. Correct on the web too. */
+  -webkit-text-size-adjust: 100%;
+}
+
+/* --- App only ------------------------------------------------------------ */
+
+/* `overscrollLock`. Kills the browser's rubber-band bounce and its built-in
+   pull-to-refresh, which the custom PullToRefresh component then replaces.
+   This is deliberately paired with that component: the website keeps
+   Chrome's native pull-to-refresh precisely because it doesn't get ours. */
+html.is-app-mode,
+html.is-app-mode body {
+  overscroll-behavior-y: contain;
+}
+
+/* `noTapHighlight`. The grey flash on tap is a browser affordance people
+   expect on a web page and a tell that you're in a browser inside an app. */
+html.is-app-mode,
+html.is-app-mode body,
+html.is-app-mode a,
+html.is-app-mode button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* `safeAreaInsets`. env() resolves to 0 in a browser tab so this is a no-op
+   there, but scoping it keeps the intent legible and avoids surprising
+   padding if a browser ever starts reporting non-zero insets. */
+html.is-app-mode body {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* `textSelectionLock`. No long-press text selection outside real inputs.
+   Applied for installed PWAs as well as the native build, since "Install
+   app" from Chrome is the common install path. */
+html.is-app-mode * {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html.is-app-mode input,
+html.is-app-mode textarea,
+html.is-app-mode select,
+html.is-app-mode [contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* `splashScreen`. Paired with the boot script in layout.tsx - hides real
+   page content the instant the browser parses <body>, before React loads,
+   so there's no flash of the homepage before the splash covers it. AppSplash
+   removes this class once its overlay has mounted. Only ever added in app
+   mode, so a website visitor can never hit a blank screen from it. */
+html.app-boot body {
+  visibility: hidden;
+}
+
+/* `bottomTabBar`. The bar is fixed, so content needs room underneath it or
+   the last row of every list sits behind it. Only applied at the breakpoint
+   where the bar is actually visible (it's lg:hidden). */
+html.is-app-mode {
+  --app-tabbar-height: 0px;
+}
+
+@media (max-width: 1023px) {
+  html.is-app-mode {
+    --app-tabbar-height: 60px;
+  }
+
+  html.is-app-mode body:has([data-app-tabbar]) {
+    padding-bottom: calc(
+      var(--app-tabbar-height) + env(safe-area-inset-bottom)
+    );
+  }
+}
+
+/* `keyboardHandling`. The soft keyboard would otherwise sit under a fixed
+   bottom bar, leaving it stranded halfway up the screen. KeyboardHandler
+   sets this class and the --keyboard-height variable. */
+html.keyboard-open [data-app-tabbar] {
+  display: none;
+}
+
+html.keyboard-open.is-app-mode body:has([data-app-tabbar]) {
+  padding-bottom: 0;
+}
+
+/* --- Browser only -------------------------------------------------------- */
+
+/* `installBanner`. The banner is fixed to the bottom, so the last row of
+   whatever is behind it - the final field of a form, a footer link - would
+   otherwise sit underneath and be untappable. Same approach as the app's
+   bottom tab bar above, and scoped to the same breakpoint the banner uses
+   (it's lg:hidden).
+
+   `:has([data-install-banner])` means the padding appears and disappears
+   with the banner itself, including after a dismiss, with nothing to keep
+   in sync. */
+@media (max-width: 1023px) {
+  html.is-browser-mode body:has([data-install-banner]) {
+    padding-bottom: calc(84px + env(safe-area-inset-bottom));
+  }
+}
+
+/* Other website-exclusive chrome (cookie/consent UI, marketing-only
+   affordances) belongs here too, or behind the <BrowserOnly> component in
+   components/providers/app-mode-provider.tsx. */

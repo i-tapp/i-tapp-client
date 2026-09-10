@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Notification } from "iconsax-reactjs";
+import { ThemeToggleButton } from "@/components/theme-toggle";
 import {
   Popover,
   PopoverContent,
@@ -30,9 +31,9 @@ export function Header({ link }: { link: { text: string; href: string }[] }) {
   const recent = notifications.slice(0, 3);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
       <div className="flex items-center justify-between px-6 h-[55px] border-b border-grey-5">
-        <Link href="/portal ">
+        <Link href="/portal " data-tour="logo">
           <Logo />
         </Link>
         <nav className="gap-16 hidden md:flex h-full ">
@@ -40,6 +41,7 @@ export function Header({ link }: { link: { text: string; href: string }[] }) {
             <Link
               key={index}
               href={link.href}
+              data-tour={`nav-${link.href.split("/").filter(Boolean).pop()}`}
               className={cn(
                 "flex items-center h-[55px] text-sm text-primary transition-colors",
                 // "border-b-2 border-transparent -mb-px",
@@ -51,13 +53,14 @@ export function Header({ link }: { link: { text: string; href: string }[] }) {
             </Link>
           ))}
         </nav>
-        <div className="hidden md:flex gap-2">
+        <div className="hidden md:flex gap-2 items-center">
+          <ThemeToggleButton />
           <Popover>
             <PopoverTrigger asChild>
-              <button type="button" className="relative cursor-pointer">
+              <button type="button" className="relative cursor-pointer" data-tour="notifications">
                 <Notification
                   size={35}
-                  className="border border-[#C9C9DA] rounded-full p-2"
+                  className="border border-border rounded-full p-2"
                 />
                 {unreadCount > 0 && (
                   <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center font-bold">
@@ -93,7 +96,7 @@ export function Header({ link }: { link: { text: string; href: string }[] }) {
 
           <Popover>
             <PopoverTrigger asChild>
-              <button type="button" className="rounded-full h-10 w-10 cursor-pointer">
+              <button type="button" className="rounded-full h-10 w-10 cursor-pointer" data-tour="avatar-menu">
                 <Image
                   src={company?.avatarUrl || student?.profileImage || "/applicant.png"}
                   alt=""
@@ -119,7 +122,10 @@ export function Header({ link }: { link: { text: string; href: string }[] }) {
             </PopoverContent>
           </Popover>
         </div>
-        <MobileNav links={link} />
+        <div className="flex items-center gap-1 md:hidden">
+          <ThemeToggleButton />
+          <MobileNav links={link} />
+        </div>
       </div>
     </header>
   );

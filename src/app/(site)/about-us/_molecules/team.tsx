@@ -53,7 +53,7 @@ const team = [
 
 export default function Team() {
   return (
-    <section className="bg-[#f7f8fc] border-t border-gray-100">
+    <section className="bg-[var(--surface-blue)] border-t border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 py-16 sm:py-24">
         {/* Header */}
         <div className="text-center mb-12 sm:mb-16">
@@ -85,8 +85,10 @@ export default function Team() {
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   style={{ objectPosition: member.position }}
                 />
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-950/40 via-transparent to-transparent" />
+                {/* Scrim over the photo. `theme-static` because a scrim is
+                    always a darkening pass — inverted it becomes a 40% white
+                    wash that fogs the portrait. */}
+                <div className="theme-static absolute inset-0 bg-gradient-to-t from-gray-950/40 via-transparent to-transparent" />
               </div>
 
               {/* Info */}
