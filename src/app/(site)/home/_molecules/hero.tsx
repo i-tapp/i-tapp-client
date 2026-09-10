@@ -44,9 +44,10 @@ const slides = [
       "Verified companies only",
       "Real-time tracking",
     ],
-    accent: "#445DCB",
-    accentRgb: "68,93,203",
-    bg: "#f0f3ff",
+    accent: "var(--accent-blue)",
+    accentText: "var(--accent-blue-text)",
+    accentRgb: "var(--accent-blue-rgb)",
+    bg: "var(--surface-blue-strong)",
   },
   {
     persona: "corps" as Persona,
@@ -60,9 +61,10 @@ const slides = [
     cta1: { label: "Find My PPA Now", href: "/corps/signup" },
     cta2: { label: "Browse PPAs", href: "/opportunities?type=ppa" },
     trust: ["State-code matched", "3-week camp mode", "BulkApply available"],
-    accent: "#059669",
-    accentRgb: "5,150,105",
-    bg: "#f0fdf8",
+    accent: "var(--accent-green)",
+    accentText: "var(--accent-green-text)",
+    accentRgb: "var(--accent-green-rgb)",
+    bg: "var(--surface-green-strong)",
   },
   {
     persona: "company" as Persona,
@@ -80,20 +82,21 @@ const slides = [
       "Verified applicants only",
       "Admin-assisted listing",
     ],
-    accent: "#7c3aed",
-    accentRgb: "124,58,237",
-    bg: "#faf5ff",
+    accent: "var(--accent-violet)",
+    accentText: "var(--accent-violet-text)",
+    accentRgb: "var(--accent-violet-rgb)",
+    bg: "var(--surface-violet)",
   },
 ];
 
-function StudentVisual({ accent }: { accent: string }) {
+function StudentVisual({ accent, accentRgb }: { accent: string; accentRgb: string }) {
   return (
     <div className="relative w-full flex flex-col gap-4 py-6 px-2">
       {/* Profile card */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.07)] p-4 flex items-center gap-3">
         <div
           className="w-12 h-12 rounded-xl overflow-hidden border-2 shrink-0"
-          style={{ borderColor: `${accent}30` }}
+          style={{ borderColor: `rgba(${accentRgb}, 0.19)` }}
         >
           <Image
             src={Girl}
@@ -129,7 +132,7 @@ function StudentVisual({ accent }: { accent: string }) {
         <div
           className="h-[3px] w-full"
           style={{
-            background: `linear-gradient(90deg, ${accent}, ${accent}80)`,
+            background: `linear-gradient(90deg, ${accent}, rgba(${accentRgb}, 0.5))`,
           }}
         />
         <div className="p-4 flex flex-col gap-3">
@@ -228,14 +231,14 @@ function StudentVisual({ accent }: { accent: string }) {
   );
 }
 
-function CorpsVisual({ accent }: { accent: string }) {
+function CorpsVisual({ accent, accentRgb }: { accent: string; accentRgb: string }) {
   return (
     <div className="relative w-full flex flex-col gap-4 py-6 px-2">
       {/* Corps member profile */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.07)] p-4 flex items-center gap-3">
         <div
           className="w-12 h-12 rounded-xl overflow-hidden border-2 shrink-0"
-          style={{ borderColor: `${accent}30` }}
+          style={{ borderColor: `rgba(${accentRgb}, 0.19)` }}
         >
           <Image
             src={Boy}
@@ -277,7 +280,7 @@ function CorpsVisual({ accent }: { accent: string }) {
         <div className="flex items-center gap-2 mb-1">
           <div
             className="w-5 h-5 rounded-lg flex items-center justify-center"
-            style={{ background: `${accent}18` }}
+            style={{ background: `rgba(${accentRgb}, 0.09)` }}
           >
             <MapPin className="w-3 h-3" style={{ color: accent }} />
           </div>
@@ -303,7 +306,7 @@ function CorpsVisual({ accent }: { accent: string }) {
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-black text-white shrink-0"
               style={{
-                background: `${accent}${i === 0 ? "ff" : i === 1 ? "cc" : "99"}`,
+                background: `rgba(${accentRgb}, ${i === 0 ? 1 : i === 1 ? 0.8 : 0.6})`,
               }}
             >
               {c.name[0]}
@@ -336,7 +339,7 @@ function CorpsVisual({ accent }: { accent: string }) {
   );
 }
 
-function CompanyVisual({ accent }: { accent: string }) {
+function CompanyVisual({ accent, accentRgb }: { accent: string; accentRgb: string }) {
   return (
     <div className="relative w-full flex flex-col gap-4 py-6 px-2">
       {/* Company profile */}
@@ -569,7 +572,7 @@ export function Hero() {
               <span
                 className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full border"
                 style={{
-                  color: slide.accent,
+                  color: slide.accentText,
                   background: `rgba(${slide.accentRgb},0.09)`,
                   borderColor: `rgba(${slide.accentRgb},0.22)`,
                 }}
@@ -589,7 +592,7 @@ export function Hero() {
                   <span
                     key={i}
                     className="block relative"
-                    style={{ color: slide.accent }}
+                    style={{ color: slide.accentText }}
                   >
                     {line}
                     <svg
@@ -634,7 +637,7 @@ export function Hero() {
               </Link>
               <Link
                 href={slide.cta2.href}
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl text-sm font-semibold text-gray-700 border border-gray-200 bg-white/70 backdrop-blur-sm hover:bg-white hover:border-gray-300 transition-all duration-200"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl text-sm font-semibold text-foreground border border-border bg-card/70 backdrop-blur-sm hover:bg-card hover:border-primary/30 transition-all duration-200"
               >
                 {slide.cta2.label}
               </Link>
@@ -649,7 +652,7 @@ export function Hero() {
                 >
                   <BadgeCheck
                     className="w-3.5 h-3.5 shrink-0"
-                    style={{ color: slide.accent }}
+                    style={{ color: slide.accentText }}
                   />
                   {item}
                 </span>
@@ -660,11 +663,11 @@ export function Hero() {
           {/* RIGHT: story visual */}
           <div className="flex-1 w-full max-w-[440px] lg:max-w-none">
             {slide.persona === "student" && (
-              <StudentVisual accent={slide.accent} />
+              <StudentVisual accent={slide.accent} accentRgb={slide.accentRgb} />
             )}
-            {slide.persona === "corps" && <CorpsVisual accent={slide.accent} />}
+            {slide.persona === "corps" && <CorpsVisual accent={slide.accent} accentRgb={slide.accentRgb} />}
             {slide.persona === "company" && (
-              <CompanyVisual accent={slide.accent} />
+              <CompanyVisual accent={slide.accent} accentRgb={slide.accentRgb} />
             )}
           </div>
         </div>
@@ -682,7 +685,7 @@ export function Hero() {
                   "relative inline-flex items-center gap-2 px-4 py-2 rounded-full text-[12px] font-semibold border overflow-hidden transition-all duration-200",
                   i === activeIdx
                     ? "text-white border-transparent shadow-sm"
-                    : "text-gray-500 border-gray-300 bg-white/70 hover:border-gray-400 hover:text-gray-700",
+                    : "text-muted-foreground border-border bg-card/70 hover:border-primary/40 hover:text-foreground",
                 )}
                 style={
                   i === activeIdx

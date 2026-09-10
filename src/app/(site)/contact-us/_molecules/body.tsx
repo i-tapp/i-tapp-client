@@ -68,7 +68,7 @@ export function ContactBody() {
   }
 
   return (
-    <section className="bg-[#f7f8fc] border-t border-gray-100">
+    <section className="bg-[var(--surface-blue)] border-t border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 py-16 sm:py-24">
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-start">
 
@@ -142,11 +142,11 @@ export function ContactBody() {
                         id="name"
                         name="name"
                         type="text"
-                        placeholder="Adaeze Okonkwo"
+                        placeholder="e.g. Adaeze Okonkwo"
                         value={form.name}
                         onChange={handleChange}
                         required
-                        className="rounded-xl border-gray-200 focus:border-primary/40 focus:ring-primary/20"
+                        className="rounded-xl border-gray-200 focus:border-primary/40 focus:ring-primary/20 placeholder:text-muted-foreground/50"
                       />
                     </div>
                     <div className="flex flex-col gap-1.5">
@@ -155,11 +155,11 @@ export function ContactBody() {
                         id="email"
                         name="email"
                         type="email"
-                        placeholder="you@email.com"
+                        placeholder="e.g. you@email.com"
                         value={form.email}
                         onChange={handleChange}
                         required
-                        className="rounded-xl border-gray-200 focus:border-primary/40 focus:ring-primary/20"
+                        className="rounded-xl border-gray-200 focus:border-primary/40 focus:ring-primary/20 placeholder:text-muted-foreground/50"
                       />
                     </div>
                   </div>

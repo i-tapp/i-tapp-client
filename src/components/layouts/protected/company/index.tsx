@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { OnboardingTour } from "@/components/onboarding-tour";
 import { usePathname } from "next/navigation";
 import { Briefcase, Element } from "iconsax-reactjs";
@@ -12,6 +12,9 @@ import SideNav from "../company-sidenav";
 import Image from "next/image";
 import { useCompanyStore } from "@/lib/store";
 import { useFetchCompanyProfile } from "@/hooks/query";
+import { AppOnly } from "@/components/providers/app-mode-provider";
+import { AppTabBar } from "../app-tab-bar";
+import { ThemeToggleButton } from "@/components/theme-toggle";
 
 const links = [
   {
@@ -48,8 +51,23 @@ export function CompanyLayout({ children }: { children: React.ReactNode }) {
     return pathname.startsWith(href);
   };
 
+  useEffect(() => {
+    function onOpen() {
+      setCollapsed(false);
+    }
+    function onClose() {
+      setCollapsed(true);
+    }
+    window.addEventListener("placeit:sidenav:open", onOpen);
+    window.addEventListener("placeit:sidenav:close", onClose);
+    return () => {
+      window.removeEventListener("placeit:sidenav:open", onOpen);
+      window.removeEventListener("placeit:sidenav:close", onClose);
+    };
+  }, [setCollapsed]);
+
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
+    <div className="flex h-screen bg-muted dark:bg-background overflow-hidden">
       {/* Sidebar (always open on lg+, hidden on smaller) */}
       <SideNav
         collapsed={collapsed}
@@ -59,7 +77,7 @@ export function CompanyLayout({ children }: { children: React.ReactNode }) {
         isActive={isActive}
       />
       <div className="flex-1 flex flex-col h-full overflow-hidden">
-        <header className="h-16 bg-white border-b border-gray-200 flex items-center px-6 justify-between">
+        <header className="h-16 bg-background border-b border-border flex items-center px-6 justify-between">
           <div className="flex items-center gap-4">
             {/* Mobile Toggle Button */}
             {isMobile && (
@@ -72,7 +90,9 @@ export function CompanyLayout({ children }: { children: React.ReactNode }) {
             )}
             <h2 className="text-lg font-semibold text-gray-800">Dashboard</h2>
           </div>
-          <Link href={"/portal/profile"}>
+          <div className="flex items-center gap-2">
+            <ThemeToggleButton />
+            <Link href={"/portal/profile"} data-tour="avatar-menu">
             <div className="rounded-full h-10 w-10">
               <Image
                 src={companyProfile?.logo || "/applicant.png"}
@@ -81,8 +101,9 @@ export function CompanyLayout({ children }: { children: React.ReactNode }) {
                 width={35}
                 height={35}
               />
-            </div>
-          </Link>
+              </div>
+            </Link>
+          </div>
         </header>
         {/* Main Content Area */}
         <main className="flex-1 overflow-auto px-2 py-2 sm:px-4 sm:py-4 lg:px-6 lg:py-6 xl:px-8 xl:py-8">
@@ -90,6 +111,9 @@ export function CompanyLayout({ children }: { children: React.ReactNode }) {
         </main>
       </div>
       <OnboardingTour role="company" />
+      <AppOnly>
+        <AppTabBar role="company" />
+      </AppOnly>
     </div>
   );
 }

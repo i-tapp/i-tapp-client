@@ -11,12 +11,20 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "react-toastify";
 import Input from "@/components/input";
 import { studentSignup } from "@/actions";
-import { useRouter } from "next/navigation";
 import { studentSignupSchema } from "@/schemas";
+import { SignupSuccessModal } from "@/components/signup-success-modal";
+import { FormErrorSummary } from "@/components/form-error-summary";
+
+const LABELS = {
+  email: "Email",
+  phone: "Phone Number",
+  password: "Password",
+  confirmPassword: "Confirm Password",
+};
 
 type Login = {
   email: string;
@@ -32,7 +40,6 @@ export function SignupInfo({
   setForm: Dispatch<SetStateAction<number>>;
   studentData: any;
 }) {
-  const router = useRouter();
   const form = useForm<z.infer<typeof studentSignupSchema>>({
     mode: "all",
     resolver: zodResolver(studentSignupSchema),
@@ -44,7 +51,8 @@ export function SignupInfo({
     },
   });
 
-  const { isDirty, isValid, errors } = form.formState;
+  const { isDirty, isValid, errors, isSubmitted } = form.formState;
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const {
     execute: signupAction,
@@ -52,9 +60,9 @@ export function SignupInfo({
     result,
     isExecuting,
   } = useAction(studentSignup, {
-    onSuccess(data) {
-      toast.success("Sign up successful!");
-      router.replace("/signin/");
+    onSuccess() {
+      // Modal shows the message and handles the redirect.
+      setShowSuccess(true);
     },
     onError(error) {
       toast.error(error?.error?.serverError ?? "Error signing up. Please try again.");
@@ -69,6 +77,15 @@ export function SignupInfo({
 
   return (
     <div className="w-full flex flex-col gap-6">
+      {showSuccess && (
+        <SignupSuccessModal
+          message="Your student account has been created. Kindly log in to continue."
+          redirectTo="/signin"
+        />
+      )}
+
+      <FormErrorSummary errors={errors} submitted={isSubmitted} labels={LABELS} />
+
       {hasErrored && result?.serverError && (
         <span className="text-red-500 text-sm font-medium">{result.serverError}</span>
       )}
@@ -83,7 +100,7 @@ export function SignupInfo({
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
+                  <FormLabel>Phone Number <span className="text-red-500">*</span></FormLabel>
                   <FormControl>
                     <Input {...field} placeholder="e.g., +234 801 234 5678" />
                   </FormControl>
@@ -97,7 +114,7 @@ export function SignupInfo({
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Email <span className="text-red-500">*</span></FormLabel>
                     <FormControl>
                       <Input {...field} placeholder="Enter your email" />
                     </FormControl>
@@ -112,7 +129,7 @@ export function SignupInfo({
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>Password <span className="text-red-500">*</span></FormLabel>
                     <FormControl>
                       <Input
                         type="password"
@@ -131,7 +148,7 @@ export function SignupInfo({
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
+                    <FormLabel>Confirm Password <span className="text-red-500">*</span></FormLabel>
                     <FormControl>
                       <Input
                         type="password"
@@ -149,7 +166,7 @@ export function SignupInfo({
           <ButtonWithLoader
             type="submit"
             isPending={isExecuting}
-            disabled={!isDirty || !isValid}
+            disabled={isExecuting}
             className="w-full"
           >
             Sign up
