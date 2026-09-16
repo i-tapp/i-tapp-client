@@ -1,0 +1,33 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "add-account-deletion-page",
+    "david/rebrand",
+    "dependabot/npm_and_yarn/next-16.4.0",
+    "fix-account-deletion-page",
+    "fix-deletion-page-syntax",
+    "main",
+    "origin",
+    "placeit-updates"
+  ],
+  "parent": {
+    "add-account-deletion-page": "main",
+    "david/rebrand": "main",
+    "dependabot/npm_and_yarn/next-16.4.0": "main",
+    "fix-account-deletion-page": "main",
+    "fix-deletion-page-syntax": "main",
+    "main": null,
+    "origin": "main",
+    "placeit-updates": "main"
+  },
+  "order": [
+    "main",
+    "add-account-deletion-page",
+    "david/rebrand",
+    "dependabot/npm_and_yarn/next-16.4.0",
+    "fix-account-deletion-page",
+    "fix-deletion-page-syntax",
+    "origin",
+    "placeit-updates"
+  ]
+}
