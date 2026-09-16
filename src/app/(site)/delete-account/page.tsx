@@ -78,7 +78,7 @@ export default function DeleteAccount() {
           <p className="text-xs text-muted-foreground mb-0.5">
             To request deletion, email
           </p>
-          
+          <a
             href="mailto:support@getplaceit.com?subject=Account%20Deletion%20Request"
             className="font-semibold text-primary"
           >
