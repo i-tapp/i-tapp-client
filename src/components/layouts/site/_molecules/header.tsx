@@ -157,6 +157,7 @@ export function Header() {
 
   return (
     <header
+      data-site-header
       className={cn(
         "w-full fixed top-0 z-40 transition-all duration-300",
         scrolled
