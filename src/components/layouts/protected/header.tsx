@@ -31,7 +31,7 @@ export function Header({ link }: { link: { text: string; href: string }[] }) {
   const recent = notifications.slice(0, 3);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
+    <header data-portal-header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
       <div className="flex items-center justify-between px-6 h-[55px] border-b border-grey-5">
         <Link href="/portal " data-tour="logo">
           <Logo />
