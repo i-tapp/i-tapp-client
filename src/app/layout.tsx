@@ -159,15 +159,6 @@ export default function RootLayout({
             fbq('track', 'PageView');
           `}
         </Script>
-        <noscript>
-          <img
-            height="1"
-            width="1"
-            style={{ display: "none" }}
-            src="https://www.facebook.com/tr?id=1315733800394508&ev=PageView&noscript=1"
-            alt=""
-          />
-        </noscript>
         <Script
           id="website-structured-data"
           type="application/ld+json"
@@ -269,6 +260,15 @@ export default function RootLayout({
       <body
         className={`${opensans.variable} ${montserrat.variable} antialiased`} suppressHydrationWarning={true}
       >
+        <noscript>
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            src="https://www.facebook.com/tr?id=1315733800394508&ev=PageView&noscript=1"
+            alt=""
+          />
+        </noscript>
         <ReactQueryProvider>
           <AppProvider>
             {/* <Suspense fallback={<Loading />}> */}
