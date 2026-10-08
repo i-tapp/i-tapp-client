@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { MapPin, Clock, Users, ArrowRight, Wifi, Banknote } from "lucide-react";
+import { MapPin, Clock, ArrowRight, Wifi, Banknote } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/utils/tailwind";
 import { useQuery } from "@tanstack/react-query";
@@ -112,13 +112,11 @@ export function OpportunitiesPreview() {
                     </span>
                   ))}
                 </div>
-                <div className="flex items-center gap-1 text-[11px] text-gray-400 mt-auto pt-2 border-t border-dashed border-gray-100">
-                  <Users className="w-3 h-3" />
-                  <span>
-                    <span className="font-medium text-gray-600">{opp.maxApplicants ? opp.maxApplicants - opp.totalApplications : "∞"}</span>{" "}
-                    spots left · {opp.company.industry}
-                  </span>
-                </div>
+                {opp.company.industry && (
+                  <div className="flex items-center gap-1 text-[11px] text-gray-400 mt-auto pt-2 border-t border-dashed border-gray-100">
+                    <span>{opp.company.industry}</span>
+                  </div>
+                )}
               </div>
             </Link>
           ))}
