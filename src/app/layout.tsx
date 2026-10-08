@@ -9,6 +9,7 @@ import { ReactQueryProvider } from "@/provider/react-query-provider";
 import { app } from "@/config/app";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
+import MetaPixelPageView from '@/components/meta-pixel-pageview';
 
 export const montserrat = Montserrat({
   weight: ["400", "500", "600", "700"],
@@ -269,6 +270,7 @@ export default function RootLayout({
             alt=""
           />
         </noscript>
+        <MetaPixelPageView />
         <ReactQueryProvider>
           <AppProvider>
             {/* <Suspense fallback={<Loading />}> */}
