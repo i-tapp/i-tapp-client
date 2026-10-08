@@ -18,10 +18,8 @@ import {
 import OpportunityCard from "./opportunity-card";
 import { ApplicantCard } from "@/components/applicant-card";
 import { useFetchApplicationsCount } from "@/queries/company";
-import Welcome from "./welcome";
 import { useState, useEffect } from "react";
-import { CompanyStatus } from "@/types/enums";
-import { useCommonStore, useCompanyStore } from "@/lib/store";
+import { useCommonStore } from "@/lib/store";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "react-toastify";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -70,11 +68,6 @@ export function Dashboard() {
   const { data: applicationsCount } = useFetchApplicationsCount();
   const { data: opportunities } = useFetchCompanyOpportunities();
   const { data: companyProfile } = useFetchCompanyProfile();
-
-  const { dismissed, setDismissed } = useCompanyStore();
-
-  const showWelcome =
-    companyProfile?.status === CompanyStatus.PENDING && !dismissed;
 
   if (isLoading) {
     return <DashboardSkeleton />;
@@ -145,14 +138,6 @@ export function Dashboard() {
           ))}
         </div>
       </div>
-
-      <Welcome
-        status={companyProfile?.status}
-        onClose={() => {
-          setDismissed(true);
-        }}
-        open={showWelcome}
-      />
     </div>
   );
 }

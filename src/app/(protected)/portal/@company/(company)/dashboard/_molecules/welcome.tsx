@@ -5,11 +5,9 @@ import { Logo } from "@/components/logo";
 export default function Welcome({
   open,
   onClose,
-  status,
 }: {
   open: boolean;
   onClose: () => void;
-  status?: string;
 }) {
   return (
     <Modal open={open} onClose={onClose}>
@@ -17,18 +15,12 @@ export default function Welcome({
         <div className="flex flex-col items-center gap-3 text-center">
           <Logo />
 
-          <div className="inline-flex items-center rounded-full bg-background/70 px-3 py-1 text-xs font-medium text-primary">
-            {status}
-          </div>
-
           <h1 className="text-2xl font-bold text-primary">
             Welcome to your dashboard
           </h1>
 
           <p className="text-sm text-muted-foreground">
-            Your account is under review. We’ll email you once it’s approved.
-            Meanwhile, you can explore resources and get familiar with the
-            platform.
+            Explore resources and get familiar with the platform.
           </p>
 
           <div className="mt-2 flex w-full gap-2">

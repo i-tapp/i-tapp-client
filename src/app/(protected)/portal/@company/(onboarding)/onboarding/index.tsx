@@ -17,9 +17,7 @@ export default function OnboardingPage() {
     onBoardCompany,
     {
       onSuccess: () => {
-        toast.success(
-          "Onboarding submitted! Your account will be reviewed shortly.",
-        );
+        toast.success("Onboarding complete! Welcome to PlaceIT.");
         router.replace("/portal/dashboard");
       },
       onError: ({ error }) => {

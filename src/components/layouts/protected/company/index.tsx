@@ -10,9 +10,7 @@ import useIsResponsive from "@/utils/responsive";
 import { Menu, X } from "lucide-react";
 import SideNav from "../company-sidenav";
 import Image from "next/image";
-import { useCompanyStore } from "@/lib/store";
 import { useFetchCompanyProfile } from "@/hooks/query";
-import { CompanyStatus } from "@/types/enums";
 import { AppOnly } from "@/components/providers/app-mode-provider";
 import { AppTabBar } from "../app-tab-bar";
 import { ThemeToggleButton } from "@/components/theme-toggle";
@@ -47,12 +45,6 @@ export function CompanyLayout({ children }: { children: React.ReactNode }) {
   const profile = pathname.includes("/portal/profile");
   const candidates = pathname.includes("/portal/candidates");
   const { data: companyProfile, isLoading } = useFetchCompanyProfile();
-  const { dismissed } = useCompanyStore();
-
-  // The pending-review welcome modal (rendered in the dashboard) takes
-  // priority over the tour so the two never stack and fight for taps.
-  const tourBlocked =
-    companyProfile?.status === CompanyStatus.PENDING && !dismissed;
 
   const isActive = (href: string) => {
     return pathname.startsWith(href);
@@ -117,7 +109,7 @@ export function CompanyLayout({ children }: { children: React.ReactNode }) {
           {children}
         </main>
       </div>
-      <OnboardingTour role="company" blocked={tourBlocked} />
+      <OnboardingTour role="company" />
       <AppOnly>
         <AppTabBar role="company" />
       </AppOnly>
