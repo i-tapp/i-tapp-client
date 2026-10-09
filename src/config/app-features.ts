@@ -94,6 +94,14 @@ export const APP_FEATURES = {
    */
   darkMode: "all",
 
+  /**
+   * Opening the installed app lands on the portal instead of the marketing
+   * homepage: straight to the user's dashboard when signed in, to the sign-in
+   * page when not (src/proxy.ts already does that split for /portal). The
+   * public website is untouched - only the app runtimes redirect.
+   */
+  launchToPortal: "app",
+
   /** Service worker - must stay on in the browser or the PWA isn't installable. */
   serviceWorker: "all",
 

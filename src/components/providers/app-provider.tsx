@@ -2,6 +2,7 @@
 
 import { AppModeProvider } from "./app-mode-provider";
 import { AppShellEffects } from "./app-shell-effects";
+import { AppLaunchRedirect } from "./app-launch-redirect";
 import { AppSplash } from "./app-splash";
 import { PullToRefresh } from "./pull-to-refresh";
 import { OfflineScreen } from "./offline-screen";
@@ -39,6 +40,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     <AppModeProvider>
       <ThemeProvider>
         <AppShellEffects />
+        <AppLaunchRedirect />
         <QueryCachePersistence />
         <BackButtonHandler />
         <DeepLinkHandler />

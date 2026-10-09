@@ -14,14 +14,12 @@ import {
   readStoredPreference,
   resolvePreference,
   storePreference,
-  THEME_CHROME_COLOR,
   type ResolvedTheme,
   type ThemePreference,
 } from "@/lib/theme";
-import { getStatusBarPlugin, whenBridgeReady } from "@/lib/capacitor-bridge";
 import { usePathname } from "next/navigation";
 import { isThemeableRoute } from "@/lib/theme";
-import { useAppMode, useFeature } from "./app-mode-provider";
+import { useFeature } from "./app-mode-provider";
 
 type ThemeContextValue = {
   /** What the user chose: light, dark, or follow-system. */
@@ -52,7 +50,6 @@ const ThemeContext = createContext<ThemeContextValue>({
 // THEMEABLE_ROUTE_PREFIXES for what that looked like.
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const enabled = useFeature("darkMode");
-  const { isNative } = useAppMode();
   const pathname = usePathname();
   const themeable = isThemeableRoute(pathname ?? "/");
   const active = enabled && themeable;
@@ -76,22 +73,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     applyTheme(theme, active);
   }, [theme, active]);
 
-  // Native status bar. The bar sits above the webview, so it stays white
-  // over a dark app unless we tell it otherwise. Note the inversion: the
-  // plugin's "style" describes the *content* colour, so a dark UI needs
-  // LIGHT text.
-  useEffect(() => {
-    if (!isNative) return;
-    const painted: ResolvedTheme = active && theme === "dark" ? "dark" : "light";
-    return whenBridgeReady(() => {
-      const statusBar = getStatusBarPlugin();
-      if (!statusBar) return;
-      void statusBar.setStyle({ style: painted === "dark" ? "LIGHT" : "DARK" });
-      void statusBar.setBackgroundColor({
-        color: THEME_CHROME_COLOR[painted],
-      });
-    });
-  }, [isNative, theme, active]);
+  // The native status bar is deliberately NOT driven from here any more. On
+  // Android the strip colour and the icon colour are set together in
+  // MainActivity (they follow the phone's light/dark mode). Setting the icon
+  // style from the page as well made the two disagree and left black icons on
+  // the dark strip.
 
   // Follow the OS while the preference is "system".
   useEffect(() => {
