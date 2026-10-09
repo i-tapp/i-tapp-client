@@ -112,7 +112,7 @@ export function ApplicantCard({ applicant }: { applicant: Applicant }) {
                 <SmsEdit size={24} />
               </a>
               <Link
-                href={`/portal/candidates/${id}`}
+                href={`/portal/candidates/${studentId}?opportunityId=${id}`}
                 onClick={handleViewProfile}
               >
                 <div className="flex flex-row justify-center gap-2 py-3 px-4 rounded-lg bg-secondary">
@@ -145,7 +145,7 @@ export function ApplicantCard({ applicant }: { applicant: Applicant }) {
                 />
               </button>
               <Link
-                href={`/portal/candidates/${id}`}
+                href={`/portal/candidates/${studentId}?opportunityId=${id}`}
                 onClick={handleViewProfile}
               >
                 <div className="flex flex-row justify-center gap-2 py-3 px-4 rounded-lg bg-secondary">

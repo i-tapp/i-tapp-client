@@ -241,6 +241,7 @@ export default function OpportunityTable({
                 key={applicant.id}
                 applicant={applicant}
                 student={person}
+                onShortlist={() => execute({ id: applicant.id })}
               />
             );
           })
@@ -264,9 +265,11 @@ export default function OpportunityTable({
 function ApplicantCard({
   applicant,
   student,
+  onShortlist,
 }: {
   applicant: Application;
   student: any;
+  onShortlist: () => void;
 }) {
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
@@ -296,6 +299,7 @@ function ApplicantCard({
           size="sm"
           className="flex-1"
           title="Shortlist"
+          onClick={onShortlist}
         >
           <ArchiveAdd size={16} className="mr-1" />
           Shortlist
@@ -312,7 +316,7 @@ function ApplicantCard({
           </Button>
         </Link>
         <Link
-          href={`/portal/candidates/${student?.id}${applicant?.corpsMember ? "?role=corps" : ""}`}
+          href={`/portal/candidates/${student?.id}?opportunityId=${applicant?.id}${applicant?.corpsMember ? "&role=corps" : ""}`}
           className={cn(
             buttonVariants({ variant: "default", size: "sm" }),
             "flex-1 justify-center",

@@ -15,6 +15,10 @@ import { AppOnly } from "@/components/providers/app-mode-provider";
 import { AppTabBar } from "../app-tab-bar";
 import { ThemeToggleButton } from "@/components/theme-toggle";
 import { PageTransition } from "@/components/providers/page-transition";
+import {
+  PcRecommendation,
+  usePcRecommendation,
+} from "@/components/pc-recommendation";
 
 const links = [
   {
@@ -59,6 +63,7 @@ export function CompanyLayout({ children }: { children: React.ReactNode }) {
         ? "Opportunities"
         : "Dashboard";
   const mainRef = useRef<HTMLElement>(null);
+  const pcNotice = usePcRecommendation();
   const { data: companyProfile, isLoading } = useFetchCompanyProfile();
 
   const isActive = (href: string) => {
@@ -135,7 +140,12 @@ export function CompanyLayout({ children }: { children: React.ReactNode }) {
           <PageTransition contentOnly>{children}</PageTransition>
         </main>
       </div>
-      <OnboardingTour role="company" />
+      <PcRecommendation
+        open={pcNotice.state === "show"}
+        onClose={pcNotice.dismiss}
+      />
+      {/* The tour waits for the PC notice so the two never stack. */}
+      <OnboardingTour role="company" blocked={pcNotice.state !== "done"} />
       <AppOnly>
         <AppTabBar role="company" />
       </AppOnly>
