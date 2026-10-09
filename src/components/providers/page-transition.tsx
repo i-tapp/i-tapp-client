@@ -17,15 +17,32 @@ import { useFeature } from "./app-mode-provider";
 // switching modes never remounts the page underneath. In browser mode the
 // motion.div is handed static props and a zero-duration transition, which
 // makes framer-motion a no-op passthrough.
-export function PageTransition({ children }: { children: ReactNode }) {
+export function PageTransition({
+  children,
+  contentOnly = false,
+}: {
+  children: ReactNode;
+  /** Set by a layout that wraps just its page content (see CompanyLayout). */
+  contentOnly?: boolean;
+}) {
   const pathname = usePathname();
   const animate = useFeature("pageTransitions");
+
+  // The root instance wraps the WHOLE app, so re-keying it on every route
+  // change remounts everything inside, including the portal layouts: the
+  // header, side menu and tab bar all reset and flash on every tab tap (the
+  // drawer visibly slides open and shut). Every /portal/* route therefore
+  // shares one key at the root, and the portal layouts animate only their
+  // own page content with <PageTransition contentOnly>. Marketing pages keep
+  // the original per-route transition.
+  const routeKey =
+    !contentOnly && pathname.startsWith("/portal") ? "portal" : pathname;
 
   return (
     <div style={{ position: "relative" }}>
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.div
-          key={animate ? pathname : "static"}
+          key={animate ? routeKey : "static"}
           initial={animate ? { opacity: 0, scale: 0.98 } : false}
           animate={animate ? { opacity: 1, scale: 1 } : undefined}
           exit={animate ? { opacity: 0, scale: 1.02 } : undefined}

@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { OnboardingTour } from "@/components/onboarding-tour";
 import { usePathname } from "next/navigation";
-import { Briefcase, Element } from "iconsax-reactjs";
+import { Briefcase, Element, Profile2User } from "iconsax-reactjs";
 import Link from "next/link";
 import useIsResponsive from "@/utils/responsive";
 
@@ -14,6 +14,7 @@ import { useFetchCompanyProfile } from "@/hooks/query";
 import { AppOnly } from "@/components/providers/app-mode-provider";
 import { AppTabBar } from "../app-tab-bar";
 import { ThemeToggleButton } from "@/components/theme-toggle";
+import { PageTransition } from "@/components/providers/page-transition";
 
 const links = [
   {
@@ -25,6 +26,11 @@ const links = [
     label: "Opportunities",
     href: "/portal/opportunities",
     icon: <Briefcase size={22} />,
+  },
+  {
+    label: "Candidates",
+    href: "/portal/candidates",
+    icon: <Profile2User size={22} />,
   },
   // {
   //   label: "Applicants",
@@ -44,6 +50,15 @@ export function CompanyLayout({ children }: { children: React.ReactNode }) {
   const { collapsed, isMobile, setCollapsed } = useIsResponsive();
   const profile = pathname.includes("/portal/profile");
   const candidates = pathname.includes("/portal/candidates");
+  const opportunities = pathname.includes("/portal/opportunities");
+  const title = candidates
+    ? "Candidates"
+    : profile
+      ? "Profile"
+      : opportunities
+        ? "Opportunities"
+        : "Dashboard";
+  const mainRef = useRef<HTMLElement>(null);
   const { data: companyProfile, isLoading } = useFetchCompanyProfile();
 
   const isActive = (href: string) => {
@@ -64,6 +79,14 @@ export function CompanyLayout({ children }: { children: React.ReactNode }) {
       window.removeEventListener("placeit:sidenav:close", onClose);
     };
   }, [setCollapsed]);
+
+  // This layout now stays mounted between pages (see PageTransition), so what
+  // a remount used to do for free is done here: close the mobile drawer after
+  // navigating, and start each page at the top of the scrollable content area.
+  useEffect(() => {
+    if (isMobile) setCollapsed(true);
+    mainRef.current?.scrollTo({ top: 0 });
+  }, [pathname, isMobile, setCollapsed]);
 
   return (
     <div className="flex h-screen bg-muted dark:bg-background overflow-hidden">
@@ -87,7 +110,7 @@ export function CompanyLayout({ children }: { children: React.ReactNode }) {
                 {collapsed ? <Menu size={24} /> : <X size={24} />}
               </button>
             )}
-            <h2 className="text-lg font-semibold text-gray-800">Dashboard</h2>
+            <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
           </div>
           <div className="flex items-center gap-2">
             <ThemeToggleButton />
@@ -105,8 +128,11 @@ export function CompanyLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
         {/* Main Content Area */}
-        <main className="flex-1 overflow-auto px-2 py-2 sm:px-4 sm:py-4 lg:px-6 lg:py-6 xl:px-8 xl:py-8">
-          {children}
+        <main
+          ref={mainRef}
+          className="flex-1 overflow-auto px-2 py-2 sm:px-4 sm:py-4 lg:px-6 lg:py-6 xl:px-8 xl:py-8"
+        >
+          <PageTransition contentOnly>{children}</PageTransition>
         </main>
       </div>
       <OnboardingTour role="company" />
