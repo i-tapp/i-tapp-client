@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
 import { Logo } from "@/components/logo";
+import { Button } from "@/components/ui/button";
 
 /**
  * Shown for a beat after a successful signup, then it sends the person to the
@@ -23,11 +24,14 @@ export function SignupSuccessModal({
   message,
   redirectTo,
   delayMs = 3000,
+  actionLabel,
 }: {
   title?: string;
   message: string;
   redirectTo: string;
   delayMs?: number;
+  /** When set, shows a button that takes the person to `redirectTo` right away. */
+  actionLabel?: string;
 }) {
   const router = useRouter();
 
@@ -79,6 +83,16 @@ export function SignupSuccessModal({
         >
           {message}
         </p>
+
+        {actionLabel && (
+          <Button
+            type="button"
+            className="mt-6 w-full"
+            onClick={() => router.replace(redirectTo)}
+          >
+            {actionLabel}
+          </Button>
+        )}
 
         <div className="mt-7">
           <div className="h-1 w-full overflow-hidden rounded-full bg-gray-100">

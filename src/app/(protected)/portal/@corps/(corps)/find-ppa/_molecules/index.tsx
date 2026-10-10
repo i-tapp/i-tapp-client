@@ -150,7 +150,7 @@ export default function FindPPA() {
             className="fixed inset-0 bg-black/40 z-30 lg:hidden"
             onClick={() => setSelectedId(null)}
           />
-          <div className="fixed inset-y-0 right-0 z-40 w-full max-w-md bg-white shadow-2xl overflow-y-auto lg:relative lg:inset-auto lg:z-auto lg:w-96 lg:shrink-0 lg:border-l lg:border-gray-200 lg:shadow-none pt-14 lg:pt-0">
+          <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white shadow-2xl overflow-y-auto lg:relative lg:inset-auto lg:z-auto lg:w-96 lg:shrink-0 lg:border-l lg:border-gray-200 lg:shadow-none pt-14 lg:pt-0">
             <PPADetailPanel id={selectedId} onClose={() => setSelectedId(null)} />
           </div>
         </>

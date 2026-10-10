@@ -59,8 +59,11 @@ export default function CorpsSignup() {
     <div className="w-full max-w-xl bg-white p-8 border-gray-100">
       {showSuccess && (
         <SignupSuccessModal
-          message="Your corps member account has been created. Check your email to verify it, then log in to continue."
+          title="Account created!"
+          message="This is your account, not an application. Verify your email, then log in to start applying to PPA opportunities."
+          actionLabel="Log in to start applying"
           redirectTo="/signin"
+          delayMs={8000}
         />
       )}
 
