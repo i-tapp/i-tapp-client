@@ -46,6 +46,20 @@ export async function proxy(req: NextRequest) {
   const role = req.cookies.get("role")?.value; // || "admin";
   const { pathname } = req.nextUrl;
 
+  // The installed Android app opens on "/", the marketing homepage. Send it
+  // straight to where the user belongs - their own home when signed in, the
+  // sign-in page when not - BEFORE any homepage HTML is sent, so it never
+  // flashes on screen at startup. The app announces itself with the
+  // "PlaceItApp" user-agent marker (appendUserAgent in capacitor.config.json).
+  // Everyone else, and every other route, is left exactly as it was.
+  if (pathname === "/") {
+    const isApp = (req.headers.get("user-agent") ?? "").includes("PlaceItApp");
+    if (!isApp) return NextResponse.next();
+
+    const home = token && role ? roleRedirects[role] : undefined;
+    return NextResponse.redirect(new URL(home ?? "/signin", req.url));
+  }
+
   const isCompanyRole = role === "company";
   const isStudentRole = role === "student";
   const isCorpsRole = role === "corps";
@@ -179,6 +193,7 @@ export async function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
+    "/",
     "/portal/:path*",
     "/admin/:path*",
     "/signin",

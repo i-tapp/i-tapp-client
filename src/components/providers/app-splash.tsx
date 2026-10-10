@@ -1,10 +1,13 @@
 "use client";
 
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useAppMode } from "./app-mode-provider";
 
 const TOTAL_MS = 1700; // ~1.5-2s on screen
 const FADE_OUT_MS = 300;
+// Safety cap: never keep the splash up longer than this waiting for the launch redirect.
+const MAX_HOLD_MS = 6000;
 
 // APP-EXCLUSIVE (scope: `splashScreen` in config/app-features.ts).
 //
@@ -25,9 +28,17 @@ export function AppSplash() {
   // `mode` is resolved during the provider's first render (it reads the class
   // the boot script wrote), so this is already correct inside useLayoutEffect.
   const { feature } = useAppMode();
+  const pathname = usePathname();
   const [shouldShow, setShouldShow] = useState(false);
   const [fadingOut, setFadingOut] = useState(false);
   const [mounted, setMounted] = useState(true);
+  const [minElapsed, setMinElapsed] = useState(false);
+  const [capReached, setCapReached] = useState(false);
+
+  // In the app, "/" is only ever a stop on the way to the portal (see
+  // AppLaunchRedirect). Keep the splash over it until we have actually left,
+  // so the marketing homepage never shows between the splash and the app.
+  const holdForLaunch = feature("launchToPortal") && pathname === "/";
 
   useLayoutEffect(() => {
     if (!feature("splashScreen")) {
@@ -41,18 +52,29 @@ export function AppSplash() {
     // safe to reveal body, it's already covered by the overlay above it.
     document.documentElement.classList.remove("app-boot");
 
-    const fadeTimer = setTimeout(
-      () => setFadingOut(true),
+    const minTimer = setTimeout(
+      () => setMinElapsed(true),
       TOTAL_MS - FADE_OUT_MS
     );
-    const removeTimer = setTimeout(() => setMounted(false), TOTAL_MS);
+    const capTimer = setTimeout(() => setCapReached(true), MAX_HOLD_MS);
 
     return () => {
-      clearTimeout(fadeTimer);
-      clearTimeout(removeTimer);
+      clearTimeout(minTimer);
+      clearTimeout(capTimer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Fade out once the minimum time has passed AND we are no longer waiting on
+  // the launch redirect (or the safety cap has been hit).
+  useEffect(() => {
+    if (!shouldShow || !minElapsed) return;
+    if (holdForLaunch && !capReached) return;
+
+    setFadingOut(true);
+    const removeTimer = setTimeout(() => setMounted(false), FADE_OUT_MS);
+    return () => clearTimeout(removeTimer);
+  }, [shouldShow, minElapsed, holdForLaunch, capReached]);
 
   if (!mounted || !shouldShow) return null;
 
