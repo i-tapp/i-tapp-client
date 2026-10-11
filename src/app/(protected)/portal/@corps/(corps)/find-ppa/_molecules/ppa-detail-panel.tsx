@@ -16,6 +16,7 @@ import Image from "next/image";
 import dp from "@/assets/images/dp.png";
 import { useState } from "react";
 import { cn } from "@/utils/tailwind";
+import { getApplyAvailability } from "@/utils/opportunity-availability";
 
 export default function PPADetailPanel({ id, onClose }: { id: string; onClose: () => void }) {
   const queryClient = useQueryClient();
@@ -73,6 +74,9 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
   }
 
   if (!ppa) return null;
+
+  // Closed, full or past its deadline: nobody can apply.
+  const availability = getApplyAvailability(ppa);
 
   const hasApplied = appStatus?.hasApplied;
   const appStatusValue = appStatus?.status;
@@ -294,8 +298,9 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
             />
             <div className="flex gap-2">
               <Button
-                disabled={isApplying || isInitingPayment}
+                disabled={isApplying || isInitingPayment || !availability.canApply}
                 onClick={() => {
+                  if (!availability.canApply) return;
                   const cl = coverLetter || undefined;
                   setPendingCoverLetter(cl);
                   apply({ id, coverLetter: cl });
@@ -307,10 +312,17 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
               <Button variant="outline" onClick={() => setShowApplyModal(false)}>Cancel</Button>
             </div>
           </div>
-        ) : (
+        ) : availability.canApply ? (
           <Button onClick={() => setShowApplyModal(true)} className="w-full">
             Apply to this PPA
           </Button>
+        ) : (
+          <div className="space-y-2">
+            <Button disabled className="w-full">
+              {availability.buttonLabel}
+            </Button>
+            <p className="text-center text-xs text-gray-500">{availability.message}</p>
+          </div>
         )}
       </div>
 

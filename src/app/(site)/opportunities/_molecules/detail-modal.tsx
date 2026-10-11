@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { getApplyAvailability } from "@/utils/opportunity-availability";
 import moment from "moment";
 import { useRouter } from "next/navigation";
 import dp from "@/assets/images/dp.png";
@@ -57,6 +58,7 @@ export default function OpportunityDetailModal({
   });
 
   function handleApply() {
+    if (!getApplyAvailability(opportunity).canApply) return;
     const token = getClientCookie("session-token");
     if (!token) {
       router.push(
@@ -88,7 +90,8 @@ export default function OpportunityDetailModal({
     company,
   } = opportunity;
 
-  const isOpen = status === "open";
+  const availability = getApplyAvailability(opportunity);
+  const isOpen = availability.canApply;
   const spotsLeft = Math.max(0, maxApplicants - totalApplications);
   const fillPct =
     maxApplicants > 0
@@ -399,7 +402,7 @@ export default function OpportunityDetailModal({
                       <ArrowRight className="w-4 h-4" />
                     </>
                   ) : (
-                    "Position Closed"
+                    availability.buttonLabel
                   )}
                 </Button>
               </div>

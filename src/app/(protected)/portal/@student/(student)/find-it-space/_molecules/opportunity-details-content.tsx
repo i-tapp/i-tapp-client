@@ -14,6 +14,7 @@ import { useFetchMyApplicationStatus } from "@/queries/student";
 import { useStudentStore } from "@/lib/store";
 import { ApplicationStatus } from "@/types/enums";
 import { cn } from "@/utils/tailwind";
+import { getApplyAvailability } from "@/utils/opportunity-availability";
 import { useQueryClient } from "@tanstack/react-query";
 import { Heart } from "iconsax-reactjs";
 import {
@@ -99,7 +100,10 @@ export default function OpportunityDetailsContent({
   const stipendNum = rawStipend != null ? Number(rawStipend) : NaN;
   const stipend = !isNaN(stipendNum) && stipendNum > 0 ? stipendNum : null;
 
-  const isClosed = selectedOpportunity?.status === "closed";
+  // Closed, full or past its deadline: nobody can apply, even if the company
+  // never closed it and the opportunity is still listed.
+  const availability = getApplyAvailability(selectedOpportunity);
+  const isClosed = !availability.canApply;
   const deadlineMoment = selectedOpportunity?.applicationDeadline
     ? moment(selectedOpportunity.applicationDeadline)
     : null;
@@ -169,15 +173,19 @@ export default function OpportunityDetailsContent({
     onError(err) { toast.error(err?.error?.serverError || "Failed to withdraw. Please try again."); },
   });
 
-  const executeApply = () => { if (!opportunityId) return; applyAction({ id: opportunityId }); };
-  const handleApply = () => { if (isLocationMismatch()) { setLocationWarningOpen(true); return; } executeApply(); };
+  const executeApply = () => {
+    if (!opportunityId) return;
+    if (!availability.canApply) { toast.error(availability.message ?? "Applications are closed."); return; }
+    applyAction({ id: opportunityId });
+  };
+  const handleApply = () => { if (!availability.canApply) { toast.error(availability.message ?? "Applications are closed."); return; } if (isLocationMismatch()) { setLocationWarningOpen(true); return; } executeApply(); };
   const handleWithdraw = () => { if (!applicationId) return; withdrawAction({ id: applicationId }); };
   const handleSave = () => { if (!opportunityId) return; saveAction({ id: opportunityId }); };
 
   const formattedAddress = formatAddress(address);
 
   let applyLabel = "Apply Now";
-  if (isClosed) applyLabel = "Closed";
+  if (isClosed) applyLabel = availability.buttonLabel;
   else if (isWithdrawn) applyLabel = "Re-apply";
   else if (isApplying) applyLabel = "Applying…";
 
@@ -283,7 +291,7 @@ export default function OpportunityDetailsContent({
               </Pill>
             )}
             {isClosed && (
-              <Pill className="text-gray-400 bg-gray-100 border-gray-200">Closed</Pill>
+              <Pill className="text-gray-400 bg-gray-100 border-gray-200">{availability.reason === "full" ? "Full" : availability.reason === "deadline" ? "Deadline passed" : "Closed"}</Pill>
             )}
             {isUrgent && !isClosed && (
               <Pill className="text-red-600 bg-red-50 border-red-200 font-bold">
@@ -410,6 +418,9 @@ export default function OpportunityDetailsContent({
 
       {/* ── Sticky action bar ── */}
       <div className="shrink-0 bg-white border-t border-gray-100 px-4 py-3">
+        {isClosed && (!exists || isWithdrawn) && availability.message && (
+          <p className="mb-2 text-center text-[11px] text-gray-500">{availability.message}</p>
+        )}
         <div className="flex gap-2">
           {/* Primary action */}
           {(!exists || isWithdrawn) ? (
