@@ -3,6 +3,7 @@
 import { mutate, query } from "@/lib/api";
 import { actionClient } from "@/lib/safe-action";
 import {
+  companyDirectSignupSchema,
   companySignupSchema,
   corpsSignupSchema,
   resetPasswordSchema,
@@ -113,6 +114,13 @@ export const companySignup = actionClient
   .inputSchema(companySignupSchema)
   .action(async ({ parsedInput }) => {
     const response = await mutate("/auth/signup/company", parsedInput);
+    return response;
+  });
+
+export const companyDirectSignup = actionClient
+  .inputSchema(companyDirectSignupSchema)
+  .action(async ({ parsedInput }) => {
+    const response = await mutate("/auth/signup/company/direct", parsedInput);
     return response;
   });
 

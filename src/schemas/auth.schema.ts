@@ -125,6 +125,16 @@ export const companyProfileSchema = z.object({
   proofOfAddress: z.instanceof(File).optional(),
 });
 
+export const companyDirectSignupSchema = z.object({
+  name: z.string().min(1, "Company name is required"),
+  email: z
+    .email("Please enter a valid email address")
+    .min(1, "Email address is required")
+    .transform((v) => v.toLowerCase()),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  cacNumber: z.string().min(1, "CAC number is required"),
+});
+
 export const corpsSignupSchema = z.object({
   email: z
     .string()
