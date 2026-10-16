@@ -4,8 +4,12 @@ import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { ApplicantCard } from "@/components/applicant-card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useFetchAllCompanyApplications } from "@/hooks/query";
-import { Applicant } from "@/types";
+import {
+  useFetchAllCompanyApplications,
+  useFetchCompanyOpportunities,
+  useFetchOpportunityDetails,
+} from "@/hooks/query";
+import { Applicant, Application, Opportunity } from "@/types";
 import { cn } from "@/utils/tailwind";
 
 type Filter = "all" | "pending" | "accepted";
@@ -98,6 +102,26 @@ export default function CandidatesPage() {
   const [course, setCourse] = useState("");
   const [school, setSchool] = useState("");
   const [location, setLocation] = useState("");
+  const [opportunityId, setOpportunityId] = useState("");
+
+  // Opportunity filter: the dropdown lists the company's opportunities, and the
+  // chosen one's own applications tell us who applied to it.
+  const { data: oppList } = useFetchCompanyOpportunities();
+  const opportunityOptions = useMemo(
+    () =>
+      ((oppList as Opportunity[]) || []).map((o) => ({
+        value: o.id,
+        label: o.title,
+      })),
+    [oppList],
+  );
+  const { data: oppDetails, isFetching: loadingOpp } = useFetchOpportunityDetails(
+    opportunityId || undefined,
+  );
+  const oppApplications: Application[] = useMemo(
+    () => (opportunityId ? ((oppDetails as Opportunity | undefined)?.applications ?? []) : []),
+    [opportunityId, oppDetails],
+  );
 
   // Same response shape the dashboard reads: totalApplicants is [list, count].
   const list = data?.data?.totalApplicants?.[0];
@@ -110,11 +134,28 @@ export default function CandidatesPage() {
   const schoolOptions = useMemo(() => optionsFor(applicants, schoolOf), [applicants]);
   const locationOptions = useMemo(() => optionsFor(applicants, locationOf), [applicants]);
 
+  // Who applied to the chosen opportunity. Match on the application id when the
+  // list carries application ids (so someone who applied to two opportunities is
+  // only counted for the right one); otherwise fall back to the person's id.
+  const oppMatcher = useMemo(() => {
+    if (!opportunityId) return null;
+    const appIds = new Set(oppApplications.map((x) => x.id));
+    const personIds = new Set(
+      oppApplications
+        .map((x) => x.student?.id ?? x.corpsMember?.id)
+        .filter(Boolean) as string[],
+    );
+    const byApplicationId = applicants.some((a) => appIds.has(a.id));
+    return (a: Applicant) =>
+      byApplicationId ? appIds.has(a.id) : personIds.has(a.student?.id);
+  }, [opportunityId, oppApplications, applicants]);
+
   // Everything except the Pending/Accepted buttons, so those buttons show
   // counts that match the other filters.
   const scoped = useMemo(() => {
     const q = search.trim().toLowerCase();
     return applicants.filter((a) => {
+      if (oppMatcher && !oppMatcher(a)) return false;
       if (course && norm(courseOf(a)) !== course) return false;
       if (school && norm(schoolOf(a)) !== school) return false;
       if (location && norm(locationOf(a)) !== location) return false;
@@ -124,7 +165,7 @@ export default function CandidatesPage() {
         .toLowerCase()
         .includes(q);
     });
-  }, [applicants, search, course, school, location]);
+  }, [applicants, search, course, school, location, oppMatcher]);
 
   const counts = useMemo(
     () => ({
@@ -143,8 +184,9 @@ export default function CandidatesPage() {
     [scoped, filter],
   );
 
-  const hasFilters = Boolean(course || school || location || search.trim());
+  const hasFilters = Boolean(opportunityId || course || school || location || search.trim());
   const clearFilters = () => {
+    setOpportunityId("");
     setCourse("");
     setSchool("");
     setLocation("");
@@ -176,7 +218,14 @@ export default function CandidatesPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <FilterSelect
+          label="Opportunity applied to"
+          allLabel="All opportunities"
+          value={opportunityId}
+          onChange={setOpportunityId}
+          options={opportunityOptions}
+        />
         <FilterSelect
           label="Course of study"
           allLabel="All courses"
@@ -228,7 +277,11 @@ export default function CandidatesPage() {
         )}
       </div>
 
-      {visible.length === 0 ? (
+      {opportunityId && loadingOpp ? (
+        <p className="py-10 text-center text-sm text-muted-foreground">
+          Loading the applicants for this opportunity...
+        </p>
+      ) : visible.length === 0 ? (
         <p className="py-10 text-center text-sm text-muted-foreground">
           {applicants.length === 0
             ? "No candidates yet. Applicants will show up here once students apply to your opportunities."
