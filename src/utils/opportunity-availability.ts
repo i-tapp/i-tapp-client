@@ -35,7 +35,7 @@ const OPEN: ApplyAvailability = {
  *   - its status is closed / draft
  *   - the applicant limit has been reached
  *   - the application deadline has passed (the deadline day itself stays open
- *     until the end of that day)
+ *     until 23:59 Nigeria time that day, matching the backend)
  *
  * This only controls the UI. The backend must enforce the same rules on the
  * apply endpoints, because anything the browser does can be bypassed.
@@ -69,8 +69,12 @@ export function getApplyAvailability(
   }
 
   if (opportunity.applicationDeadline) {
+    // Same cut-off as the backend: the deadline day stays open until
+    // 23:59:59.999 Nigeria time (WAT, UTC+1). The stored value is midnight UTC
+    // of the picked date, so shift one hour, take the end of that day, shift back.
     const deadline = moment.utc(opportunity.applicationDeadline);
-    if (deadline.isValid() && now.isAfter(deadline.clone().endOf("day"))) {
+    const cutoff = deadline.clone().add(1, "hour").endOf("day").subtract(1, "hour");
+    if (deadline.isValid() && now.isAfter(cutoff)) {
       return {
         canApply: false,
         reason: "deadline",
