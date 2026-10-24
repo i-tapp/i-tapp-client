@@ -9,7 +9,6 @@ import { ReactQueryProvider } from "@/provider/react-query-provider";
 import { app } from "@/config/app";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
-import MetaPixelPageView from '@/components/meta-pixel-pageview';
 
 export const montserrat = Montserrat({
   weight: ["400", "500", "600", "700"],
@@ -81,14 +80,8 @@ export const metadata: Metadata = {
     },
   },
 
-  // The ?v=2 makes browsers that cached the old favicon fetch the new one.
   icons: {
-    icon: [
-      { url: "/favicon-32x32.png?v=2", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-16x16.png?v=2", sizes: "16x16", type: "image/png" },
-      { url: "/favicon.ico?v=2", sizes: "48x48" },
-    ],
-    shortcut: "/favicon.ico?v=2",
+    icon: app.favicon_url,
     apple: [{ url: "/apple-touch-icon.png" }],
   },
 
@@ -150,20 +143,6 @@ export default function RootLayout({
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'G-1YSPPC5H7Z');
-          `}
-        </Script>
-        <Script id="meta-pixel" strategy="afterInteractive">
-          {`
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '1315733800394508');
-            fbq('track', 'PageView');
           `}
         </Script>
         <Script
@@ -267,16 +246,6 @@ export default function RootLayout({
       <body
         className={`${opensans.variable} ${montserrat.variable} antialiased`} suppressHydrationWarning={true}
       >
-        <noscript>
-          <img
-            height="1"
-            width="1"
-            style={{ display: "none" }}
-            src="https://www.facebook.com/tr?id=1315733800394508&ev=PageView&noscript=1"
-            alt=""
-          />
-        </noscript>
-        <MetaPixelPageView />
         <ReactQueryProvider>
           <AppProvider>
             {/* <Suspense fallback={<Loading />}> */}
