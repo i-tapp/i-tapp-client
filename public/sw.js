@@ -3,7 +3,7 @@
 // offline resilience. Deliberately simple - not a full offline-first
 // cache strategy, just enough for store packaging + basic asset caching.
 
-const CACHE_NAME = "placeit-shell-v1";
+const CACHE_NAME = "placeit-shell-v2";
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();
