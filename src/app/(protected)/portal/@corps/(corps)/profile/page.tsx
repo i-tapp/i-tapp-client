@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/form";
 import { User, GraduationCap, Shield, MapPin, BadgeCheck, HelpCircle } from "lucide-react";
 import { replayOnboardingTour } from "@/components/onboarding-tour";
+import CorpsDocumentsCard from "./_molecules/documents-card";
 
 const profileSchema = z.object({
   firstName: z.string().min(1, "Required"),
@@ -368,6 +369,11 @@ export default function CorpsProfilePage() {
                 </Button>
               </form>
             </Form>
+
+            {/* Separate from the form above: it has its own Save button. */}
+            <div className="mt-5">
+              <CorpsDocumentsCard corps={corps} />
+            </div>
           </div>
         </div>
       </Wrapper>

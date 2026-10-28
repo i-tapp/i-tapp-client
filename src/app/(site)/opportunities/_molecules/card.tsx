@@ -148,7 +148,10 @@ export default function OpportunityCard({
           )}
         </div>
 
-        {/* ── Fill progress ── */}
+        {/* ── Fill progress ──
+            Not shown on NYSC (PPA) listings: corps members must not be able to
+            see how many people have applied. */}
+        {programType !== "ppa" && (
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between text-[11px]">
             <span className="flex items-center gap-1 text-gray-400">
@@ -178,6 +181,7 @@ export default function OpportunityCard({
             />
           </div>
         </div>
+        )}
 
         {/* ── Divider ── */}
         <div className="border-t border-dashed border-gray-100" />
