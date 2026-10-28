@@ -1,6 +1,7 @@
 import { mutate, query } from "@/lib/api";
 import { actionClient } from "@/lib/safe-action";
 import {
+  corpsDocumentUpdateSchema,
   corpsOnboardingSchema,
   studentOnboardingSchema,
   verifyStudentIdentitySchema,
@@ -199,6 +200,22 @@ export const updateCorpsProfile = actionClient
   }))
   .action(async ({ parsedInput }) => {
     const response = await mutate("/corps/profile", parsedInput, "PATCH");
+    return response;
+  });
+
+/**
+ * Replace documents uploaded during onboarding (call-up letter, CV,
+ * relocation letter) from the profile page. Sends only the files that were
+ * chosen, as multipart, to PATCH /corps/profile/documents.
+ */
+export const updateCorpsDocuments = actionClient
+  .inputSchema(corpsDocumentUpdateSchema)
+  .action(async ({ parsedInput }) => {
+    const formData = new FormData();
+    for (const [key, value] of Object.entries(parsedInput)) {
+      appendToFormData(formData, key, value);
+    }
+    const response = await mutate("/corps/profile/documents", formData, "PATCH");
     return response;
   });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { query } from "@/lib/api";
 import { Wrapper } from "@/components/wrapper";
@@ -87,11 +87,78 @@ const TYPE_FILTERS: {
   },
 ];
 
+/**
+ * Fills in anything a single-opportunity response might leave out, so the
+ * detail dialog never trips over a missing array or number.
+ */
+function normalizeSharedOpportunity(raw: any): PublicOpportunity | null {
+  const o = raw?.data && !raw?.id ? raw.data : raw;
+  if (!o?.id) return null;
+  return {
+    ...o,
+    department: Array.isArray(o.department) ? o.department : [],
+    preferredFields: Array.isArray(o.preferredFields) ? o.preferredFields : [],
+    totalApplications: Number(o.totalApplications ?? 0),
+    maxApplicants: Number(o.maxApplicants ?? 0),
+    company: o.company ?? {
+      id: "",
+      name: "",
+      industry: "",
+      logo: "",
+      website: "",
+      location: "",
+    },
+  } as PublicOpportunity;
+}
+
 export default function OpportunitiesBrowse() {
   const [page, setPage] = useState(1);
   const [typeFilter, setTypeFilter] = useState<OpportunityType>("all");
   const [selectedOpportunity, setSelectedOpportunity] =
     useState<PublicOpportunity | null>(null);
+
+  // A shared link looks like /opportunities?type=ppa&o=<id>. `type` picks the
+  // tab; `o` opens that listing's dialog (see lib/share-opportunity.ts).
+  //
+  // Read from window.location after mount rather than useSearchParams():
+  // useSearchParams() would make this page skip server rendering, and the
+  // server-rendered list is what search engines index.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const sharedType = params.get("type");
+    const sharedId = params.get("o");
+
+    if (sharedType === "ppa" || sharedType === "siwes") {
+      setTypeFilter(sharedType);
+    }
+    if (!sharedId) return;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_APP_BACKEND_API_URL;
+        const res = await fetch(
+          `${baseUrl}/o/${encodeURIComponent(sharedId)}`,
+          {
+            headers: {
+              "G-PlaceIT-build": process.env.NEXT_PUBLIC_BUILD_KEY ?? "",
+            },
+          },
+        );
+        // Anything but a clean answer (removed listing, the backend asking
+        // for a login, a network blip) just leaves the normal list showing.
+        if (!res.ok) return;
+        const opp = normalizeSharedOpportunity(await res.json());
+        if (opp && !cancelled) setSelectedOpportunity(opp);
+      } catch {
+        /* show the list instead */
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["public-opportunities", page, typeFilter],

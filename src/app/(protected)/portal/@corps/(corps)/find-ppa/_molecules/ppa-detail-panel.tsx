@@ -17,6 +17,7 @@ import dp from "@/assets/images/dp.png";
 import { useState } from "react";
 import { cn } from "@/utils/tailwind";
 import { getApplyAvailability } from "@/utils/opportunity-availability";
+import { ShareOpportunityButton } from "@/components/share-opportunity-button";
 
 export default function PPADetailPanel({ id, onClose }: { id: string; onClose: () => void }) {
   const queryClient = useQueryClient();
@@ -91,6 +92,14 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
       <div className="shrink-0 flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-white sticky top-0 z-10">
         <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">PPA Detail</span>
         <div className="flex items-center gap-1">
+          <ShareOpportunityButton
+            opportunity={{
+              id,
+              title: ppa.title,
+              companyName: companyName ?? undefined,
+              program: "ppa",
+            }}
+          />
           <button
             onClick={() => toggleSave({ id })}
             title={ppa.isSaved ? "Unsave" : "Save"}

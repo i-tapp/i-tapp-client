@@ -29,6 +29,7 @@ import {
 import { useAction } from "next-safe-action/hooks";
 import { apply } from "@/actions";
 import { toast } from "react-toastify";
+import { ShareOpportunityButton } from "@/components/share-opportunity-button";
 import type { PublicOpportunity } from "./browse";
 
 function getClientCookie(name: string): string | null {
@@ -79,6 +80,7 @@ export default function OpportunityDetailModal({
     duration,
     stipend,
     type,
+    programType,
     totalApplications,
     maxApplicants,
     applicationDeadline,
@@ -106,6 +108,19 @@ export default function OpportunityDetailModal({
         <VisuallyHidden>
           <DialogTitle>{title}</DialogTitle>
         </VisuallyHidden>
+        {/* Share (NYSC PPA listings) - sits just left of the close button */}
+        {programType === "ppa" && (
+          <div className="absolute top-4 right-14 z-50 rounded-lg bg-card/80 backdrop-blur-sm shadow-sm">
+            <ShareOpportunityButton
+              opportunity={{
+                id: opportunity.id,
+                title,
+                companyName: company?.name,
+                program: "ppa",
+              }}
+            />
+          </div>
+        )}
         {/* X button — always top-right, above everything */}
         <button
           onClick={onClose}
@@ -190,7 +205,9 @@ export default function OpportunityDetailModal({
                 />
               </div>
 
-              {/* Applicant fill */}
+              {/* Applicant fill - hidden on NYSC (PPA) listings so corps members
+                  can't see how many people have applied. */}
+              {programType !== "ppa" && (
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between text-[11px]">
                   <span className="flex items-center gap-1 text-white/60">
@@ -215,6 +232,7 @@ export default function OpportunityDetailModal({
                   {spotsLeft > 0 ? `${spotsLeft} of ${maxApplicants} spots remaining` : "No spots remaining"}
                 </p>
               </div>
+              )}
 
               {/* Deadline */}
               <div

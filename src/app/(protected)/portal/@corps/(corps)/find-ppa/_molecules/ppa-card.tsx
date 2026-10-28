@@ -13,11 +13,11 @@ import {
   BookmarkIcon,
 } from "lucide-react";
 import { Clock } from "iconsax-reactjs";
-import { Profile2User } from "iconsax-reactjs";
 import { useAction } from "next-safe-action/hooks";
 import { saveCorpsPPA } from "@/actions";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import { ShareOpportunityButton } from "@/components/share-opportunity-button";
 
 const Tag = ({
   children,
@@ -95,6 +95,15 @@ export default function PPACard({
       )}
     >
       <div className="absolute top-3 right-3 flex items-center gap-1">
+        <ShareOpportunityButton
+          opportunity={{
+            id: ppa.id,
+            title: ppa.title,
+            companyName,
+            program: "ppa",
+          }}
+          className="p-1"
+        />
         <button
           title="save"
           onClick={(e) => {
@@ -136,7 +145,7 @@ export default function PPACard({
         )}
       </div>
 
-      <div className="flex items-start gap-3 pr-8">
+      <div className="flex items-start gap-3 pr-14">
         {/* Logo */}
         <div className="shrink-0 w-9 h-9 border border-gray-100 bg-gray-50 overflow-hidden flex items-center justify-center">
           <Image
@@ -202,14 +211,10 @@ export default function PPACard({
       </div>
 
       <div className="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between">
+        {/* Applicant numbers are deliberately not shown to corps members. */}
         <span className="flex items-center gap-1 text-[10px] text-gray-400 tabular-nums">
           <Clock size={11} />
           {moment(ppa.createdAt).fromNow()}
-        </span>
-        <span className="flex items-center gap-1 text-[10px] text-gray-400 tabular-nums">
-          <Profile2User size={11} />
-          {ppa.totalApplications ?? 0}
-          {ppa.maxApplicants ? ` / ${ppa.maxApplicants}` : ""} applicants
         </span>
       </div>
     </div>

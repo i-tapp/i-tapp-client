@@ -51,6 +51,11 @@ export const corpsOnboardingSchema = corpsPersonalInfoSchema
   .extend(corpsDocumentStepSchema.shape);
 
 export type CorpsDocumentSchema = z.infer<typeof corpsDocumentStepSchema>;
+
+// Replacing documents after onboarding: every file is optional, because a corps
+// member may only want to swap one of them (say, a clearer CV).
+export const corpsDocumentUpdateSchema = corpsDocumentStepSchema.partial();
+export type CorpsDocumentUpdateSchema = z.infer<typeof corpsDocumentUpdateSchema>;
 export type CorpsPersonalInfoSchema = z.infer<typeof corpsPersonalInfoSchema>;
 export type CorpsInfoSchema = z.infer<typeof corpsInfoSchema>;
 export type CorpsSkillsSchema = z.infer<typeof corpsSkillsSchema>;
