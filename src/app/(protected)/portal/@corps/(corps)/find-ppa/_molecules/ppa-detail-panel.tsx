@@ -35,6 +35,14 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
 
   const { execute: initPayment, isExecuting: isInitingPayment } = useAction(initializeCorpsPayment, {
     onSuccess: (res) => {
+      // The one-time fee is already paid (possibly a payment that was taken
+      // but not recorded): don't charge again, just submit the application.
+      if (res?.data?.alreadyPaid) {
+        setPaymentPrompt(null);
+        toast.info("You've already paid the one-time fee - submitting your application.");
+        apply({ id, coverLetter: pendingCoverLetter });
+        return;
+      }
       if (res?.data?.authorizationUrl) {
         window.location.href = res.data.authorizationUrl;
       }

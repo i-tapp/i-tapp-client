@@ -153,7 +153,16 @@ export default function OpportunityDetailsContent({
     setIsInitializingPayment(true);
     try {
       const result = await initializePayment({ opportunityId });
-      const url = (result as any)?.data?.authorizationUrl;
+      const paid = (result as any)?.data;
+      // Already paid the one-time fee (possibly a payment that was taken but
+      // not recorded): don't charge again, just submit the application.
+      if (paid?.alreadyPaid) {
+        setPaymentModalOpen(false);
+        toast.info("You've already paid the one-time fee - submitting your application.");
+        applyAction({ id: opportunityId });
+        return;
+      }
+      const url = paid?.authorizationUrl;
       if (url) window.location.href = url;
       else toast.error("Could not initialize payment. Please try again.");
     } catch {

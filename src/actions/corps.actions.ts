@@ -23,7 +23,12 @@ export const initializeCorpsPayment = actionClient
   }))
   .action(async ({ parsedInput }) => {
     const response = await mutate("/payments/initialize/corps", parsedInput, "POST");
-    return response as { authorizationUrl: string; reference: string };
+    return response as {
+      requiresPayment: boolean;
+      authorizationUrl?: string;
+      reference?: string;
+      alreadyPaid?: boolean;
+    };
   });
 
 export const withdrawPPAApplication = actionClient
