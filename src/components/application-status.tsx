@@ -29,6 +29,26 @@ export function StatusBadge({ status }: { status: ApplicationStatus }) {
       label: "Accepted",
       color: "bg-green-100 text-green-700",
     },
+    [ApplicationStatus.SENT]: {
+      label: "Sent to company",
+      color: "bg-sky-100 text-sky-700",
+    },
+    [ApplicationStatus.DELIVERED]: {
+      label: "Delivered",
+      color: "bg-green-100 text-green-700",
+    },
+    [ApplicationStatus.BOUNCED]: {
+      label: "Not delivered",
+      color: "bg-red-100 text-red-700",
+    },
+    [ApplicationStatus.FORM_OPENED]: {
+      label: "Form opened",
+      color: "bg-amber-100 text-amber-700",
+    },
+    [ApplicationStatus.FORM_SUBMITTED]: {
+      label: "Submitted",
+      color: "bg-green-100 text-green-700",
+    },
   };
 
   const currentStatus = statusConfig[status] || {

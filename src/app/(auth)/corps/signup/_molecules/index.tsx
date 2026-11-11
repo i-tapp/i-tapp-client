@@ -20,6 +20,7 @@ import {
 import Input from "@/components/input";
 import { SignupSuccessModal } from "@/components/signup-success-modal";
 import { FormErrorSummary } from "@/components/form-error-summary";
+import { ShareConsentField } from "@/components/share-consent-field";
 
 const LABELS = {
   firstName: "First Name",
@@ -27,6 +28,7 @@ const LABELS = {
   email: "Email",
   phone: "Phone Number",
   password: "Password",
+  consentToShare: "Agreement to share your details",
 };
 
 export default function CorpsSignup() {
@@ -40,6 +42,7 @@ export default function CorpsSignup() {
       firstName: "",
       lastName: "",
       password: "",
+      consentToShare: false,
     },
   });
 
@@ -164,6 +167,8 @@ export default function CorpsSignup() {
               </FormItem>
             )}
           />
+
+          <ShareConsentField control={form.control} name="consentToShare" />
 
           {hasErrored && (
             <p className="text-red-500 text-xs">{result?.serverError}</p>

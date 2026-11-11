@@ -13,6 +13,7 @@ import { MapPin, Clock, Building2 } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/utils/format-date";
 import { cn } from "@/utils/tailwind";
+import { applicationStatusLabel } from "@/utils/application-status-label";
 
 function ApplicationRowSkeleton() {
   return (
@@ -125,8 +126,8 @@ export default function CorpsMyApplications() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
-                    <span className={cn("px-2.5 py-1 rounded-full text-xs font-semibold capitalize", STATUS_COLORS[app.status] ?? "bg-gray-100 text-gray-500")}>
-                      {app.status}
+                    <span className={cn("px-2.5 py-1 rounded-full text-xs font-semibold", applicationStatusLabel(app.status).color)}>
+                      {applicationStatusLabel(app.status).label}
                     </span>
                     {app.status === "applied" && (
                       <Button

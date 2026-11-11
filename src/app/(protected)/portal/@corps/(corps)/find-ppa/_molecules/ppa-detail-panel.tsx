@@ -1,7 +1,9 @@
 "use client";
 
 import { useFetchCorpsPPADetail, useFetchCorpsPPAApplicationStatus } from "@/queries/corps";
-import { applyToPPA, withdrawPPAApplication, saveCorpsPPA, initializeCorpsPayment } from "@/actions";
+import { applyToPPA, applyExternal, withdrawPPAApplication, saveCorpsPPA, initializeCorpsPayment } from "@/actions";
+import { ExternalApplyDialog, type ExternalPayload } from "@/components/external-apply-dialog";
+import { applicationStatusLabel } from "@/utils/application-status-label";
 import { Spinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
 import { useAction } from "next-safe-action/hooks";
@@ -27,6 +29,10 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [pendingCoverLetter, setPendingCoverLetter] = useState<string | undefined>();
   const [paymentPrompt, setPaymentPrompt] = useState<{ fee: number } | null>(null);
+  // Email / form listings: the apply dialog, and what was entered in it (kept
+  // through the payment step so the application is created with it).
+  const [externalOpen, setExternalOpen] = useState(false);
+  const [pendingExternal, setPendingExternal] = useState<ExternalPayload | null>(null);
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ["corps-ppa-status", id] });
@@ -40,7 +46,8 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
       if (res?.data?.alreadyPaid) {
         setPaymentPrompt(null);
         toast.info("You've already paid the one-time fee - submitting your application.");
-        apply({ id, coverLetter: pendingCoverLetter });
+        if (ppa?.applicationMethod === "email" && pendingExternal) applyExternalAction({ id, ...pendingExternal });
+        else apply({ id, coverLetter: pendingCoverLetter });
         return;
       }
       if (res?.data?.authorizationUrl) {
@@ -62,6 +69,21 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
       }
     },
     onError: () => toast.error("Application failed. Please try again."),
+  });
+
+  const { execute: applyExternalAction, isExecuting: isApplyingExternal } = useAction(applyExternal, {
+    onSuccess: (res) => {
+      if (res?.data?.requiresPayment) {
+        setExternalOpen(false);
+        setPaymentPrompt({ fee: res.data.fee ?? 1000 });
+        return;
+      }
+      toast.success("Application sent!");
+      setExternalOpen(false);
+      setPendingExternal(null);
+      invalidate();
+    },
+    onError: (err) => toast.error(err?.error?.serverError || "Application failed. Please try again."),
   });
 
   const { execute: withdraw, isExecuting: isWithdrawing } = useAction(withdrawPPAApplication, {
@@ -87,8 +109,11 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
   // Closed, full or past its deadline: nobody can apply.
   const availability = getApplyAvailability(ppa);
 
-  const hasApplied = appStatus?.hasApplied;
+  const method: string = ppa.applicationMethod ?? "direct";
   const appStatusValue = appStatus?.status;
+  // Opened the company's form but not yet said they submitted: can open it again.
+  const isFormPending = appStatusValue === "form_opened";
+  const hasApplied = appStatus?.hasApplied && !isFormPending;
   const companyName = ppa.contactDetails?.name ?? ppa.company?.name ?? null;
   const industry = ppa.sector ?? ppa.company?.industry ?? null;
   const logo = ppa.company?.logo ?? null;
@@ -296,7 +321,7 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
           <div className="flex items-center justify-between gap-3">
             <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-2 rounded-lg">
               <CheckCircle2 className="w-4 h-4" />
-              Applied · {appStatusValue}
+              Applied · {applicationStatusLabel(appStatusValue).label}
             </span>
             {appStatusValue === "applied" && (
               <Button variant="outline" size="sm" disabled={isWithdrawing} onClick={() => withdraw({ id })}>
@@ -330,8 +355,15 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
             </div>
           </div>
         ) : availability.canApply ? (
-          <Button onClick={() => setShowApplyModal(true)} className="w-full">
-            Apply to this PPA
+          <Button
+            onClick={() => (method === "direct" ? setShowApplyModal(true) : setExternalOpen(true))}
+            className="w-full"
+          >
+            {isFormPending
+              ? "Continue to company's form"
+              : method === "form"
+                ? "Apply on company's form"
+                : "Apply to this PPA"}
           </Button>
         ) : (
           <div className="space-y-2">
@@ -342,6 +374,17 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
           </div>
         )}
       </div>
+
+      <ExternalApplyDialog
+        open={externalOpen}
+        onOpenChange={setExternalOpen}
+        opportunity={{ ...ppa, id, company: ppa.company }}
+        isSubmitting={isApplyingExternal}
+        onSubmitEmail={(payload) => {
+          setPendingExternal(payload);
+          applyExternalAction({ id, ...payload });
+        }}
+      />
 
       {/* ── Payment confirmation modal ── */}
       {paymentPrompt && (
@@ -373,7 +416,7 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
                 className="flex-1"
                 disabled={isInitingPayment}
                 onClick={() => {
-                  initPayment({ opportunityId: id, coverLetter: pendingCoverLetter });
+                  initPayment({ opportunityId: id, coverLetter: pendingCoverLetter, ...(pendingExternal ?? {}) });
                   setPaymentPrompt(null);
                 }}
               >

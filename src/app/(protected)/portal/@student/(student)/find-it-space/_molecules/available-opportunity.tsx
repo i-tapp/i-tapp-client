@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import dp from "@/assets/images/dp.png";
 import moment from "moment";
+import { formatDate } from "@/utils/format-date";
 import { cn } from "@/utils/tailwind";
 import { Opportunity } from "@/types";
 import { Clock, Profile2User } from "iconsax-reactjs";
@@ -169,7 +170,7 @@ export default function AvailableOpportunity({
       <div className="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between">
         <span className="flex items-center gap-1 text-[10px] text-gray-400 tabular-nums">
           <Clock size={11} />
-          {moment(createdAt).fromNow()}
+          {formatDate(createdAt)}
         </span>
         <span className="flex items-center gap-1 text-[10px] text-gray-400 tabular-nums">
           <Profile2User size={11} />

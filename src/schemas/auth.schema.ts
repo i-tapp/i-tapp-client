@@ -42,6 +42,9 @@ export const signupSchema = z.object({
   lastName: z.string().min(1),
   school: z.string().min(1),
   matriculation: z.string().min(1),
+  // The backend requires a phone number at signup; it was being dropped here.
+  phone: z.string().min(1),
+  consentToShare: z.literal(true),
 });
 
 export const resetPasswordSchema = z
@@ -85,6 +88,9 @@ export const studentSignupSchema = z
       .min(1, REQUIRED)
       .min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string().min(1, REQUIRED),
+    consentToShare: z.boolean().refine((v) => v === true, {
+      message: "Please tick this box to agree before you create your account",
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -147,6 +153,9 @@ export const corpsSignupSchema = z.object({
     .string()
     .min(1, REQUIRED)
     .min(6, "Password must be at least 6 characters"),
+  consentToShare: z.boolean().refine((v) => v === true, {
+    message: "Please tick this box to agree before you create your account",
+  }),
 });
 
 export type CorpsSignupInput = z.infer<typeof corpsSignupSchema>;

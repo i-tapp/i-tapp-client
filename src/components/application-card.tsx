@@ -1,6 +1,10 @@
 import { MapPin, Users, Calendar, Briefcase } from "lucide-react";
 import { formatDate } from "@/utils/format-date";
 import { getStatusConfig } from "@/utils/application-status-config";
+import {
+  applicationStatusLabel,
+  isExternalMethod,
+} from "@/utils/application-status-label";
 
 export default function ApplicationCard({
   application,
@@ -48,7 +52,9 @@ export default function ApplicationCard({
                   <span
                     className={`w-1.5 h-1.5 rounded-full mr-2 ${statusConfig.dot}`}
                   ></span>
-                  {application?.opportunity?.status}
+                  {isExternalMethod(application?.method)
+                  ? applicationStatusLabel(application?.status).label
+                  : application?.opportunity?.status}
                 </span>
               </div>
 

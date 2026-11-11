@@ -21,7 +21,7 @@ import { ButtonWithLoader } from "@/components/button-with-loader";
 
 import { useCompanyStore } from "@/lib/store/company";
 import Input from "@/components/input";
-import { signinCompany } from "@/actions";
+import { claimListings, signinCompany } from "@/actions";
 import { signinSchema } from "@/schemas";
 
 const ROLE_REDIRECTS: Record<string, string> = {
@@ -44,11 +44,19 @@ export function CompanySignIn() {
   const { execute, isExecuting, hasErrored, result } = useAction(
     signinCompany,
     {
-      onSuccess(data) {
+      async onSuccess(data) {
         const user = data?.data?.user;
         const profile = data?.data?.profile;
         if (user?.role === "company") setCompany({ ...user, ...profile });
         toast.success("Welcome back!");
+        // They came from a "claim your listing" email: attach it to this account.
+        const claimToken = sessionStorage.getItem("listingClaimToken");
+        if (claimToken && user?.role === "company") {
+          const claimed = await claimListings({ token: claimToken });
+          if (claimed?.serverError) toast.error(claimed.serverError);
+          else toast.success("Your listing has been added to your account.");
+          sessionStorage.removeItem("listingClaimToken");
+        }
         const dest = ROLE_REDIRECTS[user?.role] ?? "/portal";
         router.replace(
           user?.role === "company" && !profile?.isOnboarded ? "/portal/onboarding" : dest,

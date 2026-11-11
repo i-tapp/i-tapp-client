@@ -19,6 +19,7 @@ import {
   ScrollText,
   Search,
   MapPin,
+  FilePlus2,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -40,6 +41,7 @@ const menuItems = [
   { name: "Companies", href: "/admin/company", icon: <Building size={20} /> },
   { name: "Opportunities", href: "/admin/opportunities", icon: <Briefcase size={20} /> },
   { name: "PPA Listings", href: "/admin/ppa", icon: <MapPin size={20} /> },
+  { name: "Posted Listings", href: "/admin/listings", icon: <FilePlus2 size={20} /> },
   { name: "Applications", href: "/admin/applications", icon: <ClipboardList size={20} /> },
   { name: "Placements", href: "/admin/placements", icon: <UserCheck size={20} /> },
   { name: "Analytics", href: "/admin/analytics", icon: <BarChart2 size={20} /> },

@@ -24,6 +24,11 @@ export const applicationStatusStyle: Record<ApplicationStatus, string> = {
   [ApplicationStatus.EXPIRED]: `${baseStyle} bg-gray-100 text-gray-500`,
   [ApplicationStatus.INTERVIEWING]: `${baseStyle} bg-green-100 text-green-700`,
   [ApplicationStatus.APPROVED]: `${baseStyle} bg-green-100 text-green-700`,
+  [ApplicationStatus.SENT]: `${baseStyle} bg-sky-100 text-sky-700`,
+  [ApplicationStatus.DELIVERED]: `${baseStyle} bg-green-100 text-green-700`,
+  [ApplicationStatus.BOUNCED]: `${baseStyle} bg-red-100 text-red-700`,
+  [ApplicationStatus.FORM_OPENED]: `${baseStyle} bg-amber-100 text-amber-700`,
+  [ApplicationStatus.FORM_SUBMITTED]: `${baseStyle} bg-green-100 text-green-700`,
 };
 
 export const companyStatusStyle: Record<CompanyStatus, string> = {

@@ -1,4 +1,8 @@
 import { getStatusConfig } from "@/utils/application-status-config";
+import {
+  applicationStatusLabel,
+  isExternalMethod,
+} from "@/utils/application-status-label";
 import { formatDate } from "@/utils/format-date";
 import { Building2, MapPin, Users, Calendar, Briefcase } from "lucide-react";
 export default function ApplicationTable({
@@ -109,7 +113,9 @@ export default function ApplicationTable({
                         <span
                           className={`w-1.5 h-1.5 rounded-full mr-2 ${statusConfig.dot}`}
                         ></span>
-                        {application?.opportunity?.status}
+                        {isExternalMethod(application?.method)
+                        ? applicationStatusLabel(application?.status).label
+                        : application?.opportunity?.status}
                       </span>
                     </td>
                   </tr>

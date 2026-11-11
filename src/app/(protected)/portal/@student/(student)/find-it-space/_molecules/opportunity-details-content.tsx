@@ -1,4 +1,5 @@
-import { apply, initializePayment, save, withdraw } from "@/actions";
+import { apply, applyExternal, initializePayment, save, withdraw } from "@/actions";
+import { ExternalApplyDialog, type ExternalPayload } from "@/components/external-apply-dialog";
 import { Spinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,6 +41,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import dp from "@/assets/images/dp.png";
 import moment from "moment";
+import { formatDate } from "@/utils/format-date";
 
 export default function OpportunityDetailsContent({
   selectedId,
@@ -84,6 +86,10 @@ export default function OpportunityDetailsContent({
   const [paymentData, setPaymentData] = useState<{ fee: number; message: string } | null>(null);
   const [isInitializingPayment, setIsInitializingPayment] = useState(false);
   const [saved, setSaved] = useState(false);
+  // Email / form listings: the apply dialog, and what was entered in it (kept
+  // through the payment step so the application is created with it).
+  const [externalOpen, setExternalOpen] = useState(false);
+  const [pendingExternal, setPendingExternal] = useState<ExternalPayload | null>(null);
 
   const exists = myApplicationStatus?.exists ?? false;
   const status = myApplicationStatus?.status ?? null;
@@ -92,7 +98,10 @@ export default function OpportunityDetailsContent({
 
   const isWithdrawn = status === ApplicationStatus.WITHDRAWN;
   const canWithdraw = exists && status === ApplicationStatus.APPLIED && Boolean(applicationId);
-  const hasApplied = exists && !isWithdrawn;
+  const method: string = selectedOpportunity?.applicationMethod ?? "direct";
+  // Opened the company's form but not yet said they submitted: can open it again.
+  const isFormPending = status === ApplicationStatus.FORM_OPENED;
+  const hasApplied = exists && !isWithdrawn && !isFormPending;
 
   const address = selectedOpportunity?.company?.addresses?.[0] ?? null;
 
@@ -148,18 +157,36 @@ export default function OpportunityDetailsContent({
     onError: (err) => toast.error(err?.error?.serverError || "Failed to apply. Please try again."),
   });
 
+  const { execute: applyExternalAction, isExecuting: isApplyingExternal } = useAction(applyExternal, {
+    onSuccess: (data) => {
+      const result = data?.data;
+      if (result?.requiresPayment) {
+        setExternalOpen(false);
+        setPaymentData({ fee: result.fee ?? 0, message: result.message ?? "" });
+        setPaymentModalOpen(true);
+        return;
+      }
+      toast.success(result?.message || "Application sent!");
+      setExternalOpen(false);
+      setPendingExternal(null);
+      invalidateDetails();
+    },
+    onError: (err) => toast.error(err?.error?.serverError || "Failed to apply. Please try again."),
+  });
+
   const handleProceedToPayment = async () => {
     if (!opportunityId) return;
     setIsInitializingPayment(true);
     try {
-      const result = await initializePayment({ opportunityId });
+      const result = await initializePayment({ opportunityId, ...(pendingExternal ?? {}) });
       const paid = (result as any)?.data;
       // Already paid the one-time fee (possibly a payment that was taken but
       // not recorded): don't charge again, just submit the application.
       if (paid?.alreadyPaid) {
         setPaymentModalOpen(false);
         toast.info("You've already paid the one-time fee - submitting your application.");
-        applyAction({ id: opportunityId });
+        if (method === "email" && pendingExternal) applyExternalAction({ id: opportunityId, ...pendingExternal });
+        else applyAction({ id: opportunityId });
         return;
       }
       const url = paid?.authorizationUrl;
@@ -185,6 +212,8 @@ export default function OpportunityDetailsContent({
   const executeApply = () => {
     if (!opportunityId) return;
     if (!availability.canApply) { toast.error(availability.message ?? "Applications are closed."); return; }
+    // Email / form listings collect what the company needs first.
+    if (method === "email" || method === "form") { setExternalOpen(true); return; }
     applyAction({ id: opportunityId });
   };
   const handleApply = () => { if (!availability.canApply) { toast.error(availability.message ?? "Applications are closed."); return; } if (isLocationMismatch()) { setLocationWarningOpen(true); return; } executeApply(); };
@@ -193,10 +222,11 @@ export default function OpportunityDetailsContent({
 
   const formattedAddress = formatAddress(address);
 
-  let applyLabel = "Apply Now";
+  let applyLabel = method === "form" ? "Apply on company's form" : "Apply Now";
   if (isClosed) applyLabel = availability.buttonLabel;
   else if (isWithdrawn) applyLabel = "Re-apply";
-  else if (isApplying) applyLabel = "Applying…";
+  else if (isFormPending) applyLabel = "Continue to company's form";
+  else if (isApplying || isApplyingExternal) applyLabel = "Applying…";
 
   const visible = Boolean(opportunityId);
   if (!visible) return null;
@@ -361,7 +391,7 @@ export default function OpportunityDetailsContent({
         {/* ── Timeline metadata ── */}
         <div className="mx-4 mt-4 border border-gray-100 divide-y divide-gray-100">
           <MetaRow icon={<Clock className="w-3.5 h-3.5 text-gray-300" />} label="Posted">
-            <span className="text-[12px] font-semibold text-gray-700">{moment(selectedOpportunity?.createdAt).fromNow()}</span>
+            <span className="text-[12px] font-semibold text-gray-700">{formatDate(selectedOpportunity?.createdAt)}</span>
           </MetaRow>
           {deadlineMoment && (
             <MetaRow icon={<CalendarClock className={cn("w-3.5 h-3.5", isUrgent ? "text-red-400" : "text-gray-300")} />} label="Application Deadline">
@@ -432,7 +462,7 @@ export default function OpportunityDetailsContent({
         )}
         <div className="flex gap-2">
           {/* Primary action */}
-          {(!exists || isWithdrawn) ? (
+          {(!exists || isWithdrawn || isFormPending) ? (
             <button
               type="button"
               onClick={handleApply}
@@ -512,6 +542,19 @@ export default function OpportunityDetailsContent({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Email / form listings: what the company needs, or the company's form */}
+      <ExternalApplyDialog
+        open={externalOpen}
+        onOpenChange={setExternalOpen}
+        opportunity={selectedOpportunity}
+        isSubmitting={isApplyingExternal}
+        onSubmitEmail={(payload) => {
+          if (!opportunityId) return;
+          setPendingExternal(payload);
+          applyExternalAction({ id: opportunityId, ...payload });
+        }}
+      />
 
       {/* Payment modal */}
       <Dialog open={paymentModalOpen} onOpenChange={setPaymentModalOpen}>

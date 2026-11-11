@@ -41,6 +41,8 @@ export const studentSignup = actionClient
         password,
         matriculation,
         school,
+        phone,
+        consentToShare,
       },
     }) => {
       const response = await mutate("/auth/signup/student", {
@@ -50,6 +52,8 @@ export const studentSignup = actionClient
         password,
         matriculationNumber: matriculation,
         school,
+        phone,
+        consentToShare,
       });
     },
   );
@@ -137,7 +141,14 @@ export const corpsSignup = actionClient
   .inputSchema(corpsSignupSchema)
   .action(
     async ({
-      parsedInput: { email, password, firstName, lastName, phone },
+      parsedInput: {
+        email,
+        password,
+        firstName,
+        lastName,
+        phone,
+        consentToShare,
+      },
     }) => {
       const response = await mutate("/auth/signup/corps", {
         email,
@@ -145,6 +156,7 @@ export const corpsSignup = actionClient
         firstName,
         lastName,
         phone,
+        consentToShare,
       });
       return response;
     },

@@ -18,12 +18,14 @@ import { studentSignup } from "@/actions";
 import { studentSignupSchema } from "@/schemas";
 import { SignupSuccessModal } from "@/components/signup-success-modal";
 import { FormErrorSummary } from "@/components/form-error-summary";
+import { ShareConsentField } from "@/components/share-consent-field";
 
 const LABELS = {
   email: "Email",
   phone: "Phone Number",
   password: "Password",
   confirmPassword: "Confirm Password",
+  consentToShare: "Agreement to share your details",
 };
 
 type Login = {
@@ -47,6 +49,7 @@ export function SignupInfo({
       email: "",
       password: "",
       confirmPassword: "",
+      consentToShare: false,
       phone: studentData?.data?.data?.phone ?? studentData?.data?.phone ?? "",
     },
   });
@@ -162,6 +165,8 @@ export function SignupInfo({
               }}
             />
           </div>
+
+          <ShareConsentField control={form.control} name="consentToShare" />
 
           <ButtonWithLoader
             type="submit"

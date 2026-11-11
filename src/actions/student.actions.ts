@@ -55,6 +55,13 @@ export const initializePayment = actionClient
       opportunityId: z.string(),
       coverLetter: z.string().optional(),
       resumeUrl: z.string().optional(),
+      // Email-category listings: kept through the payment step
+      documents: z
+        .array(z.object({ type: z.string(), url: z.string(), name: z.string().optional() }))
+        .optional(),
+      answers: z
+        .array(z.object({ questionId: z.string(), answer: z.string() }))
+        .optional(),
     }),
   )
   .action(async ({ parsedInput }) => {

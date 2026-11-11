@@ -13,6 +13,13 @@ export enum ApplicationStatus {
 
   WITHDRAWN = "withdrawn",
   EXPIRED = "expired", // Company didn't respond in time
+
+  // Email / form listings (applications that leave PlaceIT)
+  SENT = "sent",
+  DELIVERED = "delivered",
+  BOUNCED = "bounced",
+  FORM_OPENED = "form_opened",
+  FORM_SUBMITTED = "form_submitted",
 }
 
 export enum OpportunityStatus {
