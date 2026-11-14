@@ -55,7 +55,11 @@ export function ExternalApplyDialog({
   opportunity,
   onSubmitEmail,
   isSubmitting = false,
+  applicantKind = "student",
 }: {
+  /** Who is applying. SIWES students send their IT letter (CV optional);
+   *  corps members send their CV. */
+  applicantKind?: "student" | "corps";
   open: boolean;
   onOpenChange: (open: boolean) => void;
   opportunity: any;
@@ -75,6 +79,7 @@ export function ExternalApplyDialog({
             open={open}
             onSubmit={onSubmitEmail}
             isSubmitting={isSubmitting}
+            applicantKind={applicantKind}
           />
         )}
       </DialogContent>
@@ -91,7 +96,9 @@ function EmailFlow({
   open,
   onSubmit,
   isSubmitting,
+  applicantKind,
 }: {
+  applicantKind: "student" | "corps";
   opportunity: any;
   open: boolean;
   onSubmit: (payload: ExternalPayload) => void;
@@ -125,7 +132,13 @@ function EmailFlow({
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
 
+  const isStudent = applicantKind === "student";
   const uploadTypes = UPLOAD_TYPES.filter((t) => required.includes(t));
+  // Students can keep a transcript and ID on their profile too.
+  const fromProfile = useMemo(
+    () => (isStudent ? [...FROM_PROFILE, "transcript", "id"] : FROM_PROFILE),
+    [isStudent],
+  );
 
   const upload = async (type: string, file: File | undefined) => {
     if (!file) return;
@@ -144,7 +157,7 @@ function EmailFlow({
     if (needsCoverLetter && coverLetter.trim().length < 30)
       out.push("Write a short cover letter (at least a few sentences)");
     for (const t of uploadTypes) {
-      if (!FROM_PROFILE.includes(t) && !docs[t]) out.push(`Upload your ${DOC_LABELS[t].toLowerCase()}`);
+      if (!fromProfile.includes(t) && !docs[t]) out.push(`Upload your ${DOC_LABELS[t].toLowerCase()}`);
     }
     if (required.includes("portfolio_link") && !/^https?:\/\/\S+/i.test(portfolio.trim()))
       out.push("Add a link to your portfolio (starting with https://)");
@@ -153,7 +166,7 @@ function EmailFlow({
     }
     if (needsConsent && !agreed) out.push("Agree to share your details with this company");
     return out;
-  }, [needsCoverLetter, coverLetter, uploadTypes, docs, required, portfolio, questions, answers, needsConsent, agreed]);
+  }, [fromProfile, needsCoverLetter, coverLetter, uploadTypes, docs, required, portfolio, questions, answers, needsConsent, agreed]);
 
   const submit = async () => {
     if (problems.length) {
@@ -194,7 +207,9 @@ function EmailFlow({
       <DialogHeader>
         <DialogTitle>Apply to {opportunity?.title}</DialogTitle>
         <DialogDescription>
-          Your application goes to {companyNameOf(opportunity)} by email, with your CV attached.
+          {isStudent
+            ? <>Your application goes to {companyNameOf(opportunity)} by email, with your IT (SIWES) letter attached.</>
+            : <>Your application goes to {companyNameOf(opportunity)} by email, with your CV attached.</>}{" "}
           They reply straight to you.
         </DialogDescription>
       </DialogHeader>
@@ -208,7 +223,9 @@ function EmailFlow({
 
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <Paperclip className="w-4 h-4 text-gray-400" />
-          Your CV from your profile is attached automatically.
+          {isStudent
+            ? "Your IT (SIWES) letter from your profile is attached automatically. Your CV is attached too if you've added one (optional)."
+            : "Your CV from your profile is attached automatically."}
         </div>
 
         {needsCoverLetter && (
@@ -251,7 +268,7 @@ function EmailFlow({
                 </span>
               )}
             </div>
-            {FROM_PROFILE.includes(t) && !docs[t] && (
+            {fromProfile.includes(t) && !docs[t] && (
               <p className="text-[11px] text-gray-400 mt-1">
                 Optional: we use the one on your profile if you don&apos;t upload one.
               </p>
@@ -333,7 +350,7 @@ function EmailFlow({
             />
             <span>
               I agree that PlaceIT may send my name, email, phone number, school or NYSC details,
-              CV and the answers I give here to {companyNameOf(opportunity)}, including by email.
+              {isStudent ? " IT letter, CV (if added)" : " CV"} and the answers I give here to {companyNameOf(opportunity)}, including by email.
             </span>
           </label>
         )}

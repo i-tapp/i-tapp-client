@@ -3,6 +3,7 @@ import { actionClient } from "@/lib/safe-action";
 import {
   corpsDocumentUpdateSchema,
   corpsOnboardingSchema,
+  studentDocumentUpdateSchema,
   studentOnboardingSchema,
   verifyStudentIdentitySchema,
 } from "@/schemas";
@@ -228,6 +229,22 @@ export const updateCorpsDocuments = actionClient
       appendToFormData(formData, key, value);
     }
     const response = await mutate("/corps/profile/documents", formData, "PATCH");
+    return response;
+  });
+
+/**
+ * Add or replace a student's profile documents (IT letter, CV, transcript, ID,
+ * other). Sends only the files that were chosen, as multipart, to
+ * PATCH /s/profile/documents.
+ */
+export const updateStudentDocuments = actionClient
+  .inputSchema(studentDocumentUpdateSchema)
+  .action(async ({ parsedInput }) => {
+    const formData = new FormData();
+    for (const [key, value] of Object.entries(parsedInput)) {
+      appendToFormData(formData, key, value);
+    }
+    const response = await mutate("/s/profile/documents", formData, "PATCH");
     return response;
   });
 

@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { corpsSignup } from "@/actions";
@@ -21,6 +21,11 @@ import Input from "@/components/input";
 import { SignupSuccessModal } from "@/components/signup-success-modal";
 import { FormErrorSummary } from "@/components/form-error-summary";
 import { ShareConsentField } from "@/components/share-consent-field";
+import {
+  TURNSTILE_ENABLED,
+  TurnstileWidget,
+  type TurnstileHandle,
+} from "@/components/turnstile-widget";
 
 const LABELS = {
   firstName: "First Name",
@@ -33,6 +38,10 @@ const LABELS = {
 
 export default function CorpsSignup() {
   const [showSuccess, setShowSuccess] = useState(false);
+  // Cloudflare Turnstile bot check
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileHandle>(null);
+  const waitingForCheck = TURNSTILE_ENABLED && !turnstileToken;
   const form = useForm<CorpsSignupInput>({
     resolver: zodResolver(corpsSignupSchema),
     mode: "all",
@@ -55,6 +64,8 @@ export default function CorpsSignup() {
       toast.error(
         error?.error?.serverError ?? "Sign up failed. Please try again.",
       );
+      // Turnstile tokens are single-use: get a fresh one for the next try.
+      turnstileRef.current?.reset();
     },
   });
 
@@ -90,7 +101,13 @@ export default function CorpsSignup() {
 
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit((data) => execute(data))}
+          onSubmit={form.handleSubmit((data) => {
+            if (waitingForCheck) {
+              toast.error("Please complete the security check first.");
+              return;
+            }
+            execute({ ...data, turnstileToken: turnstileToken ?? undefined });
+          })}
           className="flex flex-col gap-4"
         >
           <div className="grid grid-cols-2 gap-4">
@@ -170,13 +187,15 @@ export default function CorpsSignup() {
 
           <ShareConsentField control={form.control} name="consentToShare" />
 
+          <TurnstileWidget ref={turnstileRef} onToken={setTurnstileToken} className="my-2" />
+
           {hasErrored && (
             <p className="text-red-500 text-xs">{result?.serverError}</p>
           )}
 
           <Button
             type="submit"
-            disabled={isExecuting}
+            disabled={isExecuting || waitingForCheck}
             className="w-full mt-2 cursor-pointer"
           >
             {isExecuting ? "Creating account…" : "Create account"}

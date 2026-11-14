@@ -23,6 +23,7 @@ import ProfileHeaderBanner from "@/components/profile-header-banner";
 import { useFetchProfile } from "@/hooks/query";
 import { Spinner } from "@/components/spinner";
 import ProfileForm from "./profile-form";
+import StudentDocumentsCard from "./documents-card";
 import { useLogout } from "@/hooks/use-logout";
 import { replayOnboardingTour } from "@/components/onboarding-tour";
 import { HelpCircle } from "lucide-react";
@@ -316,6 +317,10 @@ const StudentProfilePage = ({ student = mockStudent, onEdit = () => {} }) => {
                   color="orange"
                 />
               </div>
+            </div>
+
+            <div className="p-3 md:p-8 border-t border-gray-200">
+              <StudentDocumentsCard student={studentDetails} />
             </div>
           </div>
         </div>

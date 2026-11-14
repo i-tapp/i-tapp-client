@@ -2,10 +2,8 @@ import React from "react";
 import Image from "next/image";
 import dp from "@/assets/images/dp.png";
 import moment from "moment";
-import { formatDate } from "@/utils/format-date";
 import { cn } from "@/utils/tailwind";
 import { Opportunity } from "@/types";
-import { Clock, Profile2User } from "iconsax-reactjs";
 import { useRouter } from "next/navigation";
 import useIsResponsive from "@/utils/responsive";
 import { BadgeCheck, MapPin, ArrowRight, Banknote, CalendarClock, CheckCircle2 } from "lucide-react";
@@ -23,8 +21,8 @@ export default function AvailableOpportunity({
 }) {
   const {
     id, title, location, duration, createdAt,
-    mode, totalApplications, status, industry,
-    applicationDeadline, hasApplied, maxApplicants,
+    mode, status, industry,
+    applicationDeadline, hasApplied,
   } = details;
 
   const rawStipend = (details as any).stipend;
@@ -166,18 +164,7 @@ export default function AvailableOpportunity({
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between">
-        <span className="flex items-center gap-1 text-[10px] text-gray-400 tabular-nums">
-          <Clock size={11} />
-          {formatDate(createdAt)}
-        </span>
-        <span className="flex items-center gap-1 text-[10px] text-gray-400 tabular-nums">
-          <Profile2User size={11} />
-          {totalApplications ?? 0}
-          {maxApplicants ? ` / ${maxApplicants}` : ""} applicants
-        </span>
-      </div>
+      {/* Applicant numbers and posting date are deliberately not shown to students. */}
     </button>
   );
 }

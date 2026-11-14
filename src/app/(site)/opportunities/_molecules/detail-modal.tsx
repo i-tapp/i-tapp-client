@@ -14,8 +14,6 @@ import {
   CalendarDays,
   BookOpen,
   FileText,
-  Users,
-  Clock,
   Wifi,
   Banknote,
   ArrowRight,
@@ -81,8 +79,6 @@ export default function OpportunityDetailModal({
     stipend,
     type,
     programType,
-    totalApplications,
-    maxApplicants,
     applicationDeadline,
     resumeRequired,
     schoolLetterRequired,
@@ -94,11 +90,6 @@ export default function OpportunityDetailModal({
 
   const availability = getApplyAvailability(opportunity);
   const isOpen = availability.canApply;
-  const spotsLeft = Math.max(0, maxApplicants - totalApplications);
-  const fillPct =
-    maxApplicants > 0
-      ? Math.min(100, Math.round((totalApplications / maxApplicants) * 100))
-      : 0;
   const daysLeft = moment(applicationDeadline).diff(moment(), "days");
   const deadlineIsNear = daysLeft <= 7 && isOpen;
 
@@ -186,7 +177,7 @@ export default function OpportunityDetailModal({
                 <StatTile
                   icon={<Timer className="w-3.5 h-3.5" />}
                   label="Duration"
-                  value={`${duration} Months`}
+                  value={programType !== "ppa" && duration ? `${duration} Months` : "—"}
                 />
                 <StatTile
                   icon={<Wifi className="w-3.5 h-3.5" />}
@@ -204,35 +195,6 @@ export default function OpportunityDetailModal({
                   value={type}
                 />
               </div>
-
-              {/* Applicant fill - hidden on NYSC (PPA) listings so corps members
-                  can't see how many people have applied. */}
-              {programType !== "ppa" && (
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between text-[11px]">
-                  <span className="flex items-center gap-1 text-white/60">
-                    <Users className="w-3 h-3" />
-                    Spots filled
-                  </span>
-                  <span className="text-white font-semibold">{fillPct}%</span>
-                </div>
-                <div className="h-1.5 w-full bg-white/15 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all duration-700 ${
-                      fillPct >= 100
-                        ? "bg-red-400"
-                        : fillPct >= 75
-                        ? "bg-orange-300"
-                        : "bg-white/70"
-                    }`}
-                    style={{ width: `${fillPct}%` }}
-                  />
-                </div>
-                <p className="text-white/50 text-[11px]">
-                  {spotsLeft > 0 ? `${spotsLeft} of ${maxApplicants} spots remaining` : "No spots remaining"}
-                </p>
-              </div>
-              )}
 
               {/* Deadline */}
               <div
@@ -310,7 +272,9 @@ export default function OpportunityDetailModal({
                   {isOpen ? "Open" : "Closed"}
                 </span>
                 {[
-                  { icon: <Timer className="w-3 h-3" />, label: `${duration}mo` },
+                  ...(programType !== "ppa" && duration
+                    ? [{ icon: <Timer className="w-3 h-3" />, label: `${duration}mo` }]
+                    : []),
                   { icon: <Wifi className="w-3 h-3" />, label: mode },
                   { icon: <Banknote className="w-3 h-3" />, label: stipend === "stipend provided" ? "Paid" : stipend === "depends" ? "Depends" : "Unpaid" },
                   { icon: <MapPin className="w-3 h-3" />, label: location },
@@ -329,10 +293,6 @@ export default function OpportunityDetailModal({
                 <div className="flex flex-wrap items-center gap-3 mt-2">
                   <span className="flex items-center gap-1 text-red-500 text-xs font-medium">
                     <MapPin className="w-3.5 h-3.5" />{location}
-                  </span>
-                  <span className="text-gray-200">·</span>
-                  <span className="flex items-center gap-1 text-gray-400 text-xs">
-                    <Clock className="w-3 h-3" />Posted {moment(opportunity.createdAt).fromNow()}
                   </span>
                 </div>
               </div>

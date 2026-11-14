@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useAction } from "next-safe-action/hooks";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { MapPin, Clock, Building2 } from "lucide-react";
+import { MapPin, Building2 } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/utils/format-date";
 import { cn } from "@/utils/tailwind";
@@ -120,7 +120,6 @@ export default function CorpsMyApplications() {
                       </p>
                       <div className="flex flex-wrap gap-3 mt-1 text-xs text-gray-400">
                         <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{opp?.location}</span>
-                        <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{opp?.duration}</span>
                         <span>Applied {formatDate(app.appliedAt)}</span>
                       </div>
                     </div>

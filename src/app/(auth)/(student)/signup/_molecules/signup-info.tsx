@@ -11,7 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import Input from "@/components/input";
 import { studentSignup } from "@/actions";
@@ -19,6 +19,11 @@ import { studentSignupSchema } from "@/schemas";
 import { SignupSuccessModal } from "@/components/signup-success-modal";
 import { FormErrorSummary } from "@/components/form-error-summary";
 import { ShareConsentField } from "@/components/share-consent-field";
+import {
+  TURNSTILE_ENABLED,
+  TurnstileWidget,
+  type TurnstileHandle,
+} from "@/components/turnstile-widget";
 
 const LABELS = {
   email: "Email",
@@ -56,6 +61,10 @@ export function SignupInfo({
 
   const { isDirty, isValid, errors, isSubmitted } = form.formState;
   const [showSuccess, setShowSuccess] = useState(false);
+  // Cloudflare Turnstile bot check
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileHandle>(null);
+  const waitingForCheck = TURNSTILE_ENABLED && !turnstileToken;
 
   const {
     execute: signupAction,
@@ -69,12 +78,18 @@ export function SignupInfo({
     },
     onError(error) {
       toast.error(error?.error?.serverError ?? "Error signing up. Please try again.");
+      // Turnstile tokens are single-use: get a fresh one for the next try.
+      turnstileRef.current?.reset();
     },
   });
 
   const handleSignup = (data: Login) => {
+    if (waitingForCheck) {
+      toast.error("Please complete the security check first.");
+      return;
+    }
     const old = studentData.data;
-    const payLoad = { ...old, ...data };
+    const payLoad = { ...old, ...data, turnstileToken: turnstileToken ?? undefined };
     signupAction(payLoad);
   };
 
@@ -168,10 +183,12 @@ export function SignupInfo({
 
           <ShareConsentField control={form.control} name="consentToShare" />
 
+          <TurnstileWidget ref={turnstileRef} onToken={setTurnstileToken} className="my-2" />
+
           <ButtonWithLoader
             type="submit"
             isPending={isExecuting}
-            disabled={isExecuting}
+            disabled={isExecuting || waitingForCheck}
             className="w-full"
           >
             Sign up

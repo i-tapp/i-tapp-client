@@ -10,7 +10,7 @@ import { useAction } from "next-safe-action/hooks";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import {
-  X, MapPin, Clock, Globe, Building2, BookmarkIcon,
+  X, MapPin, Globe, Building2, BookmarkIcon,
   Banknote, CalendarDays, Layers, CheckCircle2, Mail, Phone, User,
 } from "lucide-react";
 import { formatDate } from "@/utils/format-date";
@@ -205,15 +205,7 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
               </div>
             </div>
           )}
-          {ppa.duration && (
-            <div className="flex items-start gap-2">
-              <Clock className="w-4 h-4 text-gray-400 shrink-0 mt-0.5" />
-              <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-wide font-semibold">Duration</p>
-                <p className="text-sm text-gray-800">{ppa.duration} month{ppa.duration !== 1 ? "s" : ""}</p>
-              </div>
-            </div>
-          )}
+          {/* No duration for NYSC (PPA) listings - there is no field for it. */}
           {ppa.mode && (
             <div className="flex items-start gap-2">
               <Layers className="w-4 h-4 text-gray-400 shrink-0 mt-0.5" />
@@ -376,6 +368,7 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
       </div>
 
       <ExternalApplyDialog
+        applicantKind="corps"
         open={externalOpen}
         onOpenChange={setExternalOpen}
         opportunity={{ ...ppa, id, company: ppa.company }}

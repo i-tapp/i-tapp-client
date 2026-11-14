@@ -104,7 +104,9 @@ export function OpportunitiesPreview() {
                 <div className="flex flex-wrap gap-1.5">
                   {[
                     { icon: <Wifi className="w-3 h-3" />, text: opp.mode },
-                    { icon: <Clock className="w-3 h-3" />, text: `${opp.duration} mo` },
+                    ...((opp as any).programType !== "ppa" && opp.duration
+                      ? [{ icon: <Clock className="w-3 h-3" />, text: `${opp.duration} mo` }]
+                      : []),
                     { icon: <Banknote className="w-3 h-3" />, text: opp.stipend === "stipend provided" ? "Paid" : opp.stipend === "depends" ? "Depends" : "Unpaid" },
                   ].map((tag) => (
                     <span key={tag.text} className="inline-flex items-center gap-1 text-[11px] font-medium bg-gray-50 border border-gray-100 px-2.5 py-0.5 rounded-lg text-gray-600 capitalize">

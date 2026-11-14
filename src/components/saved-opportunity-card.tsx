@@ -1,4 +1,4 @@
-import { MapPin, Users, Calendar, Briefcase } from "lucide-react";
+import { MapPin, Calendar, Briefcase } from "lucide-react";
 import { formatDate } from "@/utils/format-date";
 import { getStatusConfig } from "@/utils/application-status-config";
 
@@ -61,19 +61,6 @@ export default function SavedOpportunityCard({
                     <p className="text-xs text-gray-500">Saved</p>
                     <p className="text-sm font-medium">
                       {formatDate(opportunity.savedAt)}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center text-gray-600">
-                  <Users
-                    size={16}
-                    className="mr-2 text-gray-400 flex-shrink-0"
-                  />
-                  <div>
-                    <p className="text-xs text-gray-500">Applicants</p>
-                    <p className="text-sm font-medium">
-                      {opportunity?.totalApplications || 0}
                     </p>
                   </div>
                 </div>

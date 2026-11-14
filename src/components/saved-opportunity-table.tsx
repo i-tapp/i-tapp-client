@@ -1,6 +1,6 @@
 import { getStatusConfig } from "@/utils/application-status-config";
 import { formatDate } from "@/utils/format-date";
-import { Building2, MapPin, Users, Calendar, Briefcase } from "lucide-react";
+import { Building2, MapPin, Calendar, Briefcase } from "lucide-react";
 export default function SavedOpportunityTable({
   opportunity,
 }: {
@@ -25,9 +25,6 @@ export default function SavedOpportunityTable({
                 Industry
               </th>
               <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Applicants
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Status
               </th>
             </tr>
@@ -35,7 +32,7 @@ export default function SavedOpportunityTable({
           <tbody className="divide-y divide-gray-200">
             {opportunity.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center">
+                <td colSpan={5} className="px-6 py-12 text-center">
                   <div className="flex flex-col items-center justify-center">
                     <Briefcase size={48} className="text-gray-300 mb-3" />
                     <p className="text-gray-500 font-medium">
@@ -86,14 +83,6 @@ export default function SavedOpportunityTable({
                         <Building2 size={16} className="mr-2 text-gray-400" />
                         <span className="text-sm">
                           {opportunity?.company?.industry}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center text-gray-600">
-                        <Users size={16} className="mr-2 text-gray-400" />
-                        <span className="text-sm font-medium">
-                          {opportunity?.totalApplications || 0}
                         </span>
                       </div>
                     </td>

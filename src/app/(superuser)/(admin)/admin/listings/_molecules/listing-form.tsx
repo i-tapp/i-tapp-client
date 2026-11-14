@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { AlertTriangle, CheckCircle2, Loader2, Plus, Trash2 } from "lucide-react";
@@ -124,12 +123,15 @@ function Field({ label, hint, wide, children }: { label: string; hint?: string; 
 const selectClass = "w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm";
 
 export default function ListingForm({ id: initialId }: { id?: string }) {
-  const router = useRouter();
   const queryClient = useQueryClient();
   const [id, setId] = useState(initialId);
   const [f, setF] = useState<Form>(EMPTY);
-  const { data: existing } = useFetchAdminListing(initialId);
-  const loaded = useRef(false);
+  // Follow the saved id (not just the one from the URL) so a brand-new listing
+  // shows its status and stats once it has been saved.
+  const { data: existing } = useFetchAdminListing(id);
+  // A new listing starts from the blank form; never overwrite what the admin
+  // typed with the copy fetched back after the first save.
+  const loaded = useRef(!initialId);
 
   const [busy, setBusy] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
@@ -170,7 +172,13 @@ export default function ListingForm({ id: initialId }: { id?: string }) {
     const saved = (out.data as any).id as string;
     if (!id) {
       setId(saved);
-      router.replace(`/admin/listings/${saved}`);
+      // Update the address bar WITHOUT navigating. router.replace() here moved
+      // to a different page in the middle of "Publish", unmounting this form
+      // while the publish request was still running: the button stuck on
+      // "Publishing…" and the listing stayed a draft. Next.js keeps
+      // history.replaceState in sync with its router, so a reload still opens
+      // /admin/listings/<id>.
+      window.history.replaceState(null, "", `/admin/listings/${saved}`);
     }
     refresh(saved);
     if (!quiet) toast.success("Draft saved");
@@ -181,6 +189,8 @@ export default function ListingForm({ id: initialId }: { id?: string }) {
     setBusy(name);
     try {
       await fn();
+    } catch (e) {
+      toast.error((e as Error)?.message || "Something went wrong. Please try again.");
     } finally {
       setBusy(null);
     }
@@ -483,7 +493,7 @@ export default function ListingForm({ id: initialId }: { id?: string }) {
           </>
         )}
 
-        <Field label={isEmail ? "Documents to ask for (the CV is always attached)" : "Documents the form will ask for (shown as a checklist)"} wide>
+        <Field label={isEmail ? "Documents to ask for (students' IT letter and corps members' CV are always attached)" : "Documents the form will ask for (shown as a checklist)"} wide>
           <div className="flex flex-wrap gap-x-5 gap-y-2">
             {DOCS.filter(([v]) => isEmail || v !== "cover_letter").map(([v, l]) => (
               <label key={v} className="flex items-center gap-1.5 text-sm">

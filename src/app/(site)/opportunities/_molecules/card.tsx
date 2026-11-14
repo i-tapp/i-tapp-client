@@ -4,7 +4,7 @@ import Image from "next/image";
 import moment from "moment";
 import dp from "@/assets/images/dp.png";
 import { Button } from "@/components/ui/button";
-import { MapPin, Clock, Users, Wifi, Banknote, ArrowUpRight, CalendarDays } from "lucide-react";
+import { MapPin, Clock, Wifi, Banknote, ArrowUpRight, CalendarDays } from "lucide-react";
 import { cn } from "@/utils/tailwind";
 import type { PublicOpportunity } from "./browse";
 
@@ -22,21 +22,13 @@ export default function OpportunityCard({
     duration,
     stipend,
     programType,
-    totalApplications,
-    maxApplicants,
     applicationDeadline,
-    createdAt,
     status,
     company,
     department,
   } = opportunity;
 
   const isOpen = status === "open";
-  const fillPct = maxApplicants > 0
-    ? Math.min(100, Math.round((totalApplications / maxApplicants) * 100))
-    : 0;
-  const spotsLeft = maxApplicants - totalApplications;
-  const isAlmostFull = fillPct >= 75;
   const deadlineMoment = moment(applicationDeadline);
   const hasValidDeadline = deadlineMoment.isValid();
   const deadlineIsNear =
@@ -135,10 +127,13 @@ export default function OpportunityCard({
             <Wifi className="w-3 h-3" />
             <span className="capitalize">{mode}</span>
           </Tag>
-          <Tag>
-            <Clock className="w-3 h-3" />
-            {duration} mo
-          </Tag>
+          {/* NYSC (PPA) listings have no duration field. */}
+          {programType !== "ppa" && !!duration && (
+            <Tag>
+              <Clock className="w-3 h-3" />
+              {duration} mo
+            </Tag>
+          )}
           <Tag>
             <Banknote className="w-3 h-3" />
             {stipend === "stipend provided" ? "Paid" : stipend === "depends" ? "Depends" : "Unpaid"}
@@ -148,40 +143,7 @@ export default function OpportunityCard({
           )}
         </div>
 
-        {/* ── Fill progress ──
-            Not shown on NYSC (PPA) listings: corps members must not be able to
-            see how many people have applied. */}
-        {programType !== "ppa" && (
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center justify-between text-[11px]">
-            <span className="flex items-center gap-1 text-gray-400">
-              <Users className="w-3 h-3" />
-              <span>
-                <span className={isAlmostFull ? "text-orange-600 font-semibold" : "text-gray-600 font-medium"}>
-                  {spotsLeft > 0 ? `${spotsLeft} spots left` : "Full"}
-                </span>
-                <span className="text-gray-300 mx-1">/</span>
-                {maxApplicants} total
-              </span>
-            </span>
-            <span className={`font-semibold ${isAlmostFull ? "text-orange-500" : "text-gray-400"}`}>
-              {fillPct}%
-            </span>
-          </div>
-          <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
-            <div
-              className={`h-full rounded-full transition-all duration-700 ${
-                fillPct >= 100
-                  ? "bg-red-400"
-                  : isAlmostFull
-                  ? "bg-gradient-to-r from-orange-400 to-orange-500"
-                  : "bg-gradient-to-r from-primary/70 to-primary"
-              }`}
-              style={{ width: `${fillPct}%` }}
-            />
-          </div>
-        </div>
-        )}
+        {/* Applicant numbers are deliberately not shown on public listings. */}
 
         {/* ── Divider ── */}
         <div className="border-t border-dashed border-gray-100" />
@@ -207,9 +169,6 @@ export default function OpportunityCard({
             <span />
           )}
 
-          <span className="text-[11px] text-gray-400" suppressHydrationWarning>
-            {moment(createdAt).fromNow()}
-          </span>
         </div>
 
         {/* ── CTA ── */}

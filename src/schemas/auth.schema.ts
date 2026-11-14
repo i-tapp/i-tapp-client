@@ -45,6 +45,8 @@ export const signupSchema = z.object({
   // The backend requires a phone number at signup; it was being dropped here.
   phone: z.string().min(1),
   consentToShare: z.literal(true),
+  // Cloudflare Turnstile token (absent when Turnstile isn't configured).
+  turnstileToken: z.string().optional(),
 });
 
 export const resetPasswordSchema = z
@@ -156,6 +158,8 @@ export const corpsSignupSchema = z.object({
   consentToShare: z.boolean().refine((v) => v === true, {
     message: "Please tick this box to agree before you create your account",
   }),
+  // Cloudflare Turnstile token (absent when Turnstile isn't configured).
+  turnstileToken: z.string().optional(),
 });
 
 export type CorpsSignupInput = z.infer<typeof corpsSignupSchema>;

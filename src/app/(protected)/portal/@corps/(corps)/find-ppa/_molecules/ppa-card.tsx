@@ -12,7 +12,6 @@ import {
   Banknote,
   BookmarkIcon,
 } from "lucide-react";
-import { Clock } from "iconsax-reactjs";
 import { useAction } from "next-safe-action/hooks";
 import { saveCorpsPPA } from "@/actions";
 import { useQueryClient } from "@tanstack/react-query";
@@ -198,7 +197,7 @@ export default function PPACard({
 
           <div className="mt-2 flex flex-wrap gap-1.5">
             {ppa.mode && <Tag>{ppa.mode}</Tag>}
-            {ppa.duration && <Tag>{ppa.duration} mo.</Tag>}
+            {/* No duration for NYSC (PPA) listings - there is no field for it. */}
             {sector && <Tag>{sector}</Tag>}
             {ppa.stipend && ppa.stipend !== "unpaid" && (
               <Tag className="text-emerald-700 bg-emerald-50">
@@ -210,13 +209,7 @@ export default function PPACard({
         </div>
       </div>
 
-      <div className="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between">
-        {/* Applicant numbers are deliberately not shown to corps members. */}
-        <span className="flex items-center gap-1 text-[10px] text-gray-400 tabular-nums">
-          <Clock size={11} />
-          {moment(ppa.createdAt).fromNow()}
-        </span>
-      </div>
+      {/* Applicant numbers and posting date are deliberately not shown to corps members. */}
     </div>
   );
 }

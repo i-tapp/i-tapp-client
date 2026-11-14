@@ -19,6 +19,29 @@ type Step = {
 };
 
 const STORAGE_PREFIX = "placeit_coachmarks_seen_";
+// Set the first time ANY tour is shown on this device/browser. The client wants
+// the tutorial to appear once per device, not once per account or per role:
+// switching accounts on the same phone or browser must not show it again.
+// (It still shows again after the browser/app data is cleared, and the
+// "Replay Tutorial" button on the profile page always works.)
+const DEVICE_KEY = "placeit_coachmarks_seen_device";
+
+function hasSeenTour(roleKey: string): boolean {
+  try {
+    return !!(localStorage.getItem(DEVICE_KEY) || localStorage.getItem(roleKey));
+  } catch {
+    return false; // storage blocked: just show it
+  }
+}
+
+function markTourSeen(roleKey: string) {
+  try {
+    localStorage.setItem(DEVICE_KEY, "1");
+    localStorage.setItem(roleKey, "1");
+  } catch {
+    /* storage blocked: nothing to remember */
+  }
+}
 const REPLAY_EVENT = "placeit:replay-tour";
 const MOBILE_BREAKPOINT = 768; // Tailwind `md`
 
@@ -268,8 +291,13 @@ export function OnboardingTour({
   useEffect(() => {
     if (!mounted) return;
     if (blocked) return;
-    if (localStorage.getItem(storageKey)) return;
-    const t = setTimeout(start, 700);
+    if (hasSeenTour(storageKey)) return;
+    const t = setTimeout(() => {
+      // Remember it as soon as it is shown, so leaving half-way (navigating,
+      // closing the tab, logging out) doesn't bring it back next time.
+      markTourSeen(storageKey);
+      start();
+    }, 700);
     return () => clearTimeout(t);
   }, [mounted, blocked, storageKey, start]);
 
@@ -341,7 +369,7 @@ export function OnboardingTour({
     stepsRef.current[step]?.afterHide?.();
     closeMobileNav();
     closeCompanySidenav();
-    localStorage.setItem(storageKey, "1");
+    markTourSeen(storageKey);
     setVisible(false);
   }, [step, storageKey]);
 

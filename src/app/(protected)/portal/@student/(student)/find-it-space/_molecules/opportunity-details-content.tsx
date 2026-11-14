@@ -30,7 +30,6 @@ import {
   MapPin,
   Monitor,
   TriangleAlert,
-  Users,
   X,
 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
@@ -41,7 +40,6 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import dp from "@/assets/images/dp.png";
 import moment from "moment";
-import { formatDate } from "@/utils/format-date";
 
 export default function OpportunityDetailsContent({
   selectedId,
@@ -348,7 +346,8 @@ export default function OpportunityDetailsContent({
         </div>
 
         {/* ── Key numbers strip ── */}
-        <div className="grid grid-cols-3 border-b border-gray-100 bg-gray-50/80">
+        {/* Applicant numbers are deliberately not shown to students. */}
+        <div className="grid grid-cols-2 border-b border-gray-100 bg-gray-50/80">
           <KeyStat
             icon={<Clock className="w-4 h-4" />}
             label="Duration"
@@ -356,17 +355,11 @@ export default function OpportunityDetailsContent({
             accent="text-primary"
           />
           <KeyStat
-            icon={<Users className="w-4 h-4" />}
-            label="Applicants"
-            value={`${selectedOpportunity?.totalApplications ?? 0}${selectedOpportunity?.maxApplicants ? `/${selectedOpportunity.maxApplicants}` : ""}`}
-            accent="text-gray-700"
-            border
-          />
-          <KeyStat
             icon={<Monitor className="w-4 h-4" />}
             label="Mode"
             value={selectedOpportunity?.mode ?? "—"}
             accent="text-gray-700"
+            border
           />
         </div>
 
@@ -389,19 +382,17 @@ export default function OpportunityDetailsContent({
         )}
 
         {/* ── Timeline metadata ── */}
-        <div className="mx-4 mt-4 border border-gray-100 divide-y divide-gray-100">
-          <MetaRow icon={<Clock className="w-3.5 h-3.5 text-gray-300" />} label="Posted">
-            <span className="text-[12px] font-semibold text-gray-700">{formatDate(selectedOpportunity?.createdAt)}</span>
-          </MetaRow>
-          {deadlineMoment && (
+        {/* Posting date is deliberately not shown to students. */}
+        {deadlineMoment && (
+          <div className="mx-4 mt-4 border border-gray-100 divide-y divide-gray-100">
             <MetaRow icon={<CalendarClock className={cn("w-3.5 h-3.5", isUrgent ? "text-red-400" : "text-gray-300")} />} label="Application Deadline">
               <span className={cn("text-[12px] font-semibold", isUrgent ? "text-red-600" : "text-gray-700")}>
                 {deadlineMoment.format("D MMM YYYY")}
                 {isUrgent && <span className="ml-2 text-[10px] font-bold text-red-500 bg-red-50 border border-red-200 px-1.5 py-0.5">Urgent</span>}
               </span>
             </MetaRow>
-          )}
-        </div>
+          </div>
+        )}
 
         <div className="px-4 pt-4 pb-6 flex flex-col gap-5">
 
@@ -545,6 +536,7 @@ export default function OpportunityDetailsContent({
 
       {/* Email / form listings: what the company needs, or the company's form */}
       <ExternalApplyDialog
+        applicantKind="student"
         open={externalOpen}
         onOpenChange={setExternalOpen}
         opportunity={selectedOpportunity}

@@ -7,7 +7,7 @@ import { Spinner } from "@/components/spinner";
 import { useAction } from "next-safe-action/hooks";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { MapPin, Clock, Bookmark } from "lucide-react";
+import { MapPin, Bookmark } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/utils/tailwind";
 
@@ -61,7 +61,6 @@ export default function SavedPPAPage() {
                 <p className="text-sm text-gray-500">{ppa.company?.name}</p>
                 <div className="mt-2 flex flex-wrap gap-2 text-xs text-gray-400">
                   <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{ppa.location}</span>
-                  <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{ppa.duration}</span>
                 </div>
                 <Link
                   href={`/portal/find-ppa`}

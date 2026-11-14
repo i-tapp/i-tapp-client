@@ -261,6 +261,9 @@ export default function CandidateProfile() {
                   : [
                       { label: "IT Letter", url: student?.itLetter },
                       { label: "CV", url: student?.cv },
+                      { label: "Transcript", url: student?.transcript },
+                      { label: "ID", url: student?.idDocument },
+                      { label: "Other Document", url: student?.otherDocument },
                     ];
                 const available = docs.filter((d) => !!d.url);
                 if (available.length === 0) return <p className="text-xs text-muted-foreground">No documents uploaded</p>;

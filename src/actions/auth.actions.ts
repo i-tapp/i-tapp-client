@@ -43,6 +43,7 @@ export const studentSignup = actionClient
         school,
         phone,
         consentToShare,
+        turnstileToken,
       },
     }) => {
       const response = await mutate("/auth/signup/student", {
@@ -54,7 +55,9 @@ export const studentSignup = actionClient
         school,
         phone,
         consentToShare,
+        turnstileToken,
       });
+      return response;
     },
   );
 
@@ -148,6 +151,7 @@ export const corpsSignup = actionClient
         lastName,
         phone,
         consentToShare,
+        turnstileToken,
       },
     }) => {
       const response = await mutate("/auth/signup/corps", {
@@ -157,6 +161,7 @@ export const corpsSignup = actionClient
         lastName,
         phone,
         consentToShare,
+        turnstileToken,
       });
       return response;
     },

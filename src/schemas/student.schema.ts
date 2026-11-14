@@ -56,6 +56,17 @@ export type CorpsDocumentSchema = z.infer<typeof corpsDocumentStepSchema>;
 // member may only want to swap one of them (say, a clearer CV).
 export const corpsDocumentUpdateSchema = corpsDocumentStepSchema.partial();
 export type CorpsDocumentUpdateSchema = z.infer<typeof corpsDocumentUpdateSchema>;
+
+// Students adding or replacing profile documents: every file is optional.
+// The CV is optional for SIWES students; the IT letter is their main document.
+export const studentDocumentUpdateSchema = z.object({
+  itLetter: fileSchema.optional(),
+  cv: fileSchema.optional(),
+  transcript: fileSchema.optional(),
+  idDocument: fileSchema.optional(),
+  otherDocument: fileSchema.optional(),
+});
+export type StudentDocumentUpdateSchema = z.infer<typeof studentDocumentUpdateSchema>;
 export type CorpsPersonalInfoSchema = z.infer<typeof corpsPersonalInfoSchema>;
 export type CorpsInfoSchema = z.infer<typeof corpsInfoSchema>;
 export type CorpsSkillsSchema = z.infer<typeof corpsSkillsSchema>;
