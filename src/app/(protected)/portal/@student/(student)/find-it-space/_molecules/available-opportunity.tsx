@@ -29,8 +29,11 @@ export default function AvailableOpportunity({
   const stipendNum = rawStipend != null ? Number(rawStipend) : NaN;
   const stipend = !isNaN(stipendNum) && stipendNum > 0 ? stipendNum : null;
 
+  // Admin-posted (email / form) listings have no company account: their name
+  // is in organisationName.
   const companyName =
     details?.company?.name ||
+    (details as any)?.organisationName ||
     // @ts-expect-error
     details?.companyName ||
     (typeof details?.company === "string" ? details.company : null);

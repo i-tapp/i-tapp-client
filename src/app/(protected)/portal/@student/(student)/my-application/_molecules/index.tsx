@@ -66,7 +66,7 @@ export default function MyApplication({
   const filteredApplications = filtered(
     applications,
     { query, status: filterStatus },
-    (item: any) => item.opportunity?.company?.name,
+    (item: any) => item.opportunity?.company?.name ?? item.opportunity?.organisationName,
   );
 
   // Determine payment banner based on reference in URL or latest transaction

@@ -37,7 +37,7 @@ export default function SavedApplication({
   const filteredApplications = filtered(
     saved,
     { query, status: filterStatus },
-    (item: any) => item?.company?.name,
+    (item: any) => item?.company?.name ?? item?.organisationName,
   );
 
   return (

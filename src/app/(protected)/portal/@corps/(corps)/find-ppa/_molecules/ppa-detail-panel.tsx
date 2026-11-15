@@ -114,7 +114,8 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
   // Opened the company's form but not yet said they submitted: can open it again.
   const isFormPending = appStatusValue === "form_opened";
   const hasApplied = appStatus?.hasApplied && !isFormPending;
-  const companyName = ppa.contactDetails?.name ?? ppa.company?.name ?? null;
+  const companyName =
+    ppa.contactDetails?.name ?? ppa.organisationName ?? ppa.company?.name ?? null;
   const industry = ppa.sector ?? ppa.company?.industry ?? null;
   const logo = ppa.company?.logo ?? null;
   const contactDetails = ppa.contactDetails ?? null;

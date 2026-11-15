@@ -293,12 +293,19 @@ export default function OpportunityDetailsContent({
               </h2>
 
               <div className="flex items-center gap-1.5 mt-1">
-                <Link
-                  href={`/portal/company/${selectedOpportunity?.company?.id}`}
-                  className="text-[12px] font-semibold text-primary hover:underline truncate max-w-[160px]"
-                >
-                  {selectedOpportunity?.company?.name}
-                </Link>
+                {selectedOpportunity?.company?.id ? (
+                  <Link
+                    href={`/portal/company/${selectedOpportunity.company.id}`}
+                    className="text-[12px] font-semibold text-primary hover:underline truncate max-w-[160px]"
+                  >
+                    {selectedOpportunity.company.name}
+                  </Link>
+                ) : (selectedOpportunity as any)?.organisationName ? (
+                  // Admin-posted listing: no company page to link to.
+                  <span className="text-[12px] font-semibold text-gray-700 truncate max-w-[160px]">
+                    {(selectedOpportunity as any).organisationName}
+                  </span>
+                ) : null}
                 {isVerified && (
                   <div className="relative group/v shrink-0">
                     <BadgeCheck className="w-3.5 h-3.5 text-blue-500" />

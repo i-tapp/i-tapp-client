@@ -111,12 +111,12 @@ export default function CorpsMyApplications() {
                 <div key={app.id} className="bg-white rounded-xl border border-gray-100 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-start gap-4 min-w-0">
                     <div className="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-700 font-bold text-lg flex items-center justify-center shrink-0">
-                      {company?.name?.charAt(0) ?? "P"}
+                      {(company?.name ?? opp?.organisationName)?.charAt(0) ?? "P"}
                     </div>
                     <div className="min-w-0">
                       <p className="font-semibold text-gray-900 truncate">{opp?.title}</p>
                       <p className="text-sm text-gray-500 flex items-center gap-1">
-                        <Building2 className="w-3.5 h-3.5" />{company?.name}
+                        <Building2 className="w-3.5 h-3.5" />{company?.name ?? opp?.organisationName}
                       </p>
                       <div className="flex flex-wrap gap-3 mt-1 text-xs text-gray-400">
                         <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{opp?.location}</span>

@@ -35,11 +35,11 @@ export default function ApplicationCard({
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center w-12 h-12 bg-blue-600 text-white rounded-lg text-lg font-bold flex-shrink-0">
-                    {application?.opportunity?.company?.name?.charAt(0) || "C"}
+                    {(application?.opportunity?.company?.name ?? (application?.opportunity as any)?.organisationName)?.charAt(0) || "C"}
                   </div>
                   <div>
                     <h3 className="font-bold text-gray-900 text-lg">
-                      {application?.opportunity?.company?.name}
+                      {application?.opportunity?.company?.name ?? (application?.opportunity as any)?.organisationName}
                     </h3>
                     <p className="text-sm text-gray-500">
                       {application.opportunity?.company?.industry}

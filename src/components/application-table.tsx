@@ -61,12 +61,13 @@ export default function ApplicationTable({
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center w-10 h-10 bg-blue-600 text-white rounded-lg text-sm font-bold">
-                          {application?.opportunity?.company?.name?.charAt(0) ||
+                          {(application?.opportunity?.company?.name ??
+                            (application?.opportunity as any)?.organisationName)?.charAt(0) ||
                             "C"}
                         </div>
                         <div>
                           <p className="font-semibold text-gray-900">
-                            {application?.opportunity?.company?.name}
+                            {application?.opportunity?.company?.name ?? (application?.opportunity as any)?.organisationName}
                           </p>
                         </div>
                       </div>

@@ -48,7 +48,7 @@ export default function SavedPPAPage() {
               <div key={ppa.id} className="bg-white rounded-xl border border-gray-100 p-5">
                 <div className="flex items-start justify-between gap-2 mb-3">
                   <div className="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-700 font-bold text-lg flex items-center justify-center shrink-0">
-                    {ppa.company?.name?.charAt(0) ?? "P"}
+                    {(ppa.company?.name ?? ppa.organisationName)?.charAt(0) ?? "P"}
                   </div>
                   <button
                     onClick={() => unsave({ id: ppa.id })}
@@ -58,7 +58,7 @@ export default function SavedPPAPage() {
                   </button>
                 </div>
                 <p className="font-semibold text-gray-900 truncate">{ppa.title}</p>
-                <p className="text-sm text-gray-500">{ppa.company?.name}</p>
+                <p className="text-sm text-gray-500">{ppa.company?.name ?? ppa.organisationName}</p>
                 <div className="mt-2 flex flex-wrap gap-2 text-xs text-gray-400">
                   <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{ppa.location}</span>
                 </div>
