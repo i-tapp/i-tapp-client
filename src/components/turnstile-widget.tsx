@@ -3,7 +3,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 
 /**
- * Cloudflare Turnstile bot check, used on the student and NYSC signup pages.
+ * Cloudflare Turnstile bot check, used on the student, NYSC and company signup pages.
  *
  * Set NEXT_PUBLIC_TURNSTILE_SITE_KEY to turn it on. Without it the widget
  * renders nothing and `TURNSTILE_ENABLED` is false, so signup still works

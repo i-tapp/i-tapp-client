@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -21,6 +21,11 @@ import { companySignup } from "@/actions";
 import { companySignupSchema } from "@/schemas";
 import { SignupSuccessModal } from "@/components/signup-success-modal";
 import { FormErrorSummary } from "@/components/form-error-summary";
+import {
+  TURNSTILE_ENABLED,
+  TurnstileWidget,
+  type TurnstileHandle,
+} from "@/components/turnstile-widget";
 
 // Field name -> the label the person actually sees, for the error summary.
 const LABELS = {
@@ -35,6 +40,10 @@ type CompanySignupSchema = z.infer<typeof companySignupSchema>;
 export function CompanyInfo1() {
   const searchParams = useSearchParams();
   const [showSuccess, setShowSuccess] = useState(false);
+  // Cloudflare Turnstile bot check
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileHandle>(null);
+  const waitingForCheck = TURNSTILE_ENABLED && !turnstileToken;
 
   useEffect(() => {
     const claim = searchParams.get("claim");
@@ -63,13 +72,19 @@ export function CompanyInfo1() {
       },
       onError(error) {
         toast.error(error?.error?.serverError ?? "Sign up failed. Please try again.");
+        // Turnstile tokens are single-use: get a fresh one for the next try.
+        turnstileRef.current?.reset();
       },
     },
   );
 
   const onSubmit = (data: CompanySignupSchema) => {
+    if (waitingForCheck) {
+      toast.error("Please complete the security check first.");
+      return;
+    }
     const claimToken = sessionStorage.getItem("listingClaimToken") ?? undefined;
-    execute({ ...data, claimToken });
+    execute({ ...data, claimToken, turnstileToken: turnstileToken ?? undefined });
   };
 
   return (
@@ -179,11 +194,13 @@ export function CompanyInfo1() {
             )}
           />
 
+          <TurnstileWidget ref={turnstileRef} onToken={setTurnstileToken} className="my-2" />
+
           <ButtonWithLoader
             type="submit"
             className="w-full my-3"
             isPending={isExecuting}
-            disabled={isExecuting}
+            disabled={isExecuting || waitingForCheck}
           >
             Sign up
           </ButtonWithLoader>

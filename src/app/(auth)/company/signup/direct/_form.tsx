@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -19,11 +20,20 @@ import { useRouter } from "next/navigation";
 import { companyDirectSignup } from "@/actions";
 import { companyDirectSignupSchema } from "@/schemas";
 import Link from "next/link";
+import {
+  TURNSTILE_ENABLED,
+  TurnstileWidget,
+  type TurnstileHandle,
+} from "@/components/turnstile-widget";
 
 type CompanyDirectSignupSchema = z.infer<typeof companyDirectSignupSchema>;
 
 export function CompanyDirectSignupForm() {
   const router = useRouter();
+  // Cloudflare Turnstile bot check
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileHandle>(null);
+  const waitingForCheck = TURNSTILE_ENABLED && !turnstileToken;
 
   const form = useForm<CompanyDirectSignupSchema>({
     mode: "onChange",
@@ -45,12 +55,18 @@ export function CompanyDirectSignupForm() {
       },
       onError(error) {
         toast.error(error?.error?.serverError ?? "Sign up failed. Please try again.");
+        // Turnstile tokens are single-use: get a fresh one for the next try.
+        turnstileRef.current?.reset();
       },
     },
   );
 
   const onSubmit = (data: CompanyDirectSignupSchema) => {
-    execute(data);
+    if (waitingForCheck) {
+      toast.error("Please complete the security check first.");
+      return;
+    }
+    execute({ ...data, turnstileToken: turnstileToken ?? undefined });
   };
 
   return (
@@ -123,11 +139,13 @@ export function CompanyDirectSignupForm() {
             )}
           />
 
+          <TurnstileWidget ref={turnstileRef} onToken={setTurnstileToken} className="my-2" />
+
           <ButtonWithLoader
             type="submit"
             className="w-full my-3"
             isPending={isExecuting}
-            disabled={!form.formState.isValid || isExecuting}
+            disabled={!form.formState.isValid || isExecuting || waitingForCheck}
           >
             Create account
           </ButtonWithLoader>

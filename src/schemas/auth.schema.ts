@@ -114,6 +114,8 @@ export const companySignupSchema = z.object({
     .min(1, REQUIRED)
     .regex(/^(RC|BN)\s?\d{4,}$/i, "Enter a valid CAC number (e.g. RC 1210548 or BN 373466)"),
   claimToken: z.string().optional(),
+  // Cloudflare Turnstile token (absent when Turnstile isn't configured).
+  turnstileToken: z.string().optional(),
 });
 
 export const companyProfileSchema = z.object({
@@ -141,6 +143,8 @@ export const companyDirectSignupSchema = z.object({
     .transform((v) => v.toLowerCase()),
   password: z.string().min(6, "Password must be at least 6 characters"),
   cacNumber: z.string().min(1, "CAC number is required"),
+  // Cloudflare Turnstile token (absent when Turnstile isn't configured).
+  turnstileToken: z.string().optional(),
 });
 
 export const corpsSignupSchema = z.object({

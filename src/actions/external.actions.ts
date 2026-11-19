@@ -133,6 +133,12 @@ export const pauseAdminListing = actionClient
     structured(() => mutate(`/admin/listings/${id}/${paused ? "pause" : "resume"}`, undefined, "POST")),
   );
 
+export const deleteAdminListing = actionClient
+  .inputSchema(z.object({ id: z.string() }))
+  .action(async ({ parsedInput: { id } }) =>
+    structured(() => mutate(`/admin/listings/${id}`, undefined, "DELETE")),
+  );
+
 export const sendAdminListingTest = actionClient
   .inputSchema(z.object({ id: z.string() }))
   .action(async ({ parsedInput: { id } }) =>

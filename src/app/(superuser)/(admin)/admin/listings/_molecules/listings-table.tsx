@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { pauseAdminListing } from "@/actions";
+import { deleteAdminListing, pauseAdminListing } from "@/actions";
 import { useFetchAdminListings } from "@/queries";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,6 +36,18 @@ export default function ListingsTable() {
       queryClient.invalidateQueries({ queryKey: ["admin-listings"] });
     } else {
       toast.error(res?.data?.message ?? "Could not update the listing");
+    }
+  };
+
+  const remove = async (id: string, title: string, applied: number) => {
+    const extra = applied > 0 ? ` Its ${applied} application(s) will be deleted too.` : "";
+    if (!window.confirm(`Delete "${title}"?${extra} This cannot be undone.`)) return;
+    const res = await deleteAdminListing({ id });
+    if (res?.data?.ok) {
+      toast.success("Listing deleted");
+      queryClient.invalidateQueries({ queryKey: ["admin-listings"] });
+    } else {
+      toast.error(res?.data?.message ?? "Could not delete the listing");
     }
   };
 
@@ -123,6 +135,7 @@ export default function ListingsTable() {
                   {r.status === "paused" && (
                     <button className="text-green-700 hover:underline" onClick={() => toggle(r.id, false)}>Resume</button>
                   )}
+                  <button className="ml-3 text-red-600 hover:underline" onClick={() => remove(r.id, r.title, r.stats.sent)}>Delete</button>
                 </td>
               </tr>
             ))}
