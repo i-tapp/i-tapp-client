@@ -134,7 +134,7 @@ export default function OpportunityDetailModal({
               <div className="flex items-center gap-3">
                 <div className="w-14 h-14 rounded-xl bg-white/10 border border-white/20 overflow-hidden flex items-center justify-center shrink-0 backdrop-blur-sm">
                   <Image
-                    src={company?.logo || dp}
+                    src={(opportunity as any).logoUrl || company?.logo || dp}
                     alt={company?.name ?? ""}
                     width={56}
                     height={56}
@@ -259,7 +259,7 @@ export default function OpportunityDetailModal({
               <div className="absolute -bottom-6 -left-6 w-28 h-28 rounded-full bg-white/5 pointer-events-none" />
               <div className="relative z-10 flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 overflow-hidden flex items-center justify-center shrink-0">
-                  <Image src={company?.logo || dp} alt={company?.name ?? ""} width={48} height={48} className="w-full h-full object-contain" />
+                  <Image src={(opportunity as any).logoUrl || company?.logo || dp} alt={company?.name ?? ""} width={48} height={48} className="w-full h-full object-contain" />
                 </div>
                 <div className="min-w-0 flex-1 pr-8">
                   <h2 className="text-white font-bold text-base leading-tight capitalize truncate">{title}</h2>

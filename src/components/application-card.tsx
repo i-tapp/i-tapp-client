@@ -1,5 +1,6 @@
 import { MapPin, Calendar, Briefcase } from "lucide-react";
 import { formatDate } from "@/utils/format-date";
+import { RemoveApplicationButton } from "@/components/remove-application-button";
 import { getStatusConfig } from "@/utils/application-status-config";
 import {
   applicationStatusLabel,
@@ -86,6 +87,8 @@ export default function ApplicationCard({
                   </div>
                 </div>
               </div>
+
+              <RemoveApplicationButton application={application} className="mt-3 inline-block" />
 
               {/* Action Button */}
               {/* <button className="w-full mt-4 px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium text-sm">

@@ -52,7 +52,7 @@ export default function PPACard({
 
   const companyName = ppa.organisationName ?? ppa.company?.name ?? null;
   const sector = ppa.sector ?? ppa.company?.industry ?? null;
-  const logo = ppa.company?.logo ?? null;
+  const logo = (ppa as any).logoUrl || ppa.company?.logo || null;
   const isClosed = ppa.status === "closed";
   const isNew = !isClosed && moment().diff(moment(ppa.createdAt), "hours") < 24;
   const deadlineMoment = ppa.applicationDeadline

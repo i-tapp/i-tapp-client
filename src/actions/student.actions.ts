@@ -86,6 +86,14 @@ export const withdraw = actionClient
     }
   });
 
+/** Removes one of the person's own applications whose email bounced. */
+export const removeBouncedApplication = actionClient
+  .inputSchema(applyJ)
+  .action(async ({ parsedInput: { id } }) => {
+    const response = await mutate(`/a/${id}`, undefined, "DELETE");
+    return response?.data ?? response;
+  });
+
 export const save = actionClient
   .inputSchema(applyJ)
   .action(async ({ parsedInput: { id } }) => {

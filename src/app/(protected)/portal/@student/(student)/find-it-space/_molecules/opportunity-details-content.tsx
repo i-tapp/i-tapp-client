@@ -92,7 +92,8 @@ export default function OpportunityDetailsContent({
   const exists = myApplicationStatus?.exists ?? false;
   const status = myApplicationStatus?.status ?? null;
   const applicationId = myApplicationStatus?.applicationId ?? null;
-  const logo = selectedOpportunity?.company?.logo ?? null;
+  const logo =
+    (selectedOpportunity as any)?.logoUrl || selectedOpportunity?.company?.logo || null;
 
   const isWithdrawn = status === ApplicationStatus.WITHDRAWN;
   const canWithdraw = exists && status === ApplicationStatus.APPLIED && Boolean(applicationId);

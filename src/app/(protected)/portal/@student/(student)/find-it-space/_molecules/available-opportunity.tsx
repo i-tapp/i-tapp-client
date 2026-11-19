@@ -108,7 +108,7 @@ export default function AvailableOpportunity({
         {/* Logo */}
         <div className="shrink-0 w-9 h-9 border border-gray-100 bg-gray-50 overflow-hidden flex items-center justify-center">
           <Image
-            src={details?.company?.logo ?? dp}
+            src={(details as any)?.logoUrl || details?.company?.logo || dp}
             alt={companyName ?? "company"}
             width={36}
             height={36}

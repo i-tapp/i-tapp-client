@@ -4,6 +4,7 @@ import {
   isExternalMethod,
 } from "@/utils/application-status-label";
 import { formatDate } from "@/utils/format-date";
+import { RemoveApplicationButton } from "@/components/remove-application-button";
 import { Building2, MapPin, Calendar, Briefcase } from "lucide-react";
 export default function ApplicationTable({
   application,
@@ -107,6 +108,7 @@ export default function ApplicationTable({
                         ? applicationStatusLabel(application?.status).label
                         : application?.opportunity?.status}
                       </span>
+                      <RemoveApplicationButton application={application} className="ml-3" />
                     </td>
                   </tr>
                 );

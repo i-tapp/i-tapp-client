@@ -117,7 +117,7 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
   const companyName =
     ppa.contactDetails?.name ?? ppa.organisationName ?? ppa.company?.name ?? null;
   const industry = ppa.sector ?? ppa.company?.industry ?? null;
-  const logo = ppa.company?.logo ?? null;
+  const logo = (ppa as any).logoUrl || ppa.company?.logo || null;
   const contactDetails = ppa.contactDetails ?? null;
 
   return (

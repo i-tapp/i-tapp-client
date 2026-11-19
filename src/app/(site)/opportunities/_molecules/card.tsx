@@ -61,7 +61,7 @@ export default function OpportunityCard({
           <div className="relative shrink-0">
             <div className="w-12 h-12 rounded-xl bg-gray-50 border border-gray-100 overflow-hidden flex items-center justify-center">
               <Image
-                src={company?.logo || dp}
+                src={(opportunity as any).logoUrl || company?.logo || dp}
                 alt={company?.name ?? ""}
                 width={48}
                 height={48}
