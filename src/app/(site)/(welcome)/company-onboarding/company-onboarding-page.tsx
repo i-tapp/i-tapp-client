@@ -23,8 +23,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Building2, User, Users } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "react-toastify";
+import {
+  TURNSTILE_ENABLED,
+  TurnstileWidget,
+  type TurnstileHandle,
+} from "@/components/turnstile-widget";
 
 export default function CompanyOnboarding() {
   const [submitted, setSubmitted] = useState(false);
@@ -56,12 +61,19 @@ export default function CompanyOnboarding() {
 
   const industry = form.watch("industry");
 
+  // Cloudflare Turnstile bot check
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileHandle>(null);
+  const waitingForCheck = TURNSTILE_ENABLED && !turnstileToken;
+
   const { execute, isExecuting } = useAction(quickCreateCompany, {
     onSuccess() {
       setSubmitted(true);
     },
     onError() {
       toast.error("Failed to submit form. Please try again.");
+      // Turnstile tokens are single-use: get a fresh one for the next try.
+      turnstileRef.current?.reset();
     },
   });
 
@@ -107,7 +119,11 @@ export default function CompanyOnboarding() {
           className="flex flex-col space-y-6 mt-8"
           onSubmit={form.handleSubmit(
             (values) => {
-              execute(values);
+              if (waitingForCheck) {
+                toast.error("Please complete the security check first.");
+                return;
+              }
+              execute({ ...values, turnstileToken: turnstileToken ?? undefined });
             },
             (errors) => {
             },
@@ -520,7 +536,9 @@ export default function CompanyOnboarding() {
             </div>
           </Card>
 
-          <Button disabled={isExecuting} type="submit">
+          <TurnstileWidget ref={turnstileRef} onToken={setTurnstileToken} className="my-2" />
+
+          <Button disabled={isExecuting || waitingForCheck} type="submit">
             {isExecuting ? "Submitting..." : "Submit"}
           </Button>
         </form>

@@ -57,6 +57,14 @@ export const createStudent = actionClient
     return { success: true, data: response };
   });
 
+/** Public /welcome student form: no login, protected by the Turnstile check. */
+export const createStudentFromWelcome = actionClient
+  .inputSchema(createStudentSchema.extend({ turnstileToken: z.string().optional() }))
+  .action(async ({ parsedInput }) => {
+    const response = await mutate(`/admin/welcome-student`, parsedInput);
+    return { success: true, data: response };
+  });
+
 export const inviteCompany = actionClient
   .inputSchema(createCompanySchema)
   .action(async ({ parsedInput }) => {

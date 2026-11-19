@@ -266,7 +266,7 @@ export const onBoardCompany = actionClient
   });
 
 export const quickCreateCompany = actionClient
-  .inputSchema(onboardingSchema)
+  .inputSchema(onboardingSchema.extend({ turnstileToken: z.string().optional() }))
   .action(async ({ parsedInput }) => {
     const response = await mutate("/c/quick-create", parsedInput, "POST");
     return response.data;

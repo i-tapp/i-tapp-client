@@ -15,9 +15,15 @@ import {
 } from "@/components/ui/form";
 import Input from "@/components/input";
 import { Button } from "@/components/ui/button";
-import { createStudent } from "@/actions";
+import { createStudentFromWelcome } from "@/actions";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "react-toastify";
+import { useRef, useState } from "react";
+import {
+  TURNSTILE_ENABLED,
+  TurnstileWidget,
+  type TurnstileHandle,
+} from "@/components/turnstile-widget";
 
 export default function Welcome() {
   const form = useForm<ForStudentsData>({
@@ -35,15 +41,23 @@ export default function Welcome() {
     },
   });
 
+  // Cloudflare Turnstile bot check
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileHandle>(null);
+  const waitingForCheck = TURNSTILE_ENABLED && !turnstileToken;
+
   const { execute, isExecuting, hasErrored, result } = useAction(
-    createStudent,
+    createStudentFromWelcome,
     {
       onSuccess: () => {
         toast.success("Form submitted successfully");
         form.reset();
+        // Turnstile tokens are single-use: get a fresh one for the next try.
+        turnstileRef.current?.reset();
       },
       onError: (error) => {
         toast.error(error?.error?.serverError ?? "Failed to submit form. Please try again.");
+        turnstileRef.current?.reset();
       },
     },
   );
@@ -74,7 +88,13 @@ export default function Welcome() {
           <form
             className="flex flex-col gap-4"
             onSubmit={form.handleSubmit(
-              (values) => execute(values),
+              (values) => {
+                if (waitingForCheck) {
+                  toast.error("Please complete the security check first.");
+                  return;
+                }
+                execute({ ...values, turnstileToken: turnstileToken ?? undefined });
+              },
               () => toast.error("Please fill in all required fields."),
             )}
             id="create-student-form"
@@ -239,9 +259,11 @@ export default function Welcome() {
               )}
             />
 
+            <TurnstileWidget ref={turnstileRef} onToken={setTurnstileToken} className="my-2" />
+
             <Button
               type="submit"
-              disabled={isExecuting}
+              disabled={isExecuting || waitingForCheck}
               form="create-student-form"
               className="w-full"
             >
