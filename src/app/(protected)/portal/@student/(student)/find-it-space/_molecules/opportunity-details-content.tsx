@@ -40,6 +40,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import dp from "@/assets/images/dp.png";
 import moment from "moment";
+import { PostedDate } from "@/components/posted-date";
 
 export default function OpportunityDetailsContent({
   selectedId,
@@ -292,6 +293,7 @@ export default function OpportunityDetailsContent({
               )}>
                 {selectedOpportunity?.title ?? "Untitled"}
               </h2>
+              <PostedDate date={selectedOpportunity?.createdAt} className="mt-0.5" />
 
               <div className="flex items-center gap-1.5 mt-1">
                 {selectedOpportunity?.company?.id ? (
@@ -579,6 +581,9 @@ export default function OpportunityDetailsContent({
               Your application will be submitted automatically once payment is confirmed.
             </p>
           </div>
+          <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900">
+            <span className="font-semibold">Disclaimer:</span> Payment does not guarantee placement or a PPA. It only gives you access to apply to different opportunities across different fields on the PlaceIT app.
+          </p>
           <DialogFooter className="gap-2 sm:gap-0">
             <Button variant="outline" onClick={() => setPaymentModalOpen(false)} disabled={isInitializingPayment}>Cancel</Button>
             <Button onClick={handleProceedToPayment} disabled={isInitializingPayment} className="bg-blue-600 hover:bg-blue-700 text-white">

@@ -15,6 +15,7 @@ import { AppOnly } from "@/components/providers/app-mode-provider";
 import { AppTabBar } from "../app-tab-bar";
 import { ThemeToggleButton } from "@/components/theme-toggle";
 import { PageTransition } from "@/components/providers/page-transition";
+import { CompanyBillingBanner } from "@/components/company-billing-banner";
 import {
   PcRecommendation,
   usePcRecommendation,
@@ -132,6 +133,7 @@ export function CompanyLayout({ children }: { children: React.ReactNode }) {
             </Link>
           </div>
         </header>
+        <CompanyBillingBanner />
         {/* Main Content Area */}
         <main
           ref={mainRef}

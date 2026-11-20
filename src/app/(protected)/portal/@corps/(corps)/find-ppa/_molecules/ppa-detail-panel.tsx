@@ -20,6 +20,7 @@ import { useState } from "react";
 import { cn } from "@/utils/tailwind";
 import { getApplyAvailability } from "@/utils/opportunity-availability";
 import { ShareOpportunityButton } from "@/components/share-opportunity-button";
+import { PostedDate } from "@/components/posted-date";
 
 export default function PPADetailPanel({ id, onClose }: { id: string; onClose: () => void }) {
   const queryClient = useQueryClient();
@@ -174,6 +175,7 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
               {companyName && (
                 <p className="text-sm text-gray-500 mt-0.5 truncate">{companyName}</p>
               )}
+              <PostedDate date={ppa.createdAt} className="mt-0.5" />
             </div>
           </div>
 
@@ -397,6 +399,9 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
               <span className="text-sm text-gray-500 font-medium">Amount</span>
               <span className="text-lg font-black text-gray-900">₦{paymentPrompt.fee.toLocaleString()}</span>
             </div>
+            <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900">
+              <span className="font-semibold">Disclaimer:</span> Payment does not guarantee placement or a PPA. It only gives you access to apply to different opportunities across different fields on the PlaceIT app.
+            </p>
             <div className="flex gap-2 mt-1">
               <Button
                 variant="outline"

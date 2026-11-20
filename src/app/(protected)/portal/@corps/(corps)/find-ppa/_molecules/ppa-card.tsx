@@ -17,6 +17,7 @@ import { saveCorpsPPA } from "@/actions";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { ShareOpportunityButton } from "@/components/share-opportunity-button";
+import { PostedDate } from "@/components/posted-date";
 
 const Tag = ({
   children,
@@ -194,6 +195,7 @@ export default function PPACard({
               </p>
             </div>
           )}
+          <PostedDate date={ppa.createdAt} className="mt-1" />
 
           <div className="mt-2 flex flex-wrap gap-1.5">
             {ppa.mode && <Tag>{ppa.mode}</Tag>}

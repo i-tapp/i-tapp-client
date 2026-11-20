@@ -273,3 +273,9 @@ export const quickCreateCompany = actionClient
   });
 
 export { createOpportunity };
+
+/** Starts the company's monthly payment; returns the Paystack page to open. */
+export const initializeCompanyPayment = actionClient.action(async () => {
+  const response = await mutate("/payments/company/initialize", undefined, "POST");
+  return response as { authorizationUrl: string; reference: string };
+});

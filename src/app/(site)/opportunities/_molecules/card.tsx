@@ -5,6 +5,7 @@ import moment from "moment";
 import dp from "@/assets/images/dp.png";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Wifi, Banknote, ArrowUpRight, CalendarDays } from "lucide-react";
+import { PostedDate } from "@/components/posted-date";
 import { cn } from "@/utils/tailwind";
 import type { PublicOpportunity } from "./browse";
 
@@ -120,6 +121,7 @@ export default function OpportunityCard({
             {company?.industry}
           </span>
         </div>
+        <PostedDate date={(opportunity as { createdAt?: string }).createdAt} />
 
         {/* ── Tags ── */}
         <div className="flex flex-wrap gap-1.5">

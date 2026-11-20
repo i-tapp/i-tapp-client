@@ -21,6 +21,7 @@ import {
   MapPin,
   FilePlus2,
   FileText,
+  Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -44,6 +45,7 @@ const menuItems = [
   { name: "PPA Listings", href: "/admin/ppa", icon: <MapPin size={20} /> },
   { name: "Posted Listings", href: "/admin/listings", icon: <FilePlus2 size={20} /> },
   { name: "Application Email", href: "/admin/email-template", icon: <FileText size={20} /> },
+  { name: "Earnings", href: "/admin/earnings", icon: <Wallet size={20} /> },
   { name: "Applications", href: "/admin/applications", icon: <ClipboardList size={20} /> },
   { name: "Placements", href: "/admin/placements", icon: <UserCheck size={20} /> },
   { name: "Analytics", href: "/admin/analytics", icon: <BarChart2 size={20} /> },

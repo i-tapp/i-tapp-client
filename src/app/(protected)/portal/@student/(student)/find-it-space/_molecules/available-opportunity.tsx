@@ -7,6 +7,7 @@ import { Opportunity } from "@/types";
 import { useRouter } from "next/navigation";
 import useIsResponsive from "@/utils/responsive";
 import { BadgeCheck, MapPin, ArrowRight, Banknote, CalendarClock, CheckCircle2 } from "lucide-react";
+import { PostedDate } from "@/components/posted-date";
 
 export default function AvailableOpportunity({
   details,
@@ -151,6 +152,7 @@ export default function AvailableOpportunity({
               <p className="text-[12px] font-semibold text-red-600 capitalize truncate">{location}</p>
             </div>
           )}
+          <PostedDate date={createdAt} className="mt-1" />
 
           {/* Tags */}
           <div className="mt-2 flex flex-wrap gap-1.5">
