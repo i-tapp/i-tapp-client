@@ -139,6 +139,16 @@ export const deleteAdminListing = actionClient
     structured(() => mutate(`/admin/listings/${id}`, undefined, "DELETE")),
   );
 
+export const saveEmailTemplate = actionClient
+  .inputSchema(z.object({ subject: z.string(), body: z.string() }))
+  .action(async ({ parsedInput }) =>
+    structured(() => mutate("/admin/email-template", parsedInput, "PUT")),
+  );
+
+export const resetEmailTemplate = actionClient.action(async () =>
+  structured(() => mutate("/admin/email-template/reset", undefined, "POST")),
+);
+
 export const sendAdminListingTest = actionClient
   .inputSchema(z.object({ id: z.string() }))
   .action(async ({ parsedInput: { id } }) =>

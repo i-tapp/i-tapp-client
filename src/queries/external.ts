@@ -47,3 +47,20 @@ export const useFetchAdminListing = (id?: string) =>
     queryFn: async () => await query(`/admin/listings/${id}`),
     enabled: !!id,
   });
+
+/** The admin-editable subject and opening of the application email. */
+export type EmailTemplateData = {
+  subject: string;
+  body: string;
+  isDefault: boolean;
+  updatedAt: string | null;
+  updatedBy: string | null;
+  defaults: { subject: string; body: string };
+  placeholders: { key: string; label: string; sample: string }[];
+};
+
+export const useFetchEmailTemplate = () =>
+  useQuery({
+    queryKey: ["email-template"],
+    queryFn: async () => (await query("/admin/email-template")) as EmailTemplateData,
+  });
