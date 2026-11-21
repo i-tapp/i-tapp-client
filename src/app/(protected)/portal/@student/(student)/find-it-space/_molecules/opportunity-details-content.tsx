@@ -41,6 +41,7 @@ import { toast } from "react-toastify";
 import dp from "@/assets/images/dp.png";
 import moment from "moment";
 import { PostedDate } from "@/components/posted-date";
+import { listingText } from "@/utils/listing-text";
 
 export default function OpportunityDetailsContent({
   selectedId,
@@ -412,6 +413,26 @@ export default function OpportunityDetailsContent({
               <SectionLabel>Description</SectionLabel>
               <p className="mt-2.5 text-[12.5px] leading-relaxed text-gray-500 whitespace-pre-line">
                 {selectedOpportunity.description}
+              </p>
+            </section>
+          )}
+
+          {/* Requirements */}
+          {listingText(selectedOpportunity?.skills) && (
+            <section>
+              <SectionLabel>Requirements</SectionLabel>
+              <p className="mt-2.5 text-[12.5px] leading-relaxed text-gray-500 whitespace-pre-line">
+                {listingText(selectedOpportunity?.skills)}
+              </p>
+            </section>
+          )}
+
+          {/* Benefits */}
+          {listingText(selectedOpportunity?.benefits) && (
+            <section>
+              <SectionLabel>Benefits</SectionLabel>
+              <p className="mt-2.5 text-[12.5px] leading-relaxed text-gray-500 whitespace-pre-line">
+                {listingText(selectedOpportunity?.benefits)}
               </p>
             </section>
           )}

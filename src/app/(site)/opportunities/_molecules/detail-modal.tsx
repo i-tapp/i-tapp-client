@@ -1,5 +1,6 @@
 "use client";
 
+import { listingText } from "@/utils/listing-text";
 import Image from "next/image";
 import { getApplyAvailability } from "@/utils/opportunity-availability";
 import moment from "moment";
@@ -324,7 +325,23 @@ export default function OpportunityDetailModal({
                 </Section>
               )}
 
-              {/* Requirements */}
+              {/* Requirements and benefits written by the poster */}
+              {listingText((opportunity as { skills?: unknown }).skills) && (
+                <Section title="Requirements">
+                  <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
+                    {listingText((opportunity as { skills?: unknown }).skills)}
+                  </p>
+                </Section>
+              )}
+              {listingText((opportunity as { benefits?: unknown }).benefits) && (
+                <Section title="Benefits">
+                  <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
+                    {listingText((opportunity as { benefits?: unknown }).benefits)}
+                  </p>
+                </Section>
+              )}
+
+              {/* Documents */}
               <Section title="What You'll Need">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <RequirementRow

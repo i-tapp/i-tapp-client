@@ -21,6 +21,7 @@ import { cn } from "@/utils/tailwind";
 import { getApplyAvailability } from "@/utils/opportunity-availability";
 import { ShareOpportunityButton } from "@/components/share-opportunity-button";
 import { PostedDate } from "@/components/posted-date";
+import { listingText } from "@/utils/listing-text";
 
 export default function PPADetailPanel({ id, onClose }: { id: string; onClose: () => void }) {
   const queryClient = useQueryClient();
@@ -248,6 +249,22 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
           <div className="px-5 py-4 border-b border-gray-100">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">About this PPA</p>
             <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{ppa.description}</p>
+          </div>
+        )}
+
+        {/* Requirements */}
+        {listingText(ppa.skills) && (
+          <div className="px-5 py-4 border-b border-gray-100">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Requirements</p>
+            <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{listingText(ppa.skills)}</p>
+          </div>
+        )}
+
+        {/* Benefits */}
+        {listingText(ppa.benefits) && (
+          <div className="px-5 py-4 border-b border-gray-100">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Benefits</p>
+            <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{listingText(ppa.benefits)}</p>
           </div>
         )}
 
