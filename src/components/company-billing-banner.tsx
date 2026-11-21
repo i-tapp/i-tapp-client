@@ -78,13 +78,15 @@ export function CompanyBillingBanner() {
   }
 
   const fee = `₦${billing.feeNaira.toLocaleString("en-NG")}`;
+  const yearly = billing.periodDays >= 365;
+  const covers = yearly ? "one year" : `${billing.periodDays} days`;
 
   if (billing.state === "expired") {
     return (
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900">
         <p>
           <span className="font-semibold">Your free trial has ended.</span> Pay {fee} to keep posting
-          opportunities and viewing applicants. Each payment covers {billing.periodDays} days.
+          opportunities and viewing applicants. One payment covers {covers}.
         </p>
         <Button size="sm" onClick={() => execute()} disabled={isExecuting}>
           {isExecuting ? "Redirecting…" : `Pay ${fee}`}
@@ -98,7 +100,7 @@ export function CompanyBillingBanner() {
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
         <p>
           Your free trial ends in <span className="font-semibold">{billing.daysLeft} day{billing.daysLeft === 1 ? "" : "s"}</span> (
-          {formatDate(billing.accessUntil)}). After that, {fee} every {billing.periodDays} days keeps your
+          {formatDate(billing.accessUntil)}). After that, {fee} {yearly ? "a year" : `every ${billing.periodDays} days`} keeps your
           listings and applicants available.
         </p>
         <Button size="sm" variant="outline" onClick={() => execute()} disabled={isExecuting}>
