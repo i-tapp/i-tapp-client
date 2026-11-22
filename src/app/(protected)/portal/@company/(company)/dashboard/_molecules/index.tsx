@@ -131,6 +131,8 @@ export function Dashboard() {
               title={opportunity.title}
               applicants={opportunity.totalApplications}
               status={opportunity.status}
+              programType={(opportunity as { programType?: string }).programType}
+              organisationName={(opportunity as { organisationName?: string }).organisationName}
               actionLabel="View Applicants"
               onAction={() => {}}
               variant="list"

@@ -12,6 +12,7 @@ import { opportunityStatusStyle } from "@/utils/admin-status-style";
 import { cn } from "@/utils/tailwind";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { CompanyShareButton } from "@/components/company-share-button";
 
 export default function OpportunityTable({ data }: { data: any[] }) {
   return (
@@ -69,6 +70,8 @@ export default function OpportunityTable({ data }: { data: any[] }) {
               </TableCell>
 
               <TableCell className="px-4 py-5 text-center">
+                <div className="flex items-center justify-center gap-2">
+                <CompanyShareButton opportunity={op} />
                 <Link
                   href={`opportunities/${op.id}`}
                   className="
@@ -82,6 +85,7 @@ export default function OpportunityTable({ data }: { data: any[] }) {
                   View
                   <ArrowRight size={14} />
                 </Link>
+                </div>
               </TableCell>
             </TableRow>
           ))}

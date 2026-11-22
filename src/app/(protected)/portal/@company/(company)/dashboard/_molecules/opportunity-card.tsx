@@ -3,6 +3,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Briefcase } from "iconsax-reactjs";
 import Link from "next/link";
 import React from "react";
+import { CompanyShareButton } from "@/components/company-share-button";
 
 type OpportunityCardProps = {
   id: string;
@@ -15,6 +16,8 @@ type OpportunityCardProps = {
   actionLabel?: string;
   onAction?: () => void;
   variant?: "dashboard" | "list";
+  programType?: string | null;
+  organisationName?: string | null;
 };
 
 export default function OpportunityCard({
@@ -28,6 +31,8 @@ export default function OpportunityCard({
   actionLabel = "View",
   onAction,
   variant = "dashboard",
+  programType,
+  organisationName,
 }: OpportunityCardProps) {
   const isDashboard = variant === "dashboard";
 
@@ -68,8 +73,11 @@ export default function OpportunityCard({
           {applicants} Applicant{applicants !== 1 && "s"}
         </div>
 
-        {/* Action */}
-        <div className="flex justify-end">
+        {/* Share + Action */}
+        <div className="flex items-center justify-end gap-2">
+          <CompanyShareButton
+            opportunity={{ id, title, status, programType, organisationName }}
+          />
           <Link
             className={
               "text-xs bg-secondary rounded px-4 py-2 outline-none shadow-none"

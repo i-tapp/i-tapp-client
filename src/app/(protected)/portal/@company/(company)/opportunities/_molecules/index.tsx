@@ -12,6 +12,7 @@ import { Opportunity } from "@/types";
 import OpportunityForm from "./opportunity-form";
 import { useAction } from "next-safe-action/hooks";
 import OpportunityTable from "./opportunity-table";
+import { CompanyShareButton } from "@/components/company-share-button";
 import { createOpportunity } from "@/actions";
 import { toast } from "react-toastify";
 
@@ -129,6 +130,9 @@ export default function OpportunityPage() {
 
 type CardProps = {
   id: string;
+  programType?: string | null;
+  organisationName?: string | null;
+  company?: { name?: string | null } | null;
   title: string;
   department: string[];
   location: string;
@@ -221,6 +225,9 @@ function MobileCardView({
   location,
   status,
   totalApplications,
+  programType,
+  organisationName,
+  company,
 }: CardProps) {
   const statusConfig = {
     open: {
@@ -265,16 +272,21 @@ function MobileCardView({
         <span className="text-xs text-gray-500">
           {totalApplications} Applicant{totalApplications !== 1 && "s"}
         </span>
-        <Link
-          href={`opportunities/${id}`}
-          className={
-            buttonVariants({ variant: "default", size: "sm" }) +
-            " flex items-center gap-1"
-          }
-        >
-          <span>View</span>
-          <ArrowRight size={14} />
-        </Link>
+        <div className="flex items-center gap-2">
+          <CompanyShareButton
+            opportunity={{ id, title, status, programType, organisationName, company }}
+          />
+          <Link
+            href={`opportunities/${id}`}
+            className={
+              buttonVariants({ variant: "default", size: "sm" }) +
+              " flex items-center gap-1"
+            }
+          >
+            <span>View</span>
+            <ArrowRight size={14} />
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -20,6 +20,7 @@ import { closeOpportunity, updateOpportunity } from "@/actions";
 import { toast } from "react-toastify";
 import { useInvalidateOpportunities } from "@/hooks/use-invalidate";
 import { Skeleton } from "@/components/ui/skeleton";
+import { CompanyShareButton } from "@/components/company-share-button";
 
 function OpportunityDetailsSkeleton() {
   return (
@@ -237,7 +238,8 @@ export default function OpportunityDetailsPage() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-row gap-2">
+          <div className="flex flex-row flex-wrap gap-2">
+            <CompanyShareButton opportunity={opportunity} variant="button" className="h-9" />
             <Button
               variant="default"
               onClick={() => setEditing(true)}
