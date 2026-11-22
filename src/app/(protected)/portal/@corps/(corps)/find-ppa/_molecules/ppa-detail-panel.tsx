@@ -49,6 +49,7 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
         setPaymentPrompt(null);
         toast.info("You've already paid the one-time fee - submitting your application.");
         if (ppa?.applicationMethod === "email" && pendingExternal) applyExternalAction({ id, ...pendingExternal });
+        else if (ppa?.applicationMethod === "form") setExternalOpen(true); // fee paid: open the company's form
         else apply({ id, coverLetter: pendingCoverLetter });
         return;
       }
@@ -393,6 +394,7 @@ export default function PPADetailPanel({ id, onClose }: { id: string; onClose: (
         onOpenChange={setExternalOpen}
         opportunity={{ ...ppa, id, company: ppa.company }}
         isSubmitting={isApplyingExternal}
+        onRequiresPayment={(fee) => setPaymentPrompt({ fee })}
         onSubmitEmail={(payload) => {
           setPendingExternal(payload);
           applyExternalAction({ id, ...payload });

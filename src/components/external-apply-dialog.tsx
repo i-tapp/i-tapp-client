@@ -56,7 +56,10 @@ export function ExternalApplyDialog({
   onSubmitEmail,
   isSubmitting = false,
   applicantKind = "student",
+  onRequiresPayment,
 }: {
+  /** The one-time fee is due before the company's form can be opened. */
+  onRequiresPayment?: (fee: number) => void;
   /** Who is applying. SIWES students send their IT letter (CV optional);
    *  corps members send their CV. */
   applicantKind?: "student" | "corps";
@@ -72,7 +75,12 @@ export function ExternalApplyDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
         {isForm ? (
-          <FormFlow opportunity={opportunity} open={open} onClose={() => onOpenChange(false)} />
+          <FormFlow
+            opportunity={opportunity}
+            open={open}
+            onClose={() => onOpenChange(false)}
+            onRequiresPayment={onRequiresPayment}
+          />
         ) : (
           <EmailFlow
             opportunity={opportunity}
@@ -399,10 +407,12 @@ function FormFlow({
   opportunity,
   open,
   onClose,
+  onRequiresPayment,
 }: {
   opportunity: any;
   open: boolean;
   onClose: () => void;
+  onRequiresPayment?: (fee: number) => void;
 }) {
   const queryClient = useQueryClient();
   const [info, setInfo] = useState<any>(null);
@@ -416,6 +426,14 @@ function FormFlow({
     started.current = true;
     (async () => {
       const res = await openFormListing({ id: opportunity.id });
+      const data = res?.data as { requiresPayment?: boolean; fee?: number } | undefined;
+      if (data?.requiresPayment) {
+        // The free application is used up: ask for the one-time fee first.
+        started.current = false;
+        onRequiresPayment?.(data.fee ?? 1000);
+        onClose();
+        return;
+      }
       if (res?.data) setInfo(res.data);
       else setError(res?.serverError || "Could not open this application. Please try again.");
     })();

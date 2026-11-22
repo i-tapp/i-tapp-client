@@ -187,6 +187,7 @@ export default function OpportunityDetailsContent({
         setPaymentModalOpen(false);
         toast.info("You've already paid the one-time fee - submitting your application.");
         if (method === "email" && pendingExternal) applyExternalAction({ id: opportunityId, ...pendingExternal });
+        else if (method === "form") setExternalOpen(true); // fee paid: open the company's form
         else applyAction({ id: opportunityId });
         return;
       }
@@ -572,6 +573,7 @@ export default function OpportunityDetailsContent({
         onOpenChange={setExternalOpen}
         opportunity={selectedOpportunity}
         isSubmitting={isApplyingExternal}
+        onRequiresPayment={() => setPaymentModalOpen(true)}
         onSubmitEmail={(payload) => {
           if (!opportunityId) return;
           setPendingExternal(payload);
