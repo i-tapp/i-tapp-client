@@ -4,11 +4,11 @@ import { useState, useMemo, useRef } from "react";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "react-toastify";
 import { sendSystemEmail } from "@/actions";
-import { useFetchAllStudents, useFetchCompanies } from "@/queries/admin";
-import { Mail, Search, X, Users, Building, Eye, EyeOff, Send, ChevronDown } from "lucide-react";
+import { useFetchAllStudents, useFetchCompanies, useFetchAllCorps } from "@/queries/admin";
+import { Mail, Search, X, Users, Building, Eye, EyeOff, Send, ChevronDown, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-type Recipient = { id: string; firstName: string; lastName: string; name: string; email: string; type: "student" | "company" };
+type Recipient = { id: string; firstName: string; lastName: string; name: string; email: string; type: "student" | "corps" | "company" };
 
 const VARIABLES = [
   { label: "{firstName}", desc: "Recipient's first name" },
@@ -51,7 +51,7 @@ function substitute(text: string, data: { firstName: string; lastName: string; e
 export default function AdminEmailPage() {
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
-  const [audienceMode, setAudienceMode] = useState<"all-students" | "all-companies" | "all" | "custom">("all-students");
+  const [audienceMode, setAudienceMode] = useState<"all-students" | "all-corps" | "all-companies" | "all" | "custom">("all-students");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRecipients, setSelectedRecipients] = useState<Recipient[]>([]);
   const [showPreview, setShowPreview] = useState(false);
@@ -60,6 +60,7 @@ export default function AdminEmailPage() {
 
   const { data: students = [] } = useFetchAllStudents();
   const { data: companies = [] } = useFetchCompanies();
+  const { data: corps = [] } = useFetchAllCorps();
 
   const { execute, isExecuting } = useAction(sendSystemEmail, {
     onSuccess: () => {
@@ -81,6 +82,14 @@ export default function AdminEmailPage() {
       email: s.user?.email ?? "",
       type: "student" as const,
     }));
+    const n: Recipient[] = (corps as any[]).map((m: any) => ({
+      id: m.id,
+      firstName: m.firstName ?? "",
+      lastName: m.lastName ?? "",
+      name: `${m.firstName ?? ""} ${m.lastName ?? ""}`.trim() || "Unknown",
+      email: m.user?.email ?? "",
+      type: "corps" as const,
+    }));
     const c: Recipient[] = (companies as any[]).map((c: any) => ({
       id: c.id,
       firstName: c.name ?? "",
@@ -89,8 +98,8 @@ export default function AdminEmailPage() {
       email: c.user?.email ?? c.email ?? "",
       type: "company" as const,
     }));
-    return [...s, ...c];
-  }, [students, companies]);
+    return [...s, ...n, ...c];
+  }, [students, corps, companies]);
 
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
@@ -114,6 +123,12 @@ export default function AdminEmailPage() {
         id: s.id, firstName: s.firstName ?? "", lastName: s.lastName ?? "",
         name: `${s.firstName ?? ""} ${s.lastName ?? ""}`.trim(),
         email: s.user?.email ?? "", type: "student" as const,
+      })).filter((r: Recipient) => r.email);
+    if (audienceMode === "all-corps")
+      return (corps as any[]).map((m: any) => ({
+        id: m.id, firstName: m.firstName ?? "", lastName: m.lastName ?? "",
+        name: `${m.firstName ?? ""} ${m.lastName ?? ""}`.trim(),
+        email: m.user?.email ?? "", type: "corps" as const,
       })).filter((r: Recipient) => r.email);
     if (audienceMode === "all-companies")
       return (companies as any[]).map((c: any) => ({
@@ -282,6 +297,7 @@ export default function AdminEmailPage() {
               {(
                 [
                   { value: "all-students", label: "All Students", icon: <Users size={14} /> },
+                  { value: "all-corps", label: "All NYSC Members", icon: <GraduationCap size={14} /> },
                   { value: "all-companies", label: "All Companies", icon: <Building size={14} /> },
                   { value: "all", label: "Everyone", icon: <Mail size={14} /> },
                   { value: "custom", label: "Custom", icon: <Search size={14} /> },
@@ -329,8 +345,8 @@ export default function AdminEmailPage() {
                             <p className="font-medium text-gray-800 truncate">{person.name}</p>
                             <p className="text-gray-400 truncate">{person.email}</p>
                           </div>
-                          <span className={`shrink-0 px-1.5 py-0.5 rounded text-[10px] font-medium ${person.type === "student" ? "bg-purple-100 text-purple-700" : "bg-orange-100 text-orange-700"}`}>
-                            {person.type}
+                          <span className={`shrink-0 px-1.5 py-0.5 rounded text-[10px] font-medium ${person.type === "student" ? "bg-purple-100 text-purple-700" : person.type === "corps" ? "bg-green-100 text-green-700" : "bg-orange-100 text-orange-700"}`}>
+                            {person.type === "corps" ? "NYSC" : person.type}
                           </span>
                         </div>
                       );
