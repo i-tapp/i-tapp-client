@@ -64,3 +64,23 @@ export const useFetchEmailTemplate = () =>
     queryKey: ["email-template"],
     queryFn: async () => (await query("/admin/email-template")) as EmailTemplateData,
   });
+
+/** Application emails that never left PlaceIT (see the admin recovery panel). */
+export type UndeliveredApplication = {
+  id: string;
+  applicantName: string;
+  applicantType: "student" | "nysc";
+  listingTitle: string;
+  organisationName: string | null;
+  appliedAt: string;
+  attempts: number;
+  reason: string;
+  retryable: boolean;
+};
+
+export const useFetchUndelivered = () =>
+  useQuery({
+    queryKey: ["undelivered-applications"],
+    queryFn: async () =>
+      (await query("/admin/application-emails/undelivered")) as UndeliveredApplication[],
+  });

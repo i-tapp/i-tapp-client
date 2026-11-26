@@ -149,6 +149,12 @@ export const resetEmailTemplate = actionClient.action(async () =>
   structured(() => mutate("/admin/email-template/reset", undefined, "POST")),
 );
 
+export const requeueUndelivered = actionClient
+  .inputSchema(z.object({ ids: z.array(z.string()).optional() }))
+  .action(async ({ parsedInput }) =>
+    structured(() => mutate("/admin/application-emails/requeue", parsedInput, "POST")),
+  );
+
 export const sendAdminListingTest = actionClient
   .inputSchema(z.object({ id: z.string() }))
   .action(async ({ parsedInput: { id } }) =>
